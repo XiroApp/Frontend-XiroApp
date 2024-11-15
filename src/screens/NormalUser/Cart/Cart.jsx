@@ -191,7 +191,7 @@ export default function Cart() {
     try {
       const response = await axios.post(`${baseUrl}/payment/newpayment`, {
         client_uid: user.uid,
-        title: "Orden Ciro",
+        title: "Pedido Xiro",
         quantity: 1,
         place: place,
         details: orderToSend,
