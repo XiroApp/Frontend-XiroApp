@@ -1,0 +1,115 @@
+[
+  {
+    "setting": "numberOfCopies",
+    "title": "Copias",
+    "content": [
+      {
+        "title": "Cantidad de copias",
+        "subtitle": "Por pedido (Máx:100)",
+        "text": "Si selecciono 'cantidad', las copias se imprimirán la cantidad de veces que indique el número seleccionado."
+      }
+    ]
+  },
+  {
+    "setting": "color",
+    "title": "Color",
+    "content": [
+      {
+        "title": "BN",
+        "subtitle": "Blanco y negro",
+        "text": "Si selecciono 'blanco y negro', las copias se imprimirán en escala de grises, manteniendo la información textual y gráfica en tonos de gris."
+      },
+      {
+        "title": "Color",
+        "subtitle": "Colores CMYK",
+        "text": "Si selecciono 'a color', las copias se imprimirán en colores vívidos y fieles a los originales."
+      }
+    ]
+  },
+  {
+    "setting": "size",
+    "title": "Tamaño",
+    "content": [
+      {
+        "title": "A4",
+        "subtitle": "297 x 210 mm",
+        "text": "Dimensiones en vertical 297 alto x 210mm ancho y en horizontal 210 alto x 297 mm de ancho."
+      },
+
+      {
+        "title": "Oficio",
+        "subtitle": "216 x 340 mm",
+        "text": "Dimensiones en vertical 216 ancho x 340mm alto y en horizontal 216 alto x 340 mm de ancho."
+      }
+    ]
+  },
+  {
+    "setting": "printWay",
+    "title": "Formas de impresión",
+    "content": [
+      {
+        "title": "Simple faz",
+        "subtitle": "Una sola cara",
+        "text": "Las copias se imprimirán en una sola cara de cada hoja de papel."
+      },
+      {
+        "title": "Doble faz",
+        "subtitle": "Ambas caras",
+        "text": "Las copias se imprimirán en ambas caras de la hoja de papel."
+      }
+    ]
+  },
+  {
+    "setting": "copiesPerPage",
+    "title": "Copias por carilla",
+    "content": [
+      {
+        "title": "Normal",
+        "subtitle": "Una por carilla",
+        "text": "Se imprimirá una página del documento por carilla."
+      },
+      {
+        "title": "2 copias",
+        "subtitle": "Por carilla",
+        "text": "Recomendación: Usar la orientación en horizontal para imprimir 2 páginas del documento una al lado de la otra."
+      },
+      {
+        "title": "4 copias",
+        "subtitle": "Por carilla",
+        "text": "Recomendación: Usar la orientación en horizontal para imprimir 4 páginas del documento apaisadas una encima de la otra."
+      }
+    ]
+  },
+  {
+    "setting": "orientacion",
+    "title": "Orientación",
+    "content": [
+      {
+        "title": "Vertical",
+        "subtitle": "Hoja impresa en vertical",
+        "text": "El alto de las copias es más largo que los lados superior e inferior."
+      },
+      {
+        "title": "Horizontal",
+        "subtitle": "Hoja impresa en horizontal",
+        "text": "El ancho de las copias es más largo que los lados izquierdo y derecho."
+      }
+    ]
+  },
+  {
+    "setting": "finishing",
+    "title": "Anillado",
+    "content": [
+      {
+        "title": "Sin anillado",
+        "subtitle": "Solo impresión",
+        "text": "Las páginas impresas irán sueltas sin ningún tipo de anillado, solo impresión."
+      },
+      {
+        "title": "Anillado",
+        "subtitle": "Por el lado largo del papel (a partir de 20 hojas)",
+        "text": "Las páginas impresas irán anilladas del lado más largo del papel."
+      }
+    ]
+  }
+]

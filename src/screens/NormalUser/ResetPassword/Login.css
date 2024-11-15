@@ -1,0 +1,28 @@
+#svg-container {
+  background-image: url("../../../utils/assets/images/fondoInicio.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+#svg-mobile-container {
+  background-image: url("../../../utils/assets/images/bg-blue-mobile.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: -6em -11em;
+}
+
+@media (min-width: 600px) {
+  #svg-mobile-container {
+    background-image: url("../../../utils/assets/images/bg-blue-mobile.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: -10em -18em;
+  }
+}
+@media (max-width: 425px) {
+  #svg-mobile-container {
+    background-image: url("../../../utils/assets/images/bg-blue-mobile.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: -1em -1em;
+  }
+}
