@@ -27,7 +27,7 @@ export default function ResetPassword() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen p-24">
-      <div className="flex flex-col items-center justify-center h-1/2 bg-[#1e1e1e] p-10 lg:px-24 gap-10  rounded-lg">
+      <div className="flex flex-col items-center justify-center h-1/2 p-10 lg:px-24 gap-10  rounded-lg">
         <h1 className="text-3xl">¿Has olvidado tu contraseña?</h1>
         <p className=" text-center">
           No te preocupes! Te enviaremos un correo electrónico con un link para

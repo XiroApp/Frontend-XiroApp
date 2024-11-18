@@ -2,7 +2,7 @@ import "./Login.css";
 import { React, useState } from "react";
 import { useAuth } from "../../../context/authContext";
 import logoGoogle from "../../../utils/assets/images/icon-google.png";
-import loginImage from "../../../utils/assets/images/ciro-login.png";
+import loginImage from "../../../utils/assets/images/xiro-head-outline-green.png";
 import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";

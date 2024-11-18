@@ -38,8 +38,8 @@ import { ApiConstants } from "../../../Common/constants";
 
 /* ------------------------ */
 const steps = ["Detalles", "Resumen", "Pago"];
-const PUBLIC_KEY = ApiConstants.MERCADOPAGO_PUBLIC_KEY
-  // "APP_USR-8ae426e8-c6c1-4422-8ccc-44c269e4a73c"; /* PRUEBA usuario test limo vendedor / JUANCHI */
+const PUBLIC_KEY = ApiConstants.MERCADOPAGO_PUBLIC_KEY;
+// "APP_USR-8ae426e8-c6c1-4422-8ccc-44c269e4a73c"; /* PRUEBA usuario test limo vendedor / JUANCHI */
 //  "TEST-89914640-e146-4696-b70c-074e73f1c62a"; // MRG COMPRADOR
 // "TEST-153e2499-54b3-4af0-81f7-2bd5ebe3df6e"; /* PRUEBA usuario test limo vendedor / JX */
 
@@ -272,7 +272,7 @@ export default function Cart() {
               {activeStep === steps.length ? (
                 <React.Fragment>
                   <Typography sx={{ mt: 2, mb: 1 }}>
-                   Todos los pasos completados
+                    Todos los pasos completados
                   </Typography>
                   <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                     <Box sx={{ flex: "1 1 auto" }} />
@@ -318,8 +318,6 @@ export default function Cart() {
                               </span>
                               <span>Forma de entrega</span>
                             </section>
-            
-            
                           </section>
                           <section className="flex flex-col gap-5">
                             <div className="flex flex-col gap-1 border border-gray-500 rounded-md p-3">

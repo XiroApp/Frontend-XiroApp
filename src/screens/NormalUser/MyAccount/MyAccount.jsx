@@ -397,7 +397,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
             </div>
           </button>
           <div className="flex flex-col gap-1">
-            <div className="flex justify-center gap-2">
+            {/* <div className="flex justify-center gap-2">
               <Tooltip title="Librería Móvil">
                 <a
                   target="_blank"
@@ -430,8 +430,8 @@ export default function MyAccount({ cart, dataBaseUser }) {
                   <WhatsAppIcon sx={{ height: "2rem", width: "2rem" }} />
                 </a>
               </Tooltip>
-            </div>
-            <h4 className="text-sm font-medium self-center">CIRO®</h4>
+            </div> */}
+            <h4 className="text-sm font-medium self-center">XiRO®</h4>
           </div>
         </section>
         {/* --------- */}

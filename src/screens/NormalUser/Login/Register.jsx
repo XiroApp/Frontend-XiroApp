@@ -2,11 +2,8 @@ import "./Login.css";
 import { React, useState } from "react";
 import { useAuth } from "../../../context/authContext";
 import { useNavigate } from "react-router-dom";
-import logoWhite from "../../../utils/assets/images/logo-white.png";
 import logoGoogle from "../../../utils/assets/images/icon-google.png";
-import loginImage from "../../../utils/assets/images/ciro-login.png";
-import amico from "../../../utils/assets/images/amico.svg";
-import blueCircle from "../../../utils/assets/images/bg-blue-mobile.svg";
+import loginImage from "../../../utils/assets/images/xiro-head-outline-green.png";
 import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -169,23 +166,6 @@ export default function Login() {
 
       {/* ------------------------------------------------------------------------------------------------------------------------------------------ */}
       <section className="w-screen lg:w-1/2 flex flex-col justify-center items-center lg:gap-4 lg:pr-32">
-        <section
-          // id="svg-mobile-container"
-          className="flex flex-col justify-start lg:hidden h-56 w-screen    "
-        >
-          {/* BACKGROUND CONTAINER */}
-          <img
-            src={blueCircle}
-            alt="limo-logo"
-            className="object-contain absolute top-[-5%] w-96  md:hidden"
-          />
-          <span className="absolute left-2 top-2 text-[12px] font-bold md:hidden w-40">
-            Hecho por estudiantes para estudiantes
-          </span>
-          <div className=" absolute w-screen top-12 flex justify-center">
-            <img src={amico} alt="limo-logo" className="object-contain h-32 " />
-          </div>
-        </section>
         <div className="flex flex-col lg:gap-4 gap-2 ">
           <div>
             <section className="flex flex-col items-center justify-center gap-2">
@@ -193,7 +173,7 @@ export default function Login() {
 
               {/* <h1 className="text-3xl">¡Bienvenido a LIMO!</h1> */}
               <h2 className="text-lg font-md opacity-60">
-                Para comenzar, ingresa tus datos
+                Registro
               </h2>
             </section>
             {/* INPUT SECTION */}
