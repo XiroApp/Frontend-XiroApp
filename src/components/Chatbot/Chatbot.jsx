@@ -7,7 +7,7 @@ export default function Chatbot() {
   return (
     <a
       target="_blank"
-      href="https://wa.me/5492617231539?text=Hola, deseo comunicarme con el soporte de XIRO."
+      href="https://wa.me/5492616362351?text=Hola, deseo comunicarme con el soporte de XIRO."
       className="fixed z-30 bottom-5 right-5"
     >
       <Button
