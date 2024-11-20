@@ -8,7 +8,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: "90%",
-  bgcolor: "#121212",
+  bgcolor: "#61774d",
   borderRadius: "8px",
   boxShadow: 24,
 };
@@ -31,7 +31,7 @@ export default function NewOrderSettingsHelpDesktop({
         <section className=" p-4 ">
           <h2
             id="parent-modal-title"
-            className="text-start text-[20px] font-[300] "
+            className="text-start text-white text-[20px] font-[300] "
           >
             {renderHelp?.title}
           </h2>
@@ -40,7 +40,7 @@ export default function NewOrderSettingsHelpDesktop({
           {renderHelp?.content.map((content, index) => (
             <div
               key={index}
-              className="flex flex-col gap-2 w-11/12 bg-[#1e1e1e] p-4 rounded-lg"
+              className="flex flex-col gap-2 w-11/12 bg-[#fff] p-4 rounded-lg"
             >
               <span className="text-[14px]">{content.title}</span>
               <span className="opacity-70 text-[14px]">{content.subtitle}</span>

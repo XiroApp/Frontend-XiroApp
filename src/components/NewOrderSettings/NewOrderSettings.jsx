@@ -77,8 +77,8 @@ export default function NewOrderSettings({
             <button
               className={
                 resume.color === "BN"
-                  ? "flex flex-col items-center w-24 justify-center px-1  border-2 border-white bg-[#61774d] rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-1  bg-[#61774d] rounded-lg"
+                  ? "flex flex-col items-center w-24 justify-center px-1  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-1  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -94,8 +94,8 @@ export default function NewOrderSettings({
             <button
               className={
                 resume.color === "Color"
-                  ? "flex flex-col items-center w-24 justify-center px-1  border-2 border-white bg-[#61774d] rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-1  bg-[#61774d] rounded-lg"
+                  ? "flex flex-col items-center w-24 justify-center px-1  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-1  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -116,8 +116,8 @@ export default function NewOrderSettings({
             <button
               className={
                 resume.size === "A4"
-                  ? "flex flex-col items-center w-24 justify-center px-1  border-2 border-white bg-[#61774d] rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-1  bg-[#61774d] rounded-lg"
+                  ? "flex flex-col items-center w-24 justify-center px-1  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-1  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -132,8 +132,8 @@ export default function NewOrderSettings({
             <button
               className={
                 resume.size === "Oficio"
-                  ? "flex flex-col items-center w-24 justify-center px-1  border-2 border-white bg-[#61774d] rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-1  bg-[#61774d] rounded-lg"
+                  ? "flex flex-col items-center w-24 justify-center px-1  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-1  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -150,8 +150,8 @@ export default function NewOrderSettings({
             <button
               className={
                 resume.size === "A3"
-                  ? "flex flex-col items-center w-24 justify-center px-1  border-2 border-white bg-[#61774d] rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-1  bg-[#61774d] rounded-lg"
+                  ? "flex flex-col items-center w-24 justify-center px-1  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-1  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -172,8 +172,8 @@ export default function NewOrderSettings({
             <button
               className={
                 resume.printWay === "Simple faz"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-[#61774d] rounded-lg"
+                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -189,8 +189,8 @@ export default function NewOrderSettings({
             <button
               className={
                 resume.printWay === "Doble faz"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-[#61774d] rounded-lg"
+                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -211,8 +211,8 @@ export default function NewOrderSettings({
             <button
               className={
                 resume.copiesPerPage === "Normal"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-[#61774d] rounded-lg"
+                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -228,8 +228,8 @@ export default function NewOrderSettings({
             <button
               className={
                 resume.copiesPerPage === "2 copias"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-[#61774d] rounded-lg"
+                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -245,8 +245,8 @@ export default function NewOrderSettings({
             <button
               className={
                 resume.copiesPerPage === "4 copias"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-[#61774d] rounded-lg"
+                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -270,7 +270,7 @@ export default function NewOrderSettings({
                 disabled
                 className={
                   resume.orientacion === "Vertical"
-                    ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] rounded-lg"
+                    ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
                     : "flex flex-col items-center w-24 justify-center px-2  py-2  bg-[#313131] rounded-lg"
                 }
                 // onClick={(e) =>
@@ -286,8 +286,8 @@ export default function NewOrderSettings({
               <button
                 className={
                   resume.orientacion === "Vertical"
-                    ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] rounded-lg"
-                    : "flex flex-col items-center w-24 justify-center px-2  py-2  bg-[#61774d] rounded-lg"
+                    ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                    : "flex flex-col items-center w-24 justify-center px-2  py-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
                 }
                 onClick={(e) =>
                   setResume({
@@ -302,8 +302,8 @@ export default function NewOrderSettings({
             <button
               className={
                 resume.orientacion === "Horizontal"
-                  ? "flex flex-col items-center w-24 justify-center px-2  py-2 border-2 border-white bg-[#61774d] rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  py-2  bg-[#61774d] rounded-lg"
+                  ? "flex flex-col items-center w-24 justify-center px-2  py-2 border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  py-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -323,8 +323,8 @@ export default function NewOrderSettings({
             <button
               className={
                 resume.finishing === "Sin anillado"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-[#61774d] rounded-lg"
+                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -340,8 +340,8 @@ export default function NewOrderSettings({
               <button
                 className={
                   resume.finishing === "Anillado"
-                    ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] rounded-lg"
-                    : "flex flex-col items-center w-24 justify-center px-2  bg-[#61774d] rounded-lg"
+                    ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                    : "flex flex-col items-center w-24 justify-center px-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
                 }
                 onClick={(e) =>
                   setResume({

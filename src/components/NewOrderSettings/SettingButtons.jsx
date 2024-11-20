@@ -8,8 +8,8 @@ export default function SettingButtons({ currentSetting, handleSettings }) {
         name="numberOfCopies"
         className={
           currentSetting === "numberOfCopies"
-            ? "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#61774d] border-2 border-white text-sm"
-            : "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1  border border-gray-600 hover:bg-[#61774d] text-sm"
+            ? "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#61774d] border-2 border-white text-white text-sm"
+            : "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-white hover:bg-[#61774d] hover:text-white text-sm"
         }
         onClick={(e) => handleSettings(e)}
       >
@@ -19,8 +19,8 @@ export default function SettingButtons({ currentSetting, handleSettings }) {
         name="color"
         className={
           currentSetting === "color"
-            ? "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#61774d] border-2 border-white text-sm"
-            : "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1  border border-gray-600 hover:bg-[#61774d] text-sm"
+            ? "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#61774d] border-2 border-white text-white text-sm"
+            : "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-white hover:bg-[#61774d] hover:text-white text-sm"
         }
         onClick={(e) => handleSettings(e)}
       >
@@ -30,8 +30,8 @@ export default function SettingButtons({ currentSetting, handleSettings }) {
         name="size"
         className={
           currentSetting === "size"
-            ? "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#61774d] border-2 border-white text-sm"
-            : "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1  border border-gray-600 hover:bg-[#61774d] text-sm"
+            ? "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#61774d] border-2 border-white text-white text-sm"
+            : "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-white hover:bg-[#61774d] hover:text-white text-sm"
         }
         onClick={(e) => handleSettings(e)}
       >
@@ -41,8 +41,8 @@ export default function SettingButtons({ currentSetting, handleSettings }) {
         name="printWay"
         className={
           currentSetting === "printWay"
-            ? "rounded-full whitespace-nowrap w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#61774d] border-2 border-white text-sm"
-            : "rounded-full whitespace-nowrap w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1  border border-gray-600 hover:bg-[#61774d] text-sm"
+            ? "rounded-full whitespace-nowrap w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#61774d] border-2 border-white text-white text-sm"
+            : "rounded-full whitespace-nowrap w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-white hover:bg-[#61774d] hover:text-white text-sm"
         }
         onClick={(e) => handleSettings(e)}
       >
@@ -52,8 +52,8 @@ export default function SettingButtons({ currentSetting, handleSettings }) {
         name="copiesPerPage"
         className={
           currentSetting === "copiesPerPage"
-            ? "rounded-full whitespace-nowrap w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#61774d] border-2 border-white text-sm"
-            : "rounded-full whitespace-nowrap w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1  border border-gray-600 hover:bg-[#61774d] text-sm"
+            ? "rounded-full whitespace-nowrap w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#61774d] border-2 border-white text-white text-sm"
+            : "rounded-full whitespace-nowrap w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-white hover:bg-[#61774d] hover:text-white text-sm"
         }
         onClick={(e) => handleSettings(e)}
       >
@@ -63,8 +63,8 @@ export default function SettingButtons({ currentSetting, handleSettings }) {
         name="orientacion"
         className={
           currentSetting === "orientacion"
-            ? "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#61774d] border-2 border-white text-sm"
-            : "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1  border border-gray-600 hover:bg-[#61774d] text-sm"
+            ? "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#61774d] border-2 border-white text-white text-sm"
+            : "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-white hover:bg-[#61774d] hover:text-white text-sm"
         }
         onClick={(e) => handleSettings(e)}
       >
@@ -74,8 +74,8 @@ export default function SettingButtons({ currentSetting, handleSettings }) {
         name="finishing"
         className={
           currentSetting === "finishing"
-            ? "rounded-full whitespace-nowrap w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#61774d] border-2 border-white text-sm"
-            : "rounded-full whitespace-nowrap w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1  border border-gray-600 hover:bg-[#61774d] text-sm"
+            ? "rounded-full whitespace-nowrap w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#61774d] border-2 border-white text-white text-sm"
+            : "rounded-full whitespace-nowrap w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-white hover:bg-[#61774d] hover:text-white text-sm"
         }
         onClick={(e) => handleSettings(e)}
       >
