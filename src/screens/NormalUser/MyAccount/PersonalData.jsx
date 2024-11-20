@@ -76,7 +76,7 @@ export default function PersonalData({ user }) {
       <span className="text-2xl opacity-80">Datos personales</span>
 
       <div className="flex flex-col w-full">
-        <span className="text-[12px]">NOMBRE(S)</span>
+        <span className="text-[12px]">NOMBRE Y APELLIDO</span>
         <Input
           error={error.displayName}
           name="displayName"
@@ -126,7 +126,7 @@ export default function PersonalData({ user }) {
       </div>
       <div className="flex flex-col  lg:flex-row gap-8 lg:flex  lg:gap-5 ">
         <div className="flex flex-col lg:w-full">
-          <span className="text-[12px]">FECHA DE NACIMIENTO</span>
+          <span className="text-[12px]">NACIMIENTO</span>
           <input
             name="birthdate"
             max={fecha18AtrasFormato}
@@ -146,7 +146,7 @@ export default function PersonalData({ user }) {
         </div>
       </div>
 
-      <div className="flex flex-col">
+      {/* <div className="flex flex-col">
         <span className="text-[12px]">¿A QUÉ TE DEDICAS? (OPCIONAL)</span>
         <Input
           error={error.bio}
@@ -163,9 +163,9 @@ export default function PersonalData({ user }) {
         ) : (
           false
         )}
-      </div>
+      </div> */}
       <div className="flex flex-col  gap-2">
-        <span className="text-[12px]">¿CON QUÉ GÉNERO TE IDENTIFICAS?</span>
+        <span className="text-[12px]">GÉNERO</span>
         <div className="flex flex-wrap gap-5">
           <button
             name="Femenino"

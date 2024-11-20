@@ -322,7 +322,7 @@ export default function NewOrder() {
                     name="deleteFiles"
                     onClick={(e) => handleResetOrderModal(e)}
                   >
-                    <span className="text-[13px] font-light text-black">
+                    <span className="text-[13px] font-light underline text-black">
                       Eliminar mis archivos
                     </span>
                   </button>

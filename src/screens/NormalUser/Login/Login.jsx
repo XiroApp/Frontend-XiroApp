@@ -142,7 +142,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
 
               {/* <h1 className="text-3xl ">¡Bienvenido!</h1> */}
               <h2 className="text-lg font-md opacity-60">
-                Para comenzar, ingresa tus datos
+                Ingresa tus datos para continuar
               </h2>
             </section>
             {/* INPUT SECTION */}
@@ -240,7 +240,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
 
           <div className="flex flex-col items-center justify-center">
             <Typography>
-              ¿Eres un nuevo usuario?{" "}
+              ¿Primera vez aquí?{" "}
               <Link href="/registro" underline="none">
                 Crear cuenta
               </Link>

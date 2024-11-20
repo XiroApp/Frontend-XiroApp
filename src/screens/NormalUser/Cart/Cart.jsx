@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../../components/Navbar/Navbar";
 import { useDispatch, useSelector } from "react-redux";
+import xiro_outline_green from "../../../utils/assets/images/xiro-head-outline-green.png";
 import EditIcon from "@mui/icons-material/Edit";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import Box from "@mui/material/Box";
@@ -286,11 +287,16 @@ export default function Cart() {
                       <div className="flex  flex-col gap-4">
                         {/* 1 */}
                         <div className="flex flex-col gap-3">
-                          <section className="flex gap-2 items-center">
-                            <span className=" w-8 h-8 p-2 flex items-center justify-center rounded-full border-[2px] border-[#789360] ">
+                          <section className="flex items-center">
+                            <img
+                              src={xiro_outline_green}
+                              alt=""
+                              className="w-8 h-8 object-contain"
+                            />
+                            <span className="w-8 h-8 p-2 flex items-center justify-center rounded-full">
                               1
                             </span>
-                            <span>Detalles de impresión</span>
+                            <span>Personalización de archivos</span>
                           </section>
                           <section className="flex h-full gap-4 overflow-auto">
                             {cart?.map((order, index) => (
@@ -311,9 +317,14 @@ export default function Cart() {
                         </div>
                         {/* 2 */}
                         <div className="flex flex-col gap-3">
-                          <section className="flex gap-2   justify-between items-center">
-                            <section className="flex items-center gap-2">
-                              <span className=" w-8 h-8 p-2 flex items-center justify-center rounded-full border-[2px] border-[#789360] ">
+                          <section className="flex gap-2 justify-between items-center">
+                            <section className="flex items-center">
+                              <img
+                                src={xiro_outline_green}
+                                alt=""
+                                className="w-8 h-8 object-contain"
+                              />
+                              <span className=" w-8 h-8 p-2 flex items-center justify-center rounded-full">
                                 2
                               </span>
                               <span>Forma de entrega</span>
@@ -370,8 +381,13 @@ export default function Cart() {
                         </div>
                         {/* 3 */}
                         <div>
-                          <section className="flex gap-2 items-center">
-                            <span className=" w-8 h-8 p-2 flex items-center justify-center rounded-full border-[2px] border-[#789360] ">
+                          <section className="flex items-center">
+                            <img
+                              src={xiro_outline_green}
+                              alt=""
+                              className="w-8 h-8 object-contain"
+                            />
+                            <span className=" w-8 h-8 p-2 flex items-center justify-center rounded-full">
                               3
                             </span>
                             <span>Disponibilidad horaria</span>
@@ -397,8 +413,13 @@ export default function Cart() {
                         </div>
                         {/* 4 */}
                         <div className="flex flex-col gap-3">
-                          <section className="flex gap-2 items-center">
-                            <span className=" w-8 h-8 p-2 flex items-center justify-center rounded-full border-[2px] border-[#789360] ">
+                          <section className="flex items-center">
+                            <img
+                              src={xiro_outline_green}
+                              alt=""
+                              className="w-8 h-8 object-contain"
+                            />
+                            <span className=" w-8 h-8 p-2 flex items-center justify-center rounded-full">
                               4
                             </span>
                             <span>Comentarios</span>
@@ -468,7 +489,7 @@ export default function Cart() {
                           </section>
                           <section className="flex flex-col">
                             <span className="opacitytext-[16px] font-[400]">
-                              Disponibilidad horaria
+                              Preferencia horaria (El horario concreto se coordinará por WhatsApp)
                             </span>
                             <section>
                               <span className="opacity-70 text-[14px] font-[400]">
@@ -479,7 +500,7 @@ export default function Cart() {
                           <section className="flex flex-col">
                             <div className="flex justify-between">
                               <span className="opacitytext-[16px] font-[400] mb-1">
-                                Comentarios
+                                Instrucciones de entrega
                               </span>
                               <button
                                 onClick={(e) => setEditComment(!editComment)}
@@ -620,7 +641,7 @@ export default function Cart() {
                         </span>
                         <button
                           onClick={handleBuy}
-                          className="flex justify-between border border-gray-400 p-8 rounded-md hover:bg-gray-500/50 hover:border-white"
+                          className="flex justify-between border border-gray-400 p-8 rounded-md hover:bg-[#789360] hover:border-black"
                         >
                           <span>Mercado Pago</span>
                           <span className="text-[20px] font-[600]">{">"}</span>
@@ -654,7 +675,7 @@ export default function Cart() {
                                 <DialogContentText className="text-center">
                                   <span className="text-xl lg:text-md">
                                     Serás redirigido a la app de mercadopago
-                                    para continuar con tu compra.
+                                    para finalizar tu compra.
                                   </span>
                                 </DialogContentText>
                               </DialogContent>
@@ -688,7 +709,7 @@ export default function Cart() {
                   </section>
                   <Box className="bg-[#fff] rounded-b-md p-4 flex justify-between items-center">
                     <section onClick={(e) => handleDeleteCart(e)}>
-                      <button className="text-[#789360] text-[14px] hover:text-blue-500 underline">
+                      <button className="text-[#789360] text-[14px] hover:text-black underline">
                         Vaciar carrito
                       </button>
                     </section>

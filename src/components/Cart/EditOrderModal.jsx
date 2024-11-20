@@ -223,12 +223,12 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
       <section className="w-full h-full lg:flex">
         <div className="flex flex-col items-center gap-2 px-4 lg:px-0  h-full lg:w-9/12">
           <div className="lg:flex  w-full md:p-4">
-            <section className="bg-[#4675C0] flex flex-col md:flex-row-reverse md:justify-around md:items-cemter items-around  justify-center w-full p-4 gap-4 rounded-lg">
+            <section className="bg-[#fff] flex flex-col md:flex-row-reverse md:justify-around md:items-cemter items-around  justify-center w-full p-4 gap-4 rounded-lg">
               <div className="flex items-center justify-around h-1/2 md:h-full">
                 {place?.type === "Envío a domicilio" ? (
                   <button
                     onClick={(e) => setChoosePlace(true)}
-                    className="flex flex-col gap-1 items-center justify-center px-2 rounded-md bg-[#6a9bea] hover:bg-[#476493]"
+                    className="flex flex-col gap-1 items-center justify-center px-2 rounded-md bg-[#789360] hover:bg-[#61774d]"
                   >
                     <div className="flex justify-center items-center gap-1">
                       <MopedIcon sx={{ height: "1.3em", width: "1.2em" }} />
@@ -238,7 +238,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                 ) : (
                   <button
                     onClick={(e) => setChoosePlace(true)}
-                    className="flex flex-col gap-1 items-center justify-center px-2 rounded-md hover:bg-[#5e89ce] bg-[#6a9bea]"
+                    className="flex flex-col gap-1 items-center justify-center px-2 rounded-md hover:bg-[#61774d] bg-[#789360]"
                   >
                     <div className="flex justify-center items-center gap-1">
                       <StoreIcon sx={{ height: "1.3em", width: "1.2em" }} />
@@ -287,7 +287,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                       loading={loading}
                       component="label"
                       variant="outlined"
-                      color="white"
+                      color="primary"
                       startIcon={
                         <UploadIcon sx={{ height: "0.8em", width: "0.8em" }} />
                       }
@@ -316,7 +316,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                     name="deleteFiles"
                     onClick={(e) => handleResetOrderModal(e)}
                   >
-                    <span className="text-[13px] font-light underline ">
+                    <span className="text-[13px] font-light underline text-black">
                       Eliminar mis archivos
                     </span>
                   </button>
@@ -434,7 +434,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                         className="text-sm font-light"
                         onClick={(e) => setReview(false)}
                       >
-                        <span className="text-[#4675C0]">
+                        <span className="text-[#fff]">
                           Editar mi pedido {">"}
                         </span>
                       </Button>

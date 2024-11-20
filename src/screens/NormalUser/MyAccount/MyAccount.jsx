@@ -253,7 +253,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
 
   return (
     <>
-      <Navbar cart={cart} loggedUser={dataBaseUser} title={"Mi cuenta"} />
+      <Navbar cart={cart} loggedUser={dataBaseUser} title={"Cuenta"} />
       <div className="flex justify-center gap-5 p-5 ">
         <Chatbot />
         {/* HAMBURGUESA - MENU MOBILE*/}

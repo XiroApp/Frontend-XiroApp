@@ -101,11 +101,13 @@ export function updateUserValidator(
   let bio = !validateBio(userBio);
   let birthdate = !validateBirthdate(userBirthdate);
 
-  if (!displayName && !phone && !bio && !birthdate)
+  // if (!displayName && !phone && !bio && !birthdate)
+  if (!displayName && !phone && !bio)
     return { error: false, allowUpdate: true };
   else
     return {
-      error: { displayName, phone, bio, birthdate },
+      // error: { displayName, phone, bio, birthdate },
+      error: { displayName, phone, bio },
       allowUpdate: false,
     };
 }

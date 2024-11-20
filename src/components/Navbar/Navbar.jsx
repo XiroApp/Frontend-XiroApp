@@ -146,10 +146,10 @@ export default function Navbar({ loggedUser, title }) {
 
               <MenuItem
                 sx={{ ":hover": { backgroundColor: "#c9d9bb" } }}
-                key={"Mi cuenta"}
+                key={"Cuenta"}
                 onClick={() => navigate("/")}
               >
-                <Typography textAlign="center">Mi cuenta</Typography>
+                <Typography textAlign="center">Cuenta</Typography>
               </MenuItem>
               <MenuItem
                 sx={{ ":hover": { backgroundColor: "#c9d9bb" } }}
