@@ -228,7 +228,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                 {place?.type === "Envío a domicilio" ? (
                   <button
                     onClick={(e) => setChoosePlace(true)}
-                    className="flex flex-col gap-1 items-center justify-center px-2 rounded-md bg-[#789360] hover:bg-[#61774d]"
+                    className="flex flex-col gap-1 items-center justify-center px-2 rounded-md text-white bg-[#789360] hover:bg-[#61774d]"
                   >
                     <div className="flex justify-center items-center gap-1">
                       <MopedIcon sx={{ height: "1.3em", width: "1.2em" }} />
@@ -238,7 +238,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                 ) : (
                   <button
                     onClick={(e) => setChoosePlace(true)}
-                    className="flex flex-col gap-1 items-center justify-center px-2 rounded-md hover:bg-[#61774d] bg-[#789360]"
+                    className="flex flex-col gap-1 items-center justify-center px-2 rounded-md text-white hover:bg-[#61774d] bg-[#789360]"
                   >
                     <div className="flex justify-center items-center gap-1">
                       <StoreIcon sx={{ height: "1.3em", width: "1.2em" }} />

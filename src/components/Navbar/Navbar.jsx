@@ -46,9 +46,9 @@ export default function Navbar({ loggedUser, title }) {
       <Container maxWidth="screen" sx={{ backgroundColor: "#fff" }}>
         <Toolbar disableGutters>
           <Link to="/">
-            <img src={logo} alt="" className="h-10  hidden md:hidden lg:flex" />
+            <img src={logo} alt="" className="h-10  " />
           </Link>
-          <span className="text-sm lg:text-xl ml-12 ">{title}</span>
+          <span className="text-[13px] md:text-sm lg:text-xl ml-12 ">{title}</span>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}></Box>
 
@@ -88,7 +88,7 @@ export default function Navbar({ loggedUser, title }) {
                   src={loggedUser?.photoURL}
                 />
               </IconButton>
-              <span className="text-[0.8rem]"> {loggedUser?.displayName}</span>
+              <span className="text-[0.8rem] hidden md:block lg:block"> {loggedUser?.displayName}</span>
             </Box>
           </Tooltip>
 
