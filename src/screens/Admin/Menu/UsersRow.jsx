@@ -72,7 +72,7 @@ export default function UsersRow({ column, value, uidUser }) {
                         onChange={(e) => setInput({ roles: [e.target.value] })}
                         name="roleSelector"
                         id="roleSelector"
-                        className="border rounded-l p-2"
+                        className="border rounded-l p-2 bg-white"
                       >
                         <option value="user">Seleccionar</option>
                         <option value="user">Usuario Base 🙍‍♂️</option>

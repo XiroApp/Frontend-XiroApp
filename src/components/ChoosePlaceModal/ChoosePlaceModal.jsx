@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Box, Button, Link, Modal, NativeSelect } from "@mui/material";
-import MopedIcon from "@mui/icons-material/Moped";
-import StoreIcon from "@mui/icons-material/Store";
+import MopedIcon from "@mui/icons-material/MopedOutlined";
+import StoreIcon from "@mui/icons-material/StoreOutlined";
+import PlaceIcon from "@mui/icons-material/PlaceOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import NewAddressForm from "../../components/Forms/NewAddressForm";
-import PlaceIcon from "@mui/icons-material/Place";
 import { setOrderPlace, setToast, updateUser } from "../../redux/actions";
 
 export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
@@ -124,7 +124,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                   ) : (
                     <span className="font-[200] text-sm">
                       {" "}
-                      No tienes ningún domicilio registrado
+                      No tienes direcciones agregadas.
                     </span>
                   )}
                 </div>

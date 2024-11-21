@@ -60,7 +60,7 @@ export default function OrderCard({
   return (
     <div className="flex flex-col gap-2 border border-gray-500 rounded-md p-3">
       <div className="flex gap-2 items-center justify-between">
-        <span className="opacity-70 text-[12px] font-[300]">
+        <span className="text-black text-[12px] font-[400]">
           Impresión {order.color === "BN" ? "en blanco y negro" : "a color"}{" "}
           {order.size} x {order?.numberOfCopies}
         </span>

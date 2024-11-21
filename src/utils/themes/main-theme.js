@@ -42,6 +42,6 @@ export const mainTheme = createTheme({
     // so a smaller fontsize may be appropriate.
     // fontSize: 12,
     // fontWeightMedium:""
-    fontFamily: "Poppins",
+    fontFamily: "Exo 2",
   },
 });

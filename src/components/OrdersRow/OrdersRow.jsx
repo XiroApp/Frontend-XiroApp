@@ -253,7 +253,7 @@ export default function OrdersRow({
                 <div className="flex justify-center  w-full pt-4">
                   <button
                     onClick={(e) => setEditStatus(true)}
-                    className="flex items-center border rounded-lg py-1 px-2 hover:bg-[#4675C0]"
+                    className="flex items-center border rounded-lg py-1 px-2 hover:bg-[#458552]"
                   >
                     <span>Editar estado:</span>
                     <Tooltip placement="bottom" title="Editar Estado">
@@ -283,7 +283,7 @@ export default function OrdersRow({
                         onChange={(e) => handleInput(e)}
                         name="orderStatus"
                         id="orderStatus"
-                        className="border rounded-l p-2"
+                        className="border rounded-l p-2 bg-white"
                       >
                         {editor === "deliveryUser" ? (
                           <>
@@ -420,7 +420,7 @@ export default function OrdersRow({
           <>
             <button
               onClick={(e) => handleOpenFilesModal(e)}
-              className="border rounded-lg py-2 px-6 hover:bg-[#4675C0]"
+              className="border rounded-lg py-2 px-6 hover:bg-[#458552]"
             >
               Ver Pedido
             </button>
@@ -436,7 +436,7 @@ export default function OrdersRow({
                     return (
                       <div key={index} className="flex flex-col gap-1">
                         <h3>Pedido {index + 1}</h3>
-                        <div className=" bg-[#1e1e1e] p-4 rounded-lg">
+                        <div className=" bg-[#fff] p-4 rounded-lg">
                           <Accordion
                             expanded={expanded === order.orderUid}
                             onChange={handleChange(order.orderUid)}
@@ -537,7 +537,7 @@ export default function OrdersRow({
                                         <a
                                           target="_blank"
                                           download
-                                          href={`https://firebasestorage.googleapis.com/v0/b/limo-dev-app.appspot.com/o/${file}?alt=media&token=226633dd-d691-49e7-93e6-bbd5612bae4f`}
+                                          href={`https://firebasestorage.googleapis.com/v0/b/xiro-app-2ec87.firebasestorage.app/o/${file}?alt=media&token=e7b0f280-413a-4546-aa2b-da0cd3523289`}
                                         >
                                           <VisibilityIcon
                                             className="hover:bg-gray-500 rounded-lg"
@@ -630,17 +630,17 @@ export default function OrdersRow({
                 <section className="flex flex-col justify-start items-start ">
                   <ul className="flex flex-col items-start justify-start">
                     <li>
-                      <span className="text-[12px] text-white">
+                      <span className="text-[12px] text-black">
                         {`Subtotal: $${order.subtotal_price}`}
                       </span>
                     </li>
                     <li>
-                      <span className="text-[12px] text-white">
+                      <span className="text-[12px] text-black">
                         {`Envío: $${order.shipment_price}`}
                       </span>
                     </li>
                     {/* <li>
-                      <span className="text-[12px] text-white">
+                      <span className="text-[12px] text-black">
                         {`Cupón: ${order.cart[0].details.coupon}`}
                       </span>
                     </li> */}
@@ -656,7 +656,7 @@ export default function OrdersRow({
               onClick={() => {
                 handleOpenClientModal(value);
               }}
-              className="border rounded-lg py-2 px-6 hover:bg-[#4675C0]"
+              className="border rounded-lg py-2 px-6 hover:bg-[#458552]"
             >
               Ver cliente
             </button>

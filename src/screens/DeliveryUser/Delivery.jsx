@@ -65,7 +65,7 @@ export default function Delivery({ cart, dataBaseUser }) {
               onClick={(e) => setDataRender("orders")}
               sx={
                 dataRender === "orders"
-                  ? { backgroundColor: "#272727", borderRadius: "10px" }
+                  ? { backgroundColor: "#458552", borderRadius: "10px" }
                   : { borderRadius: "10px" }
               }
               className="h-16"
@@ -139,7 +139,7 @@ export default function Delivery({ cart, dataBaseUser }) {
                 onClick={(e) => setDataRender("orders")}
                 sx={
                   dataRender === "orders"
-                    ? { backgroundColor: "#272727", borderRadius: "10px" }
+                    ? { backgroundColor: "#458552", borderRadius: "10px" }
                     : { borderRadius: "10px" }
                 }
                 className="h-16"

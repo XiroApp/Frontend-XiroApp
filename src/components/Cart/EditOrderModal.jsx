@@ -3,12 +3,16 @@ import Navbar from "../../components/Navbar/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import PDFViewer from "../../components/PDFViewer";
 import { LoadingButton } from "@mui/lab";
-import MopedIcon from "@mui/icons-material/Moped";
-import DescriptionIcon from "@mui/icons-material/Description";
-import FileCopySharpIcon from "@mui/icons-material/FileCopySharp";
-import ErrorIcon from "@mui/icons-material/Error";
-import PrintSharpIcon from "@mui/icons-material/PrintSharp";
-import UploadIcon from "@mui/icons-material/Upload";
+
+import MopedIcon from "@mui/icons-material/MopedOutlined";
+import DescriptionIcon from "@mui/icons-material/DescriptionOutlined";
+import FileCopySharpIcon from "@mui/icons-material/FileCopyOutlined";
+import ErrorIcon from "@mui/icons-material/ErrorOutlined";
+import PrintSharpIcon from "@mui/icons-material/PrintOutlined";
+import UploadIcon from "@mui/icons-material/UploadOutlined";
+import StoreIcon from "@mui/icons-material/StoreOutlined";
+
+
 import { styled } from "@mui/material/styles";
 import {
   editOrderFromCart,
@@ -27,7 +31,6 @@ import {
   DialogTitle,
   Modal,
 } from "@mui/material";
-import StoreIcon from "@mui/icons-material/Store";
 import NewOrderSettings from "../../components/NewOrderSettings/NewOrderSettings";
 import SettingButtons from "../../components/NewOrderSettings/SettingButtons";
 import ChoosePlaceModal from "../../components/ChoosePlaceModal/ChoosePlaceModal";
@@ -286,7 +289,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                     <LoadingButton
                       loading={loading}
                       component="label"
-                      variant="outlined"
+                      variant="contained"
                       color="primary"
                       startIcon={
                         <UploadIcon sx={{ height: "0.8em", width: "0.8em" }} />

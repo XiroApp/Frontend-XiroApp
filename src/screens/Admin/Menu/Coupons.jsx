@@ -125,7 +125,7 @@ export default function Coupons({ user }) {
         {/* NEW ADDRESS BUTTON */}
         <Box
           component="span"
-          sx={{ p: 1, border: "1px dashed #4675C0", borderRadius: "25px" }}
+          sx={{ p: 1, border: "1px dashed #458552", borderRadius: "25px" }}
           className="h-40 w-44 md:w-56 md:h-56 lg:h-56 lg:w-56  flex items-center justify-center"
         >
           <Button

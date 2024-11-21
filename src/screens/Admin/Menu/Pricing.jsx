@@ -41,12 +41,12 @@ export default function Pricing() {
   }
 
   return (
-    <div className="flex flex-col bg-[#1e1e1e] rounded-2xl lg:h-full p-6 gap-4">
+    <div className="flex flex-col  rounded-2xl lg:h-full p-6 gap-4">
       {/*A4 CAMBIAR PRECIOS */}
       <span className="text-xl opacity-80 border-b">Precios A4</span>
       <div className="flex flex-col">
         <form id="pricingForm" action="" className="flex flex-row gap-4">
-          <section className="bg-[#313131] p-2 rounded-lg flex flex-col gap-1">
+          <section className="bg-[#458552] p-2 rounded-lg flex flex-col gap-1">
             <h2>B y N 📃</h2>
 
             <div className="flex flex-col ">
@@ -76,7 +76,7 @@ export default function Pricing() {
               </div>
             </div>
           </section>
-          <section className="bg-[#313131] p-2 rounded-lg flex flex-col gap-1">
+          <section className="bg-[#458552] p-2 rounded-lg flex flex-col gap-1">
             <h2>COLOR 🎨</h2>
 
             <div className="flex flex-col ">
@@ -112,7 +112,7 @@ export default function Pricing() {
       <span className="text-xl opacity-80 border-b">Precios OFICIO</span>
       <div className="flex flex-col">
         <form id="pricingForm" action="" className="flex flex-row gap-4">
-          <section className="bg-[#313131] p-2 rounded-lg flex flex-col gap-1">
+          <section className="bg-[#458552] p-2 rounded-lg flex flex-col gap-1">
             <h2>B y N 📃</h2>
             <div className="flex flex-col ">
               <span className="text-[12px] opacity-80">Simple faz</span>
@@ -141,7 +141,7 @@ export default function Pricing() {
               </div>
             </div>
           </section>
-          <section className="bg-[#313131] p-2 rounded-lg flex flex-col gap-1">
+          <section className="bg-[#458552] p-2 rounded-lg flex flex-col gap-1">
             <h2>COLOR 🎨</h2>
             <div className="flex flex-col ">
               <span className="text-[12px] opacity-80">Simple faz</span>
@@ -178,7 +178,7 @@ export default function Pricing() {
         <section className="flex flex-col gap-4">
           <span className="text-xl opacity-80 border-b">Precio Anillado</span>
           <form id="pricingForm" action="" className="flex flex-row gap-4">
-            <section className="bg-[#313131] p-2 rounded-lg flex flex-col gap-1">
+            <section className="bg-[#458552] p-2 rounded-lg flex flex-col gap-1">
               <h2>ANILLADO 📘</h2>
 
               <div className="flex flex-col ">
@@ -214,7 +214,7 @@ export default function Pricing() {
         <section className="flex flex-col gap-4">
           <span className="text-xl opacity-80 border-b">Precio Entrega</span>
           <form id="pricingForm" action="" className="flex flex-row gap-4">
-            <section className="bg-[#313131] p-2 rounded-lg flex flex-col gap-1">
+            <section className="bg-[#458552] p-2 rounded-lg flex flex-col gap-1">
               <h2>Delivery 🛵</h2>
 
               <div className="flex flex-col ">

@@ -1,5 +1,4 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap'); */
-@import url('https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,14 +6,14 @@
 
 @layer base {
   body {
-    font-family: "Bitter", serif;
+    font-family: "Exo 2", serif;
   }
 }
 
 :root {
-  font-family: "Bitter", serif;
+  font-family: "Exo 2", serif;
   line-height: 1.5;
-  font-weight: 600;
+  font-weight: 500;
   font-optical-sizing: auto;
   font-style: normal;
   color-scheme: light dark;
