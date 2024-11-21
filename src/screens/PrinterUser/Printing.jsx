@@ -52,7 +52,7 @@ export default function Printing({ cart, dataBaseUser }) {
         {/* DATOS SESION */}
         <div className="flex flex-col justify-center items-center gap-3">
         <Avatar
-            alt="Limo Avatar"
+            alt="Xiro Avatar"
             sx={{ height: "4rem", width: "4rem" }}
             src={photoURL}
           />

@@ -20,8 +20,8 @@ export default function ResetPassword() {
     newPassword: "",
     oobCode: params.get("oobCode"),
     mail: params.get("email"),
-    subject: "LIMO: Contraseña restablecida",
-    text: "Tu contraseña de Limo se reestableció correctamente, puedes dirigirte a <a href='https://limoapp.com.ar' target:'_blank'>limoapp.com.ar</a> para continuar navegando.",
+    subject: "Xiro: Contraseña restablecida",
+    text: "Tu contraseña de Xiro se reestableció correctamente, puedes dirigirte a <a href='https://xiroapp.com.ar' target:'_blank'>xiroapp.com.ar</a> para continuar navegando.",
   });
   const [error, setError] = useState(false);
 
@@ -55,14 +55,14 @@ export default function ResetPassword() {
           .catch((err) => {
             console.log(err);
             return alert(
-              "Código de reestablecimiento expirado, debes solicitar un nuevo email de reestablecimiento de contraseña para tu usuario LIMO. "
+              "Código de reestablecimiento expirado, debes solicitar un nuevo email de reestablecimiento de contraseña para tu usuario XIRO. "
             );
           });
 
         // navigate("/login");
       } else {
         alert(
-          "A ourrido un error inesperado, debes solicitar un nuevo email de reestablecimiento de contraseña para tu usuario LIMO."
+          "A ourrido un error inesperado, debes solicitar un nuevo email de reestablecimiento de contraseña para tu usuario XIRO."
         );
       }
     } else {

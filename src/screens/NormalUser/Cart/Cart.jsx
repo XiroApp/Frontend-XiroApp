@@ -40,9 +40,6 @@ import { ApiConstants } from "../../../Common/constants";
 /* ------------------------ */
 const steps = ["Detalles", "Resumen", "Pago"];
 const PUBLIC_KEY = ApiConstants.MERCADOPAGO_PUBLIC_KEY;
-// "APP_USR-8ae426e8-c6c1-4422-8ccc-44c269e4a73c"; /* PRUEBA usuario test limo vendedor / JUANCHI */
-//  "TEST-89914640-e146-4696-b70c-074e73f1c62a"; // MRG COMPRADOR
-// "TEST-153e2499-54b3-4af0-81f7-2bd5ebe3df6e"; /* PRUEBA usuario test limo vendedor / JX */
 
 export default function Cart() {
   const dispatch = useDispatch();
@@ -489,7 +486,8 @@ export default function Cart() {
                           </section>
                           <section className="flex flex-col">
                             <span className="opacitytext-[16px] font-[400]">
-                              Preferencia horaria (El horario concreto se coordinará por WhatsApp)
+                              Preferencia horaria (El horario concreto se
+                              coordinará por WhatsApp)
                             </span>
                             <section>
                               <span className="opacity-70 text-[14px] font-[400]">

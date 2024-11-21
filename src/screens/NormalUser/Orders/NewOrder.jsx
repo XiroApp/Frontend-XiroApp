@@ -397,45 +397,45 @@ export default function NewOrder() {
                     </section>
                     <section className="flex flex-col px-5 py-10 gap-10">
                       <div className="flex justify-between">
-                        <span className="font-[300]">Copias</span>
-                        <span className="opacity-70 font-[300]">
+                        <span className="font-[500]">Copias</span>
+                        <span className="opacity-70 font-[500]">
                           {" "}
                           {resume.numberOfCopies}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="font-[300]">Color</span>
-                        <span className="opacity-70 font-[300]">
+                        <span className="font-[500]">Color</span>
+                        <span className="opacity-70 font-[500]">
                           {resume.color}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="font-[300]">Tamaño</span>
-                        <span className="opacity-70 font-[300]">
+                        <span className="font-[500]">Tamaño</span>
+                        <span className="opacity-70 font-[500]">
                           {resume.size}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="font-[300]">Forma de impresión</span>
-                        <span className="opacity-70 font-[300]">
+                        <span className="font-[500]">Forma de impresión</span>
+                        <span className="opacity-70 font-[500]">
                           {resume.printWay}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="font-[300]">Copias por carilla</span>
-                        <span className="opacity-70 font-[300]">
+                        <span className="font-[500]">Copias por carilla</span>
+                        <span className="opacity-70 font-[500]">
                           {resume.copiesPerPage}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="font-[300]">Orientación</span>
-                        <span className="opacity-70 font-[300]">
+                        <span className="font-[500]">Orientación</span>
+                        <span className="opacity-70 font-[500]">
                           {resume.orientacion}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="font-[300]">Anillado</span>
-                        <span className="opacity-70 font-[300]">
+                        <span className="font-[500]">Anillado</span>
+                        <span className="opacity-70 font-[500]">
                           {resume.finishing}
                         </span>
                       </div>

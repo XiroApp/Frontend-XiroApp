@@ -27,7 +27,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 500,
-  bgcolor: "#1e1e1e",
+  bgcolor: "#fff",
   borderRadius: "8px",
   boxShadow: 14,
 };
@@ -174,11 +174,11 @@ export default function OrderCard({
           <section className="flex flex-col px-5 py-10 gap-10">
             {order?.files?.map((file, index) => (
               <div key={index} className="flex justify-between">
-                <span className="text-[12px] font-[300]">{file.slice(11)}</span>
+                <span className="text-[12px] font-[500]">{file.slice(11)}</span>
                 <Tooltip placement="top" title="Ver en pantalla completa">
                   <a
                     target="_blank"
-                    href={`https://firebasestorage.googleapis.com/v0/b/limo-dev-app.appspot.com/o/${file}?alt=media&token=226633dd-d691-49e7-93e6-bbd5612bae4f`}
+                    href={`https://firebasestorage.googleapis.com/v0/b/xiro-app-2ec87.firebasestorage.app/o/${file}?alt=media&token=e7b0f280-413a-4546-aa2b-da0cd3523289`}
                     >
                     <VisibilityIcon
                       className="hover:bg-gray-500 rounded-lg"
