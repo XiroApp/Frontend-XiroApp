@@ -41,8 +41,8 @@ export default function UsersRow({ column, value, uidUser }) {
           <span className="font-bold">{value}</span>
         )}
         {column.id === "roles" &&
-          value.map((rol) => (
-            <span className="font-bold">
+          value.map((rol, index) => (
+            <span key={index} className="font-bold">
               {rol === "printing" ? "imprenta" : rol}
             </span>
           ))}
@@ -52,7 +52,7 @@ export default function UsersRow({ column, value, uidUser }) {
               <Tooltip placement="bottom" title="Editar Usuario">
                 <EditIcon
                   sx={{ height: "1.2em", width: "1.2em" }}
-                  className="hover:text-[#4675C0] hover:bg-[#1e1e1e] rounded-lg p-1 "
+                  className="hover:text-green-700 hover:bg-[#1e1e1e] rounded-lg p-1 "
                   onClick={(e) => setEditStatus(true)}
                 />
               </Tooltip>

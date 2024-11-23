@@ -96,6 +96,7 @@ export default function Cart() {
     setShipment((pricing.delivery_km * distance?.value) / 1000);
     setDelivery_distance(distance);
   }, [place]);
+console.log(shipment);
 
   useEffect(() => {
     coupon?.type[0] === "%"
@@ -307,7 +308,7 @@ export default function Cart() {
                             ))}
                           </section>
                           <Link to="/imprimir">
-                            <span className="text-[#789360] text-[14px] hover:text-blue-500 underline">
+                            <span className="text-[#789360] text-[14px] hover:text-green-700 underline">
                               +Agregar más productos
                             </span>
                           </Link>
@@ -336,7 +337,7 @@ export default function Cart() {
                                       "No tienes direcciones agregadas"}{" "}
                                     {place?.address?.number}
                                   </span>
-                                  <span className="opacity-70 text-[14px] font-[400] ">
+                                  <span className=" text-[14px] font-[400] ">
                                     {place?.address?.city}
                                   </span>
                                 </div>
@@ -344,7 +345,7 @@ export default function Cart() {
                                   <EditIcon
                                     className={
                                       place?.address
-                                        ? "text-blue-500"
+                                        ? "text-green-700"
                                         : "text-red-500"
                                     }
                                   />
@@ -451,7 +452,7 @@ export default function Cart() {
                               {orderToSend.orders.map((order, index) => (
                                 <span
                                   key={index}
-                                  className="opacity-70 text-[14px] font-[300]"
+                                  className=" text-[14px] font-[400]"
                                 >
                                   Impresión{" "}
                                   {order.color === "BN"
@@ -471,7 +472,7 @@ export default function Cart() {
                               Forma de entrega
                             </span>
 
-                            <span className="opacity-70 text-[14px] font-[400]">
+                            <span className=" text-[14px] font-[400]">
                               {orderToSend?.place?.type}
                             </span>
                           </section>
@@ -480,7 +481,7 @@ export default function Cart() {
                               Dirección
                             </span>
 
-                            <span className="opacity-70 text-[14px] font-[400]">
+                            <span className=" text-[14px] font-[400]">
                               {`${orderToSend?.place?.address?.name} N°${orderToSend?.place?.address?.number}, ${orderToSend?.place?.address?.locality}, ${orderToSend?.place?.address?.city}`}
                             </span>
                           </section>
@@ -490,7 +491,7 @@ export default function Cart() {
                               coordinará por WhatsApp)
                             </span>
                             <section>
-                              <span className="opacity-70 text-[14px] font-[400]">
+                              <span className=" text-[14px] font-[400]">
                                 De {orderToSend.availability}
                               </span>
                             </section>
@@ -503,7 +504,7 @@ export default function Cart() {
                               <button
                                 onClick={(e) => setEditComment(!editComment)}
                               >
-                                <EditIcon className="hover:text-blue-500" />
+                                <EditIcon className="hover:text-green-700" />
                               </button>
                             </div>
                             {editComment ? (
@@ -516,7 +517,7 @@ export default function Cart() {
                                 value={orderToSend.description}
                               />
                             ) : (
-                              <span className="opacity-70 text-[14px] font-[400]">
+                              <span className=" text-[14px] font-[400]">
                                 {orderToSend.description
                                   ? orderToSend.description
                                   : "No hay comentarios agregados"}
@@ -540,7 +541,7 @@ export default function Cart() {
                             />
                             <Button
                               variant="outlined"
-                              color="secondary"
+                              color="primary"
                               className="w-1/2 n-w-full flex items-center gap-1"
                               onClick={(e) => handleCupon(e)}
                             >
@@ -576,10 +577,10 @@ export default function Cart() {
 
                               <section className="flex justify-between">
                                 <span className=" text-[16px] font-[400]">
-                                  Envío
+                                  Entrega: {orderToSend.place.type}
                                 </span>
                                 <span>
-                                  <span className="text-[13px] opacity-70">
+                                  <span className="text-[13px] ">
                                     {`(${delivery_distance.text}) `}
                                   </span>
                                   ${shipment.toFixed(2)}{" "}
@@ -609,10 +610,10 @@ export default function Cart() {
 
                               <section className="flex justify-between">
                                 <span className=" text-[16px] font-[400]">
-                                  Envío
+                                    Entrega: {orderToSend.place.type}
                                 </span>
                                 <span>
-                                  <span className="text-[13px] opacity-70">
+                                  <span className="text-[13px] ">
                                     {`(${delivery_distance.text}) `}
                                   </span>
                                   ${shipment.toFixed(2)}{" "}
@@ -742,9 +743,8 @@ export default function Cart() {
                             !(
                               orderToSend?.place?.address &&
                               typeof shipment === "number" &&
-                              shipment > 0 &&
-                              !isNaN(shipment) &&
-                              shipment
+                             
+                              !isNaN(shipment) 
                             )
                           }
                         >

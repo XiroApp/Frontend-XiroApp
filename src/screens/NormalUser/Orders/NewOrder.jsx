@@ -326,7 +326,7 @@ export default function NewOrder() {
                     name="deleteFiles"
                     onClick={(e) => handleResetOrderModal(e)}
                   >
-                    <span className="text-[13px] font-light underline text-black">
+                    <span className="text-[15px] underline text-black">
                       Eliminar mis archivos
                     </span>
                   </button>
@@ -466,7 +466,7 @@ export default function NewOrder() {
                 </Modal>
               </div>
             ) : (
-              <div className="opacity-60 mt-2 flex flex-col justify-center px-6 items-center gap-2 overflow-x-auto overscroll-contain w-full">
+              <div className="text-white mt-2 flex flex-col justify-center px-6 items-center gap-2 overflow-x-auto overscroll-contain w-full">
                 Selecciona los archivos que quieras imprimir.
                 {/* <img src={cuate} alt="" className="bg-[#fff] rounded-lg" /> */}
               </div>

@@ -85,7 +85,6 @@ export default function Orders({ editor }) {
   };
 
   const handleFilter = (e) => {
-
     setFilter(e.target.name);
     e.target.name !== "no_filter"
       ? setAllOrders(
@@ -111,7 +110,6 @@ export default function Orders({ editor }) {
         <div>
           <label htmlFor="">Filtrar por lugar</label>
           <div className="flex flex-wrap gap-2">
-     
             <button
               name="Mendoza"
               className={
@@ -186,9 +184,9 @@ export default function Orders({ editor }) {
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
-                {columns.map((column) => (
+                {columns.map((column, index) => (
                   <TableCell
-                    key={column.id}
+                    key={index}
                     align={column.align}
                     style={{ minWidth: column.minWidth }}
                   >
@@ -200,19 +198,15 @@ export default function Orders({ editor }) {
             <TableBody>
               {allOrders
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
+                .map((row, index) => {
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.paymentId}
-                    >
-                      {columns.map((column) => {
+                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                      {columns.map((column, index) => {
                         const value = row[column.id];
 
                         return (
                           <OrdersRow
+                            key={index}
                             value={value}
                             column={column}
                             printingUsers={printingUsers}

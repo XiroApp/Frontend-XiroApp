@@ -439,9 +439,9 @@ export default function MyAccount({ cart, dataBaseUser }) {
         {/* ALL DATA */}
         <section className="flex flex-col gap-5 justify-center lg:w-9/12 z-10">
           <div className="flex flex-col gap-5 bg-[#fff] rounded-2xl lg:h-1/3 p-5">
-            <div className="flex  justify-between lg:justify-center items-center">
+            <div className="flex">
               {/* NUEVO PEDIDO */}
-              <div className="flex flex-col w-full lg:w-1/3 gap-6 ">
+              <div className="flex flex-col w-full lg:w-1/3 gap-6">
                 <span className="text-2xl lg:text-3xl w-52">¡Bienvenid@!</span>
                 <Button
                   variant="contained"
@@ -452,11 +452,10 @@ export default function MyAccount({ cart, dataBaseUser }) {
                     borderRadius: "10px",
                     ":hover": { backgroundColor: "#c9d9bb" },
                   }}
-                  
                   color="primary"
                   onClick={(e) => handleNewOrderButton(e)}
                 >
-                  <span className="text-white font-bold">Nuevo pedido</span>
+                  <span className="text-white lg:text-lg font-bold">Nuevo pedido</span>
                   {/* <img
                     src={cuatePedido}
                     alt="limo"
@@ -465,7 +464,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 </Button>
               </div>
               {/* MIS PEDIDOS VISTA PC */}
-              <div className="hidden w-1/3 lg:flex lg:flex-col items-center">
+              {/* <div className="hidden w-1/3 lg:flex lg:flex-col items-center">
                 <div className="px-2 py-5">
                   <span className="text-3xl">Mis pedidos</span>
                 </div>
@@ -487,7 +486,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                     <span className="text-3xl"> {clientOrders?.length}</span>
                   </div>
                 </div>
-              </div>
+              </div> */}
               {/* CUATE */}
               <div className="hidden lg:w-1/3 md:flex justify-end">
                 {/* <img
@@ -498,7 +497,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
               </div>
             </div>
             {/* MIS PEDIDOS VISTA MOBILE */}
-            <div className="lg:hidden">
+            {/* <div className="lg:hidden">
               <List>
                 <ListItemButton onClick={handleOpenCollapse}>
                   <ListItemText primary="Mis pedidos" />
@@ -525,7 +524,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                   </div>
                 </Collapse>
               </List>
-            </div>
+            </div> */}
           </div>
           {dataRender === "personalData" ? (
             <PersonalData user={user} />

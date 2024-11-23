@@ -17,13 +17,13 @@ const columns = [
     id: "displayName",
     label: "Nombre completo",
     minWidth: 100,
-    align: "start",
+    align: "left",
   },
   {
     id: "email",
     label: "Email",
     minWidth: 50,
-    align: "start",
+    align: "left",
   },
   {
     id: "phone",

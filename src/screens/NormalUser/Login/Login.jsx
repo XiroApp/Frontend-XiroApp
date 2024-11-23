@@ -2,7 +2,7 @@ import "./Login.css";
 import { React, useState } from "react";
 import { useAuth } from "../../../context/authContext";
 import logoGoogle from "../../../utils/assets/images/icon-google.png";
-import loginImage from "../../../utils/assets/images/xiro-head-outline-green.png";
+import loginImage from "../../../utils/assets/images/xiro-head.png";
 import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -112,7 +112,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
 
   return (
     <div className="bg-white flex flex-row h-full pb-5">
-      <span className=" text-sm absolute bottom-0 left-0">V 0.9.0</span>
+      <span className=" text-sm absolute bottom-0 left-0">V 1.0.0</span>
       {/* LOADER */}
       {loader ? (
         <Backdrop
@@ -135,7 +135,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
 
       {/* ------------------------------------------------------------------------------------------------------------------------------------------ */}
       <section className="w-screen lg:w-1/2 flex flex-col justify-center items-center lg:gap-4 lg:pr-32">
-        <div className="flex flex-col lg:gap-4 gap-2 ">
+        <div className="flex flex-col lg:gap-4 gap-2">
           <div>
             <section className="flex flex-col items-center justify-center gap-2">
               <img src={loginImage} alt="" className="h-56 object-contain " />

@@ -11,8 +11,20 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [resume, setResume] = useState({ place: null });
+  const [defaultPointAddress, setDefaultPointAddress] = useState({
+    // userUid: "vOxEpLHdLMYurVnpARaHqrqmaD93",
+    name: "Cochabamba",
+    number: "2973",
+    city: "Guaymallén",
+    locality: "Villa Nueva de Guaymallén",
+    zipCode: "5521",
+    floorOrApartment: "-",
+    tag: "Punto de retiro",
+    // addressUid: "d2951518-39cb-41c3-8d5b-e5b23c0cb5ea",
+  });
   const addresses = useSelector((state) => state.addresses);
   const place = useSelector((state) => state.place);
+
   // const user = useSelector((state) => state.dataBaseUser);
 
   function handleChoice(e) {
@@ -26,6 +38,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
       setChoosePlace(false);
     }
   }
+ 
   return (
     <>
       <Modal
@@ -48,8 +61,8 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
             <button
               className={
                 resume?.place?.type === "Envío a domicilio"
-                  ? "flex flex-col gap-5 items-center w-1/2 justify-center p-4  border border-[#000] bg-[#81A165] rounded-lg"
-                  : "flex flex-col gap-5 items-center w-1/2 justify-center p-4  bg-[#81A165]/50 rounded-lg hover:bg-[#81A165]"
+                  ? "flex flex-col gap-5 items-center w-1/2 justify-center p-4  border-2 border-[#000] bg-[#81A165] rounded-lg"
+                  : "flex flex-col gap-5 items-center w-1/2 justify-center p-4  border border-[#000] bg-[#fff]/50 rounded-lg hover:bg-[#81A165]"
               }
               onClick={(e) =>
                 setResume({
@@ -62,11 +75,10 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               <span className="text-[14px]">Envío a domicilio</span>
             </button>
             <button
-              disabled
               className={
                 resume?.place?.type === "Retiro"
-                  ? "cursor-no-drop flex flex-col gap-5 items-center w-1/2 justify-center p-4  border border-[#000] bg-[#81A165]/20 rounded-lg"
-                  : "cursor-no-drop flex flex-col gap-5 items-center w-1/2 justify-center p-4  bg-[#81A165]/20 rounded-lg"
+                  ? "flex flex-col gap-5 items-center w-1/2 justify-center p-4  border-2 border-[#000] bg-[#81A165] rounded-lg"
+                  : "flex flex-col gap-5 items-center w-1/2 justify-center p-4  border border-[#000] bg-[#fff]/50 rounded-lg hover:bg-[#81A165]"
               }
               onClick={(e) =>
                 setResume({
@@ -75,7 +87,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                 })
               }
             >
-              <span className="text-[14px] text-yellow-500">Próximamente</span>
+              {/* <span className="text-[14px] text-yellow-500">Próximamente</span> */}
               <StoreIcon color="primary" sx={{ height: "2em", width: "2em" }} />
 
               <span className="text-[14px]">Retiro en punto cercano</span>
@@ -84,7 +96,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
           <section className="flex flex-col items-center">
             {resume?.place?.type === "Envío a domicilio" ? (
               <div className="flex flex-col items-center">
-                <span className="font-[300]">Seleccioná tu domicilio</span>
+                <span className="font-[500]">Seleccioná tu domicilio</span>
                 <div className="flex flex-col justify-start p-2 gap-2">
                   {addresses && addresses.length > 0 ? (
                     addresses.map((address, index) => (
@@ -92,8 +104,8 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                         key={index}
                         className={
                           resume.place.address === address
-                            ? " p-2 rounded-md  bg-[#81A165] border border-[#000] hover:bg-[#81A165] "
-                            : " p-2 rounded-md border border-gray-400 hover:bg-[#81A165] bg-[#81A165]/60 "
+                            ? " p-2 rounded-md  bg-[#81A165] border-2 border-[#000] hover:bg-[#81A165] "
+                            : " p-2 rounded-md border border-gray-400 hover:bg-[#81A165] bg-[#fff]/60 "
                         }
                         onClick={(e) =>
                           setResume({
@@ -102,7 +114,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                           })
                         }
                       >
-                        <div className="flex items-center  gap-3 w-full text-white">
+                        <div className="flex items-center  gap-3 w-full text-black">
                           <PlaceIcon
                             color="primary"
                             sx={{ height: "1.3em", width: "1.3em" }}
@@ -122,19 +134,60 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                       </button>
                     ))
                   ) : (
-                    <span className="font-[200] text-sm">
+                    <span className="font-[400] text-sm">
                       {" "}
                       No tienes direcciones agregadas.
                     </span>
                   )}
                 </div>
                 <button onClick={(e) => setOpen(!open)}>
-                  <Link className="font-[500]">Añadir dirección</Link>
+                  <Link className="font-[600]">Añadir dirección</Link>
                 </button>
               </div>
             ) : resume?.place?.type === "Retiro" ? (
-              <div className="flex flex-col items-center w-full">
-                <span className="font-[300] text-xl">¡Próximamente!</span>
+              <div className="flex flex-col items-center w-full gap-2">   
+              <span className="font-[500]">Seleccioná donde retirar tu pedido</span>         
+                <button
+                  className={
+                    resume.place.address === defaultPointAddress
+                      ? " p-2 rounded-md  bg-[#81A165] border-2 border-[#000] hover:bg-[#81A165] "
+                      : " p-2 rounded-md border border-gray-400 hover:bg-[#81A165] bg-[#fff]/60 "
+                  }
+                  onClick={(e) =>
+                    setResume({
+                      ...resume,
+                      ["place"]: {
+                        ...resume.place,
+                        address: defaultPointAddress,
+                      },
+                    })
+                  }
+                >
+                  <div className="flex items-center  gap-3 w-full text-black">
+                    <PlaceIcon
+                      color="primary"
+                      sx={{ height: "1.3em", width: "1.3em" }}
+                    />
+                    <div className="flex flex-col items-start">
+                      <span className="text-sm">
+                        {defaultPointAddress?.name?.length < 15
+                          ? defaultPointAddress.name
+                          : `${defaultPointAddress.name.slice(0, 15)}...`}{" "}
+                        {defaultPointAddress.number}
+                      </span>
+                      <span className="text-sm opacity-60">
+                        {defaultPointAddress.locality}
+                      </span>
+                      <span className="text-sm opacity-60">
+                        {defaultPointAddress.city}
+                      </span>
+                      <span className="text-sm opacity-60">
+                        {defaultPointAddress.tag}
+                      </span>
+                    </div>
+                  </div>
+                </button>
+
                 {/* <div className="flex flex-col justify-start p-2 w-2/3">
                   <span className="text-sm">CIUDAD</span>
                   <NativeSelect

@@ -45,10 +45,14 @@ export default function Navbar({ loggedUser, title }) {
     >
       <Container maxWidth="screen" sx={{ backgroundColor: "#fff" }}>
         <Toolbar disableGutters>
-          <Link to="/">
-            <img src={logo} alt="" className="h-10  " />
-          </Link>
-          <span className="text-[13px] md:text-sm lg:text-xl ml-12 ">{title}</span>
+          <div className="flex items-center">
+            <Link to="/">
+              <img src={logo} alt="" className="h-10 ml-16 lg:m-0 " />
+            </Link>
+            <span className="text-[18px] lg:text-xl ml-12 ">
+              {title}
+            </span>
+          </div>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}></Box>
 
@@ -88,7 +92,10 @@ export default function Navbar({ loggedUser, title }) {
                   src={loggedUser?.photoURL}
                 />
               </IconButton>
-              <span className="text-[0.8rem] hidden md:block lg:block"> {loggedUser?.displayName}</span>
+              <span className="text-[0.8rem] hidden md:block lg:block">
+                {" "}
+                {loggedUser?.displayName}
+              </span>
             </Box>
           </Tooltip>
 
@@ -128,7 +135,7 @@ export default function Navbar({ loggedUser, title }) {
               {loggedUser?.roles?.includes("printing") && (
                 <MenuItem
                   sx={{ ":hover": { backgroundColor: "#c9d9bb" } }}
-                  key={"Admin"}
+                  key={"Printing"}
                   onClick={() => navigate("/imprenta")}
                 >
                   <Typography textAlign="center">Vista de imprenta</Typography>
@@ -137,7 +144,7 @@ export default function Navbar({ loggedUser, title }) {
               {loggedUser?.roles?.includes("delivery") && (
                 <MenuItem
                   sx={{ ":hover": { backgroundColor: "#c9d9bb" } }}
-                  key={"Admin"}
+                  key={"Delivery"}
                   onClick={() => navigate("/delivery")}
                 >
                   <Typography textAlign="center">Vista de delivery</Typography>

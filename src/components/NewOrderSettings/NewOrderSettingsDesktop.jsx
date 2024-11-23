@@ -91,7 +91,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               className={
                 resume.color === "BN"
                   ? "flex flex-col items-center w-24 justify-center px-1  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-1  bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-1 border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -108,7 +108,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               className={
                 resume.color === "Color"
                   ? "flex flex-col items-center w-24 justify-center px-1  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-1  bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-1  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -138,7 +138,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               className={
                 resume.size === "A4"
                   ? "flex flex-col items-center w-24 justify-center px-1  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-1  bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-1 border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -171,7 +171,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               className={
                 resume.size === "Oficio"
                   ? "flex flex-col items-center w-24 justify-center px-1  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-1  bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-1  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -200,7 +200,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               className={
                 resume.printWay === "Simple faz"
                   ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -217,7 +217,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               className={
                 resume.printWay === "Doble faz"
                   ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -246,7 +246,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               className={
                 resume.copiesPerPage === "Normal"
                   ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -263,7 +263,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               className={
                 resume.copiesPerPage === "2 copias"
                   ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -280,7 +280,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               className={
                 resume.copiesPerPage === "4 copias"
                   ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -328,7 +328,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
                 className={
                   resume.orientacion === "Vertical"
                     ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                    : "flex flex-col items-center w-24 justify-center px-2  py-2  bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                    : "flex flex-col items-center w-24 justify-center px-2  py-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
                 }
                 onClick={(e) =>
                   setResume({
@@ -344,7 +344,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               className={
                 resume.orientacion === "Horizontal"
                   ? "flex flex-col items-center w-24 justify-center px-2  py-2 border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  py-2  bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  py-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -372,7 +372,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               className={
                 resume.finishing === "Sin anillado"
                   ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -389,7 +389,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
                 className={
                   resume.finishing === "Anillado"
                     ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                    : "flex flex-col items-center w-24 justify-center px-2  bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                    : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
                 }
                 onClick={(e) =>
                   setResume({

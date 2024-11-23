@@ -105,7 +105,7 @@ export default function OrderCard({
       <div>
         <button
           onClick={() => setFilesModal(true)}
-          className="flex items-center border border-gray-500 hover:bg-gray-500 rounded-md p-2 text-[12px]"
+          className="flex items-center border border-gray-500 hover:bg-[#789360] rounded-md p-2 text-[12px]"
         >
           <AttachFileIcon sx={{ width: "0.8em", height: "0.8em" }} />
           <span>Ver documentos adjuntos</span>

@@ -4,14 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import PDFViewer from "../../components/PDFViewer";
 import { LoadingButton } from "@mui/lab";
 
-import MopedIcon from "@mui/icons-material/MopedOutlined";
+import { FaMotorcycle as MopedIcon } from "react-icons/fa6";
 import DescriptionIcon from "@mui/icons-material/DescriptionOutlined";
 import FileCopySharpIcon from "@mui/icons-material/FileCopyOutlined";
 import ErrorIcon from "@mui/icons-material/ErrorOutlined";
 import PrintSharpIcon from "@mui/icons-material/PrintOutlined";
 import UploadIcon from "@mui/icons-material/UploadOutlined";
 import StoreIcon from "@mui/icons-material/StoreOutlined";
-
 
 import { styled } from "@mui/material/styles";
 import {
@@ -319,7 +318,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                     name="deleteFiles"
                     onClick={(e) => handleResetOrderModal(e)}
                   >
-                    <span className="text-[13px] font-light underline text-black">
+                    <span className="text-[15px] underline text-black">
                       Eliminar mis archivos
                     </span>
                   </button>
@@ -456,7 +455,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                 </Modal>
               </div>
             ) : (
-              <div className="opacity-60  mt-2 flex flex-col  justify-center px-6 items-center gap-2 overflow-x-auto overscroll-contain w-full ">
+              <div className="text-white  mt-2 flex flex-col  justify-center px-6 items-center gap-2 overflow-x-auto overscroll-contain w-full ">
                 Selecciona los archivos que quieras imprimir.
                 {/* <img src={cuate} alt="" className="bg-[#4675C0] rounded-lg" /> */}
               </div>
