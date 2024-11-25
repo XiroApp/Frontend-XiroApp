@@ -3,14 +3,20 @@ import Navbar from "../../../components/Navbar/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import PDFViewer from "../../../components/PDFViewer";
 import { LoadingButton } from "@mui/lab";
-
-import StoreIcon from "@mui/icons-material/StoreOutlined";
-import MopedIcon from "@mui/icons-material/MopedOutlined";
-import DescriptionIcon from "@mui/icons-material/DescriptionOutlined";
-import FileCopySharpIcon from "@mui/icons-material/FileCopyOutlined";
-import ErrorIcon from "@mui/icons-material/ErrorOutlined";
-import PrintSharpIcon from "@mui/icons-material/PrintOutlined";
+import { FaMotorcycle as MopedIcon } from "react-icons/fa6";
+import { FaStore as StoreIcon } from "react-icons/fa6";
+import { FaRegFilePdf as DescriptionIcon } from "react-icons/fa6";
+import { FaCopy as CopiesIcon } from "react-icons/fa6";
+import { FaBookOpen as FileCopySharpIcon } from "react-icons/fa6";
+import { FaFileInvoiceDollar as PrintSharpIcon } from "react-icons/fa6";
 import UploadIcon from "@mui/icons-material/UploadOutlined";
+import ErrorIcon from "@mui/icons-material/ErrorOutlined";
+
+// import  from "@mui/icons-material/StoreOutlined";
+// import MopedIcon from "@mui/icons-material/MopedOutlined";
+// import  from "@mui/icons-material/DescriptionOutlined";
+// import  from "@mui/icons-material/FileCopyOutlined";
+// import  from "@mui/icons-material/PrintOutlined";
 
 
 import { styled } from "@mui/material/styles";
@@ -160,7 +166,7 @@ export default function NewOrder() {
             )
             .catch((error) => console.log(error))
             .finally(() => {
-              // setLoading(false);
+              setLoading(false);
               // setLoadingCard([]);
             });
         } else {
@@ -242,7 +248,7 @@ export default function NewOrder() {
                     className="flex flex-col gap-1 items-center justify-center px-2 text-white rounded-md bg-[#789360] hover:bg-[#61774d]"
                   >
                     <div className="flex justify-center items-center gap-1">
-                      <MopedIcon sx={{ height: "1.3em", width: "1.2em" }} />
+                      <MopedIcon style={{ height: "1.5em", width: "1.5em" }} />
                     </div>
                     <span className="text-[14px]">Envío</span>
                   </button>
@@ -252,21 +258,21 @@ export default function NewOrder() {
                     className="flex flex-col gap-1 items-center justify-center px-2 rounded-md text-white hover:bg-[#61774d] bg-[#789360]"
                   >
                     <div className="flex justify-center items-center gap-1">
-                      <StoreIcon sx={{ height: "1.3em", width: "1.2em" }} />
+                      <StoreIcon style={{ height: "1.5em", width: "1.5em" }} />
                     </div>
                     <span className="text-[14px]">Retiro</span>
                   </button>
                 )}
                 <section className="flex flex-col gap-1 items-center justify-center px-2 ">
                   <div className="flex justify-center items-center gap-1">
-                    <DescriptionIcon sx={{ height: "1.3em", width: "1.2em" }} />
+                    <DescriptionIcon style={{ height: "1.5em", width: "1.5em" }} />
                     <span>{newFiles?.length}</span>
                   </div>
                   <span className="text-[14px]">Archivos</span>
                 </section>
                 <section className="flex flex-col gap-1 items-center justify-center px-2 ">
                   <div className="flex justify-center items-center gap-1">
-                    <DescriptionIcon sx={{ height: "1.3em", width: "1.2em" }} />
+                    <CopiesIcon style={{ height: "1.5em", width: "1.5em" }} />
                     <span>{resume.numberOfCopies}</span>
                   </div>
                   <span className="text-[14px]">Copias</span>
@@ -274,7 +280,7 @@ export default function NewOrder() {
                 <section className="flex flex-col gap-1 items-center justify-center px-2 ">
                   <div className="flex justify-center items-center gap-1">
                     <FileCopySharpIcon
-                      sx={{ height: "1.3em", width: "1.2em" }}
+                      style={{ height: "1.5em", width: "1.5em" }}
                     />
                     <span>{resume.totalPages}</span>
                   </div>
@@ -282,7 +288,7 @@ export default function NewOrder() {
                 </section>
                 <section className="flex flex-col gap-1 items-center justify-center px-2 ">
                   <div className="flex justify-center items-center gap-1">
-                    <PrintSharpIcon sx={{ height: "1.3em", width: "1.2em" }} />
+                    <PrintSharpIcon style={{ height: "1.5em", width: "1.5em" }} />
                     <span>${pricing.total}</span>
                   </div>
                   <span className="text-[14px]">Precio</span>

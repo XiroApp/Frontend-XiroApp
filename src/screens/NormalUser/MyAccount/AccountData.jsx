@@ -80,22 +80,13 @@ export default function AccountData({ user }) {
 
   return (
     <div className="flex flex-col bg-[#fff] rounded-2xl lg:h-2/3 p-6 gap-4">
-      <span className="text-3xl opacity-80">Datos de la cuenta</span>
+      <span className="text-3xl opacity-80">Copa Xiro</span>
 
       <div className="flex gap-8">
-        <div className="flex flex-col">
-          <span className="text-[12px] opacity-80">MAIL ACTUAL</span>
-          <span>{user.email}</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="text-[12px] opacity-80">FECHA DE CREACIÓN</span>
-          <span>
-            {user.createdAt.split("T")[0].split("-").reverse().join("-")}
-          </span>
-        </div>
+          <p>Seguí nuestro Instagram y estate atento al campeonato mensual de XIRO.</p>
       </div>
       {/* CAMBIAR CONTRASEÑA */}
-      {user.providerData[0].providerId === "password" ? (
+      {/* {user.providerData[0].providerId === "password" ? (
         <>
           <span className="text-2xl opacity-80">Cambiar contraseña</span>
           <form id="passwordForm" action="" className="flex flex-col gap-4">
@@ -252,7 +243,7 @@ export default function AccountData({ user }) {
         </>
       ) : (
         false
-      )}
+      )} */}
 
       {/*  */}
     </div>

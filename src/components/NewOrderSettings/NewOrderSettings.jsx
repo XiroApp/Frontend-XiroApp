@@ -46,9 +46,9 @@ export default function NewOrderSettings({
       {currentSetting === "numberOfCopies" ? (
         <section className="flex  flex-col gap-3 items-start justify-start">
           <span className="text-sm">Cantidad de copias</span>
-          <div className="flex gap-2">
+          <div className="flex gap-2 text-black">
             <button
-              className="h-8 w-8 bg-[#61774d] rounded-lg"
+              className="h-8 w-8 bg-[#fff] rounded-lg"
               onClick={(e) =>
                 setResume({
                   ...resume,
@@ -59,11 +59,11 @@ export default function NewOrderSettings({
             >
               <span className="text-2xl ">{"<"}</span>
             </button>
-            <div className="h-8 w-12 bg-[#61774d] rounded-md flex items-center justify-center">
+            <div className="h-8 w-12 bg-[#fff] rounded-md flex items-center justify-center">
               <span>{resume.numberOfCopies}</span>
             </div>
             <button
-              className="h-8 w-8 bg-[#61774d] rounded-lg"
+              className="h-8 w-8 bg-[#fff] rounded-lg"
               onClick={(e) => toast100handle(e)}
             >
               <span className="text-2xl ">{">"}</span>
