@@ -87,7 +87,7 @@ export default function Navbar({ loggedUser, title }) {
                 }}
               >
                 <Avatar
-                  alt="Ciro profile"
+                  alt="XIRO profile"
                   sx={{ height: "2rem", width: "2rem" }}
                   src={loggedUser?.photoURL}
                 />

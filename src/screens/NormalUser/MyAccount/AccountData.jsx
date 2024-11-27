@@ -83,7 +83,24 @@ export default function AccountData({ user }) {
       <span className="text-3xl opacity-80">Copa Xiro</span>
 
       <div className="flex gap-8">
-          <p>Seguí nuestro Instagram y estate atento al campeonato mensual de XIRO.</p>
+        <p>
+          XIRO CUP es una iniciativa para premiar la confianza y el apoyo de
+          nuestra comunidad. En el margen superior podrán visualizar en la
+          sección "pedidos" la cantidad totales de pedidos que uno ha realizado.
+        </p>
+        <p>
+          Para participar por premios y beneficios deberás seguir nuestro
+          instagram    <a 
+          target="_blank"
+          href="https://www.instagram.com/xiro_app/profilecard/?igsh=aHR6aXdoNDNvbWps">@xiro_app</a>
+          y estar atento al seguimiento de XIRO CUP. Los
+          requisitos para participar son seguir nuestro instagram y estar
+          logueado en la web. El último domingo de cada mes, se publicará en las
+          historias destacadas del instagram de XIRO, la tabla de posiciones con
+          los usuarios que más pedidos totales hayan realizado hasta el momento,
+          y los mismos recibirán diferentes premios y regalos que estaremos
+          entregando en colaboración con distintas marcas.
+        </p>
       </div>
       {/* CAMBIAR CONTRASEÑA */}
       {/* {user.providerData[0].providerId === "password" ? (
