@@ -113,7 +113,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
 
   return (
     <div className="bg-white flex flex-row h-full pb-5">
-      <span className=" text-sm absolute bottom-0 left-0">V 2.0.0</span>
+      <span className=" text-sm absolute bottom-0 left-0">V 2.0.2</span>
       {/* LOADER */}
       {loader ? (
         <Backdrop
