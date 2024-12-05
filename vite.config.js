@@ -16,19 +16,19 @@ export default defineConfig({
       //   enabled: true,
       // },
       manifest: {
-        name: "CIRO",
-        short_name: "CIRO",
+        name: "XIRO",
+        short_name: "XIRO",
         description: "Fotocopias a domicilio",
         theme_color: "#fff",
         background_color: "#fff",
         icons: [
           {
-            src: "logo-new.png",
+            src: "xiro-head.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "logo-new.png",
+            src: "xiro-head.png",
             sizes: "512x512",
             type: "image/png",
           },

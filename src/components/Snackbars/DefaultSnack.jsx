@@ -12,13 +12,16 @@ export default function DefaultSnack() {
       <div className="flex gap-2 items-center w-full justify-between bg-green-200/50  border-2 border-green-200 px-4 py-4 rounded-lg">
         <div>
           <p className="text-[13px]">
-            Se aplicará la misma personalización a todos los archivos subidos
-            juntos en esta pantalla. Si quieres puedes agregar al carrito el
-            primero y volver a subir y personalizar otro.
+            Días de entrega delivery: martes y viernes de 9 a 13 (turno mañana)
+            y de 16 a 20hs (turno tarde).
           </p>
           <p className="text-[13px]">
-            Las entregas se coordinan por WhatsApp en los días y horarios
-            previstos.
+            Días de retiro en punto cercano: lunes a viernes de 9 a 13:30 y de
+            16 a 20hs.
+          </p>
+          <p className="text-[13px]">
+            Las entregas y retiros se coordinarán por WhatsApp en los días y
+            horarios previstos..
           </p>
         </div>
         <button
