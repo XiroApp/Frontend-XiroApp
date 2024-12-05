@@ -9,4 +9,4 @@ Currently, two official plugins are available:
 
 # Cambiar redux formated data
 # FrontEnd
-# Ciro-Frontend
+# XIRO-Frontend

@@ -32,7 +32,7 @@ export function limoLogin(user, rememberMe) {
         localStorage.removeItem("loggedUser");
       }
 
-      return console.log("Bienvenido a CIRO!");
+      return console.log("Bienvenido a XIRO!");
     } catch (error) {
       return console.error(error);
     }

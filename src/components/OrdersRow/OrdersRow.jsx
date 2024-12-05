@@ -677,7 +677,7 @@ export default function OrdersRow({
                       <span>Teléfono: {clientInfo?.phone}</span>
                       <a
                         className="underline hover:text-green-500 flex items-center p-1 border rounded-md "
-                        href={`https://wa.me/${clientInfo.areaCode}${clientInfo?.phone}?text=Hola, deseo comunicarme con el soporte de CIRO.`}
+                        href={`https://wa.me/${clientInfo.areaCode}${clientInfo?.phone}?text=Hola, deseo comunicarme con el soporte de XIRO.`}
                       >
                         <WhatsAppIcon />
                       </a>

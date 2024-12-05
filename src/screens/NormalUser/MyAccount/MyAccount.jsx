@@ -9,12 +9,16 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import XIcon from "@mui/icons-material/X";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import PersonIcon from "@mui/icons-material/Person";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
+// import PersonIcon from "@mui/icons-material/Person";
+import { FaClipboardUser as PersonIcon} from "react-icons/fa6";
+
+// import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { FaMapLocationDot as LocationOnIcon } from "react-icons/fa6";
+
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import ContactMailIcon from "@mui/icons-material/ContactMail";
+import {FaMedal} from "react-icons/fa6";
 import { Avatar, Box, Button, Collapse, Drawer, Tooltip } from "@mui/material";
 import cuate from "../../../utils/assets/images/cuate.svg";
 import PersonalData from "./PersonalData";
@@ -110,7 +114,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
               className="h-20 m-5"
             >
               <ListItemIcon>
-                <PersonIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
+                <PersonIcon style={{ width: "2.5rem", height: "2.5rem" }} />
               </ListItemIcon>
               <ListItemText primary="Datos personales" />
             </ListItemButton>
@@ -131,9 +135,9 @@ export default function MyAccount({ cart, dataBaseUser }) {
               className="h-16 "
             >
               <ListItemIcon>
-                <ContactMailIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
+                <FaMedal style={{ width: "2.5rem", height: "2.5rem" }} />
               </ListItemIcon>
-              <ListItemText primary="Datos de la cuenta" />
+              <ListItemText primary="Historial" />
             </ListItemButton>
             <ListItemButton
               onClick={(e) => setDataRender("addressData")}
@@ -152,11 +156,11 @@ export default function MyAccount({ cart, dataBaseUser }) {
               className="h-16 "
             >
               <ListItemIcon>
-                <LocationOnIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
+                <LocationOnIcon style={{ width: "2.5rem", height: "2.5rem" }} />
               </ListItemIcon>
               <ListItemText style={{}} primary="Direcciones de envío" />
             </ListItemButton>
-            CONFIGURACIONES
+            {/* CONFIGURACIONES
             <ListItemButton
               onClick={(e) => setDataRender("Notifications")}
               sx={
@@ -177,7 +181,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 <NotificationsIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
               </ListItemIcon>
               <ListItemText primary="Notificaciones" />
-            </ListItemButton>
+            </ListItemButton> */}
           </List>
         </div>
         <button
@@ -186,10 +190,10 @@ export default function MyAccount({ cart, dataBaseUser }) {
         >
           <div className="flex gap-1">
             <span className="text-sm md:text-[12px] font-[400]">
-              ¿Tenés dudas?
+           Preguntas Frecuentes
             </span>
             <span className="text-sm md:text-[14px] font-[600]">
-              Hace click acá
+              
             </span>
           </div>
         </button>
@@ -309,7 +313,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 className="h-16 "
               >
                 <ListItemIcon>
-                  <PersonIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
+                  <PersonIcon style={{ width: "2.5rem", height: "2.5rem" }} />
                 </ListItemIcon>
                 <ListItemText primary="Datos personales" />
               </ListItemButton>
@@ -330,9 +334,9 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 className="h-16 "
               >
                 <ListItemIcon>
-                  <ContactMailIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
+                  <FaMedal style={{ width: "2.5rem", height: "2.5rem" }} />
                 </ListItemIcon>
-                <ListItemText primary="Datos de la cuenta" />
+                <ListItemText primary="Historial" />
               </ListItemButton>
               <ListItemButton
                 onClick={(e) => setDataRender("addressData")}
@@ -351,11 +355,11 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 className="h-16 "
               >
                 <ListItemIcon>
-                  <LocationOnIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
+                  <LocationOnIcon style={{ width: "2.5rem", height: "2.5rem" }} />
                 </ListItemIcon>
                 <ListItemText style={{}} primary="Direcciones de envío" />
               </ListItemButton>
-              CONFIGURACIONES
+              {/* CONFIGURACIONES
               <ListItemButton
                 onClick={(e) => setDataRender("Notifications")}
                 sx={
@@ -378,7 +382,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                   />
                 </ListItemIcon>
                 <ListItemText primary="Notificaciones" />
-              </ListItemButton>
+              </ListItemButton> */}
             </List>
           </div>
 
@@ -388,11 +392,11 @@ export default function MyAccount({ cart, dataBaseUser }) {
           >
             <div className="flex gap-1">
               <span className="text-sm md:text-[12px] font-[400]">
-                ¿Tenés dudas?
+                Preguntas frecuentes
               </span>
               <span className="text-sm md:text-[14px] font-[600]">
                 {" "}
-                Hace click acá
+                
               </span>
             </div>
           </button>
@@ -464,7 +468,8 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 </Button>
               </div>
               {/* MIS PEDIDOS VISTA PC */}
-              {/* <div className="hidden w-1/3 lg:flex lg:flex-col items-center">
+              {dataRender === 'accountData'&&
+          <div className="hidden w-1/3 lg:flex lg:flex-col items-center">
                 <div className="px-2 py-5">
                   <span className="text-3xl">Mis pedidos</span>
                 </div>
@@ -486,7 +491,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                     <span className="text-3xl"> {clientOrders?.length}</span>
                   </div>
                 </div>
-              </div> */}
+              </div>}
               {/* CUATE */}
               <div className="hidden lg:w-1/3 md:flex justify-end">
                 {/* <img
@@ -497,7 +502,8 @@ export default function MyAccount({ cart, dataBaseUser }) {
               </div>
             </div>
             {/* MIS PEDIDOS VISTA MOBILE */}
-            {/* <div className="lg:hidden">
+            {dataRender === 'accountData'&&
+             <div className="lg:hidden">
               <List>
                 <ListItemButton onClick={handleOpenCollapse}>
                   <ListItemText primary="Mis pedidos" />
@@ -524,7 +530,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                   </div>
                 </Collapse>
               </List>
-            </div> */}
+            </div> }
           </div>
           {dataRender === "personalData" ? (
             <PersonalData user={user} />

@@ -21,7 +21,7 @@ export default function DefaultSnack() {
           </p>
           <p className="text-[13px]">
             Las entregas y retiros se coordinarán por WhatsApp en los días y
-            horarios previstos..
+            horarios previstos.
           </p>
         </div>
         <button

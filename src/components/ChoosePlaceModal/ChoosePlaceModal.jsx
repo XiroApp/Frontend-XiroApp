@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, Button, Link, Modal, NativeSelect } from "@mui/material";
-import MopedIcon from "@mui/icons-material/MopedOutlined";
-import StoreIcon from "@mui/icons-material/StoreOutlined";
+import { FaMotorcycle as MopedIcon } from "react-icons/fa6";
+import { FaStore as StoreIcon } from "react-icons/fa6";
 import PlaceIcon from "@mui/icons-material/PlaceOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import NewAddressForm from "../../components/Forms/NewAddressForm";
@@ -61,7 +61,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
             <button
               className={
                 resume?.place?.type === "Envío a domicilio"
-                  ? "flex flex-col gap-5 items-center w-1/2 justify-center p-4  border-2 border-[#000] bg-[#81A165] rounded-lg"
+                  ? "flex flex-col gap-5 items-center w-1/2 justify-center p-4  border-2 border-[#000] bg-[#81A165] rounded-lg text-white"
                   : "flex flex-col gap-5 items-center w-1/2 justify-center p-4  border border-[#000] bg-[#fff]/50 rounded-lg hover:bg-[#81A165]"
               }
               onClick={(e) =>
@@ -71,13 +71,13 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                 })
               }
             >
-              <MopedIcon color="primary" sx={{ height: "2em", width: "2em" }} />
+              <MopedIcon color="primary" style={{ color:'#458552',height: "3em", width: "3em" }} />
               <span className="text-[14px]">Envío a domicilio</span>
             </button>
             <button
               className={
                 resume?.place?.type === "Retiro"
-                  ? "flex flex-col gap-5 items-center w-1/2 justify-center p-4  border-2 border-[#000] bg-[#81A165] rounded-lg"
+                  ? "flex flex-col gap-5 items-center w-1/2 justify-center p-4  border-2 border-[#000] bg-[#81A165] rounded-lg text-white"
                   : "flex flex-col gap-5 items-center w-1/2 justify-center p-4  border border-[#000] bg-[#fff]/50 rounded-lg hover:bg-[#81A165]"
               }
               onClick={(e) =>
@@ -88,7 +88,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               }
             >
               {/* <span className="text-[14px] text-yellow-500">Próximamente</span> */}
-              <StoreIcon color="primary" sx={{ height: "2em", width: "2em" }} />
+              <StoreIcon color="primary" style={{ color:'#458552',height: "3em", width: "3em" }} />
 
               <span className="text-[14px]">Retiro en punto cercano</span>
             </button>
@@ -104,7 +104,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                         key={index}
                         className={
                           resume.place.address === address
-                            ? " p-2 rounded-md  bg-[#81A165] border-2 border-[#000] hover:bg-[#81A165] "
+                            ? " p-2 rounded-md  bg-[#81A165] border-2 border-[#000] hover:bg-[#81A165] text-white "
                             : " p-2 rounded-md border border-gray-400 hover:bg-[#81A165] bg-[#fff]/60 "
                         }
                         onClick={(e) =>
@@ -114,7 +114,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                           })
                         }
                       >
-                        <div className="flex items-center  gap-3 w-full text-black">
+                        <div className="flex items-center  gap-3 w-full">
                           <PlaceIcon
                             color="primary"
                             sx={{ height: "1.3em", width: "1.3em" }}
@@ -126,7 +126,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                                 : `${address.name.slice(0, 15)}...`}{" "}
                               {address.number}
                             </span>
-                            <span className="text-sm opacity-60">
+                            <span className="text-sm opacity-80">
                               {address.tag}
                             </span>
                           </div>
@@ -150,7 +150,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                 <button
                   className={
                     resume.place.address === defaultPointAddress
-                      ? " p-2 rounded-md  bg-[#81A165] border-2 border-[#000] hover:bg-[#81A165] "
+                      ? " p-2 rounded-md  bg-[#81A165] border-2 border-[#000] hover:bg-[#81A165] text-white "
                       : " p-2 rounded-md border border-gray-400 hover:bg-[#81A165] bg-[#fff]/60 "
                   }
                   onClick={(e) =>
@@ -163,7 +163,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                     })
                   }
                 >
-                  <div className="flex items-center  gap-3 w-full text-black">
+                  <div className="flex items-center  gap-3 w-full">
                     <PlaceIcon
                       color="primary"
                       sx={{ height: "1.3em", width: "1.3em" }}
@@ -175,13 +175,13 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                           : `${defaultPointAddress.name.slice(0, 15)}...`}{" "}
                         {defaultPointAddress.number}
                       </span>
-                      <span className="text-sm opacity-60">
+                      <span className="text-sm opacity-80">
                         {defaultPointAddress.locality}
                       </span>
-                      <span className="text-sm opacity-60">
+                      <span className="text-sm opacity-80">
                         {defaultPointAddress.city}
                       </span>
-                      <span className="text-sm opacity-60">
+                      <span className="text-sm opacity-80">
                         {defaultPointAddress.tag}
                       </span>
                     </div>
