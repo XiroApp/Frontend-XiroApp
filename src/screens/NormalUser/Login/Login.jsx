@@ -36,7 +36,6 @@ export default function Login({ loggedUser, dataBaseUser }) {
   const [input, setInput] = useState({ rememberMe: true });
   const [error, setError] = useState({ email: false, password: false });
   const [showPassword, setShowPassword] = useState(false);
-  
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
