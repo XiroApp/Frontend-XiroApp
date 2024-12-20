@@ -235,7 +235,7 @@ export default function NewOrder() {
       )}
 
       <Navbar title="Nuevo pedido" loggedUser={user} cart={cart} />
-      <Chatbot />
+      {/* <Chatbot /> */}
       <section className="w-full h-full lg:flex">
         <div className="flex flex-col items-center gap-2 px-4 lg:px-0  h-full lg:w-9/12">
           <div className="lg:flex  w-full md:p-4">

@@ -249,7 +249,7 @@ console.log(shipment);
             ) : (
               false
             )}
-            <Chatbot />
+            {/* <Chatbot /> */}
             <Box sx={{ width: "100%" }}>
               <Stepper activeStep={activeStep}>
                 {steps.map((label, index) => {

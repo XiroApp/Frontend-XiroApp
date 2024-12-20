@@ -164,17 +164,15 @@ export default function Admin({ cart, dataBaseUser }) {
             </ListItemButton> */}
           </List>
         </div>
-
       </section>
     </Box>
   );
-
 
   return (
     <>
       <Navbar loggedUser={dataBaseUser} title={"Modo Administrador"} />
       <div className="flex justify-center gap-5 p-5 ">
-        <Chatbot />
+        {/* <Chatbot /> */}
         {/* HAMBURGUESA - MENU MOBILE*/}
         <span className="lg:hidden fixed top-5 left-5 z-50 ">
           <MenuIcon onClick={toggleDrawer("left", true)} className="" />
@@ -188,7 +186,6 @@ export default function Admin({ cart, dataBaseUser }) {
         </span>
         {/* ---MENU EN VISTA PC------- */}
         <section className="bg-[#fff] rounded-2xl p-8 hidden lg:w-3/12 lg:flex lg:flex-col justify-around gap-5">
-          {/* DATOS SESION */}
           <div className="flex flex-col justify-center items-center gap-3">
             <Avatar
               alt="Xiro Avatar"
@@ -198,7 +195,7 @@ export default function Admin({ cart, dataBaseUser }) {
             <span className="text-2xl">{displayName}</span>
             <span className="text-[1em] opacity-60">{email}</span>
           </div>
-          {/* MENU */}
+
           <div className="">
             <List
               sx={{ opacity: 0.8 }}
@@ -269,25 +266,8 @@ export default function Admin({ cart, dataBaseUser }) {
                 </ListItemIcon>
                 <ListItemText style={{}} primary="Cupones" />
               </ListItemButton>
-              {/* CAMPAÑAS
-              <ListItemButton
-                onClick={(e) => setDataRender("Notifications")}
-                sx={
-                  dataRender === "Notifications"
-                    ? { backgroundColor: "#458552", borderRadius: "10px" }
-                    : { borderRadius: "10px" }
-                }
-                className="h-16"
-              >
-                <ListItemIcon>
-                  <EmailIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
-                </ListItemIcon>
-                <ListItemText primary="Mailing" />
-              </ListItemButton> */}
             </List>
           </div>
-
- 
         </section>
         {/* --------- */}
 

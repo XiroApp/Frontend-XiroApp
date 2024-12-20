@@ -114,7 +114,7 @@ export default function Orders({ editor }) {
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl p-4">
-      <span className="text-2xl lg:text-3xl ">Asignar órdenes</span>
+      <span className="text-2xl lg:text-2xl ">Asignar órdenes</span>
       <div className="flex flex-col lg:flex-row  rounded-lg  lg:w-full p-2 gap-2">
         <div>
           <label htmlFor="">Buscar órdenes</label>

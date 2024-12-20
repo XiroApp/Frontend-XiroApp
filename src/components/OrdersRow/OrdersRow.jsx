@@ -208,7 +208,6 @@ export default function OrdersRow({
                   <li>
                     <span className="text-start"> Estado actual:</span>
                     <span className="text-start">
-                      {" "}
                       {value === "pending"
                         ? "Pendiente ⏳"
                         : value === "process"
@@ -705,7 +704,7 @@ export default function OrdersRow({
         )}
         {column.id === "createdAt" && (
           <>
-            <p>{value}</p>
+            <span className="text-sm">{value}</span>
           </>
         )}
         {column.id === "place" && (

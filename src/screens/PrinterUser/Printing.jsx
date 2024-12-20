@@ -104,7 +104,7 @@ export default function Printing({ cart, dataBaseUser }) {
     <>
       <Navbar loggedUser={dataBaseUser} title={"Modo Imprenta"} />
       <div className="flex justify-center gap-5 p-5 ">
-        <Chatbot />
+        {/* <Chatbot /> */}
         {/* HAMBURGUESA - MENU MOBILE*/}
         <span className="lg:hidden fixed top-5 left-5 z-50 ">
           <MenuIcon onClick={toggleDrawer("left", true)} className="" />
