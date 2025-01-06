@@ -10,7 +10,7 @@ import XIcon from "@mui/icons-material/X";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 // import PersonIcon from "@mui/icons-material/Person";
-import { FaClipboardUser as PersonIcon} from "react-icons/fa6";
+import { FaClipboardUser as PersonIcon } from "react-icons/fa6";
 
 // import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { FaMapLocationDot as LocationOnIcon } from "react-icons/fa6";
@@ -18,14 +18,14 @@ import { FaMapLocationDot as LocationOnIcon } from "react-icons/fa6";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import {FaMedal} from "react-icons/fa6";
+import { FaMedal } from "react-icons/fa6";
 import { Avatar, Box, Button, Collapse, Drawer, Tooltip } from "@mui/material";
 import cuate from "../../../utils/assets/images/cuate.svg";
 import PersonalData from "./PersonalData";
 import AccountData from "./AccountData";
 import AddressData from "./AddressData";
 import Navbar from "../../../components/Navbar/Navbar";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FAQ from "./FAQ";
 import Notifications from "./Notifications";
 import Chatbot from "../../../components/Chatbot/Chatbot";
@@ -153,7 +153,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                       ":hover": { backgroundColor: "#c9d9bb" },
                     }
               }
-              className="h-16 "
+              className="h-16"
             >
               <ListItemIcon>
                 <LocationOnIcon style={{ width: "2.5rem", height: "2.5rem" }} />
@@ -186,18 +186,24 @@ export default function MyAccount({ cart, dataBaseUser }) {
         </div>
         <button
           onClick={(e) => setDataRender("FAQ")}
-          className="hover:bg-[#81A165] self-center flex items-center justify-around rounded-lg p-2 w-fit  border border-gray-300"
+          className="hover:bg-[#81A165] hover:text-white self-center flex items-center justify-around rounded-lg p-2 w-fit  border border-gray-300"
         >
           <div className="flex gap-1">
             <span className="text-sm md:text-[12px] font-[400]">
-           Preguntas Frecuentes
-            </span>
-            <span className="text-sm md:text-[14px] font-[600]">
-              
+              Preguntas Frecuentes
             </span>
           </div>
         </button>
         <div className="flex flex-col gap-1">
+          <h4 className="text-sm font-medium self-center hover:underline">
+            XIRO®
+          </h4>
+          <Link
+            to={"/terminosycondiciones"}
+            className="text-sm font-medium self-center hover:underline"
+          >
+            Términos y condiciones de uso
+          </Link>
           {/* <div className="flex justify-center gap-2">
             <Tooltip title="Librería Móvil">
               <a
@@ -232,7 +238,6 @@ export default function MyAccount({ cart, dataBaseUser }) {
               </a>
             </Tooltip>
           </div> */}
-          {/* <h4 className="text-sm font-medium self-center">XIRO S.A.S®</h4> */}
         </div>
       </section>
     </Box>
@@ -355,7 +360,9 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 className="h-16 "
               >
                 <ListItemIcon>
-                  <LocationOnIcon style={{ width: "2.5rem", height: "2.5rem" }} />
+                  <LocationOnIcon
+                    style={{ width: "2.5rem", height: "2.5rem" }}
+                  />
                 </ListItemIcon>
                 <ListItemText style={{}} primary="Direcciones de envío" />
               </ListItemButton>
@@ -394,10 +401,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
               <span className="text-sm md:text-[12px] font-[400]">
                 Preguntas frecuentes
               </span>
-              <span className="text-sm md:text-[14px] font-[600]">
-                {" "}
-                
-              </span>
+              <span className="text-sm md:text-[14px] font-[600]"> </span>
             </div>
           </button>
           <div className="flex flex-col gap-1">
@@ -435,7 +439,15 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 </a>
               </Tooltip>
             </div> */}
-            <h4 className="text-sm font-medium self-center">XIRO®</h4>
+            <h4 className="text-sm font-medium self-center hover:underline">
+              XIRO®
+            </h4>
+            <Link
+              to={"/terminosycondiciones"}
+              className="text-sm font-medium self-center hover:underline"
+            >
+              Términos y condiciones de uso
+            </Link>
           </div>
         </section>
         {/* --------- */}
@@ -459,7 +471,9 @@ export default function MyAccount({ cart, dataBaseUser }) {
                   color="primary"
                   onClick={(e) => handleNewOrderButton(e)}
                 >
-                  <span className="text-white lg:text-lg font-bold">Nuevo pedido</span>
+                  <span className="text-white lg:text-lg font-bold">
+                    Nuevo pedido
+                  </span>
                   {/* <img
                     src={cuatePedido}
                     alt="limo"
@@ -468,30 +482,31 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 </Button>
               </div>
               {/* MIS PEDIDOS VISTA PC */}
-              {dataRender === 'accountData'&&
-          <div className="hidden w-1/3 lg:flex lg:flex-col items-center">
-                <div className="px-2 py-5">
-                  <span className="text-3xl">Mis pedidos</span>
-                </div>
-                <div className="flex">
-                  <div className="flex flex-col gap-3 items-start px-2 ">
-                    <span className="text-[14px] opacity-70">
-                      PEDIDOS EN CURSO
-                    </span>
-                    <span className="text-3xl ">
-                      {
-                        clientOrders?.filter(
-                          (order) => order.orderStatus !== "received"
-                        ).length
-                      }
-                    </span>
+              {dataRender === "accountData" && (
+                <div className="hidden w-1/3 lg:flex lg:flex-col items-center">
+                  <div className="px-2 py-5">
+                    <span className="text-3xl">Mis pedidos</span>
                   </div>
-                  <div className="flex flex-col gap-3 items-start px-2 border-l border-white">
-                    <span className="text-[14px] opacity-70">PEDIDOS</span>
-                    <span className="text-3xl"> {clientOrders?.length}</span>
+                  <div className="flex">
+                    <div className="flex flex-col gap-3 items-start px-2 ">
+                      <span className="text-[14px] opacity-70">
+                        PEDIDOS EN CURSO
+                      </span>
+                      <span className="text-3xl ">
+                        {
+                          clientOrders?.filter(
+                            (order) => order.orderStatus !== "received"
+                          ).length
+                        }
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-3 items-start px-2 border-l border-white">
+                      <span className="text-[14px] opacity-70">PEDIDOS</span>
+                      <span className="text-3xl"> {clientOrders?.length}</span>
+                    </div>
                   </div>
                 </div>
-              </div>}
+              )}
               {/* CUATE */}
               <div className="hidden lg:w-1/3 md:flex justify-end">
                 {/* <img
@@ -502,35 +517,36 @@ export default function MyAccount({ cart, dataBaseUser }) {
               </div>
             </div>
             {/* MIS PEDIDOS VISTA MOBILE */}
-            {dataRender === 'accountData'&&
-             <div className="lg:hidden">
-              <List>
-                <ListItemButton onClick={handleOpenCollapse}>
-                  <ListItemText primary="Mis pedidos" />
-                  {openCollapse ? <ExpandLess /> : <ExpandMore />}
-                </ListItemButton>
-                <Collapse in={openCollapse} timeout="auto" unmountOnExit>
-                  <div className="flex ml-2">
-                    <div className="flex flex-col gap-1 items-start px-2 ">
-                      <span className="text-sm opacity-70">
-                        PEDIDOS EN CURSO
-                      </span>
-                      <span className="text-xl ">
-                        {
-                          clientOrders?.filter(
-                            (order) => order.orderStatus !== "received"
-                          ).length
-                        }
-                      </span>
+            {dataRender === "accountData" && (
+              <div className="lg:hidden">
+                <List>
+                  <ListItemButton onClick={handleOpenCollapse}>
+                    <ListItemText primary="Mis pedidos" />
+                    {openCollapse ? <ExpandLess /> : <ExpandMore />}
+                  </ListItemButton>
+                  <Collapse in={openCollapse} timeout="auto" unmountOnExit>
+                    <div className="flex ml-2">
+                      <div className="flex flex-col gap-1 items-start px-2 ">
+                        <span className="text-sm opacity-70">
+                          PEDIDOS EN CURSO
+                        </span>
+                        <span className="text-xl ">
+                          {
+                            clientOrders?.filter(
+                              (order) => order.orderStatus !== "received"
+                            ).length
+                          }
+                        </span>
+                      </div>
+                      <div className="flex flex-col gap-1 items-start px-2 border-l border-white">
+                        <span className="text-sm opacity-70">PEDIDOS</span>
+                        <span className="text-xl"> {clientOrders?.length}</span>
+                      </div>
                     </div>
-                    <div className="flex flex-col gap-1 items-start px-2 border-l border-white">
-                      <span className="text-sm opacity-70">PEDIDOS</span>
-                      <span className="text-xl"> {clientOrders?.length}</span>
-                    </div>
-                  </div>
-                </Collapse>
-              </List>
-            </div> }
+                  </Collapse>
+                </List>
+              </div>
+            )}
           </div>
           {dataRender === "personalData" ? (
             <PersonalData user={user} />

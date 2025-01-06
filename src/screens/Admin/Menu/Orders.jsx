@@ -103,7 +103,6 @@ export default function Orders({ editor }) {
   };
 
   const handleFilter = (e) => {
-  
     setFilter(e.target.name);
     e.target.name !== "no_filter"
       ? setAllOrders(
@@ -240,12 +239,7 @@ export default function Orders({ editor }) {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={index}
-                    >
+                    <TableRow hover role="button" tabIndex={-1} key={index} className="p-0 m-0">
                       {columns.map((column, index) => {
                         const value = row[column.id];
 

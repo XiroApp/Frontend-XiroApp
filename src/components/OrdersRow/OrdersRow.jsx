@@ -175,17 +175,19 @@ export default function OrdersRow({
 
   return (
     <>
-      <TableCell key={column.id} align={column.align}>
+      <TableCell key={column.id} align={column.align} className="p-0 m-0">
         {column.id === "orderStatus" && (
           <Accordion
             expanded={statusExpanded === value}
             onChange={handleChangeStatus(value)}
+            className=""
           >
             <AccordionSummary
               aria-controls="panel1d-content"
               id="panel1d-header"
+              className="p-0 m-0 h-fit"
             >
-              <Typography>
+              <span className="">
                 {value === "pending"
                   ? "Pendiente ⏳"
                   : value === "process"
@@ -199,7 +201,7 @@ export default function OrdersRow({
                   : value === "received"
                   ? "Recibido ✅"
                   : "🚨 REVISAR ESTADO 🚨"}
-              </Typography>
+              </span>
             </AccordionSummary>
             <AccordionDetails>
               <section className="flex flex-col justify-start items-start ">
@@ -419,7 +421,7 @@ export default function OrdersRow({
           <>
             <button
               onClick={(e) => handleOpenFilesModal(e)}
-              className="border rounded-lg py-2 px-6 hover:bg-[#458552]"
+              className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
               Ver Pedido
             </button>
@@ -708,7 +710,7 @@ export default function OrdersRow({
           </>
         )}
         {column.id === "place" && (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 min-w-56">
             <Accordion
               expanded={statusExpanded === value.type}
               onChange={handleChangeStatus(value.type)}

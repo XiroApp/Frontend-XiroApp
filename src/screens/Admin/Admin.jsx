@@ -65,7 +65,7 @@ export default function Admin({ cart, dataBaseUser }) {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <section className="bg-[#fff] p-8 h-screen flex flex-col lg:hidden justify-around">
+      <section className="bg-[#fff] p-8 h-screen flex flex-col  justify-around">
         {/* DATOS SESION */}
         <div className="flex flex-col justify-center items-center gap-3">
           <Avatar
@@ -170,11 +170,15 @@ export default function Admin({ cart, dataBaseUser }) {
 
   return (
     <>
-      <Navbar loggedUser={dataBaseUser} title={"Modo Administrador"} />
+      <Navbar
+        loggedUser={dataBaseUser}
+        title={"Modo Administrador"}
+        hideLogo={true}
+      />
       <div className="flex justify-center gap-5 p-5 ">
         {/* <Chatbot /> */}
         {/* HAMBURGUESA - MENU MOBILE*/}
-        <span className="lg:hidden fixed top-5 left-5 z-50 ">
+        <span className=" fixed top-5 left-5 z-50 ">
           <MenuIcon onClick={toggleDrawer("left", true)} className="" />
           <Drawer
             anchor={"left"}
@@ -185,7 +189,7 @@ export default function Admin({ cart, dataBaseUser }) {
           </Drawer>
         </span>
         {/* ---MENU EN VISTA PC------- */}
-        <section className="bg-[#fff] rounded-2xl p-8 hidden lg:w-3/12 lg:flex lg:flex-col justify-around gap-5">
+        {/* <section className="bg-[#fff] rounded-2xl p-8 hidden lg:w-3/12 lg:flex lg:flex-col justify-around gap-5">
           <div className="flex flex-col justify-center items-center gap-3">
             <Avatar
               alt="Xiro Avatar"
@@ -268,11 +272,11 @@ export default function Admin({ cart, dataBaseUser }) {
               </ListItemButton>
             </List>
           </div>
-        </section>
+        </section> */}
         {/* --------- */}
 
         {/* ALL DATA */}
-        <section className="bg-[#fff] rounded-2xl flex flex-col gap-5 justify-center lg:w-9/12 z-10 overflow-auto">
+        <section className="bg-[#fff] rounded-2xl flex flex-col gap-5 justify-center  z-10 overflow-auto">
           {dataRender === "users" ? (
             <UsersApp users={users} />
           ) : dataRender === "orders" ? (

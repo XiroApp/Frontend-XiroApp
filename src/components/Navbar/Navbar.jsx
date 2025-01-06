@@ -15,7 +15,7 @@ import { logout } from "../../redux/actions";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function Navbar({ loggedUser, title }) {
+export default function Navbar({ loggedUser, title, hideLogo = false }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -45,13 +45,11 @@ export default function Navbar({ loggedUser, title }) {
     >
       <Container maxWidth="screen" sx={{ backgroundColor: "#fff" }}>
         <Toolbar disableGutters>
-          <div className="flex items-center">
+          <div className={hideLogo ? "hidden " : "flex items-center"}>
             <Link to="/">
               <img src={logo} alt="" className="h-10 ml-16 lg:m-0 " />
             </Link>
-            <span className="text-[18px] lg:text-xl ml-12 ">
-              {title}
-            </span>
+            <span className="text-[18px] lg:text-xl ml-12 ">{title}</span>
           </div>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}></Box>

@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 
 export default function TyC() {
   return (
-    <div className="flex flex-col justify-center items-center p-4 gap-4">
-      <article className="flex flex-col justify-center gap-4 w-7/12 ">
-        <Link to="/registro" className="w-full">
+    <div className="flex flex-col justify-center items-center p-4 gap-4 ">
+      <article className="flex flex-col justify-center gap-4 w-7/12 bg-white p-4 rounded-lg">
+        <Link to="/" className="w-full">
           <Button variant="text" className="w-full">
             {"<"} Regresar a XIRO
           </Button>
@@ -331,6 +331,14 @@ export default function TyC() {
             debe comunicarse por WhatsApp para recibir la asistencia
             correspondiente.
           </p>
+          <p>
+            Si el pedido no fue entregado por una causa ajena a XIRO, el cliente
+            deberá retirarlo por el punto de entrega indicado desde el WhatsApp
+            de soporte de XIRO. (El cadete le proporcionará a XIRO mensaje
+            comprobando intento de contacto fallido con el cliente, el cual sera
+            prueba suficiente que XIRO cumplió con el envio del pedido y el
+            cliente se ausentó o no dio respuestas)
+          </p>
           <p>8.5. Exclusión de garantías:</p>
           <p>
             XIRO no garantiza que el servicio cumpla con todas las expectativas
@@ -365,7 +373,7 @@ export default function TyC() {
           totalidad. Si no estás de acuerdo con alguno de estos términos, te
           recomendamos que no utilices nuestra aplicación.
         </h3>
-        <Link to="/registro" className="w-full">
+        <Link to="/" className="w-full">
           <Button variant="contained" className="w-full">
             Regresar a Xiro App
           </Button>
