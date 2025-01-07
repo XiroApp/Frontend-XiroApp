@@ -112,7 +112,7 @@ export default function Orders({ editor }) {
   };
 
   return (
-    <div className="flex flex-col gap-4 rounded-2xl p-4">
+    <div className="flex flex-col gap-4 rounded-2xl p-4 ">
       <span className="text-2xl lg:text-2xl ">Asignar órdenes</span>
       <div className="flex flex-col lg:flex-row  rounded-lg  lg:w-full p-2 gap-2">
         <div>
@@ -132,8 +132,8 @@ export default function Orders({ editor }) {
               name="in_delivery"
               className={
                 filter === "in_delivery"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
+                  ? "border p-1 rounded-md text-[12px] bg-green-300"
+                  : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
               onClick={(e) => handleFilter(e)}
             >
@@ -143,8 +143,8 @@ export default function Orders({ editor }) {
               name="pending"
               className={
                 filter === "pending"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
+                  ? "border p-1 rounded-md text-[12px] bg-green-300"
+                  : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
               onClick={(e) => handleFilter(e)}
             >
@@ -154,8 +154,8 @@ export default function Orders({ editor }) {
               name="unassigned"
               className={
                 filter === "unassigned"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
+                  ? "border p-1 rounded-md text-[12px] bg-green-300"
+                  : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
               onClick={(e) => handleFilter(e)}
             >
@@ -165,8 +165,8 @@ export default function Orders({ editor }) {
               name="process"
               className={
                 filter === "process"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
+                  ? "border p-1 rounded-md text-[12px] bg-green-300"
+                  : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
               onClick={(e) => handleFilter(e)}
             >
@@ -176,8 +176,8 @@ export default function Orders({ editor }) {
               name="printed"
               className={
                 filter === "printed"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
+                  ? "border p-1 rounded-md text-[12px] bg-green-300"
+                  : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
               onClick={(e) => handleFilter(e)}
             >
@@ -187,8 +187,8 @@ export default function Orders({ editor }) {
               name="received"
               className={
                 filter === "received"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
+                  ? "border p-1 rounded-md text-[12px] bg-green-300"
+                  : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
               onClick={(e) => handleFilter(e)}
             >
@@ -198,18 +198,17 @@ export default function Orders({ editor }) {
               name="problems"
               className={
                 filter === "problems"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
+                  ? "border p-1 rounded-md text-[12px] bg-green-300"
+                  : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
               onClick={(e) => handleFilter(e)}
             >
               Con problemas
             </button>
-
             <button
               name="no_filter"
               className={
-                "underline p-1 rounded-md text-[12px] hover:bg-gray-500"
+                "underline p-1 rounded-md text-[12px] hover:bg-green-500"
               }
               onClick={(e) => handleFilter(e)}
             >
@@ -219,7 +218,7 @@ export default function Orders({ editor }) {
         </div>
       </div>
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 600 }}>
+        <TableContainer sx={{ maxHeight: 650, backgroundColor: "#f2f2f4" }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -228,6 +227,7 @@ export default function Orders({ editor }) {
                     key={index}
                     align={column.align}
                     style={{ minWidth: column.minWidth }}
+                    sx={{ maxHeight: 650, backgroundColor: "#f2f2f4" }}
                   >
                     {column.label}
                   </TableCell>
@@ -239,7 +239,13 @@ export default function Orders({ editor }) {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   return (
-                    <TableRow hover role="button" tabIndex={-1} key={index} className="p-0 m-0">
+                    <TableRow
+                      hover
+                      role="button"
+                      tabIndex={-1}
+                      key={index}
+                      className="p-0 m-0"
+                    >
                       {columns.map((column, index) => {
                         const value = row[column.id];
 

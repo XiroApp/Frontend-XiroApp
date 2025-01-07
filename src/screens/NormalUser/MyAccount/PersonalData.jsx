@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { Box, Button, Input, Modal } from "@mui/material";
+import "react-phone-number-input/style.css";
+import { countries } from "../../../utils/data/countriesAreaCodes";
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Input,
+  Modal,
+  TextField,
+} from "@mui/material";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../../../redux/actions";
 import { updateUserValidator } from "../../../utils/inputValidator";
@@ -67,6 +76,10 @@ export default function PersonalData({ user }) {
   function handleInput(e) {
     setInput({ ...input, [e.target.name]: e.target.value });
   }
+  function handleCountrySelector(e) {
+    setInput({ ...input, areaCode: e.target.value });
+  }
+
   function handleGender(e) {
     setInput({ ...input, gender: e.target.name });
   }
@@ -92,16 +105,76 @@ export default function PersonalData({ user }) {
           false
         )}
       </div>
-      <div className="flex gap-5 lg:w-full">
-        <section className="flex flex-col w-24">
-          <span className="text-[12px]">CÓDIGO</span>
-          <Input
+      <div className="flex gap-5 lg:w-full flex-wrap lg:flex-nowrap">
+        <section className="flex flex-col">
+          <span className="text-[12px]">PAÍS</span>
+
+          <Autocomplete
             name="areaCode"
-            type="number"
-            placeholder={"549"}
-            inputProps={{ max: 99999, min: 999, maxLength: 4 }}
-            defaultValue={user.areaCode}
-            onChange={(e) => handleInput(e)}
+            id="areaCode"
+            sx={{ width: 300 }}
+            options={countries}
+            onChange={handleCountrySelector}
+            getOptionLabel={(option) =>
+              !!option
+                ? `${option.label} (${option.code}) +${option.phone}`
+                : [countries.find((opt) => opt.phone == input.areaCode)]?.map(
+                    (option) =>
+                      `${option.label} (${option.code}) +${option.phone}`
+                  )[0]
+            }
+            renderOption={(props, option) => {
+              const { key, ...optionProps } = props;
+              return (
+                <Box
+                  name="areaCode"
+                  value={option.phone}
+                  key={key}
+                  component="li"
+                  sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
+                  {...optionProps}
+                >
+                  <img
+                    loading="lazy"
+                    width="20"
+                    srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                    src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                    alt=""
+                  />
+                  {option.label} ({option.code}) +{option.phone}
+                </Box>
+              );
+            }}
+            renderInput={(params) => (
+              <TextField
+                sx={{
+                  input: {
+                    "&::placeholder": {
+                      opacity: 1,
+                    },
+                  },
+                }}
+                id="customPlaceholder"
+                variant="standard"
+                {...params}
+                placeholder={
+                  input.areaCode
+                    ? [
+                        countries.find((opt) => opt.phone == input.areaCode),
+                      ]?.map(
+                        (option) =>
+                          `${option.label} (${option.code}) +${option.phone}`
+                      )[0]
+                    : "Selecciona un código de area..."
+                }
+                slotProps={{
+                  htmlInput: {
+                    ...params.inputProps,
+                    autoComplete: "areaCode", // disable autocomplete and autofill
+                  },
+                }}
+              />
+            )}
           />
         </section>
         <section className="flex flex-col w-full">
@@ -134,7 +207,11 @@ export default function PersonalData({ user }) {
             defaultValue={user.birthdate}
             type="date"
             onChange={(e) => handleInput(e)}
-            className= {error.birthdate ?"bg-transparent border-b border-red-500 pt-1" :"bg-transparent border-b border-gray-400 pt-1"}
+            className={
+              error.birthdate
+                ? "bg-transparent border-b border-red-500 pt-1"
+                : "bg-transparent border-b border-gray-400 pt-1"
+            }
           />
           {error.birthdate ? (
             <span className="text-[12px] text-red-500 font-bold">

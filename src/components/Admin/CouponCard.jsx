@@ -113,7 +113,7 @@ export default function CouponCard({ coupon }) {
       <Box
         component="span"
         sx={{ p: 1, borderRadius: "25px", padding: "1em" }}
-        className="h-40 w-44 md:w-56 md:h-56 lg:h-56 lg:w-56 flex flex-col items-center justify-center border border-gray-500  bg-[#1e1e1e]"
+        className="h-40 w-44 md:w-56 md:h-56 lg:h-56 lg:w-56 flex flex-col items-center justify-center border border-gray-500 bg-[#789360] "
       >
         <div className="relative flex flex-col items-center justify-center w-full h-full  ">
           <div className="absolute top-0 right-0 flex gap-2">
@@ -122,7 +122,7 @@ export default function CouponCard({ coupon }) {
                 onClick={handleClickOpenEditModal}
                 color="action"
                 sx={{ height: "1em", width: "1em" }}
-                className="hover:bg-[#4675C0] rounded-lg"
+                className="hover:bg-gray-300 rounded-lg"
               />
             </Tooltip>
             <Tooltip title="Eliminar" placement="top" arrow>
@@ -130,11 +130,11 @@ export default function CouponCard({ coupon }) {
                 onClick={handleClickOpenDeleteModal}
                 color="action"
                 sx={{ height: "1em", width: "1em" }}
-                className="hover:bg-[#4675C0] rounded-lg"
+                className="hover:bg-gray-300 rounded-lg"
               />
             </Tooltip>
           </div>
-          <div className="absolute bottom-0 flex flex-col justify-start gap-3 w-full items-start text-white">
+          <div className="absolute bottom-0 flex flex-col justify-start gap-3 w-full items-start text-black">
             {coupon.type[0] === "$" ? (
               <AttachMoneyIcon
                 className="text-blue-400"

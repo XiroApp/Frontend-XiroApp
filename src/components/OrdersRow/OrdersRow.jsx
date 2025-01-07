@@ -105,6 +105,8 @@ export default function OrdersRow({
   const [printingSelectStatus, setPrintingSelectStatus] = useState(false);
   const [deliverySelectStatus, setDeliverySelectStatus] = useState(false);
   const [problemsSelectStatus, setProblemsSelectStatus] = useState(false);
+  const [priceModal, setPriceModal] = useState(false);
+  const [placeModal, setPlaceModal] = useState(false);
 
   const handleSetEdiStatus = (e) => {
     setEditStatus(false);
@@ -177,17 +179,13 @@ export default function OrdersRow({
     <>
       <TableCell key={column.id} align={column.align} className="p-0 m-0">
         {column.id === "orderStatus" && (
-          <Accordion
-            expanded={statusExpanded === value}
-            onChange={handleChangeStatus(value)}
-            className=""
-          >
-            <AccordionSummary
-              aria-controls="panel1d-content"
-              id="panel1d-header"
-              className="p-0 m-0 h-fit"
+          <>
+            <Button
+              color="inherit"
+              variant="text"
+              onClick={(e) => setEditStatus(true)}
             >
-              <span className="">
+              <Typography className="">
                 {value === "pending"
                   ? "Pendiente ⏳"
                   : value === "process"
@@ -201,79 +199,29 @@ export default function OrdersRow({
                   : value === "received"
                   ? "Recibido ✅"
                   : "🚨 REVISAR ESTADO 🚨"}
-              </span>
-            </AccordionSummary>
-            <AccordionDetails>
-              <section className="flex flex-col justify-start items-start ">
-                <ul className="flex flex-col items-start justify-start">
-                  {/* Estado actual */}
-                  <li>
-                    <span className="text-start"> Estado actual:</span>
-                    <span className="text-start">
-                      {value === "pending"
-                        ? "Pendiente ⏳"
-                        : value === "process"
-                        ? "En proceso"
-                        : value === "problems"
-                        ? "Con problemas"
-                        : value === "printed"
-                        ? "Impreso"
-                        : value === "in_delivery"
-                        ? "En delivery"
-                        : value === "received"
-                        ? "Recibido"
-                        : "🚨 REVISAR ESTADO 🚨"}
-                    </span>
-                  </li>
-                  {/* Imprenta */}
-                  <li>
-                    {/* <span>
-                      {` Imprenta: 
-                      ${
-                        printingUsers.length &&
-                        order &&
-                        printingUsers?.find((user) => {
-                          user.uid === order?.uidPrinting
-                            ? user.displayName
-                            : "Error al buscar nombre";
-                        })
-                      }
-                      `}
-                    </span> */}
-                  </li>
-                  {/* Reporte */}
-                  <li>
-                    {order?.orderStatus === "problems" && (
-                      <>
-                        <span>Reporte: </span>
-                        <span>{order?.report}</span>
-                      </>
-                    )}
-                  </li>
-                </ul>
-                <div className="flex justify-center  w-full pt-4">
-                  <button
-                    onClick={(e) => setEditStatus(true)}
-                    className="flex items-center border rounded-lg py-1 px-2 hover:bg-[#458552]"
-                  >
-                    <span>Editar estado:</span>
-                    <Tooltip placement="bottom" title="Editar Estado">
-                      <EditIcon
-                        sx={{ height: "1.2em", width: "1.2em" }}
-                        className=" rounded-lg p-1 "
-                      />
-                    </Tooltip>
-                  </button>
-                </div>
-              </section>
-            </AccordionDetails>
-            {/* MODAL FORMULARIO */}
+              </Typography>
+            </Button>
+            {/* MODAL FORMULARIO EDITAR ESTADO DE ORDEN */}
             <Dialog open={editStatus} onClose={(e) => setEditStatus(false)}>
-              <DialogTitle className="text-center">
-                Editar estado de orden
-              </DialogTitle>
+              <DialogTitle className="text-center">Editar estado</DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8">
                 <section className="flex flex-col items-center gap-4 w-96">
+                  <Typography className="">
+                    Estado actual:{" "}
+                    {value === "pending"
+                      ? "Pendiente ⏳"
+                      : value === "process"
+                      ? "En proceso 🔨"
+                      : value === "problems"
+                      ? "Con problemas 📛"
+                      : value === "printed"
+                      ? "Impreso 📄"
+                      : value === "in_delivery"
+                      ? "En delivery 🛸"
+                      : value === "received"
+                      ? "Recibido ✅"
+                      : "🚨 REVISAR ESTADO 🚨"}
+                  </Typography>
                   <div className="w-full">
                     {/* AUTOCOMPLETE DE ESTADOS */}
                     <div className="flex flex-col w-full">
@@ -415,16 +363,18 @@ export default function OrdersRow({
                 </Button>
               </DialogActions>
             </Dialog>
-          </Accordion>
+          </>
         )}
         {typeof value === "object" && value.length && (
           <>
-            <button
+            <Button
+              color="inherit"
+              variant="text"
               onClick={(e) => handleOpenFilesModal(e)}
-              className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
+              // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
-              Ver Pedido
-            </button>
+              <Typography>Ver Pedido</Typography>
+            </Button>
 
             {/* MODAL FORMULARIO */}
             <Dialog open={open} onClose={(e) => setOpen(false)}>
@@ -577,11 +527,11 @@ export default function OrdersRow({
             {" "}
             {value === "accredited" ? (
               <div className="flex flex-col items-center gap-1">
-                <DoneIcon
+                {/* <DoneIcon
                   sx={{ width: "1.4rem", height: "1.4rem" }}
                   className="text-green-500"
-                />
-                <span className="text-green-500 text-[10px]">{value}</span>
+                /> */}
+                <span className="text-green-500 ">acreditado</span>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-1">
@@ -598,11 +548,11 @@ export default function OrdersRow({
           <div className="font-bold">
             {value === "approved" ? (
               <div className="flex flex-col items-center gap-1">
-                <DoneIcon
+                {/* <DoneIcon
                   sx={{ width: "1.4rem", height: "1.4rem" }}
                   className="text-green-500"
-                />
-                <span className="text-green-500 text-[10px]">{value}</span>
+                /> */}
+                <span className="text-green-500">aprobado</span>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-1">
@@ -617,17 +567,19 @@ export default function OrdersRow({
         )}
         {column.id === "transactionAmount" && (
           <>
-            <Accordion
-              expanded={statusExpanded === value}
-              onChange={handleChangeStatus(value)}
+            <Button
+              color="inherit"
+              variant="text"
+              className="hover:underline"
+              onClick={(e) => setPriceModal(true)}
             >
-              <AccordionSummary
-                aria-controls="panel1d-content"
-                id="panel1d-header"
-              >
-                <Typography>${order.transactionAmount}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
+              <Typography>${order.transactionAmount}</Typography>
+            </Button>
+
+            {/* MODAL FORMULARIO */}
+            <Dialog open={priceModal} onClose={(e) => setPriceModal(false)}>
+              <DialogTitle className="text-center">Monto</DialogTitle>
+              <DialogContent dividers className="flex flex-col gap-8">
                 <section className="flex flex-col justify-start items-start ">
                   <ul className="flex flex-col items-start justify-start">
                     <li>
@@ -647,20 +599,30 @@ export default function OrdersRow({
                     </li> */}
                   </ul>
                 </section>
-              </AccordionDetails>
-            </Accordion>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  variant="contained"
+                  onClick={(e) => setPriceModal(false)}
+                >
+                  Cerrar
+                </Button>
+              </DialogActions>
+            </Dialog>
           </>
         )}
         {column.id === "clientUid" && (
           <>
-            <button
+            <Button
+              color="inherit"
+              variant="text"
               onClick={() => {
                 handleOpenClientModal(value);
               }}
-              className="border rounded-lg py-2 px-6 hover:bg-[#458552]"
+              // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
-              Ver cliente
-            </button>
+              <Typography> Ver cliente</Typography>
+            </Button>
 
             {/* MODAL FORMULARIO */}
             <Dialog
@@ -710,36 +672,35 @@ export default function OrdersRow({
           </>
         )}
         {column.id === "place" && (
-          <div className="flex flex-col gap-2 min-w-56">
-            <Accordion
-              expanded={statusExpanded === value.type}
-              onChange={handleChangeStatus(value.type)}
+          <>
+            <Button
+              color="inherit"
+              variant="text"
+              onClick={() => {
+                setPlaceModal(true);
+              }}
+              // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
-              <AccordionSummary
-                aria-controls="panel1d-content"
-                id="panel1d-header"
-              >
-                <div className="flex flex-col justify-center items-start">
-                  <span className="text-start">
-                    {`Disponibilidad: De `}
-                    <span className="font-bold underline">
-                      {order.cart[0].details.availability}
-                    </span>
+              <Typography>
+                <div className="flex justify-center items-start">
+                  <span className="">
+                    {`${
+                      value.type === "Envío a domicilio" ? "Envío" : value.type
+                    } | `}
                   </span>
-                  <span className="text-start">
-                    {`Tipo: `}
-                    <span className="font-bold underline">
-                      {`${
-                        value.type === "Envío a domicilio"
-                          ? "Envío"
-                          : value.type
-                      }`}
-                    </span>
+                  <span className="">
+                    {`     ${order.cart[0].details.availability}`}
                   </span>
                 </div>
-                {/* <Typography>{value.type}</Typography> */}
-              </AccordionSummary>
-              <AccordionDetails>
+              </Typography>
+            </Button>
+
+            {/* MODAL FORMULARIO */}
+            <Dialog open={placeModal} onClose={(e) => setPlaceModal(false)}>
+              <DialogTitle className="text-center">
+                Información del cliente
+              </DialogTitle>
+              <DialogContent dividers className="flex flex-col gap-8">
                 <section className="flex flex-col justify-start items-start ">
                   <div>
                     <ul className="flex flex-col items-start justify-start gap-3">
@@ -768,9 +729,17 @@ export default function OrdersRow({
                     </ul>
                   </div>
                 </section>
-              </AccordionDetails>
-            </Accordion>
-          </div>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  variant="contained"
+                  onClick={(e) => setPlaceModal(false)}
+                >
+                  Cerrar
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </>
         )}
       </TableCell>
     </>

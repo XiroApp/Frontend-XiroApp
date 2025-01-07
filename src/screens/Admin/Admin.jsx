@@ -276,7 +276,7 @@ export default function Admin({ cart, dataBaseUser }) {
         {/* --------- */}
 
         {/* ALL DATA */}
-        <section className="bg-[#fff] rounded-2xl flex flex-col gap-5 justify-center  z-10 overflow-auto">
+        <section className="bg-[#fff] rounded-2xl flex flex-col gap-5 justify-center  z-10 overflow-auto w-full">
           {dataRender === "users" ? (
             <UsersApp users={users} />
           ) : dataRender === "orders" ? (
