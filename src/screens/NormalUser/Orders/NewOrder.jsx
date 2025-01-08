@@ -18,7 +18,6 @@ import ErrorIcon from "@mui/icons-material/ErrorOutlined";
 // import  from "@mui/icons-material/FileCopyOutlined";
 // import  from "@mui/icons-material/PrintOutlined";
 
-
 import { styled } from "@mui/material/styles";
 import { addToCart, getPricing, uploadMulter } from "../../../redux/actions";
 import { validatePDFFile } from "../../../utils/inputValidator";
@@ -265,7 +264,9 @@ export default function NewOrder() {
                 )}
                 <section className="flex flex-col gap-1 items-center justify-center px-2 ">
                   <div className="flex justify-center items-center gap-1">
-                    <DescriptionIcon style={{ height: "1.5em", width: "1.5em" }} />
+                    <DescriptionIcon
+                      style={{ height: "1.5em", width: "1.5em" }}
+                    />
                     <span>{newFiles?.length}</span>
                   </div>
                   <span className="text-[14px]">Archivos</span>
@@ -288,7 +289,9 @@ export default function NewOrder() {
                 </section>
                 <section className="flex flex-col gap-1 items-center justify-center px-2 ">
                   <div className="flex justify-center items-center gap-1">
-                    <PrintSharpIcon style={{ height: "1.5em", width: "1.5em" }} />
+                    <PrintSharpIcon
+                      style={{ height: "1.5em", width: "1.5em" }}
+                    />
                     <span>${pricing.total}</span>
                   </div>
                   <span className="text-[14px]">Precio</span>
@@ -483,21 +486,23 @@ export default function NewOrder() {
               loading={loading}
               variant="contained"
               color="primary"
+              sx={{ border: "2px solid white" }}
               className={cart?.length ? "w-1/3" : "w-1/2"}
               disabled={newFiles?.length === 0}
               onClick={(e) => setReview(true)}
             >
-              <span className="font-light">Añadir al carrito</span>
+              <span className="font-bold text-lg">Añadir al carrito</span>
             </LoadingButton>
             {cart?.length ? (
               <LoadingButton
                 loading={loading}
                 variant="contained"
                 color="primary"
+                sx={{ border: "2px solid white" }}
                 className="w-1/3"
                 onClick={(e) => navigate("/carrito")}
               >
-                <span className="font-light">Avanzar</span>
+                <span className="font-bold text-lg">Avanzar</span>
               </LoadingButton>
             ) : (
               false

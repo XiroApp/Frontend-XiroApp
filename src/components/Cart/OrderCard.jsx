@@ -196,7 +196,7 @@ export default function OrderCard({
               className="text-sm font-light"
               onClick={(e) => setFilesModal(false)}
             >
-              <span className="text-sm font-light">Volver al carrito</span>
+              <span className="text-sm font-light">Cerrar</span>
             </Button>
           </section>
         </Box>

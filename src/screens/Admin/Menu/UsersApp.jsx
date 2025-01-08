@@ -67,12 +67,18 @@ export default function UsersApp({ editor }) {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+  // console.log(usersApp);
 
   /* SEARCH USER */
   const handleSearch = (e) => {
     e.target.value.length
       ? setAllUsers(
-          usersApp.filter((user) => user.email.includes(e.target.value))
+          usersApp.filter(
+            (user) =>
+              user?.email?.includes(e.target.value) ||
+              user?.displayName?.includes(e.target.value) ||
+              user?.phone?.includes(e.target.value)
+          )
         )
       : setAllUsers(usersApp);
   };

@@ -467,11 +467,12 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
               loading={loading}
               variant="contained"
               color="primary"
+              sx={{ border: "2px solid white" }}
               className="w-1/2"
               disabled={newFiles?.length === 0}
               onClick={(e) => handleSetOrder(e)}
             >
-              <span className="font-light">Volver al carrito</span>
+              <span className="font-lg">Guardar y volver al carrito</span>
             </LoadingButton>
           </section>
         </div>

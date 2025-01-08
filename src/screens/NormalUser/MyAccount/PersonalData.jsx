@@ -185,7 +185,7 @@ export default function PersonalData({ user }) {
             type="number"
             defaultValue={user.phone}
             inputProps={{ maxLength: 15 }}
-            placeholder="123 456 7891"
+            placeholder="Ej: 261 123 4567"
             onChange={(e) => handleInput(e)}
           />
           {error.phone ? (
