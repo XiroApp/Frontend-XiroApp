@@ -66,6 +66,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
   const cart = useSelector((state) => state.cart);
   const pricingState = useSelector((state) => state.pricing);
   const place = useSelector((state) => state.place);
+  const labels = useSelector((state) => state.labels);
   const [resetModal, setResetModal] = useState(false);
   const [helpModal, setHelpModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -251,7 +252,9 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                 )}
                 <section className="flex flex-col gap-1 items-center justify-center px-2 ">
                   <div className="flex justify-center items-center gap-1">
-                    <DescriptionIcon style={{ height: "1.5em", width: "1.5em" }} />
+                    <DescriptionIcon
+                      style={{ height: "1.5em", width: "1.5em" }}
+                    />
                     <span>{newFiles?.length}</span>
                   </div>
                   <span className="text-[14px]">Archivos</span>
@@ -274,7 +277,9 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                 </section>
                 <section className="flex flex-col gap-1 items-center justify-center px-2 ">
                   <div className="flex justify-center items-center gap-1">
-                    <PrintSharpIcon style={{ height: "1.5em", width: "1.5em" }} />
+                    <PrintSharpIcon
+                      style={{ height: "1.5em", width: "1.5em" }}
+                    />
                     <span>${pricing?.total}</span>
                   </div>
                   <span className="text-[14px]">Precio</span>
@@ -292,13 +297,11 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                       variant="contained"
                       color="primary"
                       startIcon={
-                        <UploadIcon sx={{ height: "0.8em", width: "0.8em" }} />
+                        <UploadIcon sx={{ height: "1em", width: "1em" }} />
                       }
                       className=" h-8 "
                     >
-                      <span className="text-[14px] font-light">
-                        Cargar archivos
-                      </span>
+                      <span className="text-lg font-bold">Cargar archivos</span>
                       {!loading ? (
                         <VisuallyHiddenInput
                           multiple
@@ -348,7 +351,12 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
           </div>
           {/* ------------------------------------------PDF VIEWER------------------------------ */}
           <section className="w-full h-full">
-            <DefaultSnack />
+            <DefaultSnack
+              content={
+                labels.find((label) => label.id === "snackbar_new_order_info")
+                  .content
+              }
+            />
             {newFiles && newFiles?.length > 0 ? (
               <div className="flex flex-col items-center justify-center h-[26em] lg:h-[32em]">
                 <section className="flex justify-center w-full h-full rounded-lg px-6">
@@ -472,7 +480,9 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
               disabled={newFiles?.length === 0}
               onClick={(e) => handleSetOrder(e)}
             >
-              <span className="font-lg">Guardar y volver al carrito</span>
+              <span className="text-lg font-lg">
+                Guardar y volver al carrito
+              </span>
             </LoadingButton>
           </section>
         </div>

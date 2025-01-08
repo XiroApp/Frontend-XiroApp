@@ -69,6 +69,7 @@ export default function NewOrder() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.dataBaseUser);
   const cart = useSelector((state) => state.cart);
+  const labels = useSelector((state) => state.labels);
   const pricingState = useSelector((state) => state.pricing);
   const place = useSelector((state) => state.place);
   const [resetModal, setResetModal] = useState(false);
@@ -309,13 +310,11 @@ export default function NewOrder() {
                       variant="contained"
                       color="primary"
                       startIcon={
-                        <UploadIcon sx={{ height: "0.8em", width: "0.8em" }} />
+                        <UploadIcon sx={{ height: "1em", width: "1em" }} />
                       }
                       className=" h-8 "
                     >
-                      <span className="text-[14px] font-light">
-                        Cargar archivos
-                      </span>
+                      <span className="text-lg font-bold">Cargar archivos</span>
                       {!loading ? (
                         <VisuallyHiddenInput
                           type="file"
@@ -364,7 +363,12 @@ export default function NewOrder() {
           </div>
           {/* ------------------------------------------PDF VIEWER------------------------------ */}
           <section className="w-full h-full">
-            <DefaultSnack />
+            <DefaultSnack
+              content={
+                labels.find((label) => label.id === "snackbar_new_order_info")
+                  .content
+              }
+            />
             {/* {loadingCard?.length > 0 ? (
               <div className="pulse bg-red-500">Cargando</div>
             ) : (

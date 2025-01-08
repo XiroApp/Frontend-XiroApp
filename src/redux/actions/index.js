@@ -817,3 +817,30 @@ export function getOrdersByClientUid(clientUid) {
     }
   };
 }
+//--------------- GET LABELS --------------------
+export function getInAppLabels() {
+  return async function (dispatch) {
+    try {
+      let response = await axios.get(`${baseUrl}/labels/all`);
+      console.log(response.data);
+
+      return dispatch({
+        type: action.GET_LABELS,
+        payload: {
+          labels: response.data,
+        },
+      });
+    } catch (error) {
+      return dispatch({
+        type: action.TOAST_ALERT,
+        payload: {
+          message: "No se han establecido los textos de la aplicación.",
+          variant: "error",
+          vertical: "top",
+          horizontal: "right",
+          open: true,
+        },
+      });
+    }
+  };
+}

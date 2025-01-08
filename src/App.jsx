@@ -8,11 +8,7 @@ import Login from "./screens/NormalUser/Login/Login";
 import { ThemeProvider } from "@mui/material";
 import { mainTheme } from "./utils/themes/main-theme";
 import Register from "./screens/NormalUser/Login/Register";
-import {
-  getLoggedUser,
-  getOrdersByClientUid,
-  getPricing,
-} from "./redux/actions";
+import { getLoggedUser, getInAppLabels, getPricing } from "./redux/actions";
 import { getSession } from "./utils/controllers";
 import MyAccount from "./screens/NormalUser/MyAccount/MyAccount";
 import "./utils/assets/Fonts/Poppins-Light.ttf";
@@ -43,7 +39,7 @@ function App() {
   useEffect(() => {
     if (sessionUser) {
       dispatch(getLoggedUser(sessionUser));
-      // dispatch(getOrdersByClientUid(sessionUser.uid));
+      dispatch(getInAppLabels());
     }
   }, []);
 

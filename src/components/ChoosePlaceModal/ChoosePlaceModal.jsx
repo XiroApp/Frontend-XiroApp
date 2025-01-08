@@ -9,6 +9,8 @@ import { setOrderPlace, setToast, updateUser } from "../../redux/actions";
 
 export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
   const dispatch = useDispatch();
+  const labels = useSelector((state) => state.labels);
+
   const [open, setOpen] = useState(false);
   const [resume, setResume] = useState({ place: null });
   const [defaultPointAddress, setDefaultPointAddress] = useState({
@@ -38,7 +40,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
       setChoosePlace(false);
     }
   }
- 
+
   return (
     <>
       <Modal
@@ -54,7 +56,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               id="parent-modal-title"
               className="text-center text-[20px] font-[300] "
             >
-              ¿Dónde queres recibir tu pedido?
+              ¿Donde queres recibir tu pedido?
             </h2>
           </section>
           <section className="flex px-5 py-5 gap-10">
@@ -71,8 +73,18 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                 })
               }
             >
-              <MopedIcon color="primary" style={{ color:'#458552',height: "3em", width: "3em" }} />
+              <MopedIcon
+                color="primary"
+                style={{ color: "#458552", height: "3em", width: "3em" }}
+              />
               <span className="text-[14px]">Envío a domicilio</span>
+              <div className="flex flex-col">
+                {!!labels
+                  ? labels
+                      .find((label) => label.id === "delivery_description")
+                      .content.map((text) => <p className="text-sm">{text}</p>)
+                  : false}
+              </div>
             </button>
             <button
               className={
@@ -88,9 +100,19 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               }
             >
               {/* <span className="text-[14px] text-yellow-500">Próximamente</span> */}
-              <StoreIcon color="primary" style={{ color:'#458552',height: "3em", width: "3em" }} />
+              <StoreIcon
+                color="primary"
+                style={{ color: "#458552", height: "3em", width: "3em" }}
+              />
 
               <span className="text-[14px]">Retiro en punto cercano</span>
+              <div className="flex flex-col">
+                {!!labels
+                  ? labels
+                      .find((label) => label.id === "pick_up_point_description")
+                      .content.map((text) => <p className="text-sm">{text}</p>)
+                  : false}
+              </div>
             </button>
           </section>
           <section className="flex flex-col items-center">
@@ -145,8 +167,10 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                 </button>
               </div>
             ) : resume?.place?.type === "Retiro" ? (
-              <div className="flex flex-col items-center w-full gap-2">   
-              <span className="font-[500]">Seleccioná donde retirar tu pedido</span>         
+              <div className="flex flex-col items-center w-full gap-2">
+                <span className="font-[500]">
+                  Seleccioná donde retirar tu pedido
+                </span>
                 <button
                   className={
                     resume.place.address === defaultPointAddress

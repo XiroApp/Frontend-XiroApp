@@ -21,11 +21,13 @@ export const SET_PRICE = "SET_PRICE";
 export const SET_PLACE = "SET_PLACE";
 export const SET_CLIENT_ORDERS = "SET_CLIENT_ORDERS";
 export const SEND_EMAIL = "SEND_EMAIL";
+export const GET_LABELS = "GET_LABELS";
 
 /* -------------------ADMIN ACTIONS----------------------- */
 /* ORDERS */
 export const GET_ALL_ORDERS = "GET_ALL_ORDERS";
 export const EDIT_STATUS_ORDERS = "EDIT_STATUS_ORDERS";
+
 /* PRICING */
 export const EDIT_PRICE = "EDIT_PRICE";
 
@@ -34,6 +36,7 @@ export const GET_ALL_COUPONS = "GET_ALL_COUPONS";
 export const CREATE_COUPON = "CREATE_COUPON";
 export const EDIT_COUPON = "EDIT_COUPON";
 export const DELETE_COUPON = "DELETE_COUPON";
+
 /* USERS */
 export const GET_ALL_USERS = "GET_ALL_USERS";
 export const GET_PRINTING_USERS = "GET_PRINTING_USERS";

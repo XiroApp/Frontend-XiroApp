@@ -23,6 +23,7 @@ const initialState = {
   orders: [],
   adminCoupons: null,
   printingUsers: [],
+  labels: {},
 };
 
 export default function rootReducer(state = initialState, { type, payload }) {
@@ -89,6 +90,13 @@ export default function rootReducer(state = initialState, { type, payload }) {
       };
     }
     /* USERS ACTIONS */
+
+    case action.GET_LABELS: {
+      return {
+        ...state,
+        labels: payload.labels,
+      };
+    }
     case action.SET_CLIENT_ORDERS: {
       return {
         ...state,
