@@ -3,10 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import List from "@mui/material/List";
 import MenuIcon from "@mui/icons-material/Menu";
 import ListItemButton from "@mui/material/ListItemButton";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import XIcon from "@mui/icons-material/X";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 // import PersonIcon from "@mui/icons-material/Person";
@@ -15,12 +11,11 @@ import { FaClipboardUser as PersonIcon } from "react-icons/fa6";
 // import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { FaMapLocationDot as LocationOnIcon } from "react-icons/fa6";
 
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { FaMedal } from "react-icons/fa6";
 import { Avatar, Box, Button, Collapse, Drawer, Tooltip } from "@mui/material";
-import cuate from "../../../utils/assets/images/cuate.svg";
+
 import PersonalData from "./PersonalData";
 import AccountData from "./AccountData";
 import AddressData from "./AddressData";
@@ -31,7 +26,6 @@ import Notifications from "./Notifications";
 import Chatbot from "../../../components/Chatbot/Chatbot";
 import { useEffect } from "react";
 import { getOrdersByClientUid, setToast } from "../../../redux/actions";
-import cuatePedido from "../../../utils/assets/images/cuatePedido.svg";
 
 export default function MyAccount({ cart, dataBaseUser }) {
   const navigate = useNavigate();
@@ -501,7 +495,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                       </span>
                     </div>
                     <div className="flex flex-col gap-3 items-start px-2 border-l border-white">
-                      <span className="text-[14px] opacity-70">PEDIDOS</span>
+                      <span className="text-[14px] opacity-70">HISTÓRICOS</span>
                       <span className="text-3xl"> {clientOrders?.length}</span>
                     </div>
                   </div>
@@ -539,7 +533,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                         </span>
                       </div>
                       <div className="flex flex-col gap-1 items-start px-2 border-l border-white">
-                        <span className="text-sm opacity-70">PEDIDOS</span>
+                        <span className="text-sm opacity-70">HISTÓRICOS</span>
                         <span className="text-xl"> {clientOrders?.length}</span>
                       </div>
                     </div>
