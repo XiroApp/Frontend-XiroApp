@@ -54,7 +54,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
           <section className=" p-4 ">
             <h2
               id="parent-modal-title"
-              className="text-center text-[20px] font-[300] "
+              className="text-center text-[20px] font-bold "
             >
               ¿Donde queres recibir tu pedido?
             </h2>
@@ -77,7 +77,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                 color="primary"
                 style={{ color: "#458552", height: "3em", width: "3em" }}
               />
-              <span className="text-[14px]">Envío a domicilio</span>
+              <span className="text-[14px] font-bold">Envío a domicilio</span>
               <div className="flex flex-col">
                 {!!labels
                   ? labels
@@ -105,7 +105,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                 style={{ color: "#458552", height: "3em", width: "3em" }}
               />
 
-              <span className="text-[14px]">Retiro en punto cercano</span>
+              <span className="text-[14px] font-bold">Retiro en punto cercano</span>
               <div className="flex flex-col">
                 {!!labels
                   ? labels

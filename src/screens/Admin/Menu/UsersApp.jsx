@@ -91,7 +91,7 @@ export default function UsersApp({ editor }) {
         <Input
           name="email"
           type="text"
-          placeholder={"Ingresa un email a buscar..."}
+          placeholder={"Buscar por nombre, email o número..."}
           onChange={(e) => handleSearch(e)}
           className="w-full"
         />
