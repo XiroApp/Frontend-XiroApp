@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import { Backdrop, Box, Button, CircularProgress } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-
 import { useDispatch, useSelector } from "react-redux";
 import AddressCard from "../../../components/AddressCard/AddressCard";
-import Places from "../../../components/Maps/Places";
+import NewAddressForm from "../../../components/Forms/NewAddressForm";
 
 export default function AddressData({ user }) {
   const dispatch = useDispatch();
@@ -29,21 +26,7 @@ export default function AddressData({ user }) {
     setOpen(false);
     setError(false);
   };
-  const [location, setLocation] = useState(null);
 
-  const handleLocationChange = (newLocation) => {
-    setLocation(newLocation);
-  };
-
-  const handleSubmit = () => {
-    if (location) {
-      console.log("Dirección:", location.address);
-      console.log("Latitud:", location.lat);
-      console.log("Longitud:", location.lng);
-    } else {
-      console.log("No se ha seleccionado ninguna dirección.");
-    }
-  };
 
   return (
     // <div className="grid grid-cols-2 md:grid lg:grid md:grid-cols-3 lg:grid-cols-5 rounded-2xl lg:h-2/3  gap-8">
@@ -75,7 +58,9 @@ export default function AddressData({ user }) {
 
       {/* -------------- */}
       {/* MODAL FORMULARIO */}
-      <Dialog open={open} onClose={handleClose}>
+      <NewAddressForm open={open} setOpen={setOpen} />
+
+      {/* <Dialog open={open} onClose={handleClose}>
         <article className="flex flex-col gap-1 pt-3  ">
           <h6 className="text-center text-xl text-stone-600 lg:text-2xl 2xl:text-3xl">
             Agregar Direccion
@@ -99,7 +84,7 @@ export default function AddressData({ user }) {
             Agregar
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
       {/* --------------- */}
       {/* LOADER */}
       {loader ? (
