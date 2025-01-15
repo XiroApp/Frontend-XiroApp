@@ -178,14 +178,14 @@ export default function PersonalData({ user }) {
           />
         </section>
         <section className="flex flex-col w-full">
-          <span className="text-[12px]">NUMERO DE CELULAR</span>
+          <span className="text-[12px]">NUMERO DE CELULAR (Sin 0 y sin 15)</span>
           <Input
             error={error.phone}
             name="phone"
             type="number"
             defaultValue={user.phone}
             inputProps={{ maxLength: 15 }}
-            placeholder="Ej: 261 123 4567"
+            placeholder="Ej: 261 523 4567"
             onChange={(e) => handleInput(e)}
           />
           {error.phone ? (
