@@ -3,11 +3,12 @@ import { Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/page-navigation/lib/styles/index.css";
 import { pageNavigationPlugin } from "@react-pdf-viewer/page-navigation";
-import { ApiConstants } from "../Common/constants";
 
-export default function PDFRender({ newFile }) {
+export default function PDFRender({ newFile, setLoading }) {
   const pageNavigationPluginInstance = pageNavigationPlugin();
-
+  const handleLoadedDocument = () => {
+    setLoading(false);
+  };
   return (
     <div className="w-full h-full rounded-lg bg-white p-2">
       <div
@@ -35,8 +36,8 @@ export default function PDFRender({ newFile }) {
           }}
         >
           <Viewer
-           
             initialPage={0}
+            onDocumentLoad={handleLoadedDocument}
             // defaultScale={1}
             // viewMode={ViewMode.DualPage}
             theme={{

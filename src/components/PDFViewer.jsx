@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import FileCopySharpIcon from "@mui/icons-material/FileCopySharp";
 import PDFRender from "./PDFRender";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -11,6 +10,8 @@ import "@react-pdf-viewer/page-navigation/lib/styles/index.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { Spinner } from "@react-pdf-viewer/core";
+import { useDispatch } from "react-redux";
+import { setToast } from "../redux/actions";
 
 const PDFViewer = ({
   newFile,
@@ -21,31 +22,39 @@ const PDFViewer = ({
   index,
   setLoading,
 }) => {
-  // const [PDFMetadata, setPDFMetadata] = useState({ numPages: 0, fileSize: 0 });
+  const dispatch = useDispatch();
   const [numPages, setNumPages] = useState();
 
-
-  console.log(newFile);
-
   function onDocumentLoadSuccess(PDFMetadata) {
-    console.log("PDF METADATA", PDFMetadata);
-
-    setNumPages(PDFMetadata.numPages);
-    setResume({
-      ...resume,
-      ["totalPages"]: resume.totalPages + PDFMetadata.numPages,
-    });
-    setLoading(false);
+    try {
+      setNumPages(PDFMetadata.numPages);
+      setResume({
+        ...resume,
+        ["totalPages"]: resume.totalPages + PDFMetadata.numPages,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    // finally {
+    //   setLoading(false);
+    // }
   }
 
   function handleDeleteFile() {
-    let array = new Array(newFiles.slice()).flat(1);
-    array.splice(index, 1);
-    setNewFiles(array);
-    setResume({
-      ...resume,
-      ["totalPages"]: resume.totalPages - numPages,
-    });
+    try {
+      setLoading(true);
+      let array = new Array(newFiles.slice()).flat(1);
+      array.splice(index, 1);
+      setNewFiles(array);
+      setResume({
+        ...resume,
+        ["totalPages"]: resume.totalPages - numPages,
+      });
+    } catch (error) {
+      dispatch(setToast("Error al eliminar el archivo", "error"));
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -85,7 +94,7 @@ const PDFViewer = ({
               className={"w-full h-full"}
               renderMode="custom"
             >
-              <PDFRender newFile={newFile} />
+              <PDFRender newFile={newFile} setLoading={setLoading} />
             </Document>
           </div>
         </section>

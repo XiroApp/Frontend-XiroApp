@@ -19,12 +19,18 @@ import ErrorIcon from "@mui/icons-material/ErrorOutlined";
 // import  from "@mui/icons-material/PrintOutlined";
 
 import { styled } from "@mui/material/styles";
-import { addToCart, getPricing, uploadMulter } from "../../../redux/actions";
+import {
+  addToCart,
+  getPricing,
+  setToast,
+  uploadMulter,
+} from "../../../redux/actions";
 import { validatePDFFile } from "../../../utils/inputValidator";
 import { uploadFile } from "../../../config/firebase";
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -164,11 +170,13 @@ export default function NewOrder() {
             .then((newDocumentsName) =>
               newDocumentsName.map((doc) => newArray.push(doc))
             )
-            .catch((error) => console.log(error))
-            .finally(() => {
-              setLoading(false);
-              // setLoadingCard([]);
-            });
+            .catch((error) =>
+              dispatch(setToast("Error al subir el archivo", "error"))
+            );
+          // .finally(() => {
+          //   setLoading(false);
+          //   // setLoadingCard([]);
+          // });
         } else {
           let uploadedFile = await uploadFile(files[i]);
 
@@ -236,8 +244,27 @@ export default function NewOrder() {
 
       <Navbar title="Nuevo pedido" loggedUser={user} cart={cart} />
       {/* <Chatbot /> */}
-      <section className="w-full h-full lg:flex">
-        <div className="flex flex-col items-center gap-2 px-4 lg:px-0  h-full lg:w-9/12">
+      <section className="relative w-full h-full lg:flex">
+        <div
+          className={
+            loading
+              ? "absolute w-screen h-screen z-[9999] bg-gray-600/50"
+              : null
+          }
+        >
+          <div
+            className={
+              loading ? "w-full h-full flex items-center justify-center" : null
+            }
+          >
+            <CircularProgress
+              color="primary"
+              size={"50px"}
+              sx={loading ? { display: "block" } : { display: "none" }}
+            />
+          </div>
+        </div>
+        <div className="flex flex-col items-center justify-center gap-2 px-4 lg:px-0  h-full lg:w-9/12">
           <div className="lg:flex  w-full md:p-4">
             <section className="bg-[#fff] flex flex-col md:flex-row-reverse md:justify-around md:items-cemter items-around  justify-center w-full p-4 gap-4 rounded-lg">
               <div className="flex items-center justify-around h-1/2 md:h-full">
@@ -485,6 +512,7 @@ export default function NewOrder() {
               </div>
             )}
           </section>
+
           <section className="flex w-full justify-around pb-4">
             <LoadingButton
               loading={loading}
@@ -546,7 +574,7 @@ export default function NewOrder() {
           <div className="flex justify-end items-end w-full">
             <DialogActions>
               <Button
-                color="white"
+                color="primary"
                 autoFocus
                 onClick={(e) => setResetModal(false)}
               >
