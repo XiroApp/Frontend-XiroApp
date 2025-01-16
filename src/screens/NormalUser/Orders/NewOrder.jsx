@@ -103,7 +103,7 @@ export default function NewOrder() {
     ringed: Number(1500), //🚒🚒🚑CAMBIAR URGENTE!!!
     total: Number(0),
   });
-  
+
   const [resume, setResume] = useState({
     totalPages: 0,
     numberOfCopies: 1,
@@ -146,7 +146,7 @@ export default function NewOrder() {
 
   useEffect(() => {
     let newTotal = pricingSetter(pricing, resume);
-    if (newTotal !== NaN) {
+    if (!isNaN(newTotal)) {
       setPricing({ ...pricing, ["total"]: Number(newTotal) });
     } else {
       navigate("/");

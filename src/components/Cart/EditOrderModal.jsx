@@ -139,7 +139,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
 
   useEffect(() => {
     let newTotal = pricingSetter(pricing, resume);
-    if (newTotal !== NaN) {
+    if (!isNaN(newTotal)) {
       setPricing({ ...pricing, ["total"]: Number(newTotal) });
     } else {
       navigate("/");

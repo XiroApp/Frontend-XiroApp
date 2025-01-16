@@ -243,7 +243,9 @@ export default function Login({ loggedUser, dataBaseUser }) {
 
                   <Link href="/recuperar-contraseña">
                     {" "}
-                    <span className="font-medium ">Olvidé mi contraseña</span>
+                    <span className="text-green-700 font-medium hover:underline">
+                      Olvidé mi contraseña
+                    </span>
                   </Link>
                 </section>
               </div>
