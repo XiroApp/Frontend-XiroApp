@@ -61,9 +61,8 @@ export default function NewAddressForm({ open, setOpen }) {
     console.log("location", location);
     console.log("input", input);
 
-    const searchQuery = `${input.name} ${input.locality} ${input.city}`;
+    const searchQuery = `${input.name} ${input.number} ${input.locality} ${input.city}`;
     setSearchQuery(searchQuery);
-
   }
 
   function handleOtherTag(e) {
@@ -132,6 +131,27 @@ export default function NewAddressForm({ open, setOpen }) {
       console.log("Dirección:", location.address);
       console.log("Latitud:", location.lat);
       console.log("Longitud:", location.lng);
+     
+      let results = createAddressValidator(
+        input.name,
+        input.number,
+        input.zipCode,
+        input.floorOrApartment,
+        input.city,
+        input.locality,
+        input.tag,
+        location.lat,
+        location.lng
+      );
+
+      setError(results.error);
+      let continueRegister = results.allowCreate;
+
+      if (continueRegister) {
+        setLoader(true);
+        setOpen(false);
+        dispatch(addAddress(user, input));
+      }
     } else {
       console.log("No se ha seleccionado ninguna dirección.");
     }
