@@ -33,13 +33,17 @@
       {
         "title": "A4",
         "subtitle": "297 x 210 mm",
-        "text": "Dimensiones en vertical 297 alto x 210mm ancho y en horizontal 210 alto x 297 mm de ancho."
+        "text": "Dimensiones en vertical 297mm alto x 210mm ancho y en horizontal 210 alto x 297 mm de ancho."
       },
-
+      {
+        "title": "A3",
+        "subtitle": "420 x 297 mm",
+        "text": "Dimensiones en vertical 420mm alto x 297mm ancho y en horizontal 210 alto x 297 mm de ancho."
+      },
       {
         "title": "Oficio",
         "subtitle": "216 x 340 mm",
-        "text": "Dimensiones en vertical 216 ancho x 340mm alto y en horizontal 216 alto x 340 mm de ancho."
+        "text": "Dimensiones en vertical 216mm ancho x 340mm alto y en horizontal 216 alto x 340 mm de ancho."
       }
     ]
   },

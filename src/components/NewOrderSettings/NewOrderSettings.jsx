@@ -131,6 +131,22 @@ export default function NewOrderSettings({
             </button>
             <button
               className={
+                resume.size === "A3"
+                  ? "flex flex-col items-center w-24 justify-center px-1  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-1  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
+              }
+              onClick={(e) =>
+                setResume({
+                  ...resume,
+                  ["size"]: "A3",
+                })
+              }
+            >
+              <span className="text-[12px] ">A3</span>
+              <span className="text-[10px] opacity-70 ">420 x 297 mm</span>
+            </button>
+            <button
+              className={
                 resume.size === "Oficio"
                   ? "flex flex-col items-center w-24 justify-center px-1  border-2 border-white bg-[#61774d] text-white rounded-lg"
                   : "flex flex-col items-center w-24 justify-center px-1  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
@@ -145,24 +161,6 @@ export default function NewOrderSettings({
               <span className="text-[12px] ">Oficio</span>
               <span className="text-[10px] opacity-70 ">220 x 340 mm</span>
             </button>
-
-            {/* 
-            <button
-              className={
-                resume.size === "A3"
-                  ? "flex flex-col items-center w-24 justify-center px-1  border-2 border-white bg-[#61774d] text-white rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-1  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
-              }
-              onClick={(e) =>
-                setResume({
-                  ...resume,
-                  ["size"]: "A3",
-                })
-              }
-            >
-              <span className="text-[12px] ">A3</span>
-              <span className="text-[10px] opacity-70 ">420 x 297 mm</span>
-            </button> */}
           </div>
         </section>
       ) : currentSetting === "printWay" ? (

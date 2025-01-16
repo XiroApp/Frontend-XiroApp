@@ -12,6 +12,10 @@ function pricingSetter(pricing, config) {
   const {
     BIG_ringed,
     SMALL_ringed,
+    A3_simple_do,
+    A3_simple_do_color,
+    A3_double_does,
+    A3_double_does_color,
     OF_simple_do,
     OF_simple_do_color,
     OF_double_does,
@@ -32,6 +36,14 @@ function pricingSetter(pricing, config) {
         ? double_does
         : size === "A4" && printWay === "Doble faz" && color === "Color"
         ? double_does_color
+        : size === "A3" && printWay === "Simple faz" && color === "BN"
+        ? A3_simple_do
+        : size === "A3" && printWay === "Simple faz" && color === "Color"
+        ? A3_simple_do_color
+        : size === "A3" && printWay === "Doble faz" && color === "BN"
+        ? A3_double_does
+        : size === "A3" && printWay === "Doble faz" && color === "Color"
+        ? A3_double_does_color
         : size === "Oficio" && printWay === "Simple faz" && color === "BN"
         ? OF_simple_do
         : size === "Oficio" && printWay === "Simple faz" && color === "Color"

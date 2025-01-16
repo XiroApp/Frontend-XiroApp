@@ -88,6 +88,10 @@ export default function NewOrder() {
   const [pricing, setPricing] = useState({
     BIG_ringed: Number(pricingState?.BIG_ringed),
     SMALL_ringed: Number(pricingState?.SMALL_ringed),
+    A3_simple_do: Number(pricingState?.A3_simple_do),
+    A3_simple_do_color: Number(pricingState?.A3_simple_do_color),
+    A3_double_does: Number(pricingState?.A3_double_does),
+    A3_double_does_color: Number(pricingState?.A3_double_does_color),
     OF_simple_do: Number(pricingState?.OF_simple_do),
     OF_simple_do_color: Number(pricingState?.OF_simple_do_color),
     OF_double_does: Number(pricingState?.OF_double_does),

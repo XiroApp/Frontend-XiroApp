@@ -151,11 +151,11 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               <span className="text-[10px] opacity-70 ">297 x 210 mm</span>
             </button>
 
-            {/* <button
+            <button
               className={
                 resume.size === "A3"
                   ? "flex flex-col items-center w-24 justify-center px-1  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-1  bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-1 border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -166,7 +166,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
             >
               <span className="text-[12px] ">A3</span>
               <span className="text-[10px] opacity-70 ">420 x 297 mm</span>
-            </button> */}
+            </button>
             <button
               className={
                 resume.size === "Oficio"
