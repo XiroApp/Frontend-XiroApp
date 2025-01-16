@@ -16,16 +16,17 @@ export function getPrintingUsers() {
           printingUsers: response.data,
         },
       });
-      return dispatch({
-        type: action.TOAST_ALERT,
-        payload: {
-          message: "Usuarios cargados correctamente.",
-          variant: "success",
-          vertical: "top",
-          horizontal: "right",
-          open: true,
-        },
-      });
+      return;
+      // return dispatch({
+      //   type: action.TOAST_ALERT,
+      //   payload: {
+      //     message: "Usuarios cargados correctamente.",
+      //     variant: "success",
+      //     vertical: "top",
+      //     horizontal: "right",
+      //     open: true,
+      //   },
+      // });
     } catch (error) {
       return dispatch({
         type: action.TOAST_ALERT,
@@ -53,16 +54,17 @@ export function getAllUsers() {
           users: response.data,
         },
       });
-      return dispatch({
-        type: action.TOAST_ALERT,
-        payload: {
-          message: "Usuarios cargados correctamente.",
-          variant: "success",
-          vertical: "top",
-          horizontal: "right",
-          open: true,
-        },
-      });
+      return;
+      // return dispatch({
+      //   type: action.TOAST_ALERT,
+      //   payload: {
+      //     message: "Usuarios cargados correctamente.",
+      //     variant: "success",
+      //     vertical: "top",
+      //     horizontal: "right",
+      //     open: true,
+      //   },
+      // });
     } catch (error) {
       return dispatch({
         type: action.TOAST_ALERT,
@@ -142,7 +144,6 @@ export function getAllOrders() {
           const año = fecha.getFullYear();
 
           const fechaFormateada = `${dia}/${mes}/${año}`;
-     
 
           return {
             order_number: order.order_number,

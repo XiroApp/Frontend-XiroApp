@@ -11,13 +11,6 @@ import { FaBookOpen as FileCopySharpIcon } from "react-icons/fa6";
 import { FaFileInvoiceDollar as PrintSharpIcon } from "react-icons/fa6";
 import UploadIcon from "@mui/icons-material/UploadOutlined";
 import ErrorIcon from "@mui/icons-material/ErrorOutlined";
-
-// import  from "@mui/icons-material/StoreOutlined";
-// import MopedIcon from "@mui/icons-material/MopedOutlined";
-// import  from "@mui/icons-material/DescriptionOutlined";
-// import  from "@mui/icons-material/FileCopyOutlined";
-// import  from "@mui/icons-material/PrintOutlined";
-
 import { styled } from "@mui/material/styles";
 import {
   addToCart,
@@ -76,6 +69,9 @@ export default function NewOrder() {
   const user = useSelector((state) => state.dataBaseUser);
   const cart = useSelector((state) => state.cart);
   const labels = useSelector((state) => state.labels);
+
+  console.log(labels);
+
   const pricingState = useSelector((state) => state.pricing);
   const place = useSelector((state) => state.place);
   const [resetModal, setResetModal] = useState(false);
@@ -397,7 +393,7 @@ export default function NewOrder() {
           <section className="w-full h-full">
             <DefaultSnack
               content={
-                labels.find((label) => label.id === "snackbar_new_order_info")
+                labels?.find((label) => label.id === "snackbar_new_order_info")
                   .content
               }
             />

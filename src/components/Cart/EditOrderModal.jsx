@@ -381,7 +381,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
           <section className="w-full h-full">
             <DefaultSnack
               content={
-                labels.find((label) => label.id === "snackbar_new_order_info")
+                labels?.find((label) => label.id === "snackbar_new_order_info")
                   .content
               }
             />

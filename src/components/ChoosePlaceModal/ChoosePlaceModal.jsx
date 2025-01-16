@@ -82,7 +82,12 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                 {!!labels
                   ? labels
                       .find((label) => label.id === "delivery_description")
-                      .content.map((text,index) => <p key={index} className="text-sm">{text}</p>)
+                      .content?.split("//")
+                      .map((text, index) => (
+                        <p key={index} className="text-sm">
+                          {text}
+                        </p>
+                      ))
                   : false}
               </div>
             </button>
@@ -105,12 +110,15 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                 style={{ color: "#458552", height: "3em", width: "3em" }}
               />
 
-              <span className="text-[14px] font-bold">Retiro en punto cercano</span>
+              <span className="text-[14px] font-bold">
+                Retiro en punto cercano
+              </span>
               <div className="flex flex-col">
                 {!!labels
                   ? labels
                       .find((label) => label.id === "pick_up_point_description")
-                      .content.map((text) => <p className="text-sm">{text}</p>)
+                      .content?.split("//")
+                      .map((text) => <p className="text-sm">{text}</p>)
                   : false}
               </div>
             </button>

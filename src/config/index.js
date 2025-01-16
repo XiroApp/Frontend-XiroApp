@@ -1,5 +1,7 @@
-let _env = "DEV"; //PARA STAGGING
-// let _env = "LOCAL"; // PARA EMULADOR F CLI
+import { ApiConstants } from "../Common/constants";
+
+// let _env = "DEV"; //PARA STAGGING
+let _env = "LOCAL"; // PARA EMULADOR F CLI
 
 const URL_MESSAGES = "messages";
 const URL_PICTURES = "pictures";
@@ -8,13 +10,13 @@ export class Settings {
   static get SERVER_URL() {
     switch (_env) {
       case "LOCAL":
-        return "http://localhost:5001/xiro-app-2ec87/us-central1/api/xiro-app";
+        return ApiConstants.BASE_URL_LOCAL;
 
       case "DEV":
-        return "https://us-central1-xiro-app-2ec87.cloudfunctions.net/api/xiro-app";
+        return ApiConstants.BASE_URL_PROD;
 
       default:
-        return "https://us-central1-xiro-app-2ec87.cloudfunctions.net/api/xiro-app";
+        return ApiConstants.BASE_URL_PROD;
     }
   }
 
@@ -71,6 +73,7 @@ export class Settings {
         };
     }
   }
+
   static getDefaultConverterConfig() {
     switch (_env) {
       case "LOCAL":

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import "./App.css";
+import "./index.css";
 import { useDispatch, useSelector } from "react-redux";
 import ProtectedRoute from "./context/ProtectedRoute";
 import Login from "./screens/NormalUser/Login/Login";
