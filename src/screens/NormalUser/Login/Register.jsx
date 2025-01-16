@@ -307,17 +307,18 @@ export default function Login() {
                   <Checkbox
                     sx={{ fontWeight: "normal", margin: 0 }}
                     color="primary"
-                    defaultChecked
+                    // defaultChecked
                     name="conditionsChecked"
                     checked={input.conditionsChecked}
                     onChange={(e) => handleInput(e)}
+                    id="TyC"
                   />
                   <span className="font-light">
                     Acepto los{" "}
                     <Link to="/terminosycondiciones">
-                      <span className="text-green-700 font-medium hover:underline">
+                      <label for="TyC" className="text-green-700 font-medium hover:underline">
                         Términos y condiciones.
-                      </span>
+                      </label>
                     </Link>
                   </span>
                 </div>

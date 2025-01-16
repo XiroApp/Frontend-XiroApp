@@ -167,7 +167,7 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
               </MenuItem>
               <MenuItem
                 sx={{ ":hover": { backgroundColor: "#c9d9bb" } }}
-                key={"Cuenta"}
+                key={"Contacto"}
                 onClick={handleContactModal}
               >
                 <Typography textAlign="center">Contacto</Typography>

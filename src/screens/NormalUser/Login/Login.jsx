@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { getAdditionalUserInfo } from "firebase/auth";
-
+import { Link } from "react-router-dom";
 import {
   Backdrop,
   Checkbox,
@@ -17,7 +17,6 @@ import {
   Input,
   InputAdornment,
   InputLabel,
-  Link,
   TextField,
   Typography,
 } from "@mui/material";
@@ -233,10 +232,13 @@ export default function Login({ loggedUser, dataBaseUser }) {
                       color="primary"
                       name="rememberMe"
                       onChange={(e) => handleInput(e)}
-                      defaultChecked
+                      // defaultChecked
                       checked={input.rememberMe}
+                      id="rememberMe"
                     />
-                    <span className="font-light ">Recordarme</span>
+                    <label for="rememberMe" className="font-light">
+                      Recordarme
+                    </label>
                   </div>
 
                   <Link href="/recuperar-contraseña">
@@ -258,19 +260,21 @@ export default function Login({ loggedUser, dataBaseUser }) {
                     <Checkbox
                       sx={{ fontWeight: "normal", margin: 0 }}
                       color="primary"
-                      defaultChecked
+                      // defaultChecked
                       name="conditionsChecked"
                       checked={input.conditionsChecked}
                       onChange={(e) => handleInput(e)}
+                      id="TyC"
                     />
-                    <span className="font-light">
-                      Acepto los{" "}
-                      <Link to="/terminosycondiciones">
-                        <span className="text-green-700 font-medium hover:underline">
-                          Términos y condiciones.
-                        </span>
-                      </Link>
-                    </span>
+                    <label for="TyC" className="font-light w-fit mr-1">
+                      Acepto los
+                    </label>
+
+                    <Link to="/terminosycondiciones">
+                      <span className="text-green-700 font-medium hover:underline">
+                        Términos y condiciones.
+                      </span>
+                    </Link>
                   </div>
                   {error.conditionsChecked && (
                     <span className="text-[12px] text-red-500 font-bold">
@@ -302,8 +306,10 @@ export default function Login({ loggedUser, dataBaseUser }) {
           <div className="flex flex-col items-center justify-center">
             <Typography>
               ¿Primera vez aquí?{" "}
-              <Link href="/registro" underline="none">
-                Crear cuenta
+              <Link to="/registro" underline="none">
+                <span className="text-green-700 font-medium hover:underline">
+                  Crear cuenta
+                </span>
               </Link>
             </Typography>
           </div>
