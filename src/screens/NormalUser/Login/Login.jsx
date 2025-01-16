@@ -1,5 +1,5 @@
 import "./Login.css";
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { useAuth } from "../../../context/authContext";
 import logoGoogle from "../../../utils/assets/images/icon-google.png";
 import loginImage from "../../../utils/assets/images/xiro-head.png";
@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { getAdditionalUserInfo } from "firebase/auth";
+
 import {
   Backdrop,
   Checkbox,
@@ -22,84 +23,106 @@ import {
 } from "@mui/material";
 import { validateEmail } from "../../../utils/inputValidator";
 import { useDispatch } from "react-redux";
-import { createUserGoogle, limoLogin } from "../../../redux/actions";
-import { Navigate } from "react-router-dom";
+import { createUserGoogle, limoLogin, setToast } from "../../../redux/actions";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function Login({ loggedUser, dataBaseUser }) {
   const dispatch = useDispatch();
-
-  if (loggedUser && dataBaseUser) {
-    return <Navigate to={"/"} />;
-  }
+  const navigate = useNavigate();
   const [loader, setLoader] = useState(false);
   const { login, loginWithGoogle } = useAuth();
-  const [input, setInput] = useState({ rememberMe: true });
-  const [error, setError] = useState({ email: false, password: false });
+  const [input, setInput] = useState({
+    rememberMe: true,
+    conditionsChecked: true,
+  });
+  const [error, setError] = useState({
+    email: false,
+    password: false,
+    conditionsChecked: false,
+  });
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (loggedUser && dataBaseUser) {
+      setLoader(true);
+      navigate("/");
+      // return <Navigate to={"/"} />;
+    }
+  });
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
   async function handleGoogleLogin(e) {
-    try {
-      setLoader(true);
-      let loginResponse = await loginWithGoogle();
-      console.log(loginResponse);
-      const {
-        email,
-        displayName,
-        providerData,
-        photoURL = null,
-        uid,
-        phoneNumber = null,
-        // reloadUserInfo,
-      } = loginResponse.user;
+    if (input.conditionsChecked) {
+      try {
+        setLoader(true);
+        setError({ email: false, password: false, conditionsChecked: false });
+        let loginResponse = await loginWithGoogle();
 
-      let user = loginResponse.user;
-      console.log(user);
-      const { isNewUser } = getAdditionalUserInfo(loginResponse);
+        const {
+          email,
+          displayName,
+          providerData,
+          photoURL = null,
+          uid,
+          phoneNumber = null,
+          // reloadUserInfo,
+        } = loginResponse.user;
 
-      if (isNewUser) {
-        dispatch(
-          createUserGoogle({
-            email,
-            displayName,
-            photoURL,
-            phoneNumber,
-            uid,
-            providerData,
-            createdAt: new Date(),
-          })
-        );
-      } else dispatch(limoLogin(user, input.rememberMe));
-      setLoader(false);
-    } catch (error) {
-      console.error(error);
-      setLoader(false);
+        let user = loginResponse.user;
+
+        const { isNewUser } = getAdditionalUserInfo(loginResponse);
+
+        if (isNewUser) {
+          dispatch(
+            createUserGoogle({
+              email,
+              displayName,
+              photoURL,
+              phoneNumber,
+              uid,
+              providerData,
+              createdAt: new Date(),
+            })
+          );
+        } else dispatch(limoLogin(user, input.rememberMe));
+      } catch (error) {
+        console.error(error);
+        dispatch(setToast("Error al iniciar sesión", "error"));
+      } finally {
+        setLoader(false);
+      }
+    } else {
+      setError({ ...error, conditionsChecked: true });
     }
   }
   async function handleLogin(e) {
-    setError({ email: false, password: false });
-    validateEmail(input.email)
-      ? setError({ ...error, email: false })
-      : setError({ ...error, email: true, password: true });
+    setError({ email: false, password: false, conditionsChecked: false });
+    if (input.conditionsChecked) {
+      validateEmail(input.email)
+        ? setError({ ...error, email: false })
+        : setError({ ...error, email: true, password: true });
 
-    try {
-      setLoader(true);
-      let loginResponse = await login(input.email, input.password);
+      try {
+        setLoader(true);
+        let loginResponse = await login(input.email, input.password);
 
-      if (loginResponse.error) {
-        setError(loginResponse.error);
-      } else {
-        let user = loginResponse.user;
+        if (loginResponse.error) {
+          setError(loginResponse.error);
+        } else {
+          let user = loginResponse.user;
 
-        dispatch(limoLogin(user, input.rememberMe));
+          dispatch(limoLogin(user, input.rememberMe));
+        }
+        setLoader(false);
+      } catch (error) {
+        console.error(error);
+        setLoader(false);
       }
-      setLoader(false);
-    } catch (error) {
-      console.error(error);
-      setLoader(false);
+    } else {
+      setError({ ...error, conditionsChecked: true });
     }
   }
   function handleInput(e) {
@@ -114,16 +137,14 @@ export default function Login({ loggedUser, dataBaseUser }) {
     <div className="bg-white flex flex-row h-full pb-5">
       <span className=" text-sm absolute bottom-0 left-0">V 2.0.3</span>
       {/* LOADER */}
-      {loader ? (
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={open}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      ) : (
-        false
-      )}
+
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loader}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
       {/* --------- */}
 
       <section
@@ -188,8 +209,8 @@ export default function Login({ loggedUser, dataBaseUser }) {
                   }
                 />
                 {error.password ? (
-                  <span className="text-[12px] text-red-500 font-bold">
-                    Contraseña incorrecta.
+                  <span className="text-[11px] text-red-500">
+                    Credenciales incorrectas.
                   </span>
                 ) : (
                   false
@@ -197,28 +218,69 @@ export default function Login({ loggedUser, dataBaseUser }) {
               </FormControl>
             </section>
           </div>
-
           {/* BOTONES LOGIN */}
           <div className="flex flex-col items-center gap-4 ">
-            <div className="flex justify-between items-center gap-3">
-              <section className="flex gap-5 items-center">
-                <div className="flex items-center">
-                  <Checkbox
-                    sx={{ fontWeight: "normal", margin: 0, paddingRight: 0.5 }}
-                    color="primary"
-                    name="rememberMe"
-                    onChange={(e) => handleInput(e)}
-                    defaultChecked
-                    checked={input.rememberMe}
-                  />
-                  <span className="font-light ">Recordarme</span>
-                </div>
-                <Link href="/recuperar-contraseña">
-                  {" "}
-                  <span className="font-medium ">Olvidé mi contraseña</span>
-                </Link>
-              </section>
+            <div className="flex flex-col items-start">
+              <div className="flex justify-between items-center">
+                <section className="flex gap-3 items-center">
+                  <div className="flex items-center">
+                    <Checkbox
+                      sx={{
+                        fontWeight: "normal",
+                        margin: 0,
+                        paddingRight: 0.5,
+                      }}
+                      color="primary"
+                      name="rememberMe"
+                      onChange={(e) => handleInput(e)}
+                      defaultChecked
+                      checked={input.rememberMe}
+                    />
+                    <span className="font-light ">Recordarme</span>
+                  </div>
+
+                  <Link href="/recuperar-contraseña">
+                    {" "}
+                    <span className="font-medium ">Olvidé mi contraseña</span>
+                  </Link>
+                </section>
+              </div>
+
+              <div className="flex flex-col justify-between items-center">
+                <section
+                  className={
+                    error.conditionsChecked
+                      ? "flex flex-col items-center underline text-red-500"
+                      : "flex flex-col items-center"
+                  }
+                >
+                  <div className="flex items-center">
+                    <Checkbox
+                      sx={{ fontWeight: "normal", margin: 0 }}
+                      color="primary"
+                      defaultChecked
+                      name="conditionsChecked"
+                      checked={input.conditionsChecked}
+                      onChange={(e) => handleInput(e)}
+                    />
+                    <span className="font-light">
+                      Acepto los{" "}
+                      <Link to="/terminosycondiciones">
+                        <span className="text-green-700 font-medium hover:underline">
+                          Términos y condiciones.
+                        </span>
+                      </Link>
+                    </span>
+                  </div>
+                  {error.conditionsChecked && (
+                    <span className="text-[12px] text-red-500 font-bold">
+                      Debes aceptar los términos y condiciones.
+                    </span>
+                  )}
+                </section>
+              </div>
             </div>
+
             <Button
               onClick={(e) => handleLogin(e)}
               variant="contained"
@@ -237,7 +299,6 @@ export default function Login({ loggedUser, dataBaseUser }) {
               <span>Continuar con Google</span>
             </Button>
           </div>
-
           <div className="flex flex-col items-center justify-center">
             <Typography>
               ¿Primera vez aquí?{" "}

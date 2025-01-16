@@ -35,7 +35,9 @@ export default function Login() {
     password: "",
     verifyPassword: "",
     conditionsChecked: true,
+    instagram: "",
   });
+
   const [allowRegister, setAllowRegister] = useState(false);
   const [error, setError] = useState(false);
 
@@ -126,13 +128,13 @@ export default function Login() {
                 uid,
                 providerData,
                 createdAt: new Date(),
+                instagram: input.instagram,
               })
             );
           }
         }
 
         continueRegister && navigate("/registrocompletadoexitosamente");
-        // continueRegister && console.log("BIENVENIDO");
       } catch (error) {
         console.error(error);
       }
@@ -168,17 +170,15 @@ export default function Login() {
       <section className="w-screen lg:w-1/2 flex flex-col justify-center items-center lg:gap-4 lg:pr-32">
         <div className="flex flex-col lg:gap-4 gap-2 ">
           <div>
-            <section className="flex flex-col items-center justify-center gap-2">
+            <section className="flex flex-col items-center justify-center gap-1">
               <img src={loginImage} alt="" className="h-56 object-contain " />
 
               {/* <h1 className="text-3xl">¡Bienvenido a LIMO!</h1> */}
-              <h2 className="text-lg font-md opacity-60">
-                Registro
-              </h2>
+              <h2 className="text-lg font-md opacity-60">Registro</h2>
             </section>
             {/* INPUT SECTION */}
 
-            <section className="flex flex-col gap-1 lg:gap-4 mt-6">
+            <section className="flex flex-col gap-1 ">
               <TextField
                 className=""
                 error={error.name}
@@ -207,6 +207,17 @@ export default function Login() {
                 label="E-mail"
                 type="text"
                 autoComplete="current-email"
+                variant="standard"
+                fullWidth
+                onChange={(e) => handleInput(e)}
+              />
+              <TextField
+                error={error.instagram}
+                helperText={"Opcional"}
+                name="instagram"
+                label="Instagram (Sin @)"
+                type="text"
+                autoComplete="current-instagram"
                 variant="standard"
                 fullWidth
                 onChange={(e) => handleInput(e)}
@@ -301,7 +312,7 @@ export default function Login() {
                     checked={input.conditionsChecked}
                     onChange={(e) => handleInput(e)}
                   />
-                  <span className="font-extralight mx-2 ">
+                  <span className="font-light">
                     Acepto los{" "}
                     <Link to="/terminosycondiciones">
                       <span className="text-green-700 font-medium hover:underline">

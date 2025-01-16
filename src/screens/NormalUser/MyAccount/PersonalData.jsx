@@ -41,19 +41,20 @@ export default function PersonalData({ user }) {
     eighteenYearsAgo.getDate().toString().padStart(2, "0");
 
   // Formatear la fecha actual al formato YYYY-MM-DD
-  const fechaActualFormato =
-    fechaActual.getFullYear() +
-    "-" +
-    (fechaActual.getMonth() + 1).toString().padStart(2, "0") +
-    "-" +
-    fechaActual.getDate().toString().padStart(2, "0");
+  // const fechaActualFormato =
+  //   fechaActual.getFullYear() +
+  //   "-" +
+  //   (fechaActual.getMonth() + 1).toString().padStart(2, "0") +
+  //   "-" +
+  //   fechaActual.getDate().toString().padStart(2, "0");
 
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState({ ...user });
   const [error, setError] = useState(false);
 
-  function handleCloseModal() {
+  function handleCloseModal(e) {
+    e.preventDefault()
     setOpenModal(!openModal);
   }
   async function handleSaveChanges(e) {
@@ -178,7 +179,9 @@ export default function PersonalData({ user }) {
           />
         </section>
         <section className="flex flex-col w-full">
-          <span className="text-[12px]">NUMERO DE CELULAR (Sin 0 y sin 15)</span>
+          <span className="text-[12px]">
+            NUMERO DE CELULAR (Sin 0 y sin 15)
+          </span>
           <Input
             error={error.phone}
             name="phone"
@@ -199,7 +202,7 @@ export default function PersonalData({ user }) {
       </div>
       <div className="flex flex-col  lg:flex-row gap-8 lg:flex  lg:gap-5 ">
         <div className="flex flex-col lg:w-full">
-          <span className="text-[12px]">NACIMIENTO</span>
+          <span className="text-[12px]">FECHA DE NACIMIENTO</span>
           <input
             name="birthdate"
             max={fecha18AtrasFormato}
@@ -216,6 +219,31 @@ export default function PersonalData({ user }) {
           {error.birthdate ? (
             <span className="text-[12px] text-red-500 font-bold">
               Fecha de nacimiento inválida. Debes ser mayor de 18
+            </span>
+          ) : (
+            false
+          )}
+        </div>
+        <div className="flex flex-col lg:w-full">
+          <span className="text-[12px]">INSTAGRAM (opcional)</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xl">@</span>
+            <input
+              name="instagram"
+              defaultValue={user?.instagram}
+              type="text"
+              maxLength={40}
+              onChange={(e) => handleInput(e)}
+              className={
+                error.instagram
+                  ? "bg-transparent border-b border-red-500 pt-1"
+                  : "bg-transparent border-b border-gray-400 pt-1"
+              }
+            />
+          </div>
+          {error.birthdate ? (
+            <span className="text-[12px] text-red-500 font-bold">
+              Error al guardar
             </span>
           ) : (
             false
