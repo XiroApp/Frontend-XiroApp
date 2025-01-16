@@ -9,7 +9,7 @@ import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
 const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
 const libraries = ["places"];
 
-export default function Places({ userAddress, onLocationChange }) {
+export default function Places({ userAddress, onLocationChange,searchQuery }) {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyBf12D8PazAwJEEv91LJKc3G79zsUBl8pA",
     libraries,
@@ -17,18 +17,16 @@ export default function Places({ userAddress, onLocationChange }) {
   });
 
   if (!isLoaded) return <div>Loading...</div>;
-  return <Maps userAddress={userAddress} onLocationChange={onLocationChange} />;
+  return <Maps userAddress={userAddress} onLocationChange={onLocationChange} searchQuery={searchQuery} />;
 }
 
-function Maps({ userAddress, onLocationChange }) {
+function Maps({ userAddress, onLocationChange,searchQuery }) {
   const center = useMemo(() => ({ lat: -32, lng: -60 }), []);
   const [selected, setSelected] = useState({
     lat: center.lat,
     lng: center.lng,
     address: userAddress || "",
   });
-
-
 
   useEffect(() => {
     onLocationChange(selected);
@@ -52,8 +50,8 @@ function Maps({ userAddress, onLocationChange }) {
   };
 
   return (
-    <div className="w-[400px] h-[100%] md:w-[600px]">
-      <PlacesAutocomplete setSelected={setSelected} selected={selected} />
+    <div className="w-[100%] h-[100%]">
+      <PlacesAutocomplete setSelected={setSelected} selected={selected} searchQuery={searchQuery} />
       <APIProvider apiKey={apiKey}>
         <Map
           mapId="DEMO_MAP_ID"
@@ -76,7 +74,7 @@ function Maps({ userAddress, onLocationChange }) {
   );
 }
 
-const PlacesAutocomplete = ({ setSelected, selected }) => {
+const PlacesAutocomplete = ({ setSelected, selected, searchQuery }) => {
   const {
     ready,
     value,
@@ -86,10 +84,10 @@ const PlacesAutocomplete = ({ setSelected, selected }) => {
   } = usePlacesAutocomplete();
 
   useEffect(() => {
-    if (selected.address) {
-      setValue(selected.address, false);
+    if (searchQuery) {
+      setValue(searchQuery, false);
     }
-  }, [selected.address, setValue]);
+  }, [searchQuery, setValue]);
 
   const handleSelect = async (address) => {
     setValue(address, false);

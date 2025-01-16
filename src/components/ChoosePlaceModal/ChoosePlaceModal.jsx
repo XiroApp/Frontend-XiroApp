@@ -82,7 +82,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                 {!!labels
                   ? labels
                       .find((label) => label.id === "delivery_description")
-                      .content.map((text) => <p className="text-sm">{text}</p>)
+                      .content.map((text,index) => <p key={index} className="text-sm">{text}</p>)
                   : false}
               </div>
             </button>
