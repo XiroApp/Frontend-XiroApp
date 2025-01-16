@@ -17,6 +17,12 @@ import { Input } from "@mui/material";
 
 const columns = [
   {
+    id: "order_number",
+    label: "N° Orden",
+    minWidth: 100,
+    align: "center",
+  },
+  {
     id: "createdAt",
     label: "Fecha de llegada",
     minWidth: 100,

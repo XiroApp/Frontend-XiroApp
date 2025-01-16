@@ -142,8 +142,10 @@ export function getAllOrders() {
           const año = fecha.getFullYear();
 
           const fechaFormateada = `${dia}/${mes}/${año}`;
+     
 
           return {
+            order_number: order.order_number,
             orderStatus: order.orderStatus,
             cart: order.cart,
             paymentId: order.paymentData.id,

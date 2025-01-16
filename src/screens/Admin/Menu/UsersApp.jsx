@@ -20,6 +20,12 @@ const columns = [
     align: "left",
   },
   {
+    id: "orders_total",
+    label: "Pedidos",
+    minWidth: 100,
+    align: "left",
+  },
+  {
     id: "email",
     label: "Email",
     minWidth: 50,
@@ -115,21 +121,18 @@ export default function UsersApp({ editor }) {
             <TableBody>
               {allUsers
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
+                .map((row, index) => {
                   return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.uid}>
+                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                       {columns.map((column, index) => {
                         const value = row[column.id];
-
                         return (
-                          <>
-                            <UsersRow
-                              key={index}
-                              value={value}
-                              column={column}
-                              uidUser={row.uid}
-                            />
-                          </>
+                          <UsersRow
+                            key={index}
+                            value={value}
+                            column={column}
+                            uidUser={row.uid}
+                          />
                         );
                       })}
                     </TableRow>

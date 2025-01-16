@@ -31,7 +31,12 @@ export default function UsersRow({ column, value, uidUser }) {
         {column.id === "email" && <span className="font-bold">{value}</span>}
         {column.id === "uid" && (
           <Tooltip placement="top" title={value}>
-            <span className="font-bold">{value.slice(0, 10) + "..."}</span>
+            <span className="font-bold">{value?.slice(0, 10) + "..."}</span>
+          </Tooltip>
+        )}
+        {column.id === "orders_total" && (
+          <Tooltip placement="top" title={value}>
+            <span className="font-bold">{value}</span>
           </Tooltip>
         )}
         {column.id === "phone" && (
@@ -41,7 +46,7 @@ export default function UsersRow({ column, value, uidUser }) {
           <span className="font-bold">{value}</span>
         )}
         {column.id === "roles" &&
-          value.map((rol, index) => (
+          value?.map((rol, index) => (
             <span key={index} className="font-bold">
               {rol === "printing" ? "imprenta" : rol}
             </span>

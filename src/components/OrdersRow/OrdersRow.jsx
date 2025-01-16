@@ -178,6 +178,11 @@ export default function OrdersRow({
   return (
     <>
       <TableCell key={column.id} align={column.align} className="p-0 m-0">
+        {column.id === "order_number" && (
+          <>
+            <span className="text-sm font-bold">{value}</span>
+          </>
+        )}
         {column.id === "orderStatus" && (
           <>
             <Button
@@ -666,6 +671,7 @@ export default function OrdersRow({
             </Dialog>
           </>
         )}
+
         {column.id === "createdAt" && (
           <>
             <span className="text-sm">{value}</span>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,11 +14,16 @@ import logo from "../../utils/assets/images/xiro-head.png";
 import { logout } from "../../redux/actions";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import DialogTitle from "@mui/material/DialogTitle";
+import Dialog from "@mui/material/Dialog";
+import { Button, DialogActions, DialogContent } from "@mui/material";
+import { Mail, WhatsApp } from "@mui/icons-material";
 
 export default function Navbar({ loggedUser, title, hideLogo = false }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [contactModal, setContactModal] = useState(false);
   const cart = useSelector((state) => state.cart);
 
   function handleLogout(e) {
@@ -34,6 +39,10 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleContactModal = () => {
+    setContactModal(!contactModal);
   };
 
   return (
@@ -158,6 +167,13 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
               </MenuItem>
               <MenuItem
                 sx={{ ":hover": { backgroundColor: "#c9d9bb" } }}
+                key={"Cuenta"}
+                onClick={handleContactModal}
+              >
+                <Typography textAlign="center">Contacto</Typography>
+              </MenuItem>
+              <MenuItem
+                sx={{ ":hover": { backgroundColor: "#c9d9bb" } }}
                 key={"logout"}
                 onClick={(e) => handleLogout(e)}
               >
@@ -178,6 +194,50 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
           )}
         </Toolbar>
       </Container>
+
+      <Dialog onClose={handleContactModal} open={contactModal}>
+        <DialogTitle className="text-center">Contacto</DialogTitle>
+        <DialogContent className="flex flex-col items-center gap-3">
+          <Typography className="text-center">
+            ¿Necesitas ayuda? Contactate con nuestro soporte por alguno de los
+            siguientes medios:
+          </Typography>
+          <a
+            target="_blank"
+            href="https://wa.me/5492616362351?text=Hola, deseo comunicarme con el soporte de XIRO."
+          >
+            <Button
+              variant="outlined"
+              // sx={{ borderRadius: "100%", height: "5em", width: "5em" }}
+            >
+              <WhatsApp
+                sx={{ borderRadius: "100%", height: "1.6em", width: "1.6em" }}
+              />
+
+              <Typography>+549-261-636-2351</Typography>
+            </Button>
+          </a>
+          <a target="_blank" href="mailto:appxiro@gmail.com">
+            <Button
+              variant="outlined"
+              color="error"
+              // sx={{ borderRadius: "100%", height: "5em", width: "5em" }}
+              className="flex items-center gap-2"
+            >
+              <Mail
+                sx={{ borderRadius: "100%", height: "1.6em", width: "1.6em" }}
+              />
+
+              <Typography>appxiro@gmail.com</Typography>
+            </Button>
+          </a>
+        </DialogContent>
+        <DialogActions>
+          <Button color="inherit" onClick={handleContactModal}>
+            Cerrar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </AppBar>
   );
 }
