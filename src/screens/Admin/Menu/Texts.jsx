@@ -1,44 +1,14 @@
 import { Button, Switch } from "@mui/material";
 import React, { useState } from "react";
-import { updateUser } from "../../redux/actions";
+import { updateUser } from "../../../redux/actions";
 import { useDispatch } from "react-redux";
 
-export default function Notifications({ user }) {
+export default function Texts({ user }) {
   const dispatch = useDispatch();
 
-  const [notifications, setNotifications] = useState({
-    allowNotifications: true, // user.mailNotifications && user.whatsappNotifications,
-    mailNotifications: user.notifications.mail ,
-    whatsappNotifications: user.notifications.whatsapp ,
-  });
-  function hanldeAllowNotifications(e) {
-    e.preventDefault();
+  const [input, setInput] = useState({});
 
-    if (!e.target.checked) {
-      setNotifications({
-        allowNotifications: false,
-        mailNotifications: false,
-        whatsappNotifications: false,
-      });
-    } else {
-      setNotifications({
-        ...notifications,
-        allowNotifications: true,
-      });
-    }
-  }
-  function handleMailNotifications(e) {
-    setNotifications({
-      ...notifications,
-      mailNotifications: e.target.checked,
-    });
-  }
-  function handleWhatsappNotifications(e) {
-    setNotifications({
-      ...notifications,
-      whatsappNotifications: e.target.checked,
-    });
-  }
+  
 
   async function handleSaveChanges(e) {
     e.preventDefault();
@@ -54,11 +24,8 @@ export default function Notifications({ user }) {
     );
   }
 
-
-
   return (
     <div className="flex flex-col rounded-2xl lg:h-2/3 p-1 gap-5">
-    
       <section className="flex justify-between items-center rounded-2xl p-5 bg-[#1e1e1e]">
         <div className="flex flex-col">
           <span className="text-xl">Mail</span>
