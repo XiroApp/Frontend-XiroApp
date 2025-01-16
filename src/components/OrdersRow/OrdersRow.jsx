@@ -597,6 +597,15 @@ export default function OrdersRow({
                         {`Envío: $${order.shipment_price}`}
                       </span>
                     </li>
+                    {order.cart.map((item, index) => (
+                      <li>
+                        <span className="text-[12px] text-black">
+                          {`Cupón ${index + 1}: ${
+                            item?.coupon_used?.type[0] || ""
+                          } ${item?.coupon_used?.ammount || 0}`}
+                        </span>
+                      </li>
+                    ))}
                     {/* <li>
                       <span className="text-[12px] text-black">
                         {`Cupón: ${order.cart[0].details.coupon}`}
