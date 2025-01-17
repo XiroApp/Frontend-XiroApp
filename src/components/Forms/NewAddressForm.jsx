@@ -61,9 +61,8 @@ export default function NewAddressForm({ open, setOpen }) {
     console.log("location", location);
     console.log("input", input);
 
-    const searchQuery = `${input.name} ${input.locality} ${input.city}`;
+    const searchQuery = `${input.name} ${input.number} ${input.locality} ${input.city}`;
     setSearchQuery(searchQuery);
-
   }
 
   function handleOtherTag(e) {
@@ -128,13 +127,47 @@ export default function NewAddressForm({ open, setOpen }) {
   };
 
   const handleSubmitLocation = () => {
-    if (location) {
-      console.log("Dirección:", location.address);
-      console.log("Latitud:", location.lat);
-      console.log("Longitud:", location.lng);
+    const data = {
+      name: input.name,
+      number: input.number,
+      zipCode: input.zipCode,
+      floorOrApartment: input.floorOrApartment,
+      city: input.city,
+      locality: input.locality,
+      tag: input.tag,
+      lat: location.lat,
+      lng: location.lng,
+      address: location.address,
+    };
+    console.log("handleSubmitLocation -->", data);
+
+    /* if (location) {
+      let results = createAddressValidator(
+        input.name,
+        input.number,
+        input.zipCode,
+        input.floorOrApartment,
+        input.city,
+        input.locality,
+        input.tag,
+        location.lat,
+        location.lng,
+        location.address
+      );
+
+      setError(results.error);
+      let continueRegister = results.allowCreate;
+
+      if (continueRegister) {
+        setLoader(true);
+        setOpen(false);
+        dispatch(
+          addAddress(user, data)
+        );
+      }
     } else {
       console.log("No se ha seleccionado ninguna dirección.");
-    }
+    } */
   };
 
   /* STEPPER */
@@ -474,7 +507,6 @@ export default function NewAddressForm({ open, setOpen }) {
                     p: 1,
                     height: { xs: "450px", sm: "400px" },
                     width: "100%",
-                    backgroundColor: "red",
                   }}
                   dividers
                   className="flex flex-col gap-8"
@@ -501,9 +533,12 @@ export default function NewAddressForm({ open, setOpen }) {
 
               <Button
                 onClick={() => {
-                  handleNext();
-                  handleSubmit();
-                  /*  handleSubmitLocation(); */
+                  if (activeStep === steps.length - 1) {
+                    handleSubmitLocation();
+                  } else {
+                    handleNext();
+                    handleSubmit();
+                  }
                 }}
               >
                 {activeStep === steps.length - 1 ? "Finalizar" : "Siguiente"}

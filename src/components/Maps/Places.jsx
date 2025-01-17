@@ -9,7 +9,7 @@ import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
 const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
 const libraries = ["places"];
 
-export default function Places({ userAddress, onLocationChange,searchQuery }) {
+export default function Places({ userAddress, onLocationChange, searchQuery }) {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyBf12D8PazAwJEEv91LJKc3G79zsUBl8pA",
     libraries,
@@ -17,20 +17,42 @@ export default function Places({ userAddress, onLocationChange,searchQuery }) {
   });
 
   if (!isLoaded) return <div>Loading...</div>;
-  return <Maps userAddress={userAddress} onLocationChange={onLocationChange} searchQuery={searchQuery} />;
+  return (
+    <Maps
+      userAddress={userAddress}
+      onLocationChange={onLocationChange}
+      searchQuery={searchQuery}
+    />
+  );
 }
 
-function Maps({ userAddress, onLocationChange,searchQuery }) {
-  const center = useMemo(() => ({ lat: -32, lng: -60 }), []);
+function Maps({ userAddress, onLocationChange, searchQuery }) {
+  const center = useMemo(() => ({ lat: -32, lng: -68.83 }), []);
   const [selected, setSelected] = useState({
     lat: center.lat,
     lng: center.lng,
-    address: userAddress || "",
+    address: searchQuery || "",
   });
 
   useEffect(() => {
     onLocationChange(selected);
   }, [selected, onLocationChange]);
+
+  useEffect(() => {
+    if (searchQuery) {
+      const fetchCoordinates = async () => {
+        try {
+          const results = await getGeocode({ address: searchQuery });
+          const { lat, lng } = getLatLng(results[0]);
+          setSelected({ lat, lng, address: searchQuery });
+        } catch (error) {
+          console.error("Error geocoding searchQuery:", error);
+        }
+      };
+
+      fetchCoordinates();
+    }
+  }, [searchQuery]);
 
   const handleDragEnd = async (event) => {
     const position = event.latLng;
@@ -42,7 +64,6 @@ function Maps({ userAddress, onLocationChange,searchQuery }) {
       const address = results[0]?.formatted_address || "Unknown location";
       const newLocation = { lat, lng, address };
       setSelected(newLocation);
-
       onLocationChange(newLocation);
     } catch (error) {
       console.error("Error during reverse geocoding:", error);
@@ -51,12 +72,15 @@ function Maps({ userAddress, onLocationChange,searchQuery }) {
 
   return (
     <div className="w-[100%] h-[100%]">
-      <PlacesAutocomplete setSelected={setSelected} selected={selected} searchQuery={searchQuery} />
+      <PlacesAutocomplete
+        setSelected={setSelected}
+        selected={selected}
+      />
       <APIProvider apiKey={apiKey}>
         <Map
           mapId="DEMO_MAP_ID"
           defaultCenter={center}
-          defaultZoom={12}
+          defaultZoom={17}
           center={selected || center}
           gestureHandling="greedy"
           disableDefaultUI={true}
@@ -73,8 +97,7 @@ function Maps({ userAddress, onLocationChange,searchQuery }) {
     </div>
   );
 }
-
-const PlacesAutocomplete = ({ setSelected, selected, searchQuery }) => {
+const PlacesAutocomplete = ({ setSelected, selected}) => {
   const {
     ready,
     value,
@@ -84,10 +107,10 @@ const PlacesAutocomplete = ({ setSelected, selected, searchQuery }) => {
   } = usePlacesAutocomplete();
 
   useEffect(() => {
-    if (searchQuery) {
-      setValue(searchQuery, false);
+    if (selected.address) {
+      setValue(selected.address, false);
     }
-  }, [searchQuery, setValue]);
+  }, [selected.address, setValue]);
 
   const handleSelect = async (address) => {
     setValue(address, false);
