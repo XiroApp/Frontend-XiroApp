@@ -27,7 +27,7 @@ export default function Places({ userAddress, onLocationChange, searchQuery }) {
 }
 
 function Maps({ userAddress, onLocationChange, searchQuery }) {
-  const center = useMemo(() => ({ lat: -32, lng: -60 }), []);
+  const center = useMemo(() => ({ lat: -32, lng: -68.83 }), []);
   const [selected, setSelected] = useState({
     lat: center.lat,
     lng: center.lng,
@@ -75,13 +75,12 @@ function Maps({ userAddress, onLocationChange, searchQuery }) {
       <PlacesAutocomplete
         setSelected={setSelected}
         selected={selected}
-        searchQuery={searchQuery}
       />
       <APIProvider apiKey={apiKey}>
         <Map
           mapId="DEMO_MAP_ID"
           defaultCenter={center}
-          defaultZoom={12}
+          defaultZoom={17}
           center={selected || center}
           gestureHandling="greedy"
           disableDefaultUI={true}
@@ -98,7 +97,7 @@ function Maps({ userAddress, onLocationChange, searchQuery }) {
     </div>
   );
 }
-const PlacesAutocomplete = ({ setSelected, selected, searchQuery }) => {
+const PlacesAutocomplete = ({ setSelected, selected}) => {
   const {
     ready,
     value,

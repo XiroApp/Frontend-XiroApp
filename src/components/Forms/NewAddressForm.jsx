@@ -127,11 +127,21 @@ export default function NewAddressForm({ open, setOpen }) {
   };
 
   const handleSubmitLocation = () => {
-    if (location) {
-      console.log("Dirección:", location.address);
-      console.log("Latitud:", location.lat);
-      console.log("Longitud:", location.lng);
-     
+    const data = {
+      name: input.name,
+      number: input.number,
+      zipCode: input.zipCode,
+      floorOrApartment: input.floorOrApartment,
+      city: input.city,
+      locality: input.locality,
+      tag: input.tag,
+      lat: location.lat,
+      lng: location.lng,
+      address: location.address,
+    };
+    console.log("handleSubmitLocation -->", data);
+
+    /* if (location) {
       let results = createAddressValidator(
         input.name,
         input.number,
@@ -141,7 +151,8 @@ export default function NewAddressForm({ open, setOpen }) {
         input.locality,
         input.tag,
         location.lat,
-        location.lng
+        location.lng,
+        location.address
       );
 
       setError(results.error);
@@ -150,11 +161,13 @@ export default function NewAddressForm({ open, setOpen }) {
       if (continueRegister) {
         setLoader(true);
         setOpen(false);
-        dispatch(addAddress(user, input));
+        dispatch(
+          addAddress(user, data)
+        );
       }
     } else {
       console.log("No se ha seleccionado ninguna dirección.");
-    }
+    } */
   };
 
   /* STEPPER */
@@ -494,7 +507,6 @@ export default function NewAddressForm({ open, setOpen }) {
                     p: 1,
                     height: { xs: "450px", sm: "400px" },
                     width: "100%",
-                    backgroundColor: "red",
                   }}
                   dividers
                   className="flex flex-col gap-8"
@@ -521,9 +533,12 @@ export default function NewAddressForm({ open, setOpen }) {
 
               <Button
                 onClick={() => {
-                  handleNext();
-                  handleSubmit();
-                  /*  handleSubmitLocation(); */
+                  if (activeStep === steps.length - 1) {
+                    handleSubmitLocation();
+                  } else {
+                    handleNext();
+                    handleSubmit();
+                  }
                 }}
               >
                 {activeStep === steps.length - 1 ? "Finalizar" : "Siguiente"}
