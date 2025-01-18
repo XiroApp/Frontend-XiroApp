@@ -118,6 +118,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
         setLoader(false);
       } catch (error) {
         console.error(error);
+        dispatch(setToast("Error al iniciar sesión", "error"));
         setLoader(false);
       }
     } else {

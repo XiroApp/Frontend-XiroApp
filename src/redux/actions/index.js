@@ -112,7 +112,16 @@ export function createUserGoogle(user) {
 
       return console.log(data);
     } catch (error) {
-      return console.error(error);
+      return dispatch({
+        type: action.TOAST_ALERT,
+        payload: {
+          message: "Error al iniciar sesión",
+          variant: "error",
+          vertical: "top",
+          horizontal: "right",
+          open: true,
+        },
+      });
     }
   };
 }

@@ -45,8 +45,12 @@ export default function NewAddressForm({ open, setOpen }) {
   const [searchQuery, setSearchQuery] = useState("");
 
   function handleInput(e) {
+    console.dir(e.target.name);
+    console.dir(e.target.value);
+
     setInput({ ...input, [e.target.name]: e.target.value });
   }
+
   function handleTag(e) {
     if (e.target.name !== "Otro") {
       setOpenInputTag(false);
@@ -54,15 +58,6 @@ export default function NewAddressForm({ open, setOpen }) {
     } else {
       setInput({ ...input, ["tag"]: e.target.value });
     }
-  }
-
-  function handleSubmit(e) {
-    console.log("user", user);
-    console.log("location", location);
-    console.log("input", input);
-
-    const searchQuery = `${input.name} ${input.number} ${input.locality} ${input.city}`;
-    setSearchQuery(searchQuery);
   }
 
   function handleOtherTag(e) {
@@ -118,6 +113,15 @@ export default function NewAddressForm({ open, setOpen }) {
       </li>
     );
   };
+  // const options = ["1", "2", "3"];
+  // const [value, setValue] = React.useState(options[0]);
+  // const [inputValue, setInputValue] = React.useState("");
+
+  // function handleAutocompleteCityInput(e, newInputValue) {
+  //   console.log(newInputValue);
+
+  //   // setInput({ ...input, city: newInputValue });
+  // }
 
   /* --------------- MAPAS ----------------------------------------------------------- */
   const [location, setLocation] = useState(null);
@@ -127,47 +131,26 @@ export default function NewAddressForm({ open, setOpen }) {
   };
 
   const handleSubmitLocation = () => {
-    const data = {
-      name: input.name,
-      number: input.number,
-      zipCode: input.zipCode,
-      floorOrApartment: input.floorOrApartment,
-      city: input.city,
-      locality: input.locality,
-      tag: input.tag,
-      lat: location.lat,
-      lng: location.lng,
-      address: location.address,
-    };
-    console.log("handleSubmitLocation -->", data);
+    try {
+      const data = {
+        name: input.name,
+        number: input.number,
+        zipCode: input.zipCode,
+        floorOrApartment: input.floorOrApartment,
+        city: input.city,
+        locality: input.locality,
+        tag: input.tag,
+        lat: location.lat,
+        lng: location.lng,
+        address: location.address,
+      };
 
-    /* if (location) {
-      let results = createAddressValidator(
-        input.name,
-        input.number,
-        input.zipCode,
-        input.floorOrApartment,
-        input.city,
-        input.locality,
-        input.tag,
-        location.lat,
-        location.lng,
-        location.address
-      );
-
-      setError(results.error);
-      let continueRegister = results.allowCreate;
-
-      if (continueRegister) {
-        setLoader(true);
-        setOpen(false);
-        dispatch(
-          addAddress(user, data)
-        );
-      }
-    } else {
-      console.log("No se ha seleccionado ninguna dirección.");
-    } */
+      setLoader(true);
+      setOpen(false);
+      dispatch(addAddress(user, data));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   /* STEPPER */
@@ -194,6 +177,40 @@ export default function NewAddressForm({ open, setOpen }) {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
+
+  function handleSubmitStep1(e) {
+    // console.log("user", user);
+    // console.log("location", location);
+    // console.log("input", input);
+
+    if (input) {
+      let results = createAddressValidator(
+        input.name,
+        input.number,
+        input.zipCode,
+        input.floorOrApartment,
+        input.city,
+        input.locality,
+        input.tag
+        // location.lat,
+        // location.lng,
+        // location.address
+      );
+
+      setError(results.error);
+      let continueRegister = results.allowCreate;
+
+      if (continueRegister) {
+        const searchQuery = `${input.name} ${input.number}, ${input.locality}, ${input.city}, Mendoza, Argentina`;
+
+        setSearchQuery(searchQuery);
+
+        handleNext();
+      }
+    } else {
+      console.log("No se ha seleccionado ninguna dirección.");
+    }
+  }
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -362,6 +379,29 @@ export default function NewAddressForm({ open, setOpen }) {
                           />
                         )}
                       />
+
+                      {/* <div>
+                        <div>{`value: ${
+                          value !== null ? `'${value}'` : "null"
+                        }`}</div>
+                        <div>{`inputValue: '${inputValue}'`}</div>
+                        <br />
+                        <Autocomplete
+                          {...citiesProps}
+                          // value={value}
+                          // onChange={(event, newValue) => {
+                          //   setValue(newValue);
+                          // }}
+                          inputValue={inputValue}
+                          onInputChange={handleAutocompleteCityInput}
+                          id="city"
+                          // options={cities}
+                          sx={{ width: 300 }}
+                          renderInput={(params) => (
+                            <TextField {...params} label="Controllable" />
+                          )}
+                        />
+                      </div> */}
                       {error.city ? (
                         <span className="text-[12px] text-red-500 font-bold">
                           Ciudad no válida.
@@ -536,8 +576,8 @@ export default function NewAddressForm({ open, setOpen }) {
                   if (activeStep === steps.length - 1) {
                     handleSubmitLocation();
                   } else {
-                    handleNext();
-                    handleSubmit();
+                    // handleNext();
+                    handleSubmitStep1();
                   }
                 }}
               >
