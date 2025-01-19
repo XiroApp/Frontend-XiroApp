@@ -293,21 +293,21 @@ export function editAddress(user, address) {
 }
 //--------------- Delete Address --------------------
 export function deleteAddress(address) {
+  console.log(address)
   return async function (dispatch) {
     try {
-      let response = await axios.post(
-        `${baseUrl}/users/${address.userUid}/deleteAddress`,
-        address
+      const response = await axios.delete(
+        `${baseUrl}/users/${address.userUid}/deleteAddress/${address.addressUid}`
       );
+
       dispatch({
         type: action.DELETE_ADDRESS,
         payload: {
-          // dataBaseUser: response.data[0],
           dataBaseAddresses: response.data.addresses,
         },
       });
 
-      return dispatch({
+      dispatch({
         type: action.TOAST_ALERT,
         payload: {
           message: "La dirección se eliminó exitosamente",
@@ -318,7 +318,7 @@ export function deleteAddress(address) {
         },
       });
     } catch (error) {
-      return dispatch({
+      dispatch({
         type: action.TOAST_ALERT,
         payload: {
           message:

@@ -48,10 +48,10 @@ export default function AddressCard({ address, user }) {
   const [openLoader, setOpenLoader] = useState(false);
   const [error, setError] = useState(false);
   const [input, setInput] = useState(address);
+  
   function handleInput(e) {
     setInput({ ...input, [e.target.name]: e.target.value });
   }
-
   function handleCloseEditModal() {
     setEditModal(false);
   }
@@ -73,7 +73,6 @@ export default function AddressCard({ address, user }) {
       input.locality,
       input.tag
     );
-
     setError(results.error);
     let continueRegister = results.allowCreate;
 
@@ -92,7 +91,7 @@ export default function AddressCard({ address, user }) {
   };
   const handleDeleteAddress = () => {
     dispatch(deleteAddress(address));
-    setDeleteModal(false);
+    setDeleteModal(false); 
   };
   /* AUTOCOMPLETE STATE */
   const localitiesProps = {

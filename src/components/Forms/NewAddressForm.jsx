@@ -42,12 +42,8 @@ export default function NewAddressForm({ open, setOpen }) {
 
   const [localities, setLocalities] = useState(citiesJson.localities);
   const [cities, setCities] = useState(citiesJson.cities);
-  const [searchQuery, setSearchQuery] = useState("");
 
   function handleInput(e) {
-    console.dir(e.target.name);
-    console.dir(e.target.value);
-
     setInput({ ...input, [e.target.name]: e.target.value });
   }
 
@@ -80,21 +76,6 @@ export default function NewAddressForm({ open, setOpen }) {
     setError(false);
   };
 
-  const handleCancel = () => {
-    setInput({
-      userUid: user.uid,
-      name: null,
-      number: null,
-      city: null,
-      locality: null,
-      zipCode: null,
-      floorOrApartment: "-",
-      tag: "Casa",
-    });
-    setOpen(false);
-    setError(false);
-  };
-
   /* AUTOCOMPLETE STATE */
   const localitiesProps = {
     options: localities,
@@ -113,18 +94,9 @@ export default function NewAddressForm({ open, setOpen }) {
       </li>
     );
   };
-  // const options = ["1", "2", "3"];
-  // const [value, setValue] = React.useState(options[0]);
-  // const [inputValue, setInputValue] = React.useState("");
-
-  // function handleAutocompleteCityInput(e, newInputValue) {
-  //   console.log(newInputValue);
-
-  //   // setInput({ ...input, city: newInputValue });
-  // }
-
-  /* --------------- MAPAS ----------------------------------------------------------- */
+  /* --------------- MAPAS -------------------------------- */
   const [location, setLocation] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleLocationChange = (newLocation) => {
     setLocation(newLocation);
@@ -133,6 +105,7 @@ export default function NewAddressForm({ open, setOpen }) {
   const handleSubmitLocation = () => {
     try {
       const data = {
+        userUid: user.uid,
         name: input.name,
         number: input.number,
         zipCode: input.zipCode,
@@ -150,7 +123,7 @@ export default function NewAddressForm({ open, setOpen }) {
       dispatch(addAddress(user, data));
     } catch (error) {
       console.log(error);
-    }
+    } 
   };
 
   /* STEPPER */
@@ -173,16 +146,11 @@ export default function NewAddressForm({ open, setOpen }) {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
 
   function handleSubmitStep1(e) {
-    // console.log("user", user);
-    // console.log("location", location);
-    // console.log("input", input);
-
     if (input) {
       let results = createAddressValidator(
         input.name,
@@ -202,9 +170,7 @@ export default function NewAddressForm({ open, setOpen }) {
 
       if (continueRegister) {
         const searchQuery = `${input.name} ${input.number}, ${input.locality}, ${input.city}, Mendoza, Argentina`;
-
         setSearchQuery(searchQuery);
-
         handleNext();
       }
     } else {
@@ -379,29 +345,6 @@ export default function NewAddressForm({ open, setOpen }) {
                           />
                         )}
                       />
-
-                      {/* <div>
-                        <div>{`value: ${
-                          value !== null ? `'${value}'` : "null"
-                        }`}</div>
-                        <div>{`inputValue: '${inputValue}'`}</div>
-                        <br />
-                        <Autocomplete
-                          {...citiesProps}
-                          // value={value}
-                          // onChange={(event, newValue) => {
-                          //   setValue(newValue);
-                          // }}
-                          inputValue={inputValue}
-                          onInputChange={handleAutocompleteCityInput}
-                          id="city"
-                          // options={cities}
-                          sx={{ width: 300 }}
-                          renderInput={(params) => (
-                            <TextField {...params} label="Controllable" />
-                          )}
-                        />
-                      </div> */}
                       {error.city ? (
                         <span className="text-[12px] text-red-500 font-bold">
                           Ciudad no válida.
@@ -567,21 +510,21 @@ export default function NewAddressForm({ open, setOpen }) {
                 onClick={handleBack}
                 sx={{ mr: 1 }}
               >
-                Atrás
+                ATRÁS
               </Button>
               <Box sx={{ flex: "1 1 auto" }} />
 
               <Button
+              sx={{border: "1px solid #789360"}}
                 onClick={() => {
                   if (activeStep === steps.length - 1) {
                     handleSubmitLocation();
                   } else {
-                    // handleNext();
                     handleSubmitStep1();
                   }
                 }}
               >
-                {activeStep === steps.length - 1 ? "Finalizar" : "Siguiente"}
+                {activeStep === steps.length - 1 ? "AGREGAR DIRECCIÓN" : "SIGUIENTE"}
               </Button>
             </Box>
           </React.Fragment>
