@@ -1,31 +1,11 @@
-import {
-  Autocomplete,
-  TextField,
-  Backdrop,
-  Box,
-  CircularProgress,
-  Input,
-  Tooltip,
-} from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import PlaceIcon from "@mui/icons-material/Place";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ErrorIcon from "@mui/icons-material/Error";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import { useDispatch } from "react-redux";
-import { deleteAddress, editAddress } from "../../redux/actions";
-import { createAddressValidator } from "../../utils/inputValidator";
-import citiesJson from "../../utils/data/filteredMendozaCities.json";
 
-export default function AddressCard({ address, user, handleClickOpen }) {
-  const dispatch = useDispatch();
-
+export default function AddressCard({ address, handleClickOpen }) {
   return (
     <>
       {/* CARD */}
