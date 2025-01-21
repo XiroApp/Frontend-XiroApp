@@ -1,9 +1,7 @@
 import { Box, Tooltip } from "@mui/material";
-import React, { useState } from "react";
 import PlaceIcon from "@mui/icons-material/Place";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useDispatch } from "react-redux";
 
 export default function AddressCard({ address, handleClickOpen }) {
   return (

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Backdrop, Box, Button, CircularProgress } from "@mui/material";
+import {  Box, Button } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { useDispatch, useSelector } from "react-redux";
 import AddressCard from "../../../components/AddressCard/AddressCard";
@@ -10,16 +10,16 @@ export default function AddressData({ user }) {
   const addresses = useSelector((state) => state.addresses);
 
   const [open, setOpen] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(null); 
+  const [selectedAddress, setSelectedAddress] = useState(null);
 
   const handleClickOpen = (address = null) => {
-    setSelectedAddress(address); 
+    setSelectedAddress(address);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedAddress(null); 
+    setSelectedAddress(null);
   };
 
   return (

@@ -1,8 +1,6 @@
 import React, { useState, useEffect} from "react";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
 import citiesJson from "../../utils/data/filteredMendozaCities.json";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -347,9 +345,11 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                       <span className="text-sm">CIUDAD</span>
                       <Autocomplete
                         {...citiesProps}
+                        getOptionLabel={params => params}
                         id="auto-complete"
                         value={input.city || null}
                         name="city"
+                        isOptionEqualToValue={()=>true }
                         onSelect={(e) => handleInput(e)}
                         renderInput={(params) => (
                           <TextField
@@ -377,8 +377,10 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                     <Autocomplete
                       {...localitiesProps}
                       // filterOptions={filterOptions}
+                      getOptionLabel={params => params}
                       value={input.locality || null}
                       renderOption={renderOptions}
+                      isOptionEqualToValue={()=> true }
                       id="auto-complete"
                       name="locality"
                       onSelect={(e) => handleInput(e)}
