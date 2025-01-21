@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -20,25 +20,35 @@ import { createAddressValidator } from "../../utils/inputValidator";
 import { addAddress } from "../../redux/actions";
 import Places from "../Maps/Places";
 
-export default function NewAddressForm({ open, setOpen }) {
+export default function NewAddressForm({ open, setOpen, selectedAddress }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.dataBaseUser);
-
+  
   const [openInputTag, setOpenInputTag] = useState(false);
   const [error, setError] = useState(false);
   const [loader, setLoader] = useState(false);
   const [input, setInput] = useState({
     userUid: user.uid,
-    name: null,
-    number: null,
-    city: null,
-    locality: null,
-    zipCode: null,
+    name: "",
+    number: "",
+    city: "",
+    locality: "",
+    zipCode: "",
     lat: null,
     lng: null,
     floorOrApartment: "-",
     tag: "Casa",
+    ...selectedAddress,
   });
+
+  useEffect(() => {
+    if (selectedAddress) {
+      setInput((prevInput) => ({
+        ...prevInput,
+        ...selectedAddress,
+      }));
+    }
+  }, [selectedAddress]);
 
   const [localities, setLocalities] = useState(citiesJson.localities);
   const [cities, setCities] = useState(citiesJson.cities);
@@ -104,26 +114,30 @@ export default function NewAddressForm({ open, setOpen }) {
 
   const handleSubmitLocation = () => {
     try {
-      const data = {
-        userUid: user.uid,
-        name: input.name,
-        number: input.number,
-        zipCode: input.zipCode,
-        floorOrApartment: input.floorOrApartment,
-        city: input.city,
-        locality: input.locality,
-        tag: input.tag,
-        lat: location.lat,
-        lng: location.lng,
-        address: location.address,
-      };
+      if (selectedAddress) {
+        console.log("Editar dirección:", selectedAddress);
+      } else {
+        const data = {
+          userUid: user.uid,
+          name: input.name,
+          number: input.number,
+          zipCode: input.zipCode,
+          floorOrApartment: input.floorOrApartment,
+          city: input.city,
+          locality: input.locality,
+          tag: input.tag,
+          lat: location.lat,
+          lng: location.lng,
+          address: location.address,
+        };
 
-      setLoader(true);
-      setOpen(false);
-      dispatch(addAddress(user, data));
+        setLoader(true);
+        setOpen(false);
+        dispatch(addAddress(user, data));
+      }
     } catch (error) {
       console.log(error);
-    } 
+    }
   };
 
   /* STEPPER */
@@ -515,7 +529,7 @@ export default function NewAddressForm({ open, setOpen }) {
               <Box sx={{ flex: "1 1 auto" }} />
 
               <Button
-              sx={{border: "1px solid #789360"}}
+                sx={{ border: "1px solid #789360" }}
                 onClick={() => {
                   if (activeStep === steps.length - 1) {
                     handleSubmitLocation();
@@ -524,7 +538,9 @@ export default function NewAddressForm({ open, setOpen }) {
                   }
                 }}
               >
-                {activeStep === steps.length - 1 ? "AGREGAR DIRECCIÓN" : "SIGUIENTE"}
+                {activeStep === steps.length - 1
+                  ? "AGREGAR DIRECCIÓN"
+                  : "SIGUIENTE"}
               </Button>
             </Box>
           </React.Fragment>
