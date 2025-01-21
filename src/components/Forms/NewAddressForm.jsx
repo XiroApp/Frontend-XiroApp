@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import { createAddressValidator } from "../../utils/inputValidator";
-import { addAddress } from "../../redux/actions";
+import { addAddress,editAddress } from "../../redux/actions";
 import Places from "../Maps/Places";
 
 export default function NewAddressForm({ open, setOpen, selectedAddress }) {
@@ -128,6 +128,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
     try {
       if (selectedAddress) {
         console.log("Editar dirección:", data);
+        dispatch(editAddress(user, data));
       } else {
         setLoader(true);
         setOpen(false);

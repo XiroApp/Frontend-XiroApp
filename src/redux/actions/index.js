@@ -253,18 +253,14 @@ export function addAddress(user, address) {
 export function editAddress(user, address) {
   return async function (dispatch) {
     try {
-      console.log("bodyadres", address);
-      let response = await axios.post(
+      let response = await axios.put(
         `${baseUrl}/users/${user.uid}/editAddress`,
-        address
+        { address }  // Aquí se envía addressUid correctamente
       );
-      console.log(response.data);
+
       dispatch({
-        type: action.EDIT_ADDRESS,
-        payload: {
-          dataBaseUser: response.data[0],
-          dataBaseAddresses: response.data.addresses,
-        },
+        type: "EDIT_ADDRESS_SUCCESS",
+        payload: response.data,
       });
 
       return dispatch({
@@ -289,7 +285,7 @@ export function editAddress(user, address) {
         },
       });
     }
-  };
+  }; 
 }
 //--------------- Delete Address --------------------
 export function deleteAddress(address) {
