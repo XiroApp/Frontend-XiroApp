@@ -111,24 +111,24 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
   };
 
   const handleSubmitLocation = () => {
+    const data = {
+      userUid: user.uid,
+      name: input.name,
+      number: input.number,
+      zipCode: input.zipCode,
+      floorOrApartment: input.floorOrApartment,
+      city: input.city,
+      locality: input.locality,
+      tag: input.tag,
+      lat: location.lat,
+      lng: location.lng,
+      address: location.address,
+    };
+
     try {
       if (selectedAddress) {
-        console.log("Editar dirección:", selectedAddress);
+        console.log("Editar dirección:", data);
       } else {
-        const data = {
-          userUid: user.uid,
-          name: input.name,
-          number: input.number,
-          zipCode: input.zipCode,
-          floorOrApartment: input.floorOrApartment,
-          city: input.city,
-          locality: input.locality,
-          tag: input.tag,
-          lat: location.lat,
-          lng: location.lng,
-          address: location.address,
-        };
-
         setLoader(true);
         setOpen(false);
         dispatch(addAddress(user, data));
