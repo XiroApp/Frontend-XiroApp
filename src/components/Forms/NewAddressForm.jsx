@@ -23,7 +23,7 @@ import Places from "../Maps/Places";
 export default function NewAddressForm({ open, setOpen, selectedAddress }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.dataBaseUser);
-  
+
   const [openInputTag, setOpenInputTag] = useState(false);
   const [error, setError] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -271,6 +271,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                         name="name"
                         // defaultValue={user.displayName}
                         placeholder="Calle ejemplo"
+                        value={input.name || ""}
                         onChange={(e) => handleInput(e)}
                       />
                       {error.name ? (
@@ -291,6 +292,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                         type="number"
                         inputProps={{ max: 99999, min: 0, maxLength: 5 }}
                         placeholder="1234"
+                        value={input.number || ""}
                         // defaultValue={user.displayName}
                         onChange={(e) => handleInput(e)}
                       />
@@ -309,7 +311,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                         name="floorOrApartment"
                         // type="number"
                         placeholder="N° de casa o departamento..."
-                        defaultValue={"-"}
+                        value={input.floorOrApartment || ""}
                         onChange={(e) => handleInput(e)}
                       />
                       {error.floorOrApartment ? (
@@ -327,7 +329,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                       <Input
                         error={error.zipCode}
                         name="zipCode"
-                        // defaultValue={user.displayName}
+                        value={input.zipCode|| ""}
                         type="number"
                         placeholder="5519"
                         onChange={(e) => handleInput(e)}
@@ -346,6 +348,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                       <Autocomplete
                         {...citiesProps}
                         id="auto-complete"
+                        value={input.city || null}
                         name="city"
                         onSelect={(e) => handleInput(e)}
                         renderInput={(params) => (
@@ -374,6 +377,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                     <Autocomplete
                       {...localitiesProps}
                       // filterOptions={filterOptions}
+                      value={input.locality || null}
                       renderOption={renderOptions}
                       id="auto-complete"
                       name="locality"
