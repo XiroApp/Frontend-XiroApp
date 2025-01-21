@@ -10,16 +10,16 @@ export default function AddressData({ user }) {
   const addresses = useSelector((state) => state.addresses);
 
   const [open, setOpen] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(null); // Nueva dirección seleccionada
+  const [selectedAddress, setSelectedAddress] = useState(null); 
 
   const handleClickOpen = (address = null) => {
-    setSelectedAddress(address); // Establecer dirección seleccionada
+    setSelectedAddress(address); 
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedAddress(null); // Limpiar dirección seleccionada
+    setSelectedAddress(null); 
   };
 
   return (
