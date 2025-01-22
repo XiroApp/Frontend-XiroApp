@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import citiesJson from "../../utils/data/filteredMendozaCities.json";
@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import { createAddressValidator } from "../../utils/inputValidator";
-import { addAddress,editAddress } from "../../redux/actions";
+import { addAddress, editAddress } from "../../redux/actions";
 import Places from "../Maps/Places";
 
 export default function NewAddressForm({ open, setOpen, selectedAddress }) {
@@ -328,7 +328,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                       <Input
                         error={error.zipCode}
                         name="zipCode"
-                        value={input.zipCode|| ""}
+                        value={input.zipCode || ""}
                         type="number"
                         placeholder="5519"
                         onChange={(e) => handleInput(e)}
@@ -346,11 +346,11 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                       <span className="text-sm">CIUDAD</span>
                       <Autocomplete
                         {...citiesProps}
-                        getOptionLabel={params => params}
+                        getOptionLabel={(params) => params}
                         id="auto-complete"
                         value={input.city || null}
                         name="city"
-                        isOptionEqualToValue={()=>true }
+                        isOptionEqualToValue={() => true}
                         onSelect={(e) => handleInput(e)}
                         renderInput={(params) => (
                           <TextField
@@ -378,10 +378,10 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                     <Autocomplete
                       {...localitiesProps}
                       // filterOptions={filterOptions}
-                      getOptionLabel={params => params}
+                      getOptionLabel={(params) => params}
                       value={input.locality || null}
                       renderOption={renderOptions}
-                      isOptionEqualToValue={()=> true }
+                      isOptionEqualToValue={() => true}
                       id="auto-complete"
                       name="locality"
                       onSelect={(e) => handleInput(e)}

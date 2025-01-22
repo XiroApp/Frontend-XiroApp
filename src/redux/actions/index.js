@@ -289,8 +289,7 @@ export function editAddress(user, address) {
 }
 //--------------- Delete Address --------------------
 export function deleteAddress(address) {
-  console.log(address)
-  return async function (dispatch) {
+   return async function (dispatch) {
     try {
       const response = await axios.delete(
         `${baseUrl}/users/${address.userUid}/deleteAddress/${address.addressUid}`
@@ -326,7 +325,7 @@ export function deleteAddress(address) {
         },
       });
     }
-  };
+  }; 
 }
 //--------------- UPLOAD FILE MULTER --------------------
 export function uploadMulter(file) {

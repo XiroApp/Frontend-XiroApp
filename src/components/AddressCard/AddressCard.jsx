@@ -3,7 +3,7 @@ import PlaceIcon from "@mui/icons-material/Place";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function AddressCard({ address, handleClickOpen }) {
+export default function AddressCard({ address, handleClickOpen, handleClickDeleteAddress }) {
   return (
     <>
       {/* CARD */}
@@ -24,7 +24,7 @@ export default function AddressCard({ address, handleClickOpen }) {
             </Tooltip>
             <Tooltip title="Eliminar" placement="top" arrow>
               <DeleteIcon
-                /*  onClick={handleClickOpenDeleteModal} */
+                onClick={()=>handleClickDeleteAddress(address)}
                 color="action"
                 sx={{ height: "1em", width: "1em" }}
                 className="hover:bg-[#c9d9bb] rounded-lg"

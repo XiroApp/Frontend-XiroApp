@@ -4,6 +4,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { useDispatch, useSelector } from "react-redux";
 import AddressCard from "../../../components/AddressCard/AddressCard";
 import NewAddressForm from "../../../components/Forms/NewAddressForm";
+import { deleteAddress } from "../../../redux/actions";
 
 export default function AddressData({ user }) {
   const dispatch = useDispatch();
@@ -16,6 +17,9 @@ export default function AddressData({ user }) {
     setSelectedAddress(address);
     setOpen(true);
   };
+  const handleClickDeleteAddress = (address) => {
+    dispatch(deleteAddress(address))
+  }
 
   const handleClose = () => {
     setOpen(false);
@@ -49,7 +53,9 @@ export default function AddressData({ user }) {
             key={index}
             address={address}
             user={user}
-            handleClickOpen={() => handleClickOpen(address)} // Enviar dirección
+            handleClickOpen={() => handleClickOpen(address)} 
+            handleClickDeleteAddress={()=>handleClickDeleteAddress(address)}
+            // Enviar dirección
           />
         ))}
 
