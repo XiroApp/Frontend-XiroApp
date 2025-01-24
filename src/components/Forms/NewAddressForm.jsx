@@ -13,14 +13,17 @@ import {
   Step,
   StepLabel,
   Typography,
+  InputAdornment,
 } from "@mui/material";
 import { createAddressValidator } from "../../utils/inputValidator";
-import { addAddress, editAddress } from "../../redux/actions";
+import { addAddress, editAddress, setToast } from "../../redux/actions";
 import Places from "../Maps/Places";
 
 export default function NewAddressForm({ open, setOpen, selectedAddress }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.dataBaseUser);
+  const [localities, setLocalities] = useState(citiesJson.localities);
+  const [cities, setCities] = useState(citiesJson.cities);
 
   const [openInputTag, setOpenInputTag] = useState(false);
   const [error, setError] = useState(false);
@@ -39,115 +42,10 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
     ...selectedAddress,
   });
 
-  useEffect(() => {
-    if (selectedAddress) {
-      setInput((prevInput) => ({
-        ...prevInput,
-        ...selectedAddress,
-      }));
-    }
-  }, [selectedAddress]);
-
-  const [localities, setLocalities] = useState(citiesJson.localities);
-  const [cities, setCities] = useState(citiesJson.cities);
-
-  function handleInput(e) {
-    setInput({ ...input, [e.target.name]: e.target.value });
-  }
-
-  function handleTag(e) {
-    if (e.target.name !== "Otro") {
-      setOpenInputTag(false);
-      setInput({ ...input, ["tag"]: e.target.name });
-    } else {
-      setInput({ ...input, ["tag"]: e.target.value });
-    }
-  }
-
-  function handleOtherTag(e) {
-    setOpenInputTag(true);
-    setInput({ ...input, ["tag"]: e.target.name });
-  }
-
-  const handleClose = () => {
-    setOpen(false);
-    setInput({
-      userUid: user.uid,
-      name: null,
-      number: null,
-      city: null,
-      locality: null,
-      zipCode: null,
-      floorOrApartment: "-",
-      tag: "Casa",
-    });
-    setError(false);
-  };
-
-  /* AUTOCOMPLETE STATE */
-  const localitiesProps = {
-    options: localities,
-    getOptionLabel: (option) => option.name,
-  };
-
-  const citiesProps = {
-    options: cities,
-    getOptionLabel: (option) => option.name,
-  };
-  // create your filer options here
-  const renderOptions = (props, option) => {
-    return (
-      <li {...props} key={option.id}>
-        {option.name}
-      </li>
-    );
-  };
-  /* --------------- MAPAS -------------------------------- */
-  const [location, setLocation] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleLocationChange = (newLocation) => {
-    setLocation(newLocation);
-  };
-
-  const handleSubmitLocation = () => {
-    const data = {
-      userUid: user.uid,
-      name: input.name,
-      number: input.number,
-      zipCode: input.zipCode,
-      floorOrApartment: input.floorOrApartment,
-      city: input.city,
-      locality: input.locality,
-      tag: input.tag,
-      lat: location.lat,
-      lng: location.lng,
-      address: location.address,
-    };
-
-    try {
-      if (selectedAddress) {
-        console.log("Editar dirección:", data);
-        dispatch(editAddress(user, data));
-      } else {
-        setLoader(true);
-        setOpen(false);
-        dispatch(addAddress(user, data));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   /* STEPPER */
   const steps = ["Ingresa tu dirección", "Ayúdanos a encontrarte"];
-
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
-
-  const isStepOptional = (step) => {
-    return step === 1;
-  };
 
   const isStepSkipped = (step) => {
     return skipped.has(step);
@@ -193,24 +91,98 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
+  }; 
 
   const handleReset = () => {
     setActiveStep(0);
   };
+
+  useEffect(() => {
+    if (selectedAddress) {
+      setInput((prevInput) => ({
+        ...prevInput,
+        ...selectedAddress,
+      }));
+    }
+  }, [selectedAddress]);
+
+  function handleInput(e) {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  }
+
+  function handleTag(e) {
+    if (e.target.name !== "Otro") {
+      setOpenInputTag(false);
+      setInput({ ...input, ["tag"]: e.target.name });
+    } else {
+      setInput({ ...input, ["tag"]: e.target.value });
+    }
+  }
+
+  function handleOtherTag(e) {
+    setOpenInputTag(true);
+    setInput({ ...input, ["tag"]: e.target.name });
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+    setInput({
+      userUid: user.uid,
+      name: null,
+      number: null,
+      city: null,
+      locality: null,
+      zipCode: null,
+      floorOrApartment: "-",
+      tag: "Casa",
+    });
+    setError(false);
+    setActiveStep(0);
+  };
+
+  /* --------------- MAPAS -------------------------------- */
+  const [location, setLocation] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleLocationChange = (newLocation) => {
+    setLocation(newLocation);
+  };
+
+  const handleSubmitLocation = async () => {
+    const data = {
+      userUid: user.uid,
+      name: input.name,
+      number: input.number,
+      zipCode: input.zipCode,
+      floorOrApartment: input.floorOrApartment,
+      city: input.city,
+      locality: input.locality,
+      tag: input.tag,
+      lat: location.lat,
+      lng: location.lng,
+      address: location.address,
+    };
+    setLoader(true);
+    
+    try {
+      if (selectedAddress) {
+       dispatch(editAddress(user, data));
+      } else {
+        dispatch(addAddress(user, data));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(setToast("Error", "error"));
+    } finally {
+      setLoader(false);
+      setOpen(false);
+      setActiveStep(0);
+    }
+  };
+
+  /* AUTOCOMPLETE */
+
+
 
   return (
     <Dialog
@@ -343,26 +315,24 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                     </div>
                     {/* AUTOCOMPLETE DE CIUDADES */}
                     <div className="flex flex-col w-full">
-                      <span className="text-sm">CIUDAD</span>
+                      <span className="text-sm">LOCALIDAD</span>
                       <Autocomplete
-                        {...citiesProps}
-                        getOptionLabel={(params) => params}
-                        id="auto-complete"
-                        value={input.city || null}
+                        value={input?.city || ""}
+                        onChange={(event, newValue) => {
+                          setInput({ ...input, city: newValue });
+                        }}
                         name="city"
-                        isOptionEqualToValue={() => true}
-                        onSelect={(e) => handleInput(e)}
+                        options={cities.map((city) => city.name)}
                         renderInput={(params) => (
                           <TextField
-                            error={error.city}
-                            name="city"
-                            placeholder="Elige la ciudad"
                             {...params}
-                            label=""
+                            error={error.city}
+                            placeholder="Elige la ciudad"
                             variant="standard"
                           />
                         )}
                       />
+
                       {error.city ? (
                         <span className="text-[12px] text-red-500 font-bold">
                           Ciudad no válida.
@@ -374,23 +344,19 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                   </div>
                   {/* AUTOCOMPLETE DE LOCALIDADES */}
                   <div className="flex flex-col w-full">
-                    <span className="text-sm ">LOCALIDAD</span>
+                    <span className="text-sm ">DISTRITO</span>
                     <Autocomplete
-                      {...localitiesProps}
-                      // filterOptions={filterOptions}
-                      getOptionLabel={(params) => params}
-                      value={input.locality || null}
-                      renderOption={renderOptions}
-                      isOptionEqualToValue={() => true}
-                      id="auto-complete"
+                      value={input?.locality || ""}
+                      onChange={(event, newValue) => {
+                        setInput({ ...input, locality: newValue });
+                      }}
                       name="locality"
-                      onSelect={(e) => handleInput(e)}
+                      options={localities.map((locality) => locality.name)}
                       renderInput={(params) => (
                         <TextField
-                          error={error.locality}
                           {...params}
-                          name="locality"
-                          label=""
+                          error={error.locality}
+                          placeholder="Elige la ciudad"
                           variant="standard"
                         />
                       )}
@@ -545,9 +511,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                   }
                 }}
               >
-                {activeStep === steps.length - 1
-                  ? "AGREGAR DIRECCIÓN"
-                  : "SIGUIENTE"}
+                {activeStep === steps.length - 1 ? "GUARDAR" : "SIGUIENTE"}
               </Button>
             </Box>
           </React.Fragment>

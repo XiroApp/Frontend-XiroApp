@@ -5,6 +5,7 @@ import usePlacesAutocomplete, {
   getLatLng,
 } from "use-places-autocomplete";
 import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
+import { Typography } from "@mui/material";
 
 const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
 const libraries = ["places"];
@@ -126,7 +127,8 @@ const PlacesAutocomplete = ({ setSelected, selected}) => {
   };
 
   return (
-    <div className="autocomplete-container px-1 py-1 w-full lg:px-3 lg:pb-2">
+    <div className="autocomplete-container w-full">
+      <Typography className="" variant="h6">Selecciona la ubicación en el mapa:</Typography>
       <input
         type="text"
         value={value}

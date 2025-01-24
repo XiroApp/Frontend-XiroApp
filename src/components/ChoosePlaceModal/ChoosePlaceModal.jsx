@@ -18,7 +18,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
     name: "Cochabamba",
     number: "2973",
     city: "Guaymallén",
-    locality: "Villa Nueva de Guaymallén",
+    locality: "Villa Nueva",
     zipCode: "5521",
     floorOrApartment: "-",
     tag: "Punto de retiro",

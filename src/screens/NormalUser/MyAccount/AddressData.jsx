@@ -18,7 +18,7 @@ export default function AddressData({ user }) {
     setOpen(true);
   };
   const handleClickDeleteAddress = (address) => {
-    dispatch(deleteAddress(address))
+    dispatch(deleteAddress(address, user.uid))
   }
 
   const handleClose = () => {

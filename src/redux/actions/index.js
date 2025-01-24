@@ -255,7 +255,7 @@ export function editAddress(user, address) {
     try {
       let response = await axios.put(
         `${baseUrl}/users/${user.uid}/editAddress`,
-        { address }  // Aquí se envía addressUid correctamente
+        { address } // Aquí se envía addressUid correctamente
       );
 
       dispatch({
@@ -285,14 +285,16 @@ export function editAddress(user, address) {
         },
       });
     }
-  }; 
+  };
 }
 //--------------- Delete Address --------------------
-export function deleteAddress(address) {
-   return async function (dispatch) {
+export function deleteAddress(address, user_uid) {
+  return async function (dispatch) {
     try {
       const response = await axios.delete(
-        `${baseUrl}/users/${address.userUid}/deleteAddress/${address.addressUid}`
+        `${baseUrl}/users/${user_uid || address.userUid}/deleteAddress/${
+          address.addressUid
+        }`
       );
 
       dispatch({
@@ -325,7 +327,7 @@ export function deleteAddress(address) {
         },
       });
     }
-  }; 
+  };
 }
 //--------------- UPLOAD FILE MULTER --------------------
 export function uploadMulter(file) {
