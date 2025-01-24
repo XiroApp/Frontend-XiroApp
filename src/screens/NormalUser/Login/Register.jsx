@@ -211,7 +211,7 @@ export default function Login() {
                 fullWidth
                 onChange={(e) => handleInput(e)}
               />
-              <TextField
+              {/* <TextField
                 error={error.instagram}
                 helperText={"Opcional"}
                 name="instagram"
@@ -221,7 +221,7 @@ export default function Login() {
                 variant="standard"
                 fullWidth
                 onChange={(e) => handleInput(e)}
-              />
+              /> */}
 
               <FormControl sx={{}} variant="standard">
                 <InputLabel

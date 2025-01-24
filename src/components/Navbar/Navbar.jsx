@@ -214,13 +214,13 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
                 sx={{ borderRadius: "100%", height: "1.6em", width: "1.6em" }}
               />
 
-              <Typography>+549-261-636-2351</Typography>
+              <Typography className="text-black">+549-261-636-2351</Typography>
             </Button>
           </a>
           <a target="_blank" href="mailto:appxiro@gmail.com">
             <Button
               variant="outlined"
-              color="error"
+              // color="primary"
               // sx={{ borderRadius: "100%", height: "5em", width: "5em" }}
               className="flex items-center gap-2"
             >
@@ -228,7 +228,7 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
                 sx={{ borderRadius: "100%", height: "1.6em", width: "1.6em" }}
               />
 
-              <Typography>appxiro@gmail.com</Typography>
+              <Typography className="text-black">appxiro@gmail.com</Typography>
             </Button>
           </a>
         </DialogContent>
