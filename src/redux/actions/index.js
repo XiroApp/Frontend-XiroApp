@@ -253,18 +253,14 @@ export function addAddress(user, address) {
 export function editAddress(user, address) {
   return async function (dispatch) {
     try {
-      console.log("bodyadres", address);
-      let response = await axios.post(
+      let response = await axios.put(
         `${baseUrl}/users/${user.uid}/editAddress`,
-        address
+        { address }  // Aquí se envía addressUid correctamente
       );
-      console.log(response.data);
+
       dispatch({
-        type: action.EDIT_ADDRESS,
-        payload: {
-          dataBaseUser: response.data[0],
-          dataBaseAddresses: response.data.addresses,
-        },
+        type: "EDIT_ADDRESS_SUCCESS",
+        payload: response.data,
       });
 
       return dispatch({
@@ -289,25 +285,24 @@ export function editAddress(user, address) {
         },
       });
     }
-  };
+  }; 
 }
 //--------------- Delete Address --------------------
 export function deleteAddress(address) {
-  return async function (dispatch) {
+   return async function (dispatch) {
     try {
-      let response = await axios.post(
-        `${baseUrl}/users/${address.userUid}/deleteAddress`,
-        address
+      const response = await axios.delete(
+        `${baseUrl}/users/${address.userUid}/deleteAddress/${address.addressUid}`
       );
+
       dispatch({
         type: action.DELETE_ADDRESS,
         payload: {
-          // dataBaseUser: response.data[0],
           dataBaseAddresses: response.data.addresses,
         },
       });
 
-      return dispatch({
+      dispatch({
         type: action.TOAST_ALERT,
         payload: {
           message: "La dirección se eliminó exitosamente",
@@ -318,7 +313,7 @@ export function deleteAddress(address) {
         },
       });
     } catch (error) {
-      return dispatch({
+      dispatch({
         type: action.TOAST_ALERT,
         payload: {
           message:
@@ -330,7 +325,7 @@ export function deleteAddress(address) {
         },
       });
     }
-  };
+  }; 
 }
 //--------------- UPLOAD FILE MULTER --------------------
 export function uploadMulter(file) {
