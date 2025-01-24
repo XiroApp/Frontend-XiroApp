@@ -237,7 +237,7 @@ console.log(shipment);
         />
       ) : (
         <>
-          <Navbar title="Carrito" loggedUser={user} cart={cart} />
+          <Navbar title="Carrito" loggedUser={user} cart={cart}/>
           <section className="w-11/12 flex justify-center items-center pb-28 mt-3">
             {choosePlace ? (
               <ChoosePlaceModal
