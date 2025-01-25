@@ -241,35 +241,40 @@ export default function Orders({ editor }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {allOrders
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  return (
-                    <TableRow
-                      hover
-                      role="button"
-                      tabIndex={-1}
-                      key={index}
-                      className="p-0 m-0"
-                    >
-                      {columns.map((column, index) => {
-                        const value = row[column.id];
+              {allOrders?.length
+                ? allOrders
+                    ?.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                    .map((row, index) => {
+                      return (
+                        <TableRow
+                          hover
+                          role="button"
+                          tabIndex={-1}
+                          key={index}
+                          className="p-0 m-0"
+                        >
+                          {columns.map((column, index) => {
+                            const value = row[column.id];
 
-                        return (
-                          <OrdersRow
-                            key={index}
-                            value={value}
-                            column={column}
-                            printingUsers={printingUsers}
-                            orderId={row.paymentId}
-                            order={row}
-                            editor={editor}
-                          />
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
+                            return (
+                              <OrdersRow
+                                key={index}
+                                value={value}
+                                column={column}
+                                printingUsers={printingUsers}
+                                orderId={row.paymentId}
+                                order={row}
+                                editor={editor}
+                              />
+                            );
+                          })}
+                        </TableRow>
+                      );
+                    })
+                : null}
             </TableBody>
           </Table>
         </TableContainer>

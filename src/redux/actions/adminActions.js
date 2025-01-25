@@ -134,7 +134,7 @@ export function getAllOrders() {
     try {
       let response = await axios.get(`${baseUrl}/orders`);
 
-      let formatedOrders = response.data
+      let sortedOrders = response.data
         .map((order) => {
           const fechaStr = order.paymentData.date_created;
           const fecha = new Date(fechaStr);
@@ -165,11 +165,13 @@ export function getAllOrders() {
             total_price: order.total_price,
           };
         })
-        .reverse();
+        .sort((a, b) => b.order_number - a.order_number);
+
+
       dispatch({
         type: action.GET_ALL_ORDERS,
         payload: {
-          orders: formatedOrders,
+          orders: sortedOrders,
         },
       });
       dispatch({
@@ -183,7 +185,7 @@ export function getAllOrders() {
         },
       });
 
-      return formatedOrders;
+      return sortedOrders;
     } catch (error) {
       return dispatch({
         type: action.TOAST_ALERT,
