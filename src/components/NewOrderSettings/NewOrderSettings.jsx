@@ -129,7 +129,7 @@ export default function NewOrderSettings({
               <span className="text-[12px] ">A4</span>
               <span className="text-[10px] opacity-70 ">297 x 210 mm</span>
             </button>
-            <button
+            {/* <button
               className={
                 resume.size === "A3"
                   ? "flex flex-col items-center w-24 justify-center px-1  border-2 border-white bg-[#61774d] text-white rounded-lg"
@@ -144,7 +144,7 @@ export default function NewOrderSettings({
             >
               <span className="text-[12px] ">A3</span>
               <span className="text-[10px] opacity-70 ">420 x 297 mm</span>
-            </button>
+            </button> */}
             <button
               className={
                 resume.size === "Oficio"
