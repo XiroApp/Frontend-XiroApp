@@ -37,7 +37,7 @@ export default DeliveryRoutes;
 
 const RoutesDelivery = () => {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyBf12D8PazAwJEEv91LJKc3G79zsUBl8pA", // Replace with your actual API key
+    googleMapsApiKey: "AIzaSyBf12D8PazAwJEEv91LJKc3G79zsUBl8pA", 
     libraries: libraries,
     version: "weekly",
   });
@@ -68,12 +68,12 @@ function Maps({ isLoaded }) {
 
       try {
         const res = await directionService.route(request);
-        console.log("Directions Response:", res); // Debugging
+        console.log("Directions Response:", res);
         if (res.status === "OK") {
           setDirections(res);
         }
       } catch (error) {
-        console.error("Error calculating directions:", error); // Debugging
+        console.error("Error calculating directions:", error);
       }
     }
   };
