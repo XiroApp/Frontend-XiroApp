@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { useLoadScript, GoogleMap, DirectionsRenderer } from "@react-google-maps/api";
+import {
+  useLoadScript,
+  GoogleMap,
+  DirectionsRenderer,
+} from "@react-google-maps/api";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllOrders, getAllUsers } from "../../../redux/actions/adminActions";
 
 const libraries = ["places"];
 
@@ -10,6 +16,10 @@ const points = [
 ];
 
 const DeliveryRoutes = () => {
+  const orders = useSelector((state) => state.orders);
+
+  useEffect(() => {}, []);
+
   return (
     <section className="w-full text-balance flex flex-col justify-center items-center pt-2 lg:flex-row lg:items-start lg:pt-4">
       <article className="flex flex-col pl-3 text-stone-500 text-base md:pl-4 md:text-lg">
@@ -19,10 +29,14 @@ const DeliveryRoutes = () => {
           Accede de manera rápida y sencilla a las rutas asignadas
         </p>
         <ul className="text-stone-500 mt-4 flex flex-col gap-2 lg:mt-6">
-          <li>Pedido 1:</li>
-          <li>Pedido 2:</li>
-          <li>Pedido 3:</li>
-          <li>Pedido 4:</li>
+          {orders?.map((order, i) => (
+            <li key={i} className="text-stone-400">
+              Pedido {i + 1} :{" "}
+              <span>
+                {`${order?.place?.address.name} ${order?.place?.address.number} ${order?.place?.address.locality}`}
+              </span>
+            </li>
+          ))}
         </ul>
       </article>
 
@@ -37,7 +51,7 @@ export default DeliveryRoutes;
 
 const RoutesDelivery = () => {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyBf12D8PazAwJEEv91LJKc3G79zsUBl8pA", 
+    googleMapsApiKey: "AIzaSyBf12D8PazAwJEEv91LJKc3G79zsUBl8pA",
     libraries: libraries,
     version: "weekly",
   });
