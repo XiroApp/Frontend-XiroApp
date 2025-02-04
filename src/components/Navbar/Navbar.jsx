@@ -148,6 +148,24 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
                   <Typography textAlign="center">Vista de imprenta</Typography>
                 </MenuItem>
               )}
+              {loggedUser?.roles?.includes("pickup") && (
+                <MenuItem
+                  sx={{ ":hover": { backgroundColor: "#c9d9bb" } }}
+                  key={"Pickup"}
+                  onClick={() => navigate("/pickup")}
+                >
+                  <Typography textAlign="center">Vista de punto entrega</Typography>
+                </MenuItem>
+              )}
+              {loggedUser?.roles?.includes("distribution") && (
+                <MenuItem
+                  sx={{ ":hover": { backgroundColor: "#c9d9bb" } }}
+                  key={"Distribution"}
+                  onClick={() => navigate("/distribucion")}
+                >
+                  <Typography textAlign="center">Vista de distribución</Typography>
+                </MenuItem>
+              )}
               {loggedUser?.roles?.includes("delivery") && (
                 <MenuItem
                   sx={{ ":hover": { backgroundColor: "#c9d9bb" } }}

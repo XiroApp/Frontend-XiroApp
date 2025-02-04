@@ -1,26 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import List from "@mui/material/List";
 import MenuIcon from "@mui/icons-material/Menu";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import TurnSharpRightIcon from "@mui/icons-material/TurnSharpRight";
 import PriceChangeIcon from "@mui/icons-material/PriceChange";
 import { Avatar, Box, Drawer } from "@mui/material";
-import contactCuate from "../../utils/assets/images/contact-cuate.svg";
 import Navbar from "../../components/Navbar/Navbar";
-import FAQ from "./FAQ";
-import Chatbot from "../../components/Chatbot/Chatbot";
-import { getAllUsers } from "../../redux/actions/adminActions";
 import Orders from "./Menu/Orders";
+import DeliveryRoutes from "./Menu/DeliveryRoutes";
 
-export default function Printing({ cart, dataBaseUser }) {
-  const dispatch = useDispatch();
+export default function PickUp({ cart, dataBaseUser }) {
   const user = useSelector((state) => state.dataBaseUser);
-
-  useEffect(() => {
-    dispatch(getAllUsers());
-  }, []);
 
   let { photoURL, email, displayName } = user;
 
@@ -37,7 +30,6 @@ export default function Printing({ cart, dataBaseUser }) {
     ) {
       return;
     }
-
     setState({ ...state, [anchor]: open });
   };
 
@@ -51,7 +43,7 @@ export default function Printing({ cart, dataBaseUser }) {
       <section className="bg-[#fff] p-8 h-screen flex flex-col lg:hidden justify-around">
         {/* DATOS SESION */}
         <div className="flex flex-col justify-center items-center gap-3">
-        <Avatar
+          <Avatar
             alt="Xiro Avatar"
             sx={{ height: "4rem", width: "4rem" }}
             src={photoURL}
@@ -81,28 +73,32 @@ export default function Printing({ cart, dataBaseUser }) {
               </ListItemIcon>
               <ListItemText primary="Pedidos" />
             </ListItemButton>
+           
+            <ListItemButton
+              onClick={(e) => setDataRender("entregas")}
+              sx={
+                dataRender === "entregas"
+                  ? { backgroundColor: "#458552", borderRadius: "10px" }
+                  : { borderRadius: "10px" }
+              }
+              className="h-16"
+            >
+              <ListItemIcon>
+                <TurnSharpRightIcon
+                  sx={{ width: "2.5rem", height: "2.5rem" }}
+                />
+              </ListItemIcon>
+              <ListItemText primary="Rutas de Entrega" />
+            </ListItemButton>
           </List>
         </div>
-        {/* <button
-          onClick={(e) => setDataRender("FAQ")}
-          className="bg-[#4675C0]  flex items-center justify-between rounded-2xl h-24 p-5"
-        >
-          {" "}
-          <div className="flex flex-col">
-            <span className="text-[12px] font-[400]">¿Tenés dudas?</span>
-            <span className="text-[16px] font-[600]"> Hace click acá</span>
-          </div>
-          <div className="flex justify-end">
-            <img src={contactCuate} alt="" className="h-20" />
-          </div>
-        </button> */}
       </section>
     </Box>
   );
 
   return (
     <>
-      <Navbar loggedUser={dataBaseUser} title={"Modo Imprenta"} />
+      <Navbar loggedUser={dataBaseUser} title={"Modo Delivery"} />
       <div className="flex justify-center gap-5 p-5 ">
         {/* <Chatbot /> */}
         {/* HAMBURGUESA - MENU MOBILE*/}
@@ -134,6 +130,7 @@ export default function Printing({ cart, dataBaseUser }) {
               sx={{ opacity: 0.8 }}
               component="nav"
               aria-labelledby="nested-list-subheader"
+   
             >
               DATOS
               <ListItemButton
@@ -150,42 +147,36 @@ export default function Printing({ cart, dataBaseUser }) {
                 </ListItemIcon>
                 <ListItemText primary="Pedidos" />
               </ListItemButton>
+              <ListItemButton
+                onClick={(e) => setDataRender("entregas")}
+                sx={
+                  dataRender === "entregas"
+                    ? { backgroundColor: "#458552", borderRadius: "10px" }
+                    : { borderRadius: "10px" }
+                }
+                className="h-16"
+              >
+                <ListItemIcon>
+                  <TurnSharpRightIcon
+                    sx={{ width: "2.5rem", height: "2.5rem" }}
+                  />
+                </ListItemIcon>
+                <ListItemText primary="Rutas de Entrega" />
+              </ListItemButton>
             </List>
           </div>
-
-          {/* <button
-            onClick={(e) => setDataRender("FAQ")}
-            className="bg-[#4675C0] flex items-center justify-around rounded-2xl h-24 p-5"
-          >
-            {" "}
-            <div className="flex flex-col">
-              <span className="text-sm md:text-[12px] font-[400]">
-                ¿Tenés dudas?
-              </span>
-              <span className="text-sm md:text-[16px] font-[600]">
-                {" "}
-                Hace click acá
-              </span>
-            </div>
-            <div className="flex justify-end">
-              <img src={contactCuate} alt="" className="h-20" />
-            </div>
-          </button> */}
         </section>
         {/* --------- */}
 
         {/* ALL DATA */}
         <section className="bg-[#fff] rounded-2xl flex flex-col gap-5 justify-center lg:w-9/12 z-10  overflow-auto">
           {dataRender === "orders" ? (
-            <Orders editor={"printingUser"} />
-          ) : dataRender === "FAQ" ? (
-            <FAQ />
+            <Orders editor={"deliveryUser"} />
           ) : (
-            <Orders />
+            <DeliveryRoutes />
           )}
         </section>
       </div>
-      
     </>
   );
 }
