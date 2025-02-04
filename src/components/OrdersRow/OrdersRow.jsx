@@ -126,6 +126,7 @@ export default function OrdersRow({
     orderStatus: order.orderStatus || "unassigned",
     report: order.report || "unassigned",
   });
+  console.log(input);
 
   /* AUTOCOMPLETE STATE */
   const printingProps = {
@@ -138,7 +139,8 @@ export default function OrdersRow({
   };
 
   function handleInput(e) {
-    if (e.target.value === "process") {
+    console.log(e.target.value);
+    if (e.target.value === "pending") {
       setProblemsSelectStatus(false);
       setDeliverySelectStatus(false);
       setPrintingSelectStatus(true);
@@ -151,7 +153,8 @@ export default function OrdersRow({
       setPrintingSelectStatus(false);
       setProblemsSelectStatus(true);
     } else if (
-      e.target.value === "pending" ||
+      e.target.value === "process" ||
+      e.target.value === "unassigned" ||
       e.target.value === "printed" ||
       e.target.value === "received"
     ) {
@@ -171,6 +174,9 @@ export default function OrdersRow({
       (user) =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
+
+    // console.log(selectedPrinting.uid);
+    // console.log(selectedDelivery.uid);
 
     dispatch(
       changeOrderStatus({
@@ -239,7 +245,11 @@ export default function OrdersRow({
                       : "🚨 REVISAR ESTADO 🚨"}
                   </Typography>
                   <Typography>
-                    Motivo: "{value === "problems" && !!input.report ? input.report : null}"
+                    Motivo: "
+                    {value === "problems" && !!input.report
+                      ? input.report
+                      : null}
+                    "
                   </Typography>
                   <div className="w-full">
                     {/* AUTOCOMPLETE DE ESTADOS */}

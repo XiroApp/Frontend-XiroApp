@@ -98,7 +98,7 @@ export default function PickUp({ cart, dataBaseUser }) {
 
   return (
     <>
-      <Navbar loggedUser={dataBaseUser} title={"Modo Delivery"} />
+      <Navbar loggedUser={dataBaseUser} title={"Modo Pickup"} />
       <div className="flex justify-center gap-5 p-5 ">
         {/* <Chatbot /> */}
         {/* HAMBURGUESA - MENU MOBILE*/}

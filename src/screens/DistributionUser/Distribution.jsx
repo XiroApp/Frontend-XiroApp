@@ -100,7 +100,7 @@ export default function Distribution({ cart, dataBaseUser }) {
 
   return (
     <>
-      <Navbar loggedUser={dataBaseUser} title={"Modo Imprenta"} />
+      <Navbar loggedUser={dataBaseUser} title={"Modo Distribución"} />
       <div className="flex justify-center gap-5 p-5 ">
         {/* <Chatbot /> */}
         {/* HAMBURGUESA - MENU MOBILE*/}

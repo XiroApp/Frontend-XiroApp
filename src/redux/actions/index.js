@@ -750,6 +750,13 @@ export function setOrderPlace(place) {
       let { data } = await axios.get(
         `${baseUrl}/maps/distance?destinations=${destinationAddress}`
       );
+
+      /* PILLIN */
+      /* 
+      
+         let { data } = await axios.get(
+        `${baseUrl}/maps/distribution-distance?destinations=${destinationAddress}`
+      );*/
       return dispatch({
         type: action.SET_PLACE,
         payload: {
