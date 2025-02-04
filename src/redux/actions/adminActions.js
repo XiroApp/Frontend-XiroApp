@@ -4,6 +4,43 @@ import axios from "axios";
 
 const baseUrl = Settings.SERVER_URL;
 
+//--------------- GET DELIVERY USERS --------------------
+export function getDeliveryUsers() {
+  return async function (dispatch) {
+    try {
+      let response = await axios.get(`${baseUrl}/admin/deliveryusers`);
+    
+      dispatch({
+        type: action.GET_DELIVERY_USERS,
+        payload: {
+          deliveryUsers: response.data,
+        },
+      });
+      return;
+      // return dispatch({
+      //   type: action.TOAST_ALERT,
+      //   payload: {
+      //     message: "Usuarios cargados correctamente.",
+      //     variant: "success",
+      //     vertical: "top",
+      //     horizontal: "right",
+      //     open: true,
+      //   },
+      // });
+    } catch (error) {
+      return dispatch({
+        type: action.TOAST_ALERT,
+        payload: {
+          message: "Los usuarios no se han cargado.",
+          variant: "error",
+          vertical: "top",
+          horizontal: "right",
+          open: true,
+        },
+      });
+    }
+  };
+}
 //--------------- GET PRINTING USERS --------------------
 export function getPrintingUsers() {
   return async function (dispatch) {
@@ -129,10 +166,20 @@ export function getAllCoupons() {
 }
 
 //--------------- GET ALL ORDERS --------------------
-export function getAllOrders() {
+export function getAllOrders(pageToken) {
   return async function (dispatch) {
-    try {
-      let response = await axios.get(`${baseUrl}/orders`);
+    try { 
+
+
+      
+      const url = `${baseUrl}/orders`
+
+
+      if (pageToken) {
+        url += `?pageToken=${pageToken}`;
+    }
+
+      let response = await axios.get(url);
 
       let sortedOrders = response.data
         .map((order) => {
@@ -292,6 +339,7 @@ export function changeOrderStatus({
         type: action.EDIT_STATUS_ORDERS,
         payload: { orders: formatedOrders },
       });
+
       return dispatch({
         type: action.TOAST_ALERT,
         payload: {

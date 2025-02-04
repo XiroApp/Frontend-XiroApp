@@ -1,8 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getAllOrders,
-  getPrintingUsers,
-} from "../../../redux/actions/adminActions";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -13,8 +9,10 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
-import { getDeliveryOrders } from "../../../redux/actions/deliveryActions.js";
 import { Input } from "@mui/material";
+const baseUrl = Settings.SERVER_URL;
+import { Settings } from "../../../config/index.js";
+import axios from "axios";
 
 const columns = [
   { id: "paymentId", label: "ID de orden", minWidth: 100, align: "center" },
@@ -47,17 +45,55 @@ const columns = [
 ];
 
 export default function Orders({ editor }) {
-  const dispatch = useDispatch();
-  const orders = useSelector((state) => state.orders);
   const printingUsers = useSelector((state) => state.printingUsers);
-
+  const deliveryUsers = useSelector((state) => state.deliveryUsers);
+  const user = useSelector((state) => state.loggedUser);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
-    dispatch(getDeliveryOrders());
+    fetchOrders();
   }, []);
 
+  async function fetchOrders() {
+    try {
+      let response = await axios.get(`${baseUrl}/delivery/orders/${user.uid}`);
+
+      let formatedOrders = response.data
+        .map((order) => {
+          const fechaStr = order.paymentData.date_created;
+          const fecha = new Date(fechaStr);
+
+          const dia = fecha.getDate().toString().padStart(2, "0");
+          const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
+          const año = fecha.getFullYear();
+
+          const fechaFormateada = `${dia}/${mes}/${año}`;
+
+          return {
+            orderStatus: order.orderStatus,
+            cart: order.cart,
+            paymentId: order.paymentData.id,
+            paymentStatus: order.paymentData.status,
+            transactionAmount:
+              order.paymentData.transaction_details.total_paid_amount,
+            statusDetail: order.paymentData.status_detail,
+            clientUid: order.clientUid,
+            uidPrinting: order.uidPrinting,
+            uidDelivery: order.uidDelivery,
+            report: order.report,
+            createdAt: fechaFormateada,
+            place: order.place,
+          };
+        })
+        .reverse();
+      setOrders(formatedOrders);
+    } catch (error) {
+      console.log(error);
+
+      return error;
+    }
+  }
   /* PAGINATION */
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -69,28 +105,28 @@ export default function Orders({ editor }) {
   };
 
   /* CHANGE ORDER STATUS */
-  console.log(orders);
-  const [allOrders, setAllOrders] = useState(orders);
+  const [orders, setOrders] = useState([]);
   const [filter, setFilter] = useState("no_filter");
+
   /* SEARCH USER */
   const handleSearch = (e) => {
     setFilter("no_filter");
     e.target.value.length > 2
-      ? setAllOrders(
+      ? setOrders(
           orders.filter((order) =>
             order.paymentId.toString().includes(e.target.value)
           )
         )
-      : setAllOrders(orders);
+      : setOrders(orders);
   };
 
   const handleFilter = (e) => {
     setFilter(e.target.name);
     e.target.name !== "no_filter"
-      ? setAllOrders(
+      ? setOrders(
           orders.filter((order) => order.place.address.city === e.target.name)
         )
-      : setAllOrders(orders);
+      : setOrders(orders);
   };
 
   return (
@@ -196,7 +232,7 @@ export default function Orders({ editor }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {allOrders
+              {orders
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   return (
@@ -210,9 +246,11 @@ export default function Orders({ editor }) {
                             value={value}
                             column={column}
                             printingUsers={printingUsers}
+                            deliveryUsers={deliveryUsers}
                             orderId={row.paymentId}
                             order={row}
                             editor={editor}
+                            fetchOrders={fetchOrders}
                           />
                         );
                       })}

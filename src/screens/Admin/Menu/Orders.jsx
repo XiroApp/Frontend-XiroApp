@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllOrders,
+  getDeliveryUsers,
   getPrintingUsers,
 } from "../../../redux/actions/adminActions";
 import { useEffect, useState } from "react";
@@ -14,6 +15,9 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
 import { Input } from "@mui/material";
+import { Settings } from "../../../config/index.js";
+import axios from "axios";
+const baseUrl = Settings.SERVER_URL;
 
 const columns = [
   {
@@ -71,21 +75,87 @@ const columns = [
 
 export default function Orders({ editor }) {
   const dispatch = useDispatch();
-  const orders = useSelector((state) => state.orders);
-  const printingUsers = useSelector((state) => state.printingUsers);
 
-  const [allOrders, setAllOrders] = useState(orders);
+  const printingUsers = useSelector((state) => state.printingUsers);
+  const deliveryUsers = useSelector((state) => state.deliveryUsers);
+  const [nextVisible, setNextVisible] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const pageSize = 10;
+
+  const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const fetchOrders = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      let url = `${baseUrl}/orders?pageSize=${pageSize}`;
+      if (nextVisible) {
+        url += `&lastVisible=${nextVisible}`;
+      }
+      const response = await axios.get(url);
+      const data = await response.data;
+
+      let sortedOrders = response.data.orders.map((order) => {
+        const fechaStr = order.paymentData.date_created;
+        const fecha = new Date(fechaStr);
+
+        const dia = fecha.getDate().toString().padStart(2, "0");
+        const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
+        const año = fecha.getFullYear();
+
+        const fechaFormateada = `${dia}/${mes}/${año}`;
+
+        return {
+          order_number: order.order_number,
+          orderStatus: order.orderStatus,
+          cart: order.cart,
+          paymentId: order.paymentData.id,
+          paymentStatus: order.paymentData.status,
+          transactionAmount:
+            order.paymentData.transaction_details.total_paid_amount,
+          statusDetail: order.paymentData.status_detail,
+          clientUid: order.clientUid,
+          uidPrinting: order.uidPrinting,
+          uidDelivery: order.uidDelivery,
+          report: order.report,
+          createdAt: fechaFormateada,
+          place: order.place,
+          shipment_price: order.shipment_price,
+          subtotal_price: order.subtotal_price,
+          total_price: order.total_price,
+        };
+      });
+
+      setOrders(sortedOrders);
+      setNextVisible(data.nextLastVisible);
+      setHasMore(!!data.nextLastVisible);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchMoreOrders = async () => {
+    await fetchOrders(nextVisible);
+  };
+
   useEffect(() => {
-    dispatch(getAllOrders()).then((res) => setAllOrders(res));
-    // dispatch(getPrintingUsers());
+    fetchOrders();
+    dispatch(getPrintingUsers());
+    dispatch(getDeliveryUsers());
   }, []);
 
   /* PAGINATION */
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    fetchMoreOrders();
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -94,27 +164,24 @@ export default function Orders({ editor }) {
   };
 
   /* CHANGE ORDER STATUS */
-
   const [filter, setFilter] = useState("no_filter");
   /* SEARCH  */
   const handleSearch = (e) => {
     setFilter("no_filter");
     e.target.value.length > 2
-      ? setAllOrders(
+      ? setOrders(
           orders.filter((order) =>
             order.paymentId.toString().includes(e.target.value)
           )
         )
-      : setAllOrders(orders);
+      : setOrders(orders);
   };
 
   const handleFilter = (e) => {
     setFilter(e.target.name);
     e.target.name !== "no_filter"
-      ? setAllOrders(
-          orders.filter((order) => order.orderStatus === e.target.name)
-        )
-      : setAllOrders(orders);
+      ? setOrders(orders.filter((order) => order.orderStatus === e.target.name))
+      : setOrders(orders);
   };
 
   return (
@@ -241,8 +308,8 @@ export default function Orders({ editor }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {allOrders?.length
-                ? allOrders
+              {orders?.length
+                ? orders
                     ?.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
@@ -253,21 +320,22 @@ export default function Orders({ editor }) {
                           hover
                           role="button"
                           tabIndex={-1}
-                          key={index}
+                          key={row.id}
                           className="p-0 m-0"
                         >
                           {columns.map((column, index) => {
                             const value = row[column.id];
-
                             return (
                               <OrdersRow
-                                key={index}
+                                key={row.id}
                                 value={value}
                                 column={column}
                                 printingUsers={printingUsers}
+                                deliveryUsers={deliveryUsers}
                                 orderId={row.paymentId}
                                 order={row}
                                 editor={editor}
+                                fetchOrders={fetchOrders}
                               />
                             );
                           })}
@@ -278,7 +346,9 @@ export default function Orders({ editor }) {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
+
+        <button onClick={fetchMoreOrders}>siguiente</button>
+        {/* <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
           count={orders.length}
@@ -286,7 +356,7 @@ export default function Orders({ editor }) {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        /> */}
       </Paper>
     </div>
   );

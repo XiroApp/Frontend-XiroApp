@@ -27,6 +27,7 @@ import ErrorIcon from "@mui/icons-material/Error";
 import { useDispatch } from "react-redux";
 import {
   changeOrderStatus,
+  getAllOrders,
   getUserByUid,
 } from "../../redux/actions/adminActions";
 import { ApiConstants } from "../../Common/constants";
@@ -71,9 +72,11 @@ export default function OrdersRow({
   value,
   column,
   printingUsers,
+  deliveryUsers,
   orderId,
   order,
   editor,
+  fetchOrders,
 }) {
   const dispatch = useDispatch();
   /* VIEW FILES MODAL */
@@ -100,7 +103,6 @@ export default function OrdersRow({
   };
 
   /* STATUS ACCORDION */
-  const [statusExpanded, setStatusExpanded] = useState(false);
   const [editStatus, setEditStatus] = useState(false);
   const [printingSelectStatus, setPrintingSelectStatus] = useState(false);
   const [deliverySelectStatus, setDeliverySelectStatus] = useState(false);
@@ -113,9 +115,6 @@ export default function OrdersRow({
     setPrintingSelectStatus(false);
     setDeliverySelectStatus(false);
     setProblemsSelectStatus(false);
-  };
-  const handleChangeStatus = (panel) => (event, newExpanded) => {
-    setStatusExpanded(newExpanded ? panel : false);
   };
 
   /* STATUS PRINTING */
@@ -134,19 +133,31 @@ export default function OrdersRow({
     getOptionLabel: (option) => option?.displayName ?? "N/A",
   };
   const deliveryProps = {
-    options: printingUsers,
+    options: deliveryUsers,
     getOptionLabel: (option) => option?.displayName ?? "N/A",
   };
 
   function handleInput(e) {
     if (e.target.value === "process") {
+      setProblemsSelectStatus(false);
+      setDeliverySelectStatus(false);
       setPrintingSelectStatus(true);
-    }
-    if (e.target.value === "in_delivery") {
+    } else if (e.target.value === "in_delivery") {
+      setProblemsSelectStatus(false);
+      setPrintingSelectStatus(false);
       setDeliverySelectStatus(true);
-    }
-    if (e.target.value === "problems") {
+    } else if (e.target.value === "problems") {
+      setDeliverySelectStatus(false);
+      setPrintingSelectStatus(false);
       setProblemsSelectStatus(true);
+    } else if (
+      e.target.value === "pending" ||
+      e.target.value === "printed" ||
+      e.target.value === "received"
+    ) {
+      setDeliverySelectStatus(false);
+      setPrintingSelectStatus(false);
+      setProblemsSelectStatus(false);
     }
     setInput({ ...input, [e.target.name]: e.target.value });
   }
@@ -156,7 +167,7 @@ export default function OrdersRow({
       (user) =>
         user.displayName === input.uidPrinting || user.uid === input.uidPrinting
     );
-    let selectedDelivery = printingUsers.find(
+    let selectedDelivery = deliveryUsers.find(
       (user) =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
@@ -171,7 +182,7 @@ export default function OrdersRow({
         report: input.report || "unassigned",
         editor: editor,
       })
-    );
+    ).then(() => fetchOrders());
     setEditStatus(false);
   }
 
@@ -226,6 +237,9 @@ export default function OrdersRow({
                       : value === "received"
                       ? "Recibido ✅"
                       : "🚨 REVISAR ESTADO 🚨"}
+                  </Typography>
+                  <Typography>
+                    Motivo: "{value === "problems" && !!input.report ? input.report : null}"
                   </Typography>
                   <div className="w-full">
                     {/* AUTOCOMPLETE DE ESTADOS */}
@@ -290,54 +304,54 @@ export default function OrdersRow({
                   </div>
 
                   {printingSelectStatus ? (
-                    // <>
-                    //   <p>Seleccione imprenta:</p>
+                    <>
+                      <p>Seleccione imprenta:</p>
 
-                    //   <div className="flex flex-col w-full">
-                    //     <Autocomplete
-                    //       {...printingProps}
-                    //       id="auto-complete"
-                    //       name="uidPrinting"
-                    //       onSelect={(e) => handleInput(e)}
-                    //       renderInput={(params) => (
-                    //         <TextField
-                    //           // error={error.city}
-                    //           name="uidPrinting"
-                    //           placeholder="Elige imprenta..."
-                    //           {...params}
-                    //           label=""
-                    //           variant="standard"
-                    //         />
-                    //       )}
-                    //     />
-                    //   </div>
-                    // </>
-                    false
-                  ) : deliverySelectStatus ? (
-                    // <>
-                    //   <p>Seleccione delivery:</p>
+                      <div className="flex flex-col w-full">
+                        <Autocomplete
+                          {...printingProps}
+                          id="auto-complete"
+                          name="uidPrinting"
+                          onSelect={(e) => handleInput(e)}
+                          renderInput={(params) => (
+                            <TextField
+                              // error={error.city}
+                              name="uidPrinting"
+                              placeholder="Elige imprenta..."
+                              {...params}
+                              label=""
+                              variant="standard"
+                            />
+                          )}
+                        />
+                      </div>
+                    </>
+                  ) : // false
+                  deliverySelectStatus ? (
+                    <>
+                      <p>Seleccione delivery:</p>
 
-                    //   <div className="flex flex-col w-full">
-                    //     <Autocomplete
-                    //       {...deliveryProps}
-                    //       id="auto-complete"
-                    //       name="uidDelivery"
-                    //       onSelect={(e) => handleInput(e)}
-                    //       renderInput={(params) => (
-                    //         <TextField
-                    //           // error={error.city}
-                    //           name="uidDelivery"
-                    //           placeholder="Elige delivery..."
-                    //           {...params}
-                    //           label=""
-                    //           variant="standard"
-                    //         />
-                    //       )}
-                    //     />
-                    //   </div>
-                    // </>
-                    false
-                  ) : problemsSelectStatus ? (
+                      <div className="flex flex-col w-full">
+                        <Autocomplete
+                          {...deliveryProps}
+                          id="auto-complete"
+                          name="uidDelivery"
+                          onSelect={(e) => handleInput(e)}
+                          renderInput={(params) => (
+                            <TextField
+                              // error={error.city}
+                              name="uidDelivery"
+                              placeholder="Elige delivery..."
+                              {...params}
+                              label=""
+                              variant="standard"
+                            />
+                          )}
+                        />
+                      </div>
+                    </>
+                  ) : // false
+                  problemsSelectStatus ? (
                     <>
                       <p>Describa el problema:</p>
                       <Input
