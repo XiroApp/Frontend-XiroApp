@@ -10,9 +10,9 @@ import { setOrderPlace, setToast, updateUser } from "../../redux/actions";
 export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
   const dispatch = useDispatch();
   const labels = useSelector((state) => state.labels);
-
   const [open, setOpen] = useState(false);
   const [resume, setResume] = useState({ place: null });
+  console.log(resume)
   const [defaultPointAddress, setDefaultPointAddress] = useState({
     // userUid: "vOxEpLHdLMYurVnpARaHqrqmaD93",
     name: "Cochabamba",
