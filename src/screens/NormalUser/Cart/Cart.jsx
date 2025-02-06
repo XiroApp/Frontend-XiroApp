@@ -98,7 +98,7 @@ export default function Cart() {
     setShipment((pricing.delivery_km * distance?.value) / 1000);
     setDelivery_distance(distance);
   }, [place]);
-console.log(shipment);
+  console.log(shipment);
 
   useEffect(() => {
     coupon?.type[0] === "%"
@@ -194,13 +194,14 @@ console.log(shipment);
         client_uid: user.uid,
         title: "Pedido Xiro",
         quantity: 1,
+        unit_price: total,
         place: place,
         details: orderToSend,
-        unit_price: total,
         shipment_price: shipment,
         subtotal_price: subtotal,
         coupon_used: coupon,
         distance: delivery_distance,
+        availability: orderToSend.availability,
       });
       const id = response.data;
       return id;
@@ -237,7 +238,7 @@ console.log(shipment);
         />
       ) : (
         <>
-          <Navbar title="Carrito" loggedUser={user} cart={cart}/>
+          <Navbar title="Carrito" loggedUser={user} cart={cart} />
           <section className="w-11/12 flex justify-center items-center pb-28 mt-3">
             {choosePlace ? (
               <ChoosePlaceModal
@@ -612,7 +613,7 @@ console.log(shipment);
 
                               <section className="flex justify-between">
                                 <span className=" text-[16px] font-[400]">
-                                    Entrega: {orderToSend.place.type}
+                                  Entrega: {orderToSend.place.type}
                                 </span>
                                 <span>
                                   <span className="text-[13px] ">
@@ -745,8 +746,7 @@ console.log(shipment);
                             !(
                               orderToSend?.place?.address &&
                               typeof shipment === "number" &&
-                             
-                              !isNaN(shipment) 
+                              !isNaN(shipment)
                             )
                           }
                         >

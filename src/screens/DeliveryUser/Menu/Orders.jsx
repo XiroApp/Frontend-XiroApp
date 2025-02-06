@@ -6,109 +6,134 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
 import { Input } from "@mui/material";
-const baseUrl = Settings.SERVER_URL;
-import { Settings } from "../../../config/index.js";
-import axios from "axios";
+import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper.js";
+import { UsersAdapter } from "../../../Infra/Adapters/users.adapter.js";
 
 const columns = [
-  { id: "paymentId", label: "ID de orden", minWidth: 100, align: "center" },
   {
-    id: "place",
-    label: "Tipo de entrega",
+    id: "order_number",
+    label: "N° Orden",
+    minWidth: 100,
+    align: "center",
+  },
+  {
+    id: "createdAt",
+    label: "Fecha de llegada",
+    minWidth: 100,
+    align: "center",
+  },
+  { id: "paymentId", label: "ID de pago", minWidth: 100, align: "center" },
+  {
+    id: "paymentStatus",
+    label: "Estado de Pago",
+    minWidth: 100,
+    align: "center",
+  },
+  {
+    id: "statusDetail",
+    label: "Detalle de Pago",
+    minWidth: 100,
+    align: "center",
+  },
+  {
+    id: "transactionAmount",
+    label: "Monto",
     minWidth: 50,
     align: "center",
   },
   {
     id: "orderStatus",
     label: "Estado de Orden",
-    minWidth: 50,
+    minWidth: 300,
     align: "center",
   },
+  {
+    id: "place",
+    label: "Tipo de entrega",
+    minWidth: 150,
+    align: "center",
+  },
+  { id: "cart", label: "Pedido", minWidth: 100, align: "center" },
+
   {
     id: "clientUid",
     label: "Cliente",
     minWidth: 150,
     align: "center",
   },
-  // {
-  //   id: "createdAt",
-  //   label: "Fecha de llegada",
-  //   minWidth: 100,
-  //   align: "center",
-  // },
-
-  // { id: "cart", label: "Archivos", minWidth: 100, align: "center" },
 ];
 
 export default function Orders({ editor }) {
-  const printingUsers = useSelector((state) => state.printingUsers);
-  const deliveryUsers = useSelector((state) => state.deliveryUsers);
   const user = useSelector((state) => state.loggedUser);
+  const [printingUsers, setPrintingUsers] = useState([]);
+  const [deliveryUsers, setDeliveryUsers] = useState([]);
+  const [distributionUsers, setDistributionUsers] = useState([]);
+  const [pickupUsers, setPickupUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [pageSize, setPageSize] = useState(10); // Tamaño de la página
+  const [nextVisible, setNextVisible] = useState(null); // Último documento visible para la paginación hacia adelante
+  const [prevVisible, setPrevVisible] = useState(null); // Primer documento visible para la paginación hacia atrás
+  const [hasNext, setHasNext] = useState(false); // Indica si hay más páginas hacia adelante
+  const [hasPrev, setHasPrev] = useState(false); // Indica si hay más páginas hacia atrás
+  const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const fetchOrders = async (direction = "next") => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await OrdersAdapter.getOrdersPaginated(
+        pageSize,
+        nextVisible,
+        prevVisible,
+        direction,
+        "delivery",
+        user.uid
+      );
+
+      console.log(data);
+
+      // Actualizar el estado de las órdenes
+      setOrders(data.orders);
+      // Actualizar los valores de paginación
+      // console.log(data.nextLastVisible);
+      // console.log(data.firstVisible);
+      // console.log(!!data.nextLastVisible);
+      // console.log(!!data.firstVisible);
+      setNextVisible(data.nextLastVisible || null);
+      setPrevVisible(data.firstVisible || null);
+      setHasNext(!!data.nextLastVisible);
+      setHasPrev(!!data.firstVisible);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUsersByRole = () => {
+    UsersAdapter.getSpecialUsers().then((res) => {
+      setDeliveryUsers(res.deliveryUsers);
+      setPrintingUsers(res.printingUsers);
+      setDistributionUsers(res.distributionUsers);
+      setPickupUsers(res.pickupUsers);
+    });
+  };
+
   useEffect(() => {
     fetchOrders();
+    fetchUsersByRole();
   }, []);
 
-  async function fetchOrders() {
-    try {
-      let response = await axios.get(`${baseUrl}/delivery/orders/${user.uid}`);
-
-      let formatedOrders = response.data
-        .map((order) => {
-          const fechaStr = order.paymentData.date_created;
-          const fecha = new Date(fechaStr);
-
-          const dia = fecha.getDate().toString().padStart(2, "0");
-          const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
-          const año = fecha.getFullYear();
-
-          const fechaFormateada = `${dia}/${mes}/${año}`;
-
-          return {
-            orderStatus: order.orderStatus,
-            cart: order.cart,
-            paymentId: order.paymentData.id,
-            paymentStatus: order.paymentData.status,
-            transactionAmount:
-              order.paymentData.transaction_details.total_paid_amount,
-            statusDetail: order.paymentData.status_detail,
-            clientUid: order.clientUid,
-            uidPrinting: order.uidPrinting,
-            uidDelivery: order.uidDelivery,
-            report: order.report,
-            createdAt: fechaFormateada,
-            place: order.place,
-          };
-        })
-        .reverse();
-      setOrders(formatedOrders);
-    } catch (error) {
-      console.log(error);
-
-      return error;
-    }
-  }
-  /* PAGINATION */
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
   /* CHANGE ORDER STATUS */
-  const [orders, setOrders] = useState([]);
   const [filter, setFilter] = useState("no_filter");
-
-  /* SEARCH USER */
+  /* SEARCH  */
   const handleSearch = (e) => {
     setFilter("no_filter");
     e.target.value.length > 2
@@ -123,15 +148,13 @@ export default function Orders({ editor }) {
   const handleFilter = (e) => {
     setFilter(e.target.name);
     e.target.name !== "no_filter"
-      ? setOrders(
-          orders.filter((order) => order.place.address.city === e.target.name)
-        )
+      ? setOrders(orders.filter((order) => order.orderStatus === e.target.name))
       : setOrders(orders);
   };
 
   return (
-    <div className="flex flex-col gap-4 rounded-2xl p-4">
-      <span className="text-2xl lg:text-3xl ">Estado de órdenes</span>
+    <div className="flex flex-col gap-4 rounded-2xl p-4 ">
+      <span className="text-2xl lg:text-2xl ">Asignar órdenes</span>
       <div className="flex flex-col lg:flex-row  rounded-lg  lg:w-full p-2 gap-2">
         <div>
           <label htmlFor="">Buscar órdenes</label>
@@ -144,68 +167,89 @@ export default function Orders({ editor }) {
           />
         </div>
         <div>
-          <label htmlFor="">Filtrar por lugar</label>
+          <label htmlFor="">Filtrar órdenes</label>
           <div className="flex flex-wrap gap-2">
             <button
-              name="Mendoza"
+              name="in_delivery"
               className={
-                filter === "Mendoza"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
+                filter === "in_delivery"
+                  ? "border p-1 rounded-md text-[12px] bg-green-300"
+                  : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
               onClick={(e) => handleFilter(e)}
             >
-              Mendoza
+              En delivery
             </button>
             <button
-              name="Las Heras"
+              name="pending"
               className={
-                filter === "Las Heras"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
+                filter === "pending"
+                  ? "border p-1 rounded-md text-[12px] bg-green-300"
+                  : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
               onClick={(e) => handleFilter(e)}
             >
-              Las Heras
+              Pendientes
             </button>
             <button
-              name="Godoy Cruz"
+              name="unassigned"
               className={
-                filter === "Godoy Cruz"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
+                filter === "unassigned"
+                  ? "border p-1 rounded-md text-[12px] bg-green-300"
+                  : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
               onClick={(e) => handleFilter(e)}
             >
-              Godoy Cruz
+              Sin Asignar
             </button>
             <button
-              name="Lujan de Cuyo"
+              name="process"
               className={
-                filter === "Lujan de Cuyo"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
+                filter === "process"
+                  ? "border p-1 rounded-md text-[12px] bg-green-300"
+                  : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
               onClick={(e) => handleFilter(e)}
             >
-              Lujan de Cuyo
+              En proceso
             </button>
             <button
-              name="Guaymallén"
+              name="printed"
               className={
-                filter === "Guaymallén"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
+                filter === "printed"
+                  ? "border p-1 rounded-md text-[12px] bg-green-300"
+                  : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
               onClick={(e) => handleFilter(e)}
             >
-              Guaymallén
+              Impresas
             </button>
-
+            <button
+              name="received"
+              className={
+                filter === "received"
+                  ? "border p-1 rounded-md text-[12px] bg-green-300"
+                  : "border p-1 rounded-md text-[12px] hover:bg-green-500"
+              }
+              onClick={(e) => handleFilter(e)}
+            >
+              Recibidas
+            </button>
+            <button
+              name="problems"
+              className={
+                filter === "problems"
+                  ? "border p-1 rounded-md text-[12px] bg-green-300"
+                  : "border p-1 rounded-md text-[12px] hover:bg-green-500"
+              }
+              onClick={(e) => handleFilter(e)}
+            >
+              Con problemas
+            </button>
             <button
               name="no_filter"
               className={
-                "underline p-1 rounded-md text-[12px] hover:bg-gray-500"
+                "underline p-1 rounded-md text-[12px] hover:bg-green-500"
               }
               onClick={(e) => handleFilter(e)}
             >
@@ -214,9 +258,8 @@ export default function Orders({ editor }) {
           </div>
         </div>
       </div>
-
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 600 }}>
+        <TableContainer sx={{ maxHeight: 650, backgroundColor: "#f2f2f4" }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -225,6 +268,7 @@ export default function Orders({ editor }) {
                     key={index}
                     align={column.align}
                     style={{ minWidth: column.minWidth }}
+                    sx={{ maxHeight: 650, backgroundColor: "#f2f2f4" }}
                   >
                     {column.label}
                   </TableCell>
@@ -232,35 +276,60 @@ export default function Orders({ editor }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                      {columns.map((column, index) => {
-                        const value = row[column.id];
-
-                        return (
-                          <OrdersRow
+              {orders?.length
+                ? orders.map((order, index) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="button"
+                        tabIndex={-1}
+                        key={index}
+                        className="p-0 m-0"
+                      >
+                        {columns.map((column, index) => {
+                          const value = order[column.id];
+                          return (
+                            <OrdersRow
                             key={index}
                             value={value}
                             column={column}
                             printingUsers={printingUsers}
                             deliveryUsers={deliveryUsers}
-                            orderId={row.paymentId}
-                            order={row}
+                            distributionUsers={distributionUsers}
+                            pickupUsers={pickupUsers}
+                            orderId={order.paymentId}
+                            order={order}
                             editor={editor}
                             fetchOrders={fetchOrders}
-                          />
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
+                            />
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })
+                : null}
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
+        <div className="flex gap-4">
+          <button
+            onClick={() => fetchOrders("prev")}
+            // disabled={!hasPrev || loading}
+            disabled={loading}
+          >
+            Anterior
+          </button>{" "}
+          |
+          <button
+            onClick={() => fetchOrders("next")}
+            // disabled={!hasNext || loading}
+            disabled={loading}
+          >
+            Siguiente
+          </button>
+        </div>
+
+        {/* <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
           count={orders.length}
@@ -268,7 +337,7 @@ export default function Orders({ editor }) {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        /> */}
       </Paper>
     </div>
   );

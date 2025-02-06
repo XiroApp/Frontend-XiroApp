@@ -237,7 +237,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
                       checked={input.rememberMe}
                       id="rememberMe"
                     />
-                    <label for="rememberMe" className="font-light">
+                    <label htmlFor="rememberMe" className="font-light">
                       Recordarme
                     </label>
                   </div>
@@ -269,7 +269,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
                       onChange={(e) => handleInput(e)}
                       id="TyC"
                     />
-                    <label for="TyC" className="font-light w-fit mr-1">
+                    <label htmlFor="TyC" className="font-light w-fit mr-1">
                       Acepto los
                     </label>
 

@@ -1,9 +1,3 @@
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getAllOrders,
-  getDeliveryUsers,
-  getPrintingUsers,
-} from "../../../redux/actions/adminActions";
 import { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -11,13 +5,11 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
 import { Input } from "@mui/material";
-import { Settings } from "../../../config/index.js";
-import axios from "axios";
-const baseUrl = Settings.SERVER_URL;
+import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper.js";
+import { UsersAdapter } from "../../../Infra/Adapters/users.adapter.js";
 
 const columns = [
   {
@@ -73,11 +65,11 @@ const columns = [
   },
 ];
 
-export default function Orders({ editor }) {
-  const dispatch = useDispatch();
-
-  const printingUsers = useSelector((state) => state.printingUsers);
-  const deliveryUsers = useSelector((state) => state.deliveryUsers);
+export default function Orders({ editor, role }) {
+  const [printingUsers, setPrintingUsers] = useState([]);
+  const [deliveryUsers, setDeliveryUsers] = useState([]);
+  const [distributionUsers, setDistributionUsers] = useState([]);
+  const [pickupUsers, setPickupUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [pageSize, setPageSize] = useState(10); // Tamaño de la página
@@ -94,56 +86,21 @@ export default function Orders({ editor }) {
     setError(null);
 
     try {
-      let url = `${baseUrl}/orders?pageSize=${pageSize}`;
-      // Agregar parámetros según la dirección de la paginación
-      if (direction === "next" && nextVisible) {
-        url += `&lastVisible=${nextVisible}&direction=next`;
-      } else if (direction === "prev" && prevVisible) {
-        url += `&firstVisible=${prevVisible}&direction=prev`;
-      }
-
-      const response = await axios.get(url);
-      const data = response.data;
-
-      // Formatear las órdenes
-      const sortedOrders = data.orders.map((order) => {
-        const fechaStr = order.paymentData.date_created;
-        const fecha = new Date(fechaStr);
-
-        const dia = fecha.getDate().toString().padStart(2, "0");
-        const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
-        const año = fecha.getFullYear();
-
-        const fechaFormateada = `${dia}/${mes}/${año}`;
-
-        return {
-          order_number: order.order_number,
-          orderStatus: order.orderStatus,
-          cart: order.cart,
-          paymentId: order.paymentData.id,
-          paymentStatus: order.paymentData.status,
-          transactionAmount:
-            order.paymentData.transaction_details.total_paid_amount,
-          statusDetail: order.paymentData.status_detail,
-          clientUid: order.clientUid,
-          uidPrinting: order.uidPrinting,
-          uidDelivery: order.uidDelivery,
-          report: order.report,
-          createdAt: fechaFormateada,
-          place: order.place,
-          shipment_price: order.shipment_price,
-          subtotal_price: order.subtotal_price,
-          total_price: order.total_price,
-        };
-      });
+      const data = await OrdersAdapter.getOrdersPaginated(
+        pageSize,
+        nextVisible,
+        prevVisible,
+        direction,
+        "admin"
+      );
 
       // Actualizar el estado de las órdenes
-      setOrders(sortedOrders);
+      setOrders(data.orders);
       // Actualizar los valores de paginación
-      console.log(data.nextLastVisible);
-      console.log(data.firstVisible);
-      console.log(!!data.nextLastVisible);
-      console.log(!!data.firstVisible);
+      // console.log(data.nextLastVisible);
+      // console.log(data.firstVisible);
+      // console.log(!!data.nextLastVisible);
+      // console.log(!!data.firstVisible);
       setNextVisible(data.nextLastVisible || null);
       setPrevVisible(data.firstVisible || null);
       setHasNext(!!data.nextLastVisible);
@@ -155,10 +112,18 @@ export default function Orders({ editor }) {
     }
   };
 
+  const fetchUsersByRole = () => {
+    UsersAdapter.getSpecialUsers().then((res) => {
+      setDeliveryUsers(res.deliveryUsers);
+      setPrintingUsers(res.printingUsers);
+      setDistributionUsers(res.distributionUsers);
+      setPickupUsers(res.pickupUsers);
+    });
+  };
+
   useEffect(() => {
     fetchOrders();
-    dispatch(getPrintingUsers());
-    dispatch(getDeliveryUsers());
+    fetchUsersByRole();
   }, []);
 
   /* CHANGE ORDER STATUS */
@@ -325,6 +290,8 @@ export default function Orders({ editor }) {
                               column={column}
                               printingUsers={printingUsers}
                               deliveryUsers={deliveryUsers}
+                              distributionUsers={distributionUsers}
+                              pickupUsers={pickupUsers}
                               orderId={order.paymentId}
                               order={order}
                               editor={editor}
@@ -356,16 +323,6 @@ export default function Orders({ editor }) {
             Siguiente
           </button>
         </div>
-
-        {/* <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={orders.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        /> */}
       </Paper>
     </div>
   );

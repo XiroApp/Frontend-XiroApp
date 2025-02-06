@@ -9,7 +9,7 @@ export function getDeliveryUsers() {
   return async function (dispatch) {
     try {
       let response = await axios.get(`${baseUrl}/admin/deliveryusers`);
-    
+
       dispatch({
         type: action.GET_DELIVERY_USERS,
         payload: {
@@ -168,16 +168,12 @@ export function getAllCoupons() {
 //--------------- GET ALL ORDERS --------------------
 export function getAllOrders(pageToken) {
   return async function (dispatch) {
-    try { 
-
-
-      
-      const url = `${baseUrl}/orders`
-
+    try {
+      const url = `${baseUrl}/orders`;
 
       if (pageToken) {
         url += `?pageToken=${pageToken}`;
-    }
+      }
 
       let response = await axios.get(url);
 
@@ -213,7 +209,6 @@ export function getAllOrders(pageToken) {
           };
         })
         .sort((a, b) => b.order_number - a.order_number);
-
 
       dispatch({
         type: action.GET_ALL_ORDERS,

@@ -21,16 +21,12 @@ import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import EditIcon from "@mui/icons-material/Edit";
-import DoneIcon from "@mui/icons-material/Done";
 import ErrorIcon from "@mui/icons-material/Error";
 import { useDispatch } from "react-redux";
 import {
   changeOrderStatus,
-  getAllOrders,
   getUserByUid,
 } from "../../redux/actions/adminActions";
-import { ApiConstants } from "../../Common/constants";
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -73,6 +69,8 @@ export default function OrdersRow({
   column,
   printingUsers,
   deliveryUsers,
+  distributionUsers,
+  pickupUsers,
   orderId,
   order,
   editor,
@@ -104,11 +102,14 @@ export default function OrdersRow({
 
   /* STATUS ACCORDION */
   const [editStatus, setEditStatus] = useState(false);
-  const [printingSelectStatus, setPrintingSelectStatus] = useState(false);
-  const [deliverySelectStatus, setDeliverySelectStatus] = useState(false);
-  const [problemsSelectStatus, setProblemsSelectStatus] = useState(false);
   const [priceModal, setPriceModal] = useState(false);
   const [placeModal, setPlaceModal] = useState(false);
+  const [printingSelectStatus, setPrintingSelectStatus] = useState(null);
+  const [deliverySelectStatus, setDeliverySelectStatus] = useState(null);
+  const [distributionSelectStatus, setDistributionSelectStatus] =
+    useState(null);
+  const [pickupSelectStatus, setPickupSelectStatus] = useState(null);
+  const [problemsSelectStatus, setProblemsSelectStatus] = useState(null);
 
   const handleSetEdiStatus = (e) => {
     setEditStatus(false);
@@ -126,7 +127,6 @@ export default function OrdersRow({
     orderStatus: order.orderStatus || null,
     report: order.report || null,
   });
-  console.log(input);
 
   /* AUTOCOMPLETE STATE */
   const printingProps = {
@@ -171,22 +171,30 @@ export default function OrdersRow({
       (user) =>
         user.displayName === input.uidPrinting || user.uid === input.uidPrinting
     );
+
     let selectedDelivery = deliveryUsers.find(
       (user) =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
-
-    // console.log(selectedPrinting.uid);
-    // console.log(selectedDelivery.uid);
+    let selectedDistribution = distributionUsers.find(
+      (user) =>
+        user.displayName === input.uidDelivery || user.uid === input.uidDelivery
+    );
+    let selectedPickup = pickupUsers.find(
+      (user) =>
+        user.displayName === input.uidDelivery || user.uid === input.uidDelivery
+    );
 
     dispatch(
       changeOrderStatus({
-        idOrder: input.orderId,
+        idOrder: orderId,
         orderStatus: input.orderStatus,
-        uidPrinting: selectedPrinting?.uid || null,
-        uidDelivery: selectedDelivery?.uid || null,
+        uidPrinting: selectedPrinting?.uid || order.uidPrinting,
+        uidDelivery: selectedDelivery?.uid || order.uidDelivery,
+        uidDistribution: selectedDistribution?.uid || order.uidDistribution,
+        uidPickup: selectedPickup?.uid || order.uidPickup,
         uidClient: input.clientUid,
-        report: input.report || null,
+        report: problemsSelectStatus || input.report,
         editor: editor,
       })
     ).then(() => fetchOrders("refresh"));
@@ -255,7 +263,7 @@ export default function OrdersRow({
                   <div className="w-full">
                     {/* AUTOCOMPLETE DE ESTADOS */}
                     <div className="flex flex-col w-full">
-                      <label className="py-2" for="orderStatus">
+                      <label className="py-2" hrmlFor="orderStatus">
                         Cambiar estado de orden
                       </label>
                       <select
@@ -623,7 +631,7 @@ export default function OrdersRow({
                       </span>
                     </li>
                     {order.cart.map((item, index) => (
-                      <li>
+                      <li key={index}>
                         <span className="text-[12px] text-black">
                           {`Cupón ${index + 1}: ${
                             item?.coupon_used?.type[0] || ""
@@ -721,18 +729,14 @@ export default function OrdersRow({
               }}
               // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
-              <Typography>
-                <div className="flex justify-center items-start">
-                  <span className="">
-                    {`${
-                      value.type === "Envío a domicilio" ? "Envío" : value.type
-                    } | `}
-                  </span>
-                  <span className="">
-                    {`     ${order.cart[0].details.availability}`}
-                  </span>
-                </div>
-              </Typography>
+              <div className="flex justify-center items-start">
+                <span className="">
+                  {`${
+                    value.type === "Envío a domicilio" ? "Envío" : value.type
+                  } | `}
+                </span>
+                <span className="">{`${order?.availability}`}</span>
+              </div>
             </Button>
 
             {/* MODAL FORMULARIO */}
@@ -748,7 +752,7 @@ export default function OrdersRow({
                         Distancia: {order.cart[0].distance.text}{" "}
                       </li>
                       <li className="text-[12px] text-start">
-                        Disponibilidad: {order.cart[0].details.availability}
+                        Disponibilidad: {`${order?.availability}`}
                       </li>
                       <li className="text-[12px] text-start">
                         Ciudad: {value.address.city}{" "}
