@@ -744,7 +744,7 @@ export function verifyCoupon(idCoupon) {
 export function setOrderPlace(place) {
   return async function (dispatch) {
     try {
-      const { name, number, zipCode, locality, city, lat, lng } = place.address;
+      const { name, number, city, lat, lng } = place.address;
       let destinationAddress = `${name} ${number}, ${city}`;
 
       let { data } = await axios.get(
