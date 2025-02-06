@@ -249,16 +249,16 @@ export default function Orders({ editor }) {
             <TableBody>
               {orders
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
+                .map((order, index) => {
                   return (
                     <TableRow
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      key={row.paymentId}
+                      key={index}
                     >
-                      {columns.map((column) => {
-                        const value = row[column.id];
+                      {columns.map((column,index) => {
+                        const value = order[column.id];
 
                         return (
                           <OrdersRow
@@ -267,8 +267,8 @@ export default function Orders({ editor }) {
                             column={column}
                             printingUsers={printingUsers}
                             deliveryUsers={deliveryUsers}
-                            orderId={row.paymentId}
-                            order={row}
+                            orderId={index}
+                            order={order}
                             key={column.id}
                             fetchOrders={fetchOrders}
                           />

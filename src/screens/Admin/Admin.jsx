@@ -15,7 +15,7 @@ import Coupons from "./Menu/Coupons";
 import { getAllUsers } from "../../redux/actions/adminActions";
 import Pricing from "./Menu/Pricing";
 import Orders from "./Menu/Orders";
-import {  StickyNote2 } from "@mui/icons-material";
+import { StickyNote2 } from "@mui/icons-material";
 import Texts from "./Menu/Texts";
 
 export default function Admin({ cart, dataBaseUser }) {
@@ -46,9 +46,9 @@ export default function Admin({ cart, dataBaseUser }) {
 
     setState({ ...state, [anchor]: open });
   };
+
   const list = (anchor) => (
     <Box
-      sx={{ width: "80vw", borderRadius: "10px" }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}

@@ -89,12 +89,11 @@ export default function Orders({ editor }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const fetchOrders = async (direction = "next",) => {
+  const fetchOrders = async (direction = "next") => {
     setLoading(true);
     setError(null);
 
     try {
-
       let url = `${baseUrl}/orders?pageSize=${pageSize}`;
       // Agregar parámetros según la dirección de la paginación
       if (direction === "next" && nextVisible) {
@@ -104,7 +103,7 @@ export default function Orders({ editor }) {
       }
 
       const response = await axios.get(url);
-      const data = response.data;   
+      const data = response.data;
 
       // Formatear las órdenes
       const sortedOrders = data.orders.map((order) => {
@@ -140,8 +139,11 @@ export default function Orders({ editor }) {
 
       // Actualizar el estado de las órdenes
       setOrders(sortedOrders);
-      
       // Actualizar los valores de paginación
+      console.log(data.nextLastVisible);
+      console.log(data.firstVisible);
+      console.log(!!data.nextLastVisible);
+      console.log(!!data.firstVisible);
       setNextVisible(data.nextLastVisible || null);
       setPrevVisible(data.firstVisible || null);
       setHasNext(!!data.nextLastVisible);
@@ -158,8 +160,6 @@ export default function Orders({ editor }) {
     dispatch(getPrintingUsers());
     dispatch(getDeliveryUsers());
   }, []);
-
-
 
   /* CHANGE ORDER STATUS */
   const [filter, setFilter] = useState("no_filter");
@@ -307,39 +307,34 @@ export default function Orders({ editor }) {
             </TableHead>
             <TableBody>
               {orders?.length
-                ? orders
-                    ?.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
-                    .map((row, index) => {
-                      return (
-                        <TableRow
-                          hover
-                          role="button"
-                          tabIndex={-1}
-                          key={row.id}
-                          className="p-0 m-0"
-                        >
-                          {columns.map((column, index) => {
-                            const value = row[column.id];
-                            return (
-                              <OrdersRow
-                                key={row.id}
-                                value={value}
-                                column={column}
-                                printingUsers={printingUsers}
-                                deliveryUsers={deliveryUsers}
-                                orderId={row.paymentId}
-                                order={row}
-                                editor={editor}
-                                fetchOrders={fetchOrders}
-                              />
-                            );
-                          })}
-                        </TableRow>
-                      );
-                    })
+                ? orders.map((order, index) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="button"
+                        tabIndex={-1}
+                        key={index}
+                        className="p-0 m-0"
+                      >
+                        {columns.map((column, index) => {
+                          const value = order[column.id];
+                          return (
+                            <OrdersRow
+                              key={index}
+                              value={value}
+                              column={column}
+                              printingUsers={printingUsers}
+                              deliveryUsers={deliveryUsers}
+                              orderId={order.paymentId}
+                              order={order}
+                              editor={editor}
+                              fetchOrders={fetchOrders}
+                            />
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })
                 : null}
             </TableBody>
           </Table>
@@ -347,13 +342,16 @@ export default function Orders({ editor }) {
         <div className="flex gap-4">
           <button
             onClick={() => fetchOrders("prev")}
-            disabled={!hasPrev || loading}
+            // disabled={!hasPrev || loading}
+            disabled={loading}
           >
             Anterior
-          </button> | 
+          </button>{" "}
+          |
           <button
             onClick={() => fetchOrders("next")}
-            disabled={!hasNext || loading}
+            // disabled={!hasNext || loading}
+            disabled={loading}
           >
             Siguiente
           </button>

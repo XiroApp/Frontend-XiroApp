@@ -41,7 +41,7 @@ export default function Distribution({ cart, dataBaseUser }) {
 
   const list = (anchor) => (
     <Box
-      sx={{ width: "80vw", borderRadius: "10px" }}
+
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
@@ -175,7 +175,7 @@ export default function Distribution({ cart, dataBaseUser }) {
         {/* ALL DATA */}
         <section className="bg-[#fff] rounded-2xl flex flex-col gap-5 justify-center lg:w-9/12 z-10  overflow-auto">
           {dataRender === "orders" ? (
-            <Orders editor={"printingUser"} />
+            <Orders editor={"distributionUser"} />
           ) : dataRender === "FAQ" ? (
             <FAQ />
           ) : (

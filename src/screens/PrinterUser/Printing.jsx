@@ -43,7 +43,6 @@ export default function Printing({ cart, dataBaseUser }) {
 
   const list = (anchor) => (
     <Box
-      sx={{ width: "80vw", borderRadius: "10px" }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
@@ -51,7 +50,7 @@ export default function Printing({ cart, dataBaseUser }) {
       <section className="bg-[#fff] p-8 h-screen flex flex-col lg:hidden justify-around">
         {/* DATOS SESION */}
         <div className="flex flex-col justify-center items-center gap-3">
-        <Avatar
+          <Avatar
             alt="Xiro Avatar"
             sx={{ height: "4rem", width: "4rem" }}
             src={photoURL}
@@ -185,7 +184,6 @@ export default function Printing({ cart, dataBaseUser }) {
           )}
         </section>
       </div>
-      
     </>
   );
 }
