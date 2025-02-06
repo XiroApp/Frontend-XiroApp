@@ -1,57 +1,47 @@
 import { Button, TableCell, Tooltip } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateUserRole } from "../../../redux/actions/adminActions";
 
-export default function UsersRow({ column, value, uidUser }) {
+export default function UsersRow({ column, value, uidUser, user, index }) {
   const dispatch = useDispatch();
   const [editStatus, setEditStatus] = useState(false);
+  const [selectedRoles, setSelectedRoles] = useState(user.roles);
+  console.log(selectedRoles);
 
   const handleSetEditStatus = (e) => {
     setEditStatus(false);
   };
 
-  const [input, setInput] = useState({
-    roles: ["user"],
-  });
-
   const handleAssignRole = () => {
-    dispatch(updateUserRole(uidUser, input)).then(setEditStatus(false));
+    dispatch(updateUserRole(uidUser, { roles: selectedRoles })).then(
+      setEditStatus(false)
+    );
+  };
+
+  // Función para manejar el cambio de los checkboxes
+  const handleCheckboxChange = (e) => {
+    const { value, checked } = e.target;
+
+    // Si el checkbox está marcado, agregar el valor al array
+    if (checked) {
+      setSelectedRoles([...selectedRoles, value]);
+    } else {
+      // Si el checkbox no está marcado, eliminar el valor del array
+      setSelectedRoles(selectedRoles.filter((role) => role !== value));
+    }
   };
 
   return (
     <>
       <TableCell key={column.id} align={column.align}>
-        {column.id === "email" && <span className="font-bold">{value}</span>}
-        {column.id === "uid" && (
-          <Tooltip placement="top" title={value}>
-            <span className="font-bold">{value?.slice(0, 10) + "..."}</span>
-          </Tooltip>
-        )}
-        {column.id === "orders_total" && (
-          <Tooltip placement="top" title={value}>
-            <span className="font-bold">{value}</span>
-          </Tooltip>
-        )}
-        {column.id === "phone" && (
-          <span className="font-bold">{value || "-"}</span>
-        )}
-        {column.id === "displayName" && (
-          <span className="font-bold">{value}</span>
-        )}
-        {column.id === "roles" &&
-          value?.map((rol, index) => (
-            <span key={index} className="font-bold">
-              {rol === "printing" ? "imprenta" : rol}
-            </span>
-          ))}
-        {column.id === "edit" && (
+        {column.id === "edit" ? (
           <>
             <button>
               <Tooltip placement="bottom" title="Editar Usuario">
@@ -63,11 +53,11 @@ export default function UsersRow({ column, value, uidUser }) {
               </Tooltip>
             </button>
 
-            {/* MODAL FORMULARIO */}
+            {/* MODAL FORMULARIO  EDITAR ROL*/}
             <Dialog open={editStatus} onClose={(e) => setEditStatus(false)}>
               <DialogTitle className="text-center">Editar rol</DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8">
-                <section className="flex flex-col items-center gap-4 w-96">
+                {/* <section className="flex flex-col items-center gap-4 w-96">
                   <div className="w-full">
                     <div className="flex flex-col w-full">
                       <label className="py-2" for="roleSelector">
@@ -87,7 +77,93 @@ export default function UsersRow({ column, value, uidUser }) {
                       </select>
                     </div>
                   </div>
-                </section>
+                </section> */}
+
+                <div className="flex flex-col w-full">
+                  <label className="py-2">Cambiar rol de usuario.</label>
+                  {/* Checkbox para Usuario Base */}
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="user"
+                      value="user"
+                      defaultChecked={user?.roles?.includes("user")}
+                      onChange={handleCheckboxChange}
+                      className="mr-2"
+                    />
+                    <label htmlFor="user">Usuario Base 🙍‍♂️</label>
+                  </div>
+
+                  {/* Checkbox para Imprenta */}
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="printing"
+                      value="printing"
+                      defaultChecked={user?.roles?.includes("printing")}
+                      onChange={handleCheckboxChange}
+                      className="mr-2"
+                    />
+                    <label htmlFor="printing">Imprenta 📄</label>
+                  </div>
+
+                  {/* Checkbox para Delivery */}
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="distribution"
+                      value="distribution"
+                      defaultChecked={user?.roles?.includes("distribution")}
+                      onChange={handleCheckboxChange}
+                      className="mr-2"
+                    />
+                    <label htmlFor="distribution">Distribución ⛽</label>
+                  </div>
+                  {/* Checkbox para Delivery */}
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="pickup"
+                      value="pickup"
+                      defaultChecked={user?.roles?.includes("pickup")}
+                      onChange={handleCheckboxChange}
+                      className="mr-2"
+                    />
+                    <label htmlFor="pickup">Pickup 🧭</label>
+                  </div>
+
+                  {/* Checkbox para Delivery */}
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="delivery"
+                      value="delivery"
+                      defaultChecked={user?.roles?.includes("delivery")}
+                      onChange={handleCheckboxChange}
+                      className="mr-2"
+                    />
+                    <label htmlFor="delivery">Delivery 🛸</label>
+                  </div>
+
+                  {/* Checkbox para Administrador */}
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="admin"
+                      value="admin"
+                      defaultChecked={user?.roles?.includes("admin")}
+                      onChange={handleCheckboxChange}
+                      className="mr-2"
+                    />
+                    <label htmlFor="admin">Administrador 🏆</label>
+                  </div>
+
+                  {/* Mostrar el estado actual (opcional) */}
+                  <div className="mt-4">
+                    <strong>Roles seleccionados:</strong>{" "}
+                    {selectedRoles.join(", ")}
+                  </div>
+                </div>
               </DialogContent>
               <DialogActions>
                 <Button
@@ -104,6 +180,14 @@ export default function UsersRow({ column, value, uidUser }) {
                 </Button>
               </DialogActions>
             </Dialog>
+          </>
+        ) : (
+          <>
+            {column.id == "index" ? (
+              <span className="font-bold text-black/50">{value}</span>
+            ) : (
+              <span className="font-bold">{value}</span>
+            )}
           </>
         )}
       </TableCell>

@@ -120,11 +120,11 @@ export default function OrdersRow({
   /* STATUS PRINTING */
   const [input, setInput] = useState({
     orderId: orderId,
-    uidPrinting: order.uidPrinting || "unassigned",
-    uidDelivery: order.uidDelivery || "unassigned",
-    clientUid: order.clientUid || "unassigned",
-    orderStatus: order.orderStatus || "unassigned",
-    report: order.report || "unassigned",
+    uidPrinting: order.uidPrinting || null,
+    uidDelivery: order.uidDelivery || null,
+    clientUid: order.clientUid || null,
+    orderStatus: order.orderStatus || null,
+    report: order.report || null,
   });
   console.log(input);
 
@@ -153,6 +153,7 @@ export default function OrdersRow({
       setPrintingSelectStatus(false);
       setProblemsSelectStatus(true);
     } else if (
+      e.target.value === null ||
       e.target.value === "process" ||
       e.target.value === "unassigned" ||
       e.target.value === "printed" ||
@@ -182,13 +183,13 @@ export default function OrdersRow({
       changeOrderStatus({
         idOrder: input.orderId,
         orderStatus: input.orderStatus,
-        uidPrinting: selectedPrinting?.uid || "unassigned",
-        uidDelivery: selectedDelivery?.uid || "unassigned",
+        uidPrinting: selectedPrinting?.uid || null,
+        uidDelivery: selectedDelivery?.uid || null,
         uidClient: input.clientUid,
-        report: input.report || "unassigned",
+        report: input.report || null,
         editor: editor,
       })
-    ).then(() => fetchOrders());
+    ).then(() => fetchOrders("refresh"));
     setEditStatus(false);
   }
 

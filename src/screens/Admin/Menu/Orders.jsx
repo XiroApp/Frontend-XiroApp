@@ -78,30 +78,36 @@ export default function Orders({ editor }) {
 
   const printingUsers = useSelector((state) => state.printingUsers);
   const deliveryUsers = useSelector((state) => state.deliveryUsers);
-  const [nextVisible, setNextVisible] = useState(null);
-  const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const pageSize = 10;
-
+  const [pageSize, setPageSize] = useState(10); // Tamaño de la página
+  const [nextVisible, setNextVisible] = useState(null); // Último documento visible para la paginación hacia adelante
+  const [prevVisible, setPrevVisible] = useState(null); // Primer documento visible para la paginación hacia atrás
+  const [hasNext, setHasNext] = useState(false); // Indica si hay más páginas hacia adelante
+  const [hasPrev, setHasPrev] = useState(false); // Indica si hay más páginas hacia atrás
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (direction = "next",) => {
     setLoading(true);
     setError(null);
 
     try {
-      let url = `${baseUrl}/orders?pageSize=${pageSize}`;
-      if (nextVisible) {
-        url += `&lastVisible=${nextVisible}`;
-      }
-      const response = await axios.get(url);
-      const data = await response.data;
 
-      let sortedOrders = response.data.orders.map((order) => {
+      let url = `${baseUrl}/orders?pageSize=${pageSize}`;
+      // Agregar parámetros según la dirección de la paginación
+      if (direction === "next" && nextVisible) {
+        url += `&lastVisible=${nextVisible}&direction=next`;
+      } else if (direction === "prev" && prevVisible) {
+        url += `&firstVisible=${prevVisible}&direction=prev`;
+      }
+
+      const response = await axios.get(url);
+      const data = response.data;   
+
+      // Formatear las órdenes
+      const sortedOrders = data.orders.map((order) => {
         const fechaStr = order.paymentData.date_created;
         const fecha = new Date(fechaStr);
 
@@ -132,18 +138,19 @@ export default function Orders({ editor }) {
         };
       });
 
+      // Actualizar el estado de las órdenes
       setOrders(sortedOrders);
-      setNextVisible(data.nextLastVisible);
-      setHasMore(!!data.nextLastVisible);
+      
+      // Actualizar los valores de paginación
+      setNextVisible(data.nextLastVisible || null);
+      setPrevVisible(data.firstVisible || null);
+      setHasNext(!!data.nextLastVisible);
+      setHasPrev(!!data.firstVisible);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  };
-
-  const fetchMoreOrders = async () => {
-    await fetchOrders(nextVisible);
   };
 
   useEffect(() => {
@@ -152,16 +159,7 @@ export default function Orders({ editor }) {
     dispatch(getDeliveryUsers());
   }, []);
 
-  /* PAGINATION */
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-    fetchMoreOrders();
-  };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
 
   /* CHANGE ORDER STATUS */
   const [filter, setFilter] = useState("no_filter");
@@ -346,8 +344,21 @@ export default function Orders({ editor }) {
             </TableBody>
           </Table>
         </TableContainer>
+        <div className="flex gap-4">
+          <button
+            onClick={() => fetchOrders("prev")}
+            disabled={!hasPrev || loading}
+          >
+            Anterior
+          </button> | 
+          <button
+            onClick={() => fetchOrders("next")}
+            disabled={!hasNext || loading}
+          >
+            Siguiente
+          </button>
+        </div>
 
-        <button onClick={fetchMoreOrders}>siguiente</button>
         {/* <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
