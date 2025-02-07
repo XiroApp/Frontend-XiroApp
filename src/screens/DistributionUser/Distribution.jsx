@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import List from "@mui/material/List";
 import MenuIcon from "@mui/icons-material/Menu";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -7,18 +7,12 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import PriceChangeIcon from "@mui/icons-material/PriceChange";
 import { Avatar, Box, Drawer } from "@mui/material";
-import Navbar from "../../components/Navbar/Navbar";import FAQ from "./FAQ";
-
-import { getAllUsers } from "../../redux/actions/adminActions";
+import Navbar from "../../components/Navbar/Navbar";
+import FAQ from "./FAQ";
 import Orders from "./Menu/Orders";
 
 export default function Distribution({ cart, dataBaseUser }) {
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.dataBaseUser);
-
-  useEffect(() => {
-    dispatch(getAllUsers());
-  }, []);
 
   let { photoURL, email, displayName } = user;
 
@@ -41,7 +35,6 @@ export default function Distribution({ cart, dataBaseUser }) {
 
   const list = (anchor) => (
     <Box
-
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
@@ -49,7 +42,7 @@ export default function Distribution({ cart, dataBaseUser }) {
       <section className="bg-[#fff] p-8 h-screen flex flex-col lg:hidden justify-around">
         {/* DATOS SESION */}
         <div className="flex flex-col justify-center items-center gap-3">
-        <Avatar
+          <Avatar
             alt="Xiro Avatar"
             sx={{ height: "4rem", width: "4rem" }}
             src={photoURL}
@@ -183,7 +176,6 @@ export default function Distribution({ cart, dataBaseUser }) {
           )}
         </section>
       </div>
-      
     </>
   );
 }

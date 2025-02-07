@@ -4,8 +4,7 @@ import {
   GoogleMap,
   DirectionsRenderer,
 } from "@react-google-maps/api";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllOrders, getAllUsers } from "../../../redux/actions/adminActions";
+import { useSelector } from "react-redux";
 
 const libraries = ["places"];
 

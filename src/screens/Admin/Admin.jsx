@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import List from "@mui/material/List";
 import MenuIcon from "@mui/icons-material/Menu";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -12,22 +12,15 @@ import { Avatar, Box, Drawer } from "@mui/material";
 import UsersApp from "./Menu/UsersApp";
 import Navbar from "../../components/Navbar/Navbar";
 import Coupons from "./Menu/Coupons";
-import { getAllUsers } from "../../redux/actions/adminActions";
 import Pricing from "./Menu/Pricing";
 import Orders from "./Menu/Orders";
 import { StickyNote2 } from "@mui/icons-material";
 import Texts from "./Menu/Texts";
 
 export default function Admin({ cart, dataBaseUser }) {
-  const dispatch = useDispatch();
-
   const user = useSelector((state) => state.dataBaseUser);
 
   const users = useSelector((state) => state.usersApp);
-
-  useEffect(() => {
-    dispatch(getAllUsers());
-  }, []);
 
   let { photoURL, email, displayName } = user;
 
