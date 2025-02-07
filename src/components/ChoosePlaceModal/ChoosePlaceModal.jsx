@@ -10,20 +10,9 @@ import { setOrderPlace, setToast, updateUser } from "../../redux/actions";
 export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
   const dispatch = useDispatch();
   const labels = useSelector((state) => state.labels);
-
   const [open, setOpen] = useState(false);
   const [resume, setResume] = useState({ place: null });
-  const [defaultPointAddress, setDefaultPointAddress] = useState({
-    // userUid: "vOxEpLHdLMYurVnpARaHqrqmaD93",
-    name: "Cochabamba",
-    number: "2973",
-    city: "Guaymallén",
-    locality: "Villa Nueva",
-    zipCode: "5521",
-    floorOrApartment: "-",
-    tag: "Punto de retiro",
-    // addressUid: "d2951518-39cb-41c3-8d5b-e5b23c0cb5ea",
-  });
+
   const addresses = useSelector((state) => state.addresses);
   const place = useSelector((state) => state.place);
 

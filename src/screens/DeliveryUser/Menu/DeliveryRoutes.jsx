@@ -30,7 +30,7 @@ const DeliveryRoutes = () => {
         <ul className="text-stone-500 mt-4 flex flex-col gap-2 lg:mt-6">
           {orders?.map((order, i) => (
             <li key={i} className="text-stone-400">
-              Pedido {i + 1} :{" "}
+              Pedido {i + 1} : {" "}
               <span>
                 {`${order?.place?.address.name} ${order?.place?.address.number} ${order?.place?.address.locality}`}
               </span>

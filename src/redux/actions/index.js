@@ -744,19 +744,13 @@ export function verifyCoupon(idCoupon) {
 export function setOrderPlace(place) {
   return async function (dispatch) {
     try {
-      const { name, number, zipCode, locality, city } = place.address;
-      let destinationAddress = `${name} ${number}, ${zipCode}, ${city}`;
+      const { name, number, city, lat, lng } = place.address;
+      let destinationAddress = `${name} ${number}, ${city}`;
 
       let { data } = await axios.get(
-        `${baseUrl}/maps/distance?destinations=${destinationAddress}`
+        `${baseUrl}/maps/distance?destinations=${destinationAddress}&lat=${lat}&lng=${lng}`
       );
 
-      /* PILLIN */
-      /* 
-      
-         let { data } = await axios.get(
-        `${baseUrl}/maps/distribution-distance?destinations=${destinationAddress}`
-      );*/
       return dispatch({
         type: action.SET_PLACE,
         payload: {
