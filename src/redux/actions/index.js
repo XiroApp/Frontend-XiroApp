@@ -746,16 +746,33 @@ export function setOrderPlace(place) {
     try {
       const { name, number, city, lat, lng } = place.address;
       let destinationAddress = `${name} ${number}, ${city}`;
+      console.log(place);
 
-      let { data } = await axios.get(
-        `${baseUrl}/maps/distance?destinations=${destinationAddress}&lat=${lat}&lng=${lng}`
-      );
+      let distance = {
+        uidDistribution: null,
+        uidPickup: null,
+        distributor: null,
+        value: 0,
+        text: "0",
+        address: null,
+        lat: null,
+        lng: null,
+      };
+
+      if (place.type == "Retiro") {
+        distance = { ...distance, uidPickup: place.address.userUid, text:"Retiro" };
+      } else {
+        let { data } = await axios.get(
+          `${baseUrl}/maps/distance?destinations=${destinationAddress}&lat=${lat}&lng=${lng}`
+        );
+        distance = data;
+      }
 
       return dispatch({
         type: action.SET_PLACE,
         payload: {
           place: place,
-          distance: data,
+          distance: distance,
         },
       });
     } catch (error) {

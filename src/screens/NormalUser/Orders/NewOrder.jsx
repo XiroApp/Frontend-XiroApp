@@ -69,9 +69,6 @@ export default function NewOrder() {
   const user = useSelector((state) => state.dataBaseUser);
   const cart = useSelector((state) => state.cart);
   const labels = useSelector((state) => state.labels);
-
-  console.log(labels);
-
   const pricingState = useSelector((state) => state.pricing);
   const place = useSelector((state) => state.place);
   const [resetModal, setResetModal] = useState(false);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Link, Modal, NativeSelect } from "@mui/material";
 import { FaMotorcycle as MopedIcon } from "react-icons/fa6";
 import { FaStore as StoreIcon } from "react-icons/fa6";
@@ -6,13 +6,14 @@ import PlaceIcon from "@mui/icons-material/PlaceOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import NewAddressForm from "../../components/Forms/NewAddressForm";
 import { setOrderPlace, setToast, updateUser } from "../../redux/actions";
+import { UsersAdapter } from "../../Infra/Adapters/users.adapter";
 
 export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
   const dispatch = useDispatch();
   const labels = useSelector((state) => state.labels);
   const [open, setOpen] = useState(false);
   const [resume, setResume] = useState({ place: null });
-
+  const [pickupUsers, setPickupUsers] = useState([]);
   const addresses = useSelector((state) => state.addresses);
   const place = useSelector((state) => state.place);
 
@@ -29,6 +30,15 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
       setChoosePlace(false);
     }
   }
+
+  const fetchPickupPoints = async () => {
+    UsersAdapter.getPickupUsers().then((res) => setPickupUsers(res));
+  };
+
+
+  useEffect(() => {
+    fetchPickupPoints();
+  }, []);
 
   return (
     <>
@@ -107,7 +117,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                   ? labels
                       .find((label) => label.id === "pick_up_point_description")
                       .content?.split("//")
-                      .map((text) => <p className="text-sm">{text}</p>)
+                      .map((text,index) => <p key={index} className="text-sm">{text}</p>)
                   : false}
               </div>
             </button>
@@ -168,46 +178,52 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                 <span className="font-[500]">
                   Seleccioná donde retirar tu pedido
                 </span>
-                <button
-                  className={
-                    resume.place.address === defaultPointAddress
-                      ? " p-2 rounded-md  bg-[#81A165] border-2 border-[#000] hover:bg-[#81A165] text-white "
-                      : " p-2 rounded-md border border-gray-400 hover:bg-[#81A165] bg-[#fff]/60 "
-                  }
-                  onClick={(e) =>
-                    setResume({
-                      ...resume,
-                      ["place"]: {
-                        ...resume.place,
-                        address: defaultPointAddress,
-                      },
-                    })
-                  }
-                >
-                  <div className="flex items-center  gap-3 w-full">
-                    <PlaceIcon
-                      color="primary"
-                      sx={{ height: "1.3em", width: "1.3em" }}
-                    />
-                    <div className="flex flex-col items-start">
-                      <span className="text-sm">
-                        {defaultPointAddress?.name?.length < 15
-                          ? defaultPointAddress.name
-                          : `${defaultPointAddress.name.slice(0, 15)}...`}{" "}
-                        {defaultPointAddress.number}
-                      </span>
-                      <span className="text-sm opacity-80">
-                        {defaultPointAddress.locality}
-                      </span>
-                      <span className="text-sm opacity-80">
-                        {defaultPointAddress.city}
-                      </span>
-                      <span className="text-sm opacity-80">
-                        {defaultPointAddress.tag}
-                      </span>
-                    </div>
-                  </div>
-                </button>
+                {/* {console.log(pickupUsers)} */}
+                {pickupUsers?.length > 0
+                  ? pickupUsers?.map((pickup) => (
+                      <button
+                        className={
+                          resume.place.address === pickup.address
+                            ? " p-2 rounded-md  bg-[#81A165] border-2 border-[#000] hover:bg-[#81A165] text-white "
+                            : " p-2 rounded-md border border-gray-400 hover:bg-[#81A165] bg-[#fff]/60 "
+                        }
+                        onClick={(e) =>
+                          setResume({
+                            ...resume,
+                            ["place"]: {
+                              ...resume.place,
+                              address: pickup.address,
+                            },
+                          })
+                        }
+                      >
+                        <div className="flex items-center  gap-3 w-full">
+                          <PlaceIcon
+                            color="primary"
+                            sx={{ height: "1.3em", width: "1.3em" }}
+                          />
+                          <div className="flex flex-col items-start">
+                            <span className="text-sm">{pickup?.displayName}</span>
+                            <span className="text-sm opacity-80">
+                              {pickup.address?.name?.length < 15
+                                ? pickup.address.name
+                                : `${pickup.address.name.slice(0, 15)}...`}{" "}
+                              {pickup.address.number}
+                            </span>
+                            <span className="text-sm opacity-80">
+                              {pickup.address.locality}
+                            </span>
+                            <span className="text-sm opacity-80">
+                              {pickup.address.city}
+                            </span>
+                            {/* <span className="text-sm opacity-80">
+                              {pickup.address.tag}
+                            </span> */}
+                          </div>
+                        </div>
+                      </button>
+                    ))
+                  : false}
 
                 {/* <div className="flex flex-col justify-start p-2 w-2/3">
                   <span className="text-sm">CIUDAD</span>

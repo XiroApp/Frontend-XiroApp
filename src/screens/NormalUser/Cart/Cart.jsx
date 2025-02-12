@@ -35,7 +35,6 @@ import axios from "axios";
 /* MERCADOPAGO */
 const baseUrl = Settings.SERVER_URL;
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
-import Chatbot from "../../../components/Chatbot/Chatbot";
 import { NativeSelect } from "@mui/material";
 import { ApiConstants } from "../../../Common/constants";
 
@@ -53,7 +52,12 @@ export default function Cart() {
   const pricing = useSelector((state) => state.pricing);
   const distance = useSelector((state) => state.distance);
   const [shipment, setShipment] = useState(null);
-  const [delivery_distance, setDelivery_distance] = useState("0 mtrs");
+  const [delivery_distance, setDelivery_distance] = useState({
+    text: null,
+    value: null,
+    uidDistribution: null,
+    uidPickup: null,
+  });
 
   /* DELETE BUTTON */
   const [mercadoPagoModal, setmercadoPagoModal] = useState(false);
@@ -94,11 +98,14 @@ export default function Cart() {
 
   useEffect(() => {
     setOrderTosend({ ...orderToSend, place: place });
-
-    setShipment((pricing.delivery_km * distance?.value) / 1000);
-    setDelivery_distance(distance);
+    if (place?.type === "Retiro") {
+      setShipment(500); // PELIGRO! CAMBIAR POR PRECIO DE DB NUEVO DE RETIROS EN PUNTO DE ENTREGA
+      setDelivery_distance(distance);
+    } else {
+      setShipment(pricing.delivery_km * (distance?.value / 1000));
+      setDelivery_distance(distance);
+    }
   }, [place]);
-  console.log(shipment);
 
   useEffect(() => {
     coupon?.type[0] === "%"
@@ -580,11 +587,11 @@ export default function Cart() {
 
                               <section className="flex justify-between">
                                 <span className=" text-[16px] font-[400]">
-                                  Entrega: {orderToSend.place.type}
+                                  Forma de entrega: {orderToSend.place.type}
                                 </span>
                                 <span>
                                   <span className="text-[13px] ">
-                                    {`(${delivery_distance.text}) `}
+                                    {`(${delivery_distance?.text || 0}) `}
                                   </span>
                                   ${shipment.toFixed(2)}{" "}
                                 </span>
@@ -613,11 +620,11 @@ export default function Cart() {
 
                               <section className="flex justify-between">
                                 <span className=" text-[16px] font-[400]">
-                                  Entrega: {orderToSend.place.type}
+                                  Forma de Entrega: {orderToSend.place.type}
                                 </span>
                                 <span>
                                   <span className="text-[13px] ">
-                                    {`(${delivery_distance.text}) `}
+                                    {`(${delivery_distance?.text || 0}) `}
                                   </span>
                                   ${shipment.toFixed(2)}{" "}
                                 </span>
