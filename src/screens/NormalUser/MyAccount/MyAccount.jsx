@@ -26,12 +26,14 @@ import Notifications from "./Notifications";
 import Chatbot from "../../../components/Chatbot/Chatbot";
 import { useEffect } from "react";
 import { getOrdersByClientUid, setToast } from "../../../redux/actions";
+import { ShoppingCart as CartIcon } from "@mui/icons-material";
+import LibraryStore from "./LibraryStore";
 
 export default function MyAccount({ cart, dataBaseUser }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.dataBaseUser);
-  const clientOrders = useSelector((state) => state.clientOrders);
+  const user = useSelector(state => state.dataBaseUser);
+  const clientOrders = useSelector(state => state.clientOrders);
   let { photoURL, email, displayName } = user;
 
   const [openCollapse, setOpenCollapse] = useState(false);
@@ -45,7 +47,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
     dispatch(getOrdersByClientUid(dataBaseUser.uid));
   }, []);
 
-  const toggleDrawer = (anchor, open) => (event) => {
+  const toggleDrawer = (anchor, open) => event => {
     if (
       event.type === "keydown" &&
       (event.key === "Tab" || event.key === "Shift")
@@ -56,7 +58,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
     setState({ ...state, [anchor]: open });
   };
 
-  const list = (anchor) => (
+  const list = anchor => (
     <Box
       sx={{
         width: "80vw",
@@ -92,7 +94,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
           >
             MI PERFIL
             <ListItemButton
-              onClick={(e) => setDataRender("personalData")}
+              onClick={e => setDataRender("personalData")}
               sx={
                 dataRender === "personalData"
                   ? {
@@ -113,7 +115,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
               <ListItemText primary="Datos personales" />
             </ListItemButton>
             <ListItemButton
-              onClick={(e) => setDataRender("accountData")}
+              onClick={e => setDataRender("accountData")}
               sx={
                 dataRender === "accountData"
                   ? {
@@ -134,7 +136,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
               <ListItemText primary="Historial" />
             </ListItemButton>
             <ListItemButton
-              onClick={(e) => setDataRender("addressData")}
+              onClick={e => setDataRender("addressData")}
               sx={
                 dataRender === "addressData"
                   ? {
@@ -153,6 +155,27 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 <LocationOnIcon style={{ width: "2.5rem", height: "2.5rem" }} />
               </ListItemIcon>
               <ListItemText style={{}} primary="Direcciones de envío" />
+            </ListItemButton>
+            <ListItemButton
+              onClick={e => setDataRender("libraryStoreData")}
+              sx={
+                dataRender === "libraryStoreData"
+                  ? {
+                      backgroundColor: "#81A165",
+                      borderRadius: "10px",
+                      ":hover": { backgroundColor: "#c9d9bb" },
+                    }
+                  : {
+                      borderRadius: "10px",
+                      ":hover": { backgroundColor: "#c9d9bb" },
+                    }
+              }
+              className="h-16"
+            >
+              <ListItemIcon>
+                <CartIcon style={{ width: "2.5rem", height: "2.5rem" }} />
+              </ListItemIcon>
+              <ListItemText style={{}} primary="Librería" />
             </ListItemButton>
             {/* CONFIGURACIONES
             <ListItemButton
@@ -179,7 +202,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
           </List>
         </div>
         <button
-          onClick={(e) => setDataRender("FAQ")}
+          onClick={e => setDataRender("FAQ")}
           className="hover:bg-[#81A165] hover:text-white self-center flex items-center justify-around rounded-lg p-2 w-fit  border border-gray-300"
         >
           <div className="flex gap-1">
@@ -296,7 +319,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
             >
               MI PERFIL
               <ListItemButton
-                onClick={(e) => setDataRender("personalData")}
+                onClick={e => setDataRender("personalData")}
                 sx={
                   dataRender === "personalData"
                     ? {
@@ -317,7 +340,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 <ListItemText primary="Datos personales" />
               </ListItemButton>
               <ListItemButton
-                onClick={(e) => setDataRender("accountData")}
+                onClick={e => setDataRender("accountData")}
                 sx={
                   dataRender === "accountData"
                     ? {
@@ -338,7 +361,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 <ListItemText primary="Historial" />
               </ListItemButton>
               <ListItemButton
-                onClick={(e) => setDataRender("addressData")}
+                onClick={e => setDataRender("addressData")}
                 sx={
                   dataRender === "addressData"
                     ? {
@@ -360,11 +383,10 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 </ListItemIcon>
                 <ListItemText style={{}} primary="Direcciones de envío" />
               </ListItemButton>
-              {/* CONFIGURACIONES
               <ListItemButton
-                onClick={(e) => setDataRender("Notifications")}
+                onClick={e => setDataRender("libraryStoreData")}
                 sx={
-                  dataRender === "Notifications"
+                  dataRender === "libraryStoreData"
                     ? {
                         backgroundColor: "#81A165",
                         borderRadius: "10px",
@@ -375,20 +397,18 @@ export default function MyAccount({ cart, dataBaseUser }) {
                         ":hover": { backgroundColor: "#c9d9bb" },
                       }
                 }
-                className="h-16 "
+                className="h-16"
               >
                 <ListItemIcon>
-                  <NotificationsIcon
-                    sx={{ width: "2.5rem", height: "2.5rem" }}
-                  />
+                  <CartIcon style={{ width: "2.5rem", height: "2.5rem" }} />
                 </ListItemIcon>
-                <ListItemText primary="Notificaciones" />
-              </ListItemButton> */}
+                <ListItemText style={{}} primary="Librería" />
+              </ListItemButton>
             </List>
           </div>
 
           <button
-            onClick={(e) => setDataRender("FAQ")}
+            onClick={e => setDataRender("FAQ")}
             className="hover:bg-[#81A165] self-center flex items-center justify-around rounded-lg p-2 w-fit  border border-gray-300"
           >
             <div className="flex gap-1">
@@ -463,7 +483,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                     ":hover": { backgroundColor: "#c9d9bb" },
                   }}
                   color="primary"
-                  onClick={(e) => handleNewOrderButton(e)}
+                  onClick={e => handleNewOrderButton(e)}
                 >
                   <span className="text-white lg:text-lg font-bold">
                     Nuevo pedido
@@ -489,7 +509,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                       <span className="text-3xl ">
                         {
                           clientOrders?.filter(
-                            (order) => order.orderStatus !== "received"
+                            order => order.orderStatus !== "received"
                           ).length
                         }
                       </span>
@@ -527,7 +547,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                         <span className="text-xl ">
                           {
                             clientOrders?.filter(
-                              (order) => order.orderStatus !== "received"
+                              order => order.orderStatus !== "received"
                             ).length
                           }
                         </span>
@@ -552,6 +572,8 @@ export default function MyAccount({ cart, dataBaseUser }) {
             <FAQ />
           ) : dataRender === "Notifications" ? (
             <Notifications user={user} />
+          ) : dataRender === "libraryStoreData" ? (
+            <LibraryStore />
           ) : (
             <PersonalData user={user} />
           )}

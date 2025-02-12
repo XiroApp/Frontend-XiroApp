@@ -1,5 +1,5 @@
-let _env = "DEV"; //PARA STAGGING
-// let _env = "LOCAL"; // PARA EMULADOR F CLI
+// let _env = "DEV"; //PARA STAGGING
+let _env = "LOCAL"; // PARA EMULADOR F CLI //! Cambiar antes de subir cambios.
 
 const URL_MESSAGES = "messages";
 const URL_PICTURES = "pictures";
