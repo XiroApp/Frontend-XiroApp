@@ -7,10 +7,16 @@ import { editPricing, getPricing } from "../../../redux/actions/adminActions";
 export default function Pricing() {
   const dispatch = useDispatch();
   const pricing = useSelector((state) => state.pricing);
+  //console.log(pricing);
+
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState({
     BIG_ringed: pricing?.BIG_ringed,
     SMALL_ringed: pricing?.SMALL_ringed,
+    A3_simple_do: pricing?.A3_simple_do,
+    A3_simple_do_color: pricing?.A3_simple_do_color,
+    A3_double_does: pricing?.A3_double_does,
+    A3_double_does_color: pricing?.A3_double_does_color,
     OF_simple_do: pricing?.OF_simple_do,
     OF_simple_do_color: pricing?.OF_simple_do_color,
     OF_double_does: pricing?.OF_double_does,
@@ -41,144 +47,226 @@ export default function Pricing() {
   }
 
   return (
-    <div className="flex flex-col  rounded-2xl lg:h-full p-6 gap-4">
-      {/*A4 CAMBIAR PRECIOS */}
-      <span className="text-xl opacity-80 border-b">Precios A4</span>
-      <div className="flex flex-col">
-        <form id="pricingForm" action="" className="flex flex-row gap-4">
-          <section className="bg-[#458552] p-2 rounded-lg flex flex-col gap-1">
-            <h2>B y N 📃</h2>
+    <div className="flex flex-col items-center rounded-2xl lg:h-full p-6 gap-4">
+      <div className="flex gap-4 flex-wrap">
+        {/*A3 CAMBIAR PRECIOS */}
+        <div className="flex  flex-col items-center gap-2">
+          <span className="text-xl border-b border-black w-full text-left opacity-80 border-b">
+            Precios A3
+          </span>
+          <div className="flex flex-col">
+            <form id="pricingForm" action="" className="flex flex-row gap-4">
+              <section className="border border-black bg-slate-200 shadow-2xl p-2 rounded-lg flex flex-col gap-1">
+                <h2>B y N 📃</h2>
 
-            <div className="flex flex-col ">
-              <span className="text-[12px] opacity-80">Simple faz</span>
-              <div className="flex items-center gap-x-1">
-                <span className="font-semibold">$</span>
-                <Input
-                  type="number"
-                  name="simple_do"
-                  defaultValue={input.simple_do}
-                  onChange={(e) => handleInput(e)}
-                  className="lg:w-fit"
-                />
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] opacity-80">Doble faz</span>
-              <div className="flex items-center gap-x-1">
-                <span className="font-semibold">$</span>
-                <Input
-                  type="number"
-                  name="double_does"
-                  defaultValue={input.double_does}
-                  onChange={(e) => handleInput(e)}
-                  className="lg:w-fit"
-                />
-              </div>
-            </div>
-          </section>
-          <section className="bg-[#458552] p-2 rounded-lg flex flex-col gap-1">
-            <h2>COLOR 🎨</h2>
+                <div className="flex flex-col ">
+                  <span className="text-[12px] opacity-80">Simple faz</span>
+                  <div className="flex items-center gap-x-1">
+                    <span className="font-semibold">$</span>
+                    <Input
+                      type="number"
+                      name="simple_do"
+                      defaultValue={input.A3_simple_do}
+                      onChange={(e) => handleInput(e)}
+                      className="lg:w-fit"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[12px] opacity-80">Doble faz</span>
+                  <div className="flex items-center gap-x-1">
+                    <span className="font-semibold">$</span>
+                    <Input
+                      type="number"
+                      name="double_does"
+                      defaultValue={input.A3_double_does}
+                      onChange={(e) => handleInput(e)}
+                      className="lg:w-fit"
+                    />
+                  </div>
+                </div>
+              </section>
+              <section className="border border-black bg-slate-200 shadow-2xl p-2 rounded-lg flex flex-col gap-1">
+                <h2>COLOR 🎨</h2>
 
-            <div className="flex flex-col ">
-              <span className="text-[12px] opacity-80">Simple faz</span>
-              <div className="flex items-center gap-x-1">
-                <span className="font-semibold">$</span>
-                <Input
-                  type="number"
-                  name="simple_do_color"
-                  defaultValue={input.simple_do_color}
-                  onChange={(e) => handleInput(e)}
-                  className="lg:w-fit"
-                />
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] opacity-80">Doble faz</span>
-              <div className="flex items-center gap-x-1">
-                <span className="font-semibold">$</span>
-                <Input
-                  type="number"
-                  name="double_does_color"
-                  defaultValue={input.double_does_color}
-                  onChange={(e) => handleInput(e)}
-                  className="lg:w-fit"
-                />
-              </div>
-            </div>
-          </section>
-        </form>
+                <div className="flex flex-col ">
+                  <span className="text-[12px] opacity-80">Simple faz</span>
+                  <div className="flex items-center gap-x-1">
+                    <span className="font-semibold">$</span>
+                    <Input
+                      type="number"
+                      name="simple_do_color"
+                      defaultValue={input.A3_simple_do_color}
+                      onChange={(e) => handleInput(e)}
+                      className="lg:w-fit"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[12px] opacity-80">Doble faz</span>
+                  <div className="flex items-center gap-x-1">
+                    <span className="font-semibold">$</span>
+                    <Input
+                      type="number"
+                      name="double_does_color"
+                      defaultValue={input.A3_double_does_color}
+                      onChange={(e) => handleInput(e)}
+                      className="lg:w-fit"
+                    />
+                  </div>
+                </div>
+              </section>
+            </form>
+          </div>
+        </div>
+        {/*A4 CAMBIAR PRECIOS */}
+        <div className="flex  flex-col items-center gap-2">
+          <span className="text-xl border-b border-black w-full text-left opacity-80 border-b">
+            Precios A4
+          </span>
+          <div className="flex flex-col">
+            <form id="pricingForm" action="" className="flex flex-row gap-4">
+              <section className="border border-black bg-slate-200 shadow-2xl p-2 rounded-lg flex flex-col gap-1">
+                <h2>B y N 📃</h2>
+
+                <div className="flex flex-col ">
+                  <span className="text-[12px] opacity-80">Simple faz</span>
+                  <div className="flex items-center gap-x-1">
+                    <span className="font-semibold">$</span>
+                    <Input
+                      type="number"
+                      name="simple_do"
+                      defaultValue={input.simple_do}
+                      onChange={(e) => handleInput(e)}
+                      className="lg:w-fit"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[12px] opacity-80">Doble faz</span>
+                  <div className="flex items-center gap-x-1">
+                    <span className="font-semibold">$</span>
+                    <Input
+                      type="number"
+                      name="double_does"
+                      defaultValue={input.double_does}
+                      onChange={(e) => handleInput(e)}
+                      className="lg:w-fit"
+                    />
+                  </div>
+                </div>
+              </section>
+              <section className="border border-black bg-slate-200 shadow-2xl p-2 rounded-lg flex flex-col gap-1">
+                <h2>COLOR 🎨</h2>
+
+                <div className="flex flex-col ">
+                  <span className="text-[12px] opacity-80">Simple faz</span>
+                  <div className="flex items-center gap-x-1">
+                    <span className="font-semibold">$</span>
+                    <Input
+                      type="number"
+                      name="simple_do_color"
+                      defaultValue={input.simple_do_color}
+                      onChange={(e) => handleInput(e)}
+                      className="lg:w-fit"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[12px] opacity-80">Doble faz</span>
+                  <div className="flex items-center gap-x-1">
+                    <span className="font-semibold">$</span>
+                    <Input
+                      type="number"
+                      name="double_does_color"
+                      defaultValue={input.double_does_color}
+                      onChange={(e) => handleInput(e)}
+                      className="lg:w-fit"
+                    />
+                  </div>
+                </div>
+              </section>
+            </form>
+          </div>
+        </div>
       </div>
-      {/*OFICIO CAMBIAR PRECIOS */}
-      <span className="text-xl opacity-80 border-b">Precios OFICIO</span>
-      <div className="flex flex-col">
-        <form id="pricingForm" action="" className="flex flex-row gap-4">
-          <section className="bg-[#458552] p-2 rounded-lg flex flex-col gap-1">
-            <h2>B y N 📃</h2>
-            <div className="flex flex-col ">
-              <span className="text-[12px] opacity-80">Simple faz</span>
-              <div className="flex items-center gap-x-1">
-                <span className="font-semibold">$</span>
-                <Input
-                  type="number"
-                  name="OF_simple_do"
-                  defaultValue={input.OF_simple_do}
-                  onChange={(e) => handleInput(e)}
-                  className="lg:w-fit"
-                />
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] opacity-80">Doble faz</span>
-              <div className="flex items-center gap-x-1">
-                <span className="font-semibold">$</span>
-                <Input
-                  type="number"
-                  name="OF_double_does"
-                  defaultValue={input.OF_double_does}
-                  onChange={(e) => handleInput(e)}
-                  className="lg:w-fit"
-                />
-              </div>
-            </div>
-          </section>
-          <section className="bg-[#458552] p-2 rounded-lg flex flex-col gap-1">
-            <h2>COLOR 🎨</h2>
-            <div className="flex flex-col ">
-              <span className="text-[12px] opacity-80">Simple faz</span>
-              <div className="flex items-center gap-x-1">
-                <span className="font-semibold">$</span>
-                <Input
-                  type="number"
-                  name="OF_simple_do_color"
-                  defaultValue={input.OF_simple_do_color}
-                  onChange={(e) => handleInput(e)}
-                  className="lg:w-fit"
-                />
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] opacity-80">Doble faz</span>
-              <div className="flex items-center gap-x-1">
-                <span className="font-semibold">$</span>
-                <Input
-                  type="number"
-                  name="OF_double_does_color"
-                  defaultValue={input.OF_double_does_color}
-                  onChange={(e) => handleInput(e)}
-                  className="lg:w-fit"
-                />
-              </div>
-            </div>
-          </section>
-        </form>
-      </div>
 
-      <div className="flex gap-4">
+      <div className="flex gap-4 flex-wrap">
+        {/*OFICIO CAMBIAR PRECIOS */}
+        <div className="flex  flex-col items-center gap-2">
+          <span className="text-xl border-b border-black w-full text-left opacity-80 border-b">
+            Precios OFICIO
+          </span>
+          <div className="flex flex-col">
+            <form id="pricingForm" action="" className="flex flex-row gap-4">
+              <section className="border border-black bg-slate-200 shadow-2xl p-2 rounded-lg flex flex-col gap-1">
+                <h2>B y N 📃</h2>
+                <div className="flex flex-col ">
+                  <span className="text-[12px] opacity-80">Simple faz</span>
+                  <div className="flex items-center gap-x-1">
+                    <span className="font-semibold">$</span>
+                    <Input
+                      type="number"
+                      name="OF_simple_do"
+                      defaultValue={input.OF_simple_do}
+                      onChange={(e) => handleInput(e)}
+                      className="lg:w-fit"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[12px] opacity-80">Doble faz</span>
+                  <div className="flex items-center gap-x-1">
+                    <span className="font-semibold">$</span>
+                    <Input
+                      type="number"
+                      name="OF_double_does"
+                      defaultValue={input.OF_double_does}
+                      onChange={(e) => handleInput(e)}
+                      className="lg:w-fit"
+                    />
+                  </div>
+                </div>
+              </section>
+              <section className="border border-black bg-slate-200 shadow-2xl p-2 rounded-lg flex flex-col gap-1">
+                <h2>COLOR 🎨</h2>
+                <div className="flex flex-col ">
+                  <span className="text-[12px] opacity-80">Simple faz</span>
+                  <div className="flex items-center gap-x-1">
+                    <span className="font-semibold">$</span>
+                    <Input
+                      type="number"
+                      name="OF_simple_do_color"
+                      defaultValue={input.OF_simple_do_color}
+                      onChange={(e) => handleInput(e)}
+                      className="lg:w-fit"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[12px] opacity-80">Doble faz</span>
+                  <div className="flex items-center gap-x-1">
+                    <span className="font-semibold">$</span>
+                    <Input
+                      type="number"
+                      name="OF_double_does_color"
+                      defaultValue={input.OF_double_does_color}
+                      onChange={(e) => handleInput(e)}
+                      className="lg:w-fit"
+                    />
+                  </div>
+                </div>
+              </section>
+            </form>
+          </div>
+        </div>
         {/*ANILLADO CAMBIAR PRECIOS */}
-        <section className="flex flex-col gap-4">
-          <span className="text-xl opacity-80 border-b">Precio Anillado</span>
+        <div className="flex  flex-col items-center gap-2">
+          <span className="text-xl border-b border-black w-full text-left opacity-80 border-b">
+            Precio Anillado
+          </span>
           <form id="pricingForm" action="" className="flex flex-row gap-4">
-            <section className="bg-[#458552] p-2 rounded-lg flex flex-col gap-1">
+            <section className="border border-black bg-slate-200 shadow-2xl p-2 rounded-lg flex flex-col gap-1">
               <h2>ANILLADO 📘</h2>
 
               <div className="flex flex-col ">
@@ -209,12 +297,14 @@ export default function Pricing() {
               </div>
             </section>
           </form>
-        </section>
+        </div>
         {/*DELIVERY CAMBIAR PRECIOS */}
-        <section className="flex flex-col gap-4">
-          <span className="text-xl opacity-80 border-b">Precio Entrega</span>
+        <div className="flex  flex-col items-center gap-2">
+          <span className="text-xl border-b border-black w-full text-left opacity-80 border-b">
+            Precio Entrega
+          </span>
           <form id="pricingForm" action="" className="flex flex-row gap-4">
-            <section className="bg-[#458552] p-2 rounded-lg flex flex-col gap-1">
+            <section className="border border-black bg-slate-200 shadow-2xl p-2 rounded-lg flex flex-col gap-1">
               <h2>Delivery 🛵</h2>
 
               <div className="flex flex-col ">
@@ -232,7 +322,7 @@ export default function Pricing() {
               </div>
             </section>
           </form>
-        </section>
+        </div>
       </div>
 
       <div className="flex lg:justify-end">

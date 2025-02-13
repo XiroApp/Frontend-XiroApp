@@ -30,6 +30,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #789360;
 }
 
 /* MUI UPPERCASE FIX */
@@ -41,4 +42,38 @@ body {
 }
 .MuiButton-root {
   text-transform: unset !important;
+}
+
+.autocomplete-container {
+  position: relative;
+  margin: 0 auto;
+}
+
+.autocomplete-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background: #f0f0f0;
 }

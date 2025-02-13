@@ -5,13 +5,12 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-
+import TurnSharpRightIcon from "@mui/icons-material/TurnSharpRight";
 import PriceChangeIcon from "@mui/icons-material/PriceChange";
 import { Avatar, Box, Drawer } from "@mui/material";
-
 import Navbar from "../../components/Navbar/Navbar";
-
 import Orders from "./Menu/Orders";
+import DeliveryRoutes from "./Menu/DeliveryRoutes";
 
 export default function Delivery({ cart, dataBaseUser }) {
   const user = useSelector((state) => state.dataBaseUser);
@@ -31,13 +30,12 @@ export default function Delivery({ cart, dataBaseUser }) {
     ) {
       return;
     }
-
     setState({ ...state, [anchor]: open });
   };
 
   const list = (anchor) => (
     <Box
-      sx={{ width: "80vw", borderRadius: "10px" }}
+
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
@@ -75,21 +73,25 @@ export default function Delivery({ cart, dataBaseUser }) {
               </ListItemIcon>
               <ListItemText primary="Pedidos" />
             </ListItemButton>
+           
+            <ListItemButton
+              onClick={(e) => setDataRender("entregas")}
+              sx={
+                dataRender === "entregas"
+                  ? { backgroundColor: "#458552", borderRadius: "10px" }
+                  : { borderRadius: "10px" }
+              }
+              className="h-16"
+            >
+              <ListItemIcon>
+                <TurnSharpRightIcon
+                  sx={{ width: "2.5rem", height: "2.5rem" }}
+                />
+              </ListItemIcon>
+              <ListItemText primary="Rutas de Entrega" />
+            </ListItemButton>
           </List>
         </div>
-        {/* <button
-          onClick={(e) => setDataRender("FAQ")}
-          className="bg-[#4675C0]  flex items-center justify-between rounded-2xl h-24 p-5"
-        >
-          {" "}
-          <div className="flex flex-col">
-            <span className="text-[12px] font-[400]">¿Tenés dudas?</span>
-            <span className="text-[16px] font-[600]"> Hace click acá</span>
-          </div>
-          <div className="flex justify-end">
-            <img src={contactCuate} alt="" className="h-20" />
-          </div>
-        </button> */}
       </section>
     </Box>
   );
@@ -128,11 +130,7 @@ export default function Delivery({ cart, dataBaseUser }) {
               sx={{ opacity: 0.8 }}
               component="nav"
               aria-labelledby="nested-list-subheader"
-              // subheader={
-              //   <ListSubheader component="div" id="nested-list-subheader">
-              //     Nested List Items
-              //   </ListSubheader>
-              // }
+   
             >
               DATOS
               <ListItemButton
@@ -149,10 +147,24 @@ export default function Delivery({ cart, dataBaseUser }) {
                 </ListItemIcon>
                 <ListItemText primary="Pedidos" />
               </ListItemButton>
+              <ListItemButton
+                onClick={(e) => setDataRender("entregas")}
+                sx={
+                  dataRender === "entregas"
+                    ? { backgroundColor: "#458552", borderRadius: "10px" }
+                    : { borderRadius: "10px" }
+                }
+                className="h-16"
+              >
+                <ListItemIcon>
+                  <TurnSharpRightIcon
+                    sx={{ width: "2.5rem", height: "2.5rem" }}
+                  />
+                </ListItemIcon>
+                <ListItemText primary="Rutas de Entrega" />
+              </ListItemButton>
             </List>
           </div>
-
- 
         </section>
         {/* --------- */}
 
@@ -161,7 +173,7 @@ export default function Delivery({ cart, dataBaseUser }) {
           {dataRender === "orders" ? (
             <Orders editor={"deliveryUser"} />
           ) : (
-            <Orders />
+            <DeliveryRoutes />
           )}
         </section>
       </div>

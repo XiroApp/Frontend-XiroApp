@@ -155,7 +155,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               className={
                 resume.size === "A3"
                   ? "flex flex-col items-center w-24 justify-center px-1  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-1  bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-1 border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({

@@ -112,7 +112,16 @@ export function createUserGoogle(user) {
 
       return console.log(data);
     } catch (error) {
-      return console.error(error);
+      return dispatch({
+        type: action.TOAST_ALERT,
+        payload: {
+          message: "Error al iniciar sesión",
+          variant: "error",
+          vertical: "top",
+          horizontal: "right",
+          open: true,
+        },
+      });
     }
   };
 }
@@ -244,18 +253,14 @@ export function addAddress(user, address) {
 export function editAddress(user, address) {
   return async function (dispatch) {
     try {
-      console.log("bodyadres", address);
-      let response = await axios.post(
+      let response = await axios.put(
         `${baseUrl}/users/${user.uid}/editAddress`,
-        address
+        { address } // Aquí se envía addressUid correctamente
       );
-      console.log(response.data);
+
       dispatch({
-        type: action.EDIT_ADDRESS,
-        payload: {
-          dataBaseUser: response.data[0],
-          dataBaseAddresses: response.data.addresses,
-        },
+        type: "EDIT_ADDRESS_SUCCESS",
+        payload: response.data,
       });
 
       return dispatch({
@@ -283,22 +288,23 @@ export function editAddress(user, address) {
   };
 }
 //--------------- Delete Address --------------------
-export function deleteAddress(address) {
+export function deleteAddress(address, user_uid) {
   return async function (dispatch) {
     try {
-      let response = await axios.post(
-        `${baseUrl}/users/${address.userUid}/deleteAddress`,
-        address
+      const response = await axios.delete(
+        `${baseUrl}/users/${user_uid || address.userUid}/deleteAddress/${
+          address.addressUid
+        }`
       );
+
       dispatch({
         type: action.DELETE_ADDRESS,
         payload: {
-          // dataBaseUser: response.data[0],
           dataBaseAddresses: response.data.addresses,
         },
       });
 
-      return dispatch({
+      dispatch({
         type: action.TOAST_ALERT,
         payload: {
           message: "La dirección se eliminó exitosamente",
@@ -309,7 +315,7 @@ export function deleteAddress(address) {
         },
       });
     } catch (error) {
-      return dispatch({
+      dispatch({
         type: action.TOAST_ALERT,
         payload: {
           message:
@@ -738,17 +744,35 @@ export function verifyCoupon(idCoupon) {
 export function setOrderPlace(place) {
   return async function (dispatch) {
     try {
-      const { name, number, zipCode, locality, city } = place.address;
-      let destinationAddress = `${name} ${number}, ${zipCode}, ${city}`;
+      const { name, number, city, lat, lng } = place.address;
+      let destinationAddress = `${name} ${number}, ${city}`;
+      console.log(place);
 
-      let { data } = await axios.get(
-        `${baseUrl}/maps/distance?destinations=${destinationAddress}`
-      );
+      let distance = {
+        uidDistribution: null,
+        uidPickup: null,
+        distributor: null,
+        value: 0,
+        text: "0",
+        address: null,
+        lat: null,
+        lng: null,
+      };
+
+      if (place.type == "Retiro") {
+        distance = { ...distance, uidPickup: place.address.userUid, text:"Retiro" };
+      } else {
+        let { data } = await axios.get(
+          `${baseUrl}/maps/distance?destinations=${destinationAddress}&lat=${lat}&lng=${lng}`
+        );
+        distance = data;
+      }
+
       return dispatch({
         type: action.SET_PLACE,
         payload: {
           place: place,
-          distance: data,
+          distance: distance,
         },
       });
     } catch (error) {
@@ -822,7 +846,6 @@ export function getInAppLabels() {
   return async function (dispatch) {
     try {
       let response = await axios.get(`${baseUrl}/labels/all`);
-      console.log(response.data);
 
       return dispatch({
         type: action.GET_LABELS,

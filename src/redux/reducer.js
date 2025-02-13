@@ -23,7 +23,8 @@ const initialState = {
   orders: [],
   adminCoupons: null,
   printingUsers: [],
-  labels: {},
+  deliveryUsers: [],
+  labels: [],
 };
 
 export default function rootReducer(state = initialState, { type, payload }) {
@@ -51,6 +52,12 @@ export default function rootReducer(state = initialState, { type, payload }) {
       return {
         ...state,
         pricing: payload.pricing,
+      };
+    }
+    case action.GET_DELIVERY_USERS: {
+      return {
+        ...state,
+        deliveryUsers: payload.deliveryUsers,
       };
     }
     case action.GET_PRINTING_USERS: {

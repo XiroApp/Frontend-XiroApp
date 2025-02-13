@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import List from "@mui/material/List";
 import MenuIcon from "@mui/icons-material/Menu";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -10,17 +10,11 @@ import { Avatar, Box, Drawer } from "@mui/material";
 import contactCuate from "../../utils/assets/images/contact-cuate.svg";
 import Navbar from "../../components/Navbar/Navbar";
 import FAQ from "./FAQ";
-import Chatbot from "../../components/Chatbot/Chatbot";
-import { getAllUsers } from "../../redux/actions/adminActions";
+
 import Orders from "./Menu/Orders";
 
 export default function Printing({ cart, dataBaseUser }) {
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.dataBaseUser);
-
-  useEffect(() => {
-    dispatch(getAllUsers());
-  }, []);
 
   let { photoURL, email, displayName } = user;
 
@@ -43,7 +37,6 @@ export default function Printing({ cart, dataBaseUser }) {
 
   const list = (anchor) => (
     <Box
-      sx={{ width: "80vw", borderRadius: "10px" }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
@@ -51,7 +44,7 @@ export default function Printing({ cart, dataBaseUser }) {
       <section className="bg-[#fff] p-8 h-screen flex flex-col lg:hidden justify-around">
         {/* DATOS SESION */}
         <div className="flex flex-col justify-center items-center gap-3">
-        <Avatar
+          <Avatar
             alt="Xiro Avatar"
             sx={{ height: "4rem", width: "4rem" }}
             src={photoURL}
@@ -185,7 +178,6 @@ export default function Printing({ cart, dataBaseUser }) {
           )}
         </section>
       </div>
-      
     </>
   );
 }

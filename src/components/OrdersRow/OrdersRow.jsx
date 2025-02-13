@@ -21,15 +21,12 @@ import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import EditIcon from "@mui/icons-material/Edit";
-import DoneIcon from "@mui/icons-material/Done";
 import ErrorIcon from "@mui/icons-material/Error";
 import { useDispatch } from "react-redux";
 import {
   changeOrderStatus,
   getUserByUid,
 } from "../../redux/actions/adminActions";
-import { ApiConstants } from "../../Common/constants";
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -71,10 +68,16 @@ export default function OrdersRow({
   value,
   column,
   printingUsers,
+  deliveryUsers,
+  distributionUsers,
+  pickupUsers,
   orderId,
   order,
   editor,
+  fetchOrders,
 }) {
+  // console.log(order.uidPickup);
+
   const dispatch = useDispatch();
   /* VIEW FILES MODAL */
   const [open, setOpen] = useState(false);
@@ -100,13 +103,15 @@ export default function OrdersRow({
   };
 
   /* STATUS ACCORDION */
-  const [statusExpanded, setStatusExpanded] = useState(false);
   const [editStatus, setEditStatus] = useState(false);
-  const [printingSelectStatus, setPrintingSelectStatus] = useState(false);
-  const [deliverySelectStatus, setDeliverySelectStatus] = useState(false);
-  const [problemsSelectStatus, setProblemsSelectStatus] = useState(false);
   const [priceModal, setPriceModal] = useState(false);
   const [placeModal, setPlaceModal] = useState(false);
+  const [printingSelectStatus, setPrintingSelectStatus] = useState(null);
+  const [deliverySelectStatus, setDeliverySelectStatus] = useState(null);
+  const [distributionSelectStatus, setDistributionSelectStatus] =
+    useState(null);
+  const [pickupSelectStatus, setPickupSelectStatus] = useState(null);
+  const [problemsSelectStatus, setProblemsSelectStatus] = useState(null);
 
   const handleSetEdiStatus = (e) => {
     setEditStatus(false);
@@ -114,18 +119,15 @@ export default function OrdersRow({
     setDeliverySelectStatus(false);
     setProblemsSelectStatus(false);
   };
-  const handleChangeStatus = (panel) => (event, newExpanded) => {
-    setStatusExpanded(newExpanded ? panel : false);
-  };
 
   /* STATUS PRINTING */
   const [input, setInput] = useState({
     orderId: orderId,
-    uidPrinting: order.uidPrinting || "unassigned",
-    uidDelivery: order.uidDelivery || "unassigned",
-    clientUid: order.clientUid || "unassigned",
-    orderStatus: order.orderStatus || "unassigned",
-    report: order.report || "unassigned",
+    uidPrinting: order.uidPrinting || null,
+    uidDelivery: order.uidDelivery || null,
+    clientUid: order.clientUid || null,
+    orderStatus: order.orderStatus || null,
+    report: order.report || null,
   });
 
   /* AUTOCOMPLETE STATE */
@@ -134,19 +136,34 @@ export default function OrdersRow({
     getOptionLabel: (option) => option?.displayName ?? "N/A",
   };
   const deliveryProps = {
-    options: printingUsers,
+    options: deliveryUsers,
     getOptionLabel: (option) => option?.displayName ?? "N/A",
   };
 
   function handleInput(e) {
-    if (e.target.value === "process") {
+    console.log(e.target.value);
+    if (e.target.value === "pending") {
+      setProblemsSelectStatus(false);
+      setDeliverySelectStatus(false);
       setPrintingSelectStatus(true);
-    }
-    if (e.target.value === "in_delivery") {
+    } else if (e.target.value === "in_delivery") {
+      setProblemsSelectStatus(false);
+      setPrintingSelectStatus(false);
       setDeliverySelectStatus(true);
-    }
-    if (e.target.value === "problems") {
+    } else if (e.target.value === "problems") {
+      setDeliverySelectStatus(false);
+      setPrintingSelectStatus(false);
       setProblemsSelectStatus(true);
+    } else if (
+      e.target.value === null ||
+      e.target.value === "process" ||
+      e.target.value === "unassigned" ||
+      e.target.value === "printed" ||
+      e.target.value === "received"
+    ) {
+      setDeliverySelectStatus(false);
+      setPrintingSelectStatus(false);
+      setProblemsSelectStatus(false);
     }
     setInput({ ...input, [e.target.name]: e.target.value });
   }
@@ -156,28 +173,44 @@ export default function OrdersRow({
       (user) =>
         user.displayName === input.uidPrinting || user.uid === input.uidPrinting
     );
-    let selectedDelivery = printingUsers.find(
+
+    let selectedDelivery = deliveryUsers.find(
+      (user) =>
+        user.displayName === input.uidDelivery || user.uid === input.uidDelivery
+    );
+    let selectedDistribution = distributionUsers.find(
+      (user) =>
+        user.displayName === input.uidDelivery || user.uid === input.uidDelivery
+    );
+    let selectedPickup = pickupUsers.find(
       (user) =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
 
     dispatch(
       changeOrderStatus({
-        idOrder: input.orderId,
+        idOrder: orderId,
         orderStatus: input.orderStatus,
-        uidPrinting: selectedPrinting?.uid || "unassigned",
-        uidDelivery: selectedDelivery?.uid || "unassigned",
+        uidPrinting: selectedPrinting?.uid || order.uidPrinting,
+        uidDelivery: selectedDelivery?.uid || order.uidDelivery,
+        uidDistribution: selectedDistribution?.uid || order.uidDistribution,
+        uidPickup: selectedPickup?.uid || order.uidPickup,
         uidClient: input.clientUid,
-        report: input.report || "unassigned",
+        report: problemsSelectStatus || input.report,
         editor: editor,
       })
-    );
+    ).then(() => fetchOrders("refresh"));
     setEditStatus(false);
   }
 
   return (
     <>
       <TableCell key={column.id} align={column.align} className="p-0 m-0">
+        {column.id === "order_number" && (
+          <>
+            <span className="text-sm font-bold">{value}</span>
+          </>
+        )}
         {column.id === "orderStatus" && (
           <>
             <Button
@@ -222,10 +255,17 @@ export default function OrdersRow({
                       ? "Recibido ✅"
                       : "🚨 REVISAR ESTADO 🚨"}
                   </Typography>
+                  <Typography>
+                    Motivo: "
+                    {value === "problems" && !!input.report
+                      ? input.report
+                      : null}
+                    "
+                  </Typography>
                   <div className="w-full">
                     {/* AUTOCOMPLETE DE ESTADOS */}
                     <div className="flex flex-col w-full">
-                      <label className="py-2" for="orderStatus">
+                      <label className="py-2" hrmlFor="orderStatus">
                         Cambiar estado de orden
                       </label>
                       <select
@@ -267,6 +307,14 @@ export default function OrdersRow({
                             <option value="printed">Impreso 📄</option>
                             <option value="problems">Con problemas 📛</option>
                             <option value="in_delivery">En delivery 🛸</option>
+
+                            {console.log(order.place.type)}
+                            <option value="distribution">
+                              Enviar a punto de distribución{" "}
+                            </option>
+                            <option value="pickup">
+                              Enviar a punto de retiro{" "}
+                            </option>
                             {/* <option value="received">Recibido ✅</option> */}
                           </>
                         ) : (
@@ -285,54 +333,54 @@ export default function OrdersRow({
                   </div>
 
                   {printingSelectStatus ? (
-                    // <>
-                    //   <p>Seleccione imprenta:</p>
+                    <>
+                      <p>Seleccione imprenta:</p>
 
-                    //   <div className="flex flex-col w-full">
-                    //     <Autocomplete
-                    //       {...printingProps}
-                    //       id="auto-complete"
-                    //       name="uidPrinting"
-                    //       onSelect={(e) => handleInput(e)}
-                    //       renderInput={(params) => (
-                    //         <TextField
-                    //           // error={error.city}
-                    //           name="uidPrinting"
-                    //           placeholder="Elige imprenta..."
-                    //           {...params}
-                    //           label=""
-                    //           variant="standard"
-                    //         />
-                    //       )}
-                    //     />
-                    //   </div>
-                    // </>
-                    false
-                  ) : deliverySelectStatus ? (
-                    // <>
-                    //   <p>Seleccione delivery:</p>
+                      <div className="flex flex-col w-full">
+                        <Autocomplete
+                          {...printingProps}
+                          id="auto-complete"
+                          name="uidPrinting"
+                          onSelect={(e) => handleInput(e)}
+                          renderInput={(params) => (
+                            <TextField
+                              // error={error.city}
+                              name="uidPrinting"
+                              placeholder="Elige imprenta..."
+                              {...params}
+                              label=""
+                              variant="standard"
+                            />
+                          )}
+                        />
+                      </div>
+                    </>
+                  ) : // false
+                  deliverySelectStatus ? (
+                    <>
+                      <p>Seleccione delivery:</p>
 
-                    //   <div className="flex flex-col w-full">
-                    //     <Autocomplete
-                    //       {...deliveryProps}
-                    //       id="auto-complete"
-                    //       name="uidDelivery"
-                    //       onSelect={(e) => handleInput(e)}
-                    //       renderInput={(params) => (
-                    //         <TextField
-                    //           // error={error.city}
-                    //           name="uidDelivery"
-                    //           placeholder="Elige delivery..."
-                    //           {...params}
-                    //           label=""
-                    //           variant="standard"
-                    //         />
-                    //       )}
-                    //     />
-                    //   </div>
-                    // </>
-                    false
-                  ) : problemsSelectStatus ? (
+                      <div className="flex flex-col w-full">
+                        <Autocomplete
+                          {...deliveryProps}
+                          id="auto-complete"
+                          name="uidDelivery"
+                          onSelect={(e) => handleInput(e)}
+                          renderInput={(params) => (
+                            <TextField
+                              // error={error.city}
+                              name="uidDelivery"
+                              placeholder="Elige delivery..."
+                              {...params}
+                              label=""
+                              variant="standard"
+                            />
+                          )}
+                        />
+                      </div>
+                    </>
+                  ) : // false
+                  problemsSelectStatus ? (
                     <>
                       <p>Describa el problema:</p>
                       <Input
@@ -592,6 +640,15 @@ export default function OrdersRow({
                         {`Envío: $${order.shipment_price}`}
                       </span>
                     </li>
+                    {order.cart.map((item, index) => (
+                      <li key={index}>
+                        <span className="text-[12px] text-black">
+                          {`Cupón ${index + 1}: ${
+                            item?.coupon_used?.type[0] || ""
+                          } ${item?.coupon_used?.ammount || 0}`}
+                        </span>
+                      </li>
+                    ))}
                     {/* <li>
                       <span className="text-[12px] text-black">
                         {`Cupón: ${order.cart[0].details.coupon}`}
@@ -666,6 +723,7 @@ export default function OrdersRow({
             </Dialog>
           </>
         )}
+
         {column.id === "createdAt" && (
           <>
             <span className="text-sm">{value}</span>
@@ -681,18 +739,14 @@ export default function OrdersRow({
               }}
               // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
-              <Typography>
-                <div className="flex justify-center items-start">
-                  <span className="">
-                    {`${
-                      value.type === "Envío a domicilio" ? "Envío" : value.type
-                    } | `}
-                  </span>
-                  <span className="">
-                    {`     ${order.cart[0].details.availability}`}
-                  </span>
-                </div>
-              </Typography>
+              <div className="flex justify-center items-start">
+                <span className="">
+                  {`${
+                    value.type === "Envío a domicilio" ? "Envío" : value.type
+                  } | `}
+                </span>
+                <span className="">{`${order?.availability}`}</span>
+              </div>
             </Button>
 
             {/* MODAL FORMULARIO */}
@@ -705,10 +759,10 @@ export default function OrdersRow({
                   <div>
                     <ul className="flex flex-col items-start justify-start gap-3">
                       <li className="text-[12px] text-start">
-                        Distancia: {order.cart[0].distance.text}{" "}
+                        Distancia: {order?.cart[0]?.distance?.text}{" "}
                       </li>
                       <li className="text-[12px] text-start">
-                        Disponibilidad: {order.cart[0].details.availability}
+                        Disponibilidad: {`${order?.availability}`}
                       </li>
                       <li className="text-[12px] text-start">
                         Ciudad: {value.address.city}{" "}

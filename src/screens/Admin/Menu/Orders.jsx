@@ -1,8 +1,3 @@
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getAllOrders,
-  getPrintingUsers,
-} from "../../../redux/actions/adminActions";
 import { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -10,12 +5,19 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
 import { Input } from "@mui/material";
+import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper.js";
+import { UsersAdapter } from "../../../Infra/Adapters/users.adapter.js";
 
 const columns = [
+  {
+    id: "order_number",
+    label: "N° Orden",
+    minWidth: 100,
+    align: "center",
+  },
   {
     id: "createdAt",
     label: "Fecha de llegada",
@@ -63,52 +65,86 @@ const columns = [
   },
 ];
 
-export default function Orders({ editor }) {
-  const dispatch = useDispatch();
-  const orders = useSelector((state) => state.orders);
-  const printingUsers = useSelector((state) => state.printingUsers);
-
-  const [allOrders, setAllOrders] = useState(orders);
+export default function Orders({ editor, role }) {
+  const [printingUsers, setPrintingUsers] = useState([]);
+  const [deliveryUsers, setDeliveryUsers] = useState([]);
+  const [distributionUsers, setDistributionUsers] = useState([]);
+  const [pickupUsers, setPickupUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [pageSize, setPageSize] = useState(10); // Tamaño de la página
+  const [nextVisible, setNextVisible] = useState(null); // Último documento visible para la paginación hacia adelante
+  const [prevVisible, setPrevVisible] = useState(null); // Primer documento visible para la paginación hacia atrás
+  const [hasNext, setHasNext] = useState(false); // Indica si hay más páginas hacia adelante
+  const [hasPrev, setHasPrev] = useState(false); // Indica si hay más páginas hacia atrás
+  const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const fetchOrders = async (direction = "next") => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await OrdersAdapter.getOrdersPaginated(
+        pageSize,
+        nextVisible,
+        prevVisible,
+        direction,
+        "admin"
+      );
+
+      // Actualizar el estado de las órdenes
+      setOrders(data.orders);
+      // Actualizar los valores de paginación
+      // console.log(data.nextLastVisible);
+      // console.log(data.firstVisible);
+      // console.log(!!data.nextLastVisible);
+      // console.log(!!data.firstVisible);
+      setNextVisible(data.nextLastVisible || null);
+      setPrevVisible(data.firstVisible || null);
+      setHasNext(!!data.nextLastVisible);
+      setHasPrev(!!data.firstVisible);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUsersByRole = () => {
+    UsersAdapter.getSpecialUsers().then((res) => {
+      setDeliveryUsers(res.deliveryUsers);
+      setPrintingUsers(res.printingUsers);
+      setDistributionUsers(res.distributionUsers);
+      setPickupUsers(res.pickupUsers);
+    });
+  };
+
   useEffect(() => {
-    dispatch(getAllOrders()).then((res) => setAllOrders(res));
-    // dispatch(getPrintingUsers());
+    fetchOrders();
+    fetchUsersByRole();
   }, []);
 
-  /* PAGINATION */
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
   /* CHANGE ORDER STATUS */
-
   const [filter, setFilter] = useState("no_filter");
   /* SEARCH  */
   const handleSearch = (e) => {
     setFilter("no_filter");
     e.target.value.length > 2
-      ? setAllOrders(
+      ? setOrders(
           orders.filter((order) =>
             order.paymentId.toString().includes(e.target.value)
           )
         )
-      : setAllOrders(orders);
+      : setOrders(orders);
   };
 
   const handleFilter = (e) => {
     setFilter(e.target.name);
     e.target.name !== "no_filter"
-      ? setAllOrders(
-          orders.filter((order) => order.orderStatus === e.target.name)
-        )
-      : setAllOrders(orders);
+      ? setOrders(orders.filter((order) => order.orderStatus === e.target.name))
+      : setOrders(orders);
   };
 
   return (
@@ -235,47 +271,58 @@ export default function Orders({ editor }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {allOrders
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  return (
-                    <TableRow
-                      hover
-                      role="button"
-                      tabIndex={-1}
-                      key={index}
-                      className="p-0 m-0"
-                    >
-                      {columns.map((column, index) => {
-                        const value = row[column.id];
-
-                        return (
-                          <OrdersRow
-                            key={index}
-                            value={value}
-                            column={column}
-                            printingUsers={printingUsers}
-                            orderId={row.paymentId}
-                            order={row}
-                            editor={editor}
-                          />
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
+              {orders?.length
+                ? orders.map((order, index) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="button"
+                        tabIndex={-1}
+                        key={index}
+                        className="p-0 m-0"
+                      >
+                        {columns.map((column, index) => {
+                          const value = order[column.id];
+                          return (
+                            <OrdersRow
+                              key={index}
+                              value={value}
+                              column={column}
+                              printingUsers={printingUsers}
+                              deliveryUsers={deliveryUsers}
+                              distributionUsers={distributionUsers}
+                              pickupUsers={pickupUsers}
+                              orderId={order.paymentId}
+                              order={order}
+                              editor={editor}
+                              fetchOrders={fetchOrders}
+                            />
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })
+                : null}
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={orders.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <div className="flex gap-4">
+          <button
+            onClick={() => fetchOrders("prev")}
+            // disabled={!hasPrev || loading}
+            disabled={loading}
+          >
+            Anterior
+          </button>{" "}
+          |
+          <button
+            onClick={() => fetchOrders("next")}
+            // disabled={!hasNext || loading}
+            disabled={loading}
+          >
+            Siguiente
+          </button>
+        </div>
       </Paper>
     </div>
   );

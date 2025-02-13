@@ -55,10 +55,8 @@ export default function Notifications({ user }) {
   }
 
 
-
   return (
     <div className="flex flex-col rounded-2xl lg:h-2/3 p-1 gap-5">
-    
       <section className="flex justify-between items-center rounded-2xl p-5 bg-[#1e1e1e]">
         <div className="flex flex-col">
           <span className="text-xl">Mail</span>

@@ -61,7 +61,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
   const list = anchor => (
     <Box
       sx={{
-        width: "80vw",
+
         borderRadius: "10px",
         ":hover": { backgroundColor: "#c9d9bb" },
       }}

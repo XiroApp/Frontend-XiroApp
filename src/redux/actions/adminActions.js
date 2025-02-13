@@ -4,43 +4,6 @@ import axios from "axios";
 
 const baseUrl = Settings.SERVER_URL;
 
-//--------------- GET PRINTING USERS --------------------
-export function getPrintingUsers() {
-  return async function (dispatch) {
-    try {
-      let response = await axios.get(`${baseUrl}/admin/printingusers`);
-
-      dispatch({
-        type: action.GET_PRINTING_USERS,
-        payload: {
-          printingUsers: response.data,
-        },
-      });
-      return dispatch({
-        type: action.TOAST_ALERT,
-        payload: {
-          message: "Usuarios cargados correctamente.",
-          variant: "success",
-          vertical: "top",
-          horizontal: "right",
-          open: true,
-        },
-      });
-    } catch (error) {
-      return dispatch({
-        type: action.TOAST_ALERT,
-        payload: {
-          message: "Los usuarios no se han cargado.",
-          variant: "error",
-          vertical: "top",
-          horizontal: "right",
-          open: true,
-        },
-      });
-    }
-  };
-}
-
 //--------------- GET ALL USERS --------------------
 export function getAllUsers() {
   return async function (dispatch) {
@@ -53,16 +16,17 @@ export function getAllUsers() {
           users: response.data,
         },
       });
-      return dispatch({
-        type: action.TOAST_ALERT,
-        payload: {
-          message: "Usuarios cargados correctamente.",
-          variant: "success",
-          vertical: "top",
-          horizontal: "right",
-          open: true,
-        },
-      });
+      return;
+      // return dispatch({
+      //   type: action.TOAST_ALERT,
+      //   payload: {
+      //     message: "Usuarios cargados correctamente.",
+      //     variant: "success",
+      //     vertical: "top",
+      //     horizontal: "right",
+      //     open: true,
+      //   },
+      // });
     } catch (error) {
       return dispatch({
         type: action.TOAST_ALERT,
@@ -127,12 +91,18 @@ export function getAllCoupons() {
 }
 
 //--------------- GET ALL ORDERS --------------------
-export function getAllOrders() {
+export function getAllOrders(pageToken) {
   return async function (dispatch) {
     try {
-      let response = await axios.get(`${baseUrl}/orders`);
+      const url = `${baseUrl}/orders`;
 
-      let formatedOrders = response.data
+      if (pageToken) {
+        url += `?pageToken=${pageToken}`;
+      }
+
+      let response = await axios.get(url);
+
+      let sortedOrders = response.data
         .map((order) => {
           const fechaStr = order.paymentData.date_created;
           const fecha = new Date(fechaStr);
@@ -144,6 +114,7 @@ export function getAllOrders() {
           const fechaFormateada = `${dia}/${mes}/${año}`;
 
           return {
+            order_number: order.order_number,
             orderStatus: order.orderStatus,
             cart: order.cart,
             paymentId: order.paymentData.id,
@@ -154,6 +125,8 @@ export function getAllOrders() {
             clientUid: order.clientUid,
             uidPrinting: order.uidPrinting,
             uidDelivery: order.uidDelivery,
+            uidPickup: order.uidPickup,
+            uidDistribution: order.uidDistribution,
             report: order.report,
             createdAt: fechaFormateada,
             place: order.place,
@@ -162,11 +135,12 @@ export function getAllOrders() {
             total_price: order.total_price,
           };
         })
-        .reverse();
+        .sort((a, b) => b.order_number - a.order_number);
+
       dispatch({
         type: action.GET_ALL_ORDERS,
         payload: {
-          orders: formatedOrders,
+          orders: sortedOrders,
         },
       });
       dispatch({
@@ -180,7 +154,7 @@ export function getAllOrders() {
         },
       });
 
-      return formatedOrders;
+      return sortedOrders;
     } catch (error) {
       return dispatch({
         type: action.TOAST_ALERT,
@@ -287,6 +261,7 @@ export function changeOrderStatus({
         type: action.EDIT_STATUS_ORDERS,
         payload: { orders: formatedOrders },
       });
+
       return dispatch({
         type: action.TOAST_ALERT,
         payload: {

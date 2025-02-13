@@ -1,1 +1,0 @@
-import mercadopago from "mercadopago";

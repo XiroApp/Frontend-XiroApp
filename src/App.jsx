@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import "./App.css";
+import "./index.css";
 import { useDispatch, useSelector } from "react-redux";
 import ProtectedRoute from "./context/ProtectedRoute";
 import Login from "./screens/NormalUser/Login/Login";
@@ -27,6 +27,8 @@ import ResetSuccess from "./screens/NormalUser/ResetPassword/ResetSuccess";
 import Printing from "./screens/PrinterUser/Printing";
 import Delivery from "./screens/DeliveryUser/Delivery";
 import TyC from "./screens/TermsAndConditions/TyC";
+import PickUp from "./screens/PickUpUser/Pickup";
+import Distribution from "./screens/DistributionUser/Distribution";
 
 function App() {
   const navigate = useNavigate();
@@ -55,8 +57,12 @@ function App() {
         ? navigate("/admin")
         : dataBaseUser.roles.includes("printing")
         ? navigate("/imprenta")
+        : dataBaseUser.roles.includes("distribution")
+        ? navigate("/distribucion")
         : dataBaseUser.roles.includes("delivery")
         ? navigate("/delivery")
+        : dataBaseUser.roles.includes("pickup")
+        ? navigate("/pickup")
         : navigate("/");
     }
   }, [dataBaseUser]);
@@ -136,6 +142,32 @@ function App() {
                 redirectTo={"/login"}
               >
                 <Printing dataBaseUser={dataBaseUser} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/distribucion"
+            element={
+              <ProtectedRoute
+                isAllowed={
+                  !!loggedUser && dataBaseUser?.roles?.includes("distribution")
+                }
+                redirectTo={"/login"}
+              >
+                <Distribution dataBaseUser={dataBaseUser} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/pickup"
+            element={
+              <ProtectedRoute
+                isAllowed={
+                  !!loggedUser && dataBaseUser?.roles?.includes("pickup")
+                }
+                redirectTo={"/login"}
+              >
+                <PickUp dataBaseUser={dataBaseUser} />
               </ProtectedRoute>
             }
           />

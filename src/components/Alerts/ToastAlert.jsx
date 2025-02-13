@@ -30,7 +30,11 @@ export default function ToastAlert() {
   return (
     <div>
       <Snackbar
-        sx={{ backgroundColor: "#81A165", borderRadius: "4px" }}
+        sx={{
+          backgroundColor: "#fff",
+          borderRadius: "4px",
+          border: "1px solid rgb(160, 160, 160)",
+        }}
         open={open}
         autoHideDuration={3000}
         onClose={handleClose}
@@ -52,7 +56,7 @@ export default function ToastAlert() {
           ) : (
             false
           )}
-          <span className="text-[14px] text-white">{state.message}</span>
+          <span className="text-[14px] text-black">{state.message}</span>
           <IconButton
             size="small"
             aria-label="close"
