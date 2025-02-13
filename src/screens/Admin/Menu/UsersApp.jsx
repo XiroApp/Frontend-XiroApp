@@ -65,6 +65,7 @@ export default function UsersApp({ editor }) {
 
   useEffect(() => {
     setAllUsers(usersApp);
+    setRoleFIlter("")
   }, [usersApp]);
 
   /* PAGINATION */

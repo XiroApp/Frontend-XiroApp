@@ -12,8 +12,7 @@ import { updateUserRole } from "../../../redux/actions/adminActions";
 export default function UsersRow({ column, value, uidUser, user, index }) {
   const dispatch = useDispatch();
   const [editStatus, setEditStatus] = useState(false);
-  const [selectedRoles, setSelectedRoles] = useState(user.roles);
-  console.log(selectedRoles);
+  const [selectedRoles, setSelectedRoles] = useState([]);
 
   const handleSetEditStatus = (e) => {
     setEditStatus(false);
@@ -37,6 +36,10 @@ export default function UsersRow({ column, value, uidUser, user, index }) {
       setSelectedRoles(selectedRoles.filter((role) => role !== value));
     }
   };
+
+  useEffect(() => {
+    setSelectedRoles(user.roles);
+  }, [user]);
 
   return (
     <>

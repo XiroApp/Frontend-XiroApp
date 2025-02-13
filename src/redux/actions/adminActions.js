@@ -125,6 +125,8 @@ export function getAllOrders(pageToken) {
             clientUid: order.clientUid,
             uidPrinting: order.uidPrinting,
             uidDelivery: order.uidDelivery,
+            uidPickup: order.uidPickup,
+            uidDistribution: order.uidDistribution,
             report: order.report,
             createdAt: fechaFormateada,
             place: order.place,

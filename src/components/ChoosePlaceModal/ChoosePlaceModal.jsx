@@ -35,7 +35,6 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
     UsersAdapter.getPickupUsers().then((res) => setPickupUsers(res));
   };
 
-
   useEffect(() => {
     fetchPickupPoints();
   }, []);
@@ -80,7 +79,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               <div className="flex flex-col">
                 {!!labels
                   ? labels
-                      .find((label) => label.id === "delivery_description")
+                      ?.find((label) => label.id === "delivery_description")
                       .content?.split("//")
                       .map((text, index) => (
                         <p key={index} className="text-sm">
@@ -115,9 +114,15 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               <div className="flex flex-col">
                 {!!labels
                   ? labels
-                      .find((label) => label.id === "pick_up_point_description")
+                      ?.find(
+                        (label) => label.id === "pick_up_point_description"
+                      )
                       .content?.split("//")
-                      .map((text,index) => <p key={index} className="text-sm">{text}</p>)
+                      .map((text, index) => (
+                        <p key={index} className="text-sm">
+                          {text}
+                        </p>
+                      ))
                   : false}
               </div>
             </button>
@@ -203,7 +208,9 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                             sx={{ height: "1.3em", width: "1.3em" }}
                           />
                           <div className="flex flex-col items-start">
-                            <span className="text-sm">{pickup?.displayName}</span>
+                            <span className="text-sm">
+                              {pickup?.displayName}
+                            </span>
                             <span className="text-sm opacity-80">
                               {pickup.address?.name?.length < 15
                                 ? pickup.address.name

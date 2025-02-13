@@ -76,6 +76,8 @@ export default function OrdersRow({
   editor,
   fetchOrders,
 }) {
+  // console.log(order.uidPickup);
+
   const dispatch = useDispatch();
   /* VIEW FILES MODAL */
   const [open, setOpen] = useState(false);
@@ -305,6 +307,14 @@ export default function OrdersRow({
                             <option value="printed">Impreso 📄</option>
                             <option value="problems">Con problemas 📛</option>
                             <option value="in_delivery">En delivery 🛸</option>
+
+                            {console.log(order.place.type)}
+                            <option value="distribution">
+                              Enviar a punto de distribución{" "}
+                            </option>
+                            <option value="pickup">
+                              Enviar a punto de retiro{" "}
+                            </option>
                             {/* <option value="received">Recibido ✅</option> */}
                           </>
                         ) : (
@@ -749,7 +759,7 @@ export default function OrdersRow({
                   <div>
                     <ul className="flex flex-col items-start justify-start gap-3">
                       <li className="text-[12px] text-start">
-                        Distancia: {order.cart[0].distance.text}{" "}
+                        Distancia: {order?.cart[0]?.distance?.text}{" "}
                       </li>
                       <li className="text-[12px] text-start">
                         Disponibilidad: {`${order?.availability}`}
