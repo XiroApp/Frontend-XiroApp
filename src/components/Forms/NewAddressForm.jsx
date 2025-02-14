@@ -181,9 +181,22 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
   };
 
   /* AUTOCOMPLETE */
-  const [inputCityValue, setInputCityValue] = useState('');
-  const [inputLocalityValue, setInputLocalityValue] = useState('');
-  
+  const [inputCityValue, setInputCityValue] = useState("");
+  const [inputLocalityValue, setInputLocalityValue] = useState("");
+
+  useEffect(() => {
+    let city = citiesJson?.cities?.find((city) => city.name === inputCityValue);
+    if (city) {
+      let filtered = citiesJson.localities.filter(
+        (locality) =>
+          city.cp.includes(locality.postal_code) ||
+          city.cp.includes(input.zip_code)
+      );
+
+      setLocalities(filtered);
+    }
+  }, [inputCityValue]);
+
   return (
     <Dialog
       open={open}
@@ -317,11 +330,10 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                     <div className="flex flex-col w-full">
                       <span className="text-sm">LOCALIDAD</span>
                       <Autocomplete
-                      
-                      inputValue={inputCityValue}
-                      onInputChange={(event, newInputValue) => {
-                        setInputCityValue(newInputValue);
-                      }}
+                        inputValue={inputCityValue}
+                        onInputChange={(event, newInputValue) => {
+                          setInputCityValue(newInputValue);
+                        }}
                         value={input?.city || null}
                         onChange={(event, newValue) => {
                           setInput({ ...input, city: newValue });
@@ -351,14 +363,11 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                   <div className="flex flex-col w-full">
                     <span className="text-sm ">DISTRITO</span>
                     <Autocomplete
-
-
+                      disabled={!inputCityValue}
                       inputValue={inputLocalityValue}
                       onInputChange={(event, newInputValue) => {
                         setInputLocalityValue(newInputValue);
                       }}
-
-
                       value={input?.locality || null}
                       onChange={(event, newValue) => {
                         setInput({ ...input, locality: newValue });

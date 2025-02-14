@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Settings } from "../../config";
+import { Settings } from "../../config/index";
 
 const baseUrl = Settings.SERVER_URL;
 
