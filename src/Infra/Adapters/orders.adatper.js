@@ -27,7 +27,7 @@ export class OrdersAdapter {
 
     const response = await axios.get(url);
     const data = response.data;
- 
+
     // Formatear las órdenes
     const sortedOrders = data.orders.map((order) => {
       const fechaStr = order.created_at;
@@ -63,5 +63,15 @@ export class OrdersAdapter {
     });
 
     return { ...data, orders: sortedOrders };
+  }
+
+  static async getUnassignedOrders() {
+    
+    const response = await axios.get(`${baseUrl}/delivery/orders-unassigned`);
+
+    const data = response.data;
+    console.log(data);
+
+    return data;
   }
 }

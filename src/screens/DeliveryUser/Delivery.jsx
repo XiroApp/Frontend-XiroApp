@@ -11,6 +11,8 @@ import { Avatar, Box, Drawer } from "@mui/material";
 import Navbar from "../../components/Navbar/Navbar";
 import Orders from "./Menu/Orders";
 import DeliveryRoutes from "./Menu/DeliveryRoutes";
+import OrdersPool from "./Menu/OrdersPool";
+import { AddBusiness } from "@mui/icons-material";
 
 export default function Delivery({ cart, dataBaseUser }) {
   const user = useSelector((state) => state.dataBaseUser);
@@ -35,7 +37,6 @@ export default function Delivery({ cart, dataBaseUser }) {
 
   const list = (anchor) => (
     <Box
-
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
@@ -73,7 +74,20 @@ export default function Delivery({ cart, dataBaseUser }) {
               </ListItemIcon>
               <ListItemText primary="Pedidos" />
             </ListItemButton>
-           
+            <ListItemButton
+              onClick={(e) => setDataRender("pool")}
+              sx={
+                dataRender === "pool"
+                  ? { backgroundColor: "#458552", borderRadius: "10px" }
+                  : { borderRadius: "10px" }
+              }
+              className="h-16"
+            >
+              <ListItemIcon>
+                <AddBusiness sx={{ width: "2.5rem", height: "2.5rem" }} />
+              </ListItemIcon>
+              <ListItemText primary="Buscar pedidos" />
+            </ListItemButton>
             <ListItemButton
               onClick={(e) => setDataRender("entregas")}
               sx={
@@ -130,9 +144,8 @@ export default function Delivery({ cart, dataBaseUser }) {
               sx={{ opacity: 0.8 }}
               component="nav"
               aria-labelledby="nested-list-subheader"
-   
             >
-              DATOS
+           MENÚ
               <ListItemButton
                 onClick={(e) => setDataRender("orders")}
                 sx={
@@ -145,7 +158,21 @@ export default function Delivery({ cart, dataBaseUser }) {
                 <ListItemIcon>
                   <PriceChangeIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
                 </ListItemIcon>
-                <ListItemText primary="Pedidos" />
+                <ListItemText primary="Pedidos Asignados" />
+              </ListItemButton>
+              <ListItemButton
+                onClick={(e) => setDataRender("pool")}
+                sx={
+                  dataRender === "pool"
+                    ? { backgroundColor: "#458552", borderRadius: "10px" }
+                    : { borderRadius: "10px" }
+                }
+                className="h-16"
+              >
+                <ListItemIcon>
+                  <AddBusiness sx={{ width: "2.5rem", height: "2.5rem" }} />
+                </ListItemIcon>
+                <ListItemText primary="Asignar lote de pedidos" />
               </ListItemButton>
               <ListItemButton
                 onClick={(e) => setDataRender("entregas")}
@@ -172,6 +199,8 @@ export default function Delivery({ cart, dataBaseUser }) {
         <section className="bg-[#fff] rounded-2xl flex flex-col gap-5 justify-center lg:w-9/12 z-10  overflow-auto">
           {dataRender === "orders" ? (
             <Orders editor={"deliveryUser"} />
+          ) : dataRender === "pool" ? (
+            <OrdersPool />
           ) : (
             <DeliveryRoutes />
           )}

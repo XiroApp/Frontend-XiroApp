@@ -85,7 +85,9 @@ export default function Orders({ editor }) {
   //--------------- GET PRINTING ORDERS --------------------
   async function fetchOrders() {
     try {
-      let response = await axios.get(`${baseUrl}/printing/orders/${user.uid}`);
+      let response = await axios.get(
+        `${baseUrl}/distribution/orders/${user.uid}`
+      );
 
       let formatedOrders = response.data
         .map((order) => {
@@ -95,10 +97,10 @@ export default function Orders({ editor }) {
           const dia = fecha.getDate().toString().padStart(2, "0");
           const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
           const año = fecha.getFullYear();
-
           const fechaFormateada = `${dia}/${mes}/${año}`;
 
           return {
+            uid: order.uid,
             orderStatus: order.orderStatus,
             cart: order.cart,
             paymentId: order.paymentData.id,
@@ -109,6 +111,8 @@ export default function Orders({ editor }) {
             clientUid: order.clientUid,
             uidPrinting: order.uidPrinting,
             uidDelivery: order.uidDelivery,
+            uidDistribution: order.uidDistribution,
+            uidPickup: order.uidPickup,
             report: order.report,
             createdAt: fechaFormateada,
             place: order.place,
@@ -249,11 +253,11 @@ export default function Orders({ editor }) {
             <TableBody>
               {orders
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
+                .map((order, index) => {
                   return (
                     <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                       {columns.map((column, index) => {
-                        const value = row[column.id];
+                        const value = order[column.id];
 
                         return (
                           <OrdersRow
@@ -262,9 +266,9 @@ export default function Orders({ editor }) {
                             column={column}
                             printingUsers={printingUsers}
                             deliveryUsers={deliveryUsers}
-                            orderId={index}
-                            order={row}
-                            key={column.id}
+                            orderId={order.paymentId}
+                            order={order}
+                            key={index}
                             fetchOrders={fetchOrders}
                           />
                         );
