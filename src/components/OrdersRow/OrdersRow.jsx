@@ -76,7 +76,7 @@ export default function OrdersRow({
   editor,
   fetchOrders,
 }) {
-  // console.log(order.uidPickup);
+  console.log(order);
 
   const dispatch = useDispatch();
   /* VIEW FILES MODAL */
@@ -448,7 +448,7 @@ export default function OrdersRow({
             </Dialog>
           </>
         )}
-        {typeof value === "object" && value.length && (
+        {typeof value === "object" && value?.length && (
           <>
             <Button
               color="inherit"

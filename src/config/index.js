@@ -1,7 +1,7 @@
 import { ApiConstants } from "../Common/constants";
 
-// let _env = "DEV"; //PARA STAGGING
-let _env = "LOCAL"; // PARA EMULADOR F CLI
+let _env = "DEV"; //PARA STAGGING
+// let _env = "LOCAL"; // PARA EMULADOR F CLI
 
 const URL_MESSAGES = "messages";
 const URL_PICTURES = "pictures";
@@ -42,7 +42,6 @@ export class Settings {
           appId: "1:795770640225:web:194d64648d2caea6e8d720",
           measurementId: "G-NV3WGWXXM6",
         };
-
       default:
         return {
           apiKey: "AIzaSyC0yeDOJlWXV5rTc3V5vtNyG9VT_BzVH7Y",

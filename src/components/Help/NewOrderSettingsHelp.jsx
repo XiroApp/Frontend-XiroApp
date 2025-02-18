@@ -39,14 +39,14 @@ export default function NewOrderSettingsHelp({
           </h2>
         </section>
         <section className="flex flex-col items-center px-5 pb-8 gap-5">
-          {renderHelp?.content.map((content, index) => (
+          {renderHelp?.content?.map((content, index) => (
             <div
               key={index}
               className="flex flex-col gap-2 w-11/12 bg-[#fff] p-4 rounded-lg"
             >
-              <span className="text-[14px]">{content.title}</span>
-              <span className="opacity-70 text-[14px]">{content.subtitle}</span>
-              <span className="text-[12px]">{content.text}</span>
+              <span className="text-[14px]">{content?.title}</span>
+              <span className="opacity-70 text-[14px]">{content?.subtitle}</span>
+              <span className="text-[12px]">{content?.text}</span>
             </div>
           ))}
         </section>
