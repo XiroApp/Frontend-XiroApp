@@ -208,25 +208,30 @@ export function deleteCoupon(idCoupon) {
 
 //--------------- EDIT ORDER STATUS --------------------
 export function changeOrderStatus({
-  uidPrinting,
   idOrder,
   orderStatus,
+  uidPrinting,
   uidDelivery,
+  uidDistribution,
+  uidPickup,
+  uidClient,
   report,
   editor,
-  uidClient,
 }) {
-  return async function (dispatch) {
+  return async function (dispatch) {  
     try {
       let response = await axios.post(
         `${baseUrl}/orders/edit/status/${idOrder}`,
         {
+          idOrder,
           orderStatus,
           uidPrinting,
           uidDelivery,
+          uidDistribution,
+          uidPickup,
+          uidClient,
           report,
           editor,
-          uidClient,
         }
       );
 

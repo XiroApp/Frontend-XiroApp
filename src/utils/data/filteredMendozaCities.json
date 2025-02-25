@@ -2,27 +2,66 @@
   "cities": [
     {
       "id": 1,
-      "name": "Guaymallén"
+      "name": "Guaymallén",
+      "cp": [
+        "5521",
+        "5523",
+        "5525",
+        "5533",
+        "5519"
+      ]
     },
     {
       "id": 2,
-      "name": "Lujan de Cuyo"
+      "name": "Lujan de Cuyo",
+      "cp": [
+        "5508",
+        "5527",
+        "5529",
+        "5541",
+        "5543"
+      ]
     },
     {
       "id": 3,
-      "name": "Godoy Cruz"
+      "name": "Godoy Cruz",
+      "cp": [
+        "5501",
+        "5503",
+        "5505",
+        "5507",
+        "5547"
+      ]
     },
     {
       "id": 4,
-      "name": "Las Heras"
+      "name": "Las Heras",
+      "cp": [
+        "5539",
+        "5543",
+        "5545",
+        "5547"
+      ]
     },
     {
       "id": 5,
-      "name": "Mendoza"
+      "name": "Mendoza",
+      "cp": [
+        "5500",
+        "5501"
+      ]
     },
     {
       "id": 6,
-      "name": "Maipu"
+      "name": "Maipu",
+      "cp": [
+        "5509",
+        "5511",
+        "5513",
+        "5515",
+        "5517",
+        "5519"
+      ]
     }
   ],
   "localities": [

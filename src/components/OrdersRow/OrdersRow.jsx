@@ -67,16 +67,16 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 export default function OrdersRow({
   value,
   column,
-  printingUsers,
-  deliveryUsers,
-  distributionUsers,
-  pickupUsers,
+  printingUsers = [],
+  deliveryUsers = [],
+  distributionUsers = [],
+  pickupUsers = [],
   orderId,
   order,
   editor,
   fetchOrders,
 }) {
-  // console.log(order.uidPickup);
+  console.log(order);
 
   const dispatch = useDispatch();
   /* VIEW FILES MODAL */
@@ -119,12 +119,15 @@ export default function OrdersRow({
     setDeliverySelectStatus(false);
     setProblemsSelectStatus(false);
   };
+  console.log(orderId);
 
   /* STATUS PRINTING */
   const [input, setInput] = useState({
     orderId: orderId,
     uidPrinting: order.uidPrinting || null,
     uidDelivery: order.uidDelivery || null,
+    uidDistribution: order.uidDistribution || null,
+    uidPickup: order.uidPickup || null,
     clientUid: order.clientUid || null,
     orderStatus: order.orderStatus || null,
     report: order.report || null,
@@ -231,6 +234,10 @@ export default function OrdersRow({
                   ? "En delivery 🛸"
                   : value === "received"
                   ? "Recibido ✅"
+                  : value === "distribution"
+                  ? "En punto de distribución 🏤"
+                  : value === "pickup"
+                  ? "En punto de retiro 🏃‍♂️"
                   : "🚨 REVISAR ESTADO 🚨"}
               </Typography>
             </Button>
@@ -253,6 +260,10 @@ export default function OrdersRow({
                       ? "En delivery 🛸"
                       : value === "received"
                       ? "Recibido ✅"
+                      : value === "distribution"
+                      ? "En punto de distribución 🏤"
+                      : value === "pickup"
+                      ? "En punto de retiro 🏃‍♂️"
                       : "🚨 REVISAR ESTADO 🚨"}
                   </Typography>
                   <Typography>
@@ -274,13 +285,31 @@ export default function OrdersRow({
                         id="orderStatus"
                         className="border rounded-l p-2 bg-white"
                       >
+                        {editor === "pickupUser" ? (
+                          <>
+                            <option value="pickup">Seleccionar</option>
+                            <option value="received">
+                              Entregado a cliente ✅
+                            </option>
+                            <option value="problems">
+                              Reportar problemas 📛
+                            </option>
+                          </>
+                        ) : (
+                          false
+                        )}
                         {editor === "deliveryUser" ? (
                           <>
-                            <option value="printed">Seleccionar</option>
-                            {/* <option value="printed">Impreso 📄</option> */}
-                            <option value="problems">Con problemas 📛</option>
-                            <option value="in_delivery">En delivery 🛸</option>
-                            <option value="received">Recibido ✅</option>
+                            <option value="in_delivery">Seleccionar</option>
+                            <option value="distribution">
+                              Regresar a punto de distribución 🏤
+                            </option>
+                            <option value="received">
+                              Entregado a cliente ✅
+                            </option>
+                            <option value="problems">
+                              Reportar problemas 📛
+                            </option>
                           </>
                         ) : (
                           false
@@ -301,38 +330,44 @@ export default function OrdersRow({
                         )}
                         {editor === "printingUser" ? (
                           <>
-                            <option value="pending">Seleccionar</option>
+                            <option value="printed">Seleccionar</option>
                             <option value="pending">Pendiente ⏳</option>
                             <option value="process">En proceso 🔨</option>
                             <option value="printed">Impreso 📄</option>
-                            <option value="problems">Con problemas 📛</option>
-                            <option value="in_delivery">En delivery 🛸</option>
-
-                            {console.log(order.place.type)}
-                            <option value="distribution">
-                              Enviar a punto de distribución{" "}
+                            <option value="problems">
+                              Reportar problemas 📛
                             </option>
-                            <option value="pickup">
-                              Enviar a punto de retiro{" "}
-                            </option>
-                            {/* <option value="received">Recibido ✅</option> */}
+                            {order.place.type === "Envío a domicilio" ? (
+                              <option value="distribution">
+                                Enviado a punto de distribución 🏤
+                              </option>
+                            ) : (
+                              <option value="pickup">
+                                Enviar a punto pickup 🏃‍♂️
+                              </option>
+                            )}
                           </>
                         ) : (
                           false
                         )}
-                        {/* <option value="pending">Seleccionar</option>
-                        <option value="unassigned">No asignado 🚦</option>
-                        <option value="pending">Pendiente ⏳</option>
-                        <option value="process">En proceso 🔨</option>
-                        <option value="printed">Impreso 📄</option>
-                        <option value="problems">Con problemas 📛</option>
-                        <option value="in_delivery">En delivery 🛸</option>
-                        <option value="received">Recibido ✅</option> */}
+                        {editor === "distributionUser" ? (
+                          <>
+                            <option value="distribution">Seleccionar</option>
+                            <option value="in_delivery">
+                              Entregado a delivery 🛸
+                            </option>
+                            <option value="problems">
+                              Reportar problemas 📛
+                            </option>
+                          </>
+                        ) : (
+                          false
+                        )}
                       </select>
                     </div>
                   </div>
 
-                  {printingSelectStatus ? (
+                  {printingSelectStatus && editor === "adminUser" ? (
                     <>
                       <p>Seleccione imprenta:</p>
 
@@ -356,7 +391,7 @@ export default function OrdersRow({
                       </div>
                     </>
                   ) : // false
-                  deliverySelectStatus ? (
+                  deliverySelectStatus && editor === "adminUser" ? (
                     <>
                       <p>Seleccione delivery:</p>
 
@@ -413,7 +448,7 @@ export default function OrdersRow({
             </Dialog>
           </>
         )}
-        {typeof value === "object" && value.length && (
+        {typeof value === "object" && value?.length && (
           <>
             <Button
               color="inherit"

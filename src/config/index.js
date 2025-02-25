@@ -41,7 +41,6 @@ export class Settings {
           appId: "1:795770640225:web:194d64648d2caea6e8d720",
           measurementId: "G-NV3WGWXXM6",
         };
-
       default:
         return {
           apiKey: "AIzaSyC0yeDOJlWXV5rTc3V5vtNyG9VT_BzVH7Y",

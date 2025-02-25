@@ -20,6 +20,7 @@ export function getPrintingOrders() {
           const año = fecha.getFullYear();
 
           const fechaFormateada = `${dia}/${mes}/${año}`;
+          console.log(order);
 
           return {
             orderStatus: order.orderStatus,

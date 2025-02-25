@@ -120,7 +120,7 @@ export function createAddressValidator(
   userlocality,
   usertag
 ) {
-  let name = !(username && username.length < 30) ? true : false;
+  let name = !(username && username.length < 80) ? true : false;
   let number = !(usernumber && usernumber < 99999 && usernumber > 0)
     ? true
     : false;

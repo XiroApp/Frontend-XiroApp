@@ -17,6 +17,18 @@ import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
 import { Input } from "@mui/material";
 
 const columns = [
+  {
+    id: "order_number",
+    label: "N° Orden",
+    minWidth: 100,
+    align: "center",
+  },
+  {
+    id: "createdAt",
+    label: "Fecha de llegada",
+    minWidth: 100,
+    align: "center",
+  },
   { id: "paymentId", label: "ID orden", minWidth: 50, align: "center" },
 
   {
@@ -99,6 +111,7 @@ export default function Orders({ editor }) {
           const fechaFormateada = `${dia}/${mes}/${año}`;
 
           return {
+            uid: order.uid,
             orderStatus: order.orderStatus,
             cart: order.cart,
             paymentId: order.paymentData.id,
@@ -109,6 +122,8 @@ export default function Orders({ editor }) {
             clientUid: order.clientUid,
             uidPrinting: order.uidPrinting,
             uidDelivery: order.uidDelivery,
+            uidDistribution: order.uidDistribution,
+            uidPickup: order.uidPickup,
             report: order.report,
             createdAt: fechaFormateada,
             place: order.place,
@@ -251,25 +266,21 @@ export default function Orders({ editor }) {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((order, index) => {
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={index}
-                    >
-                      {columns.map((column,index) => {
+                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                      {columns.map((column, index) => {
                         const value = order[column.id];
 
                         return (
                           <OrdersRow
+                            order_number={order.order_number}
                             editor={editor}
                             value={value}
                             column={column}
                             printingUsers={printingUsers}
                             deliveryUsers={deliveryUsers}
-                            orderId={index}
+                            orderId={order.paymentId}
                             order={order}
-                            key={column.id}
+                            key={index}
                             fetchOrders={fetchOrders}
                           />
                         );
