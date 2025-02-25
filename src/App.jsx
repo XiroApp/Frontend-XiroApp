@@ -33,9 +33,9 @@ import Distribution from "./screens/DistributionUser/Distribution";
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const loggedUser = useSelector((state) => state.loggedUser);
-  const dataBaseUser = useSelector((state) => state.dataBaseUser);
-  const cart = useSelector((state) => state.cart);
+  const loggedUser = useSelector(state => state.loggedUser);
+  const dataBaseUser = useSelector(state => state.dataBaseUser);
+  const cart = useSelector(state => state.cart);
   const sessionUser = getSession();
 
   useEffect(() => {

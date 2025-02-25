@@ -42,3 +42,6 @@ export const GET_ALL_USERS = "GET_ALL_USERS";
 export const GET_PRINTING_USERS = "GET_PRINTING_USERS";
 export const GET_DELIVERY_USERS = "GET_DELIVERY_USERS";
 export const UPDATE_ROLE = "UPDATE_ROLE";
+
+/* Library Cart */
+export const SET_LIBRARY_CART = "SET_LIBRARY_CART";

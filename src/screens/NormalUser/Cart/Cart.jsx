@@ -317,11 +317,18 @@ export default function Cart() {
                               />
                             ))}
                           </section>
-                          <Link to="/imprimir">
-                            <span className="text-[#789360] text-[14px] hover:text-green-700 underline">
-                              +Agregar más productos
-                            </span>
-                          </Link>
+                          <div className="flex gap-x-4 items-center justify-start">
+                            <Link to="/imprimir">
+                              <span className="text-[#789360] text-[14px] hover:text-green-700 underline">
+                                +Agregar más impresiones
+                              </span>
+                            </Link>
+                            <Link to="/?libreria">
+                              <span className="text-[#789360] text-[14px] hover:text-green-700 underline">
+                                +Agregar artículos de librería
+                              </span>
+                            </Link>
+                          </div>
                         </div>
                         {/* 2 */}
                         <div className="flex flex-col gap-3">

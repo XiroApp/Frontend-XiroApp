@@ -64,11 +64,11 @@ const style = {
 
 export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.dataBaseUser);
-  const cart = useSelector((state) => state.cart);
-  const pricingState = useSelector((state) => state.pricing);
-  const place = useSelector((state) => state.place);
-  const labels = useSelector((state) => state.labels);
+  const user = useSelector(state => state.dataBaseUser);
+  const cart = useSelector(state => state.cart);
+  const pricingState = useSelector(state => state.pricing);
+  const place = useSelector(state => state.place);
+  const labels = useSelector(state => state.labels);
   const [resetModal, setResetModal] = useState(false);
   const [helpModal, setHelpModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -165,10 +165,10 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
         if (result === false) {
           formData.append("files", files[i]);
           await dispatch(uploadMulter(formData))
-            .then((newDocumentsName) =>
-              newDocumentsName.map((doc) => newArray.push(doc))
+            .then(newDocumentsName =>
+              newDocumentsName.map(doc => newArray.push(doc))
             )
-            .catch((error) =>
+            .catch(error =>
               dispatch(setToast("Error al subir el archivo", "error"))
             );
           // .finally(() => {
@@ -259,7 +259,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
               <div className="flex items-center justify-around h-1/2 md:h-full">
                 {place?.type === "Envío a domicilio" ? (
                   <button
-                    onClick={(e) => setChoosePlace(true)}
+                    onClick={e => setChoosePlace(true)}
                     className="flex flex-col gap-1 items-center justify-center px-2 rounded-md text-white bg-[#789360] hover:bg-[#61774d]"
                   >
                     <div className="flex justify-center items-center gap-1">
@@ -269,7 +269,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                   </button>
                 ) : (
                   <button
-                    onClick={(e) => setChoosePlace(true)}
+                    onClick={e => setChoosePlace(true)}
                     className="flex flex-col gap-1 items-center justify-center px-2 rounded-md text-white hover:bg-[#61774d] bg-[#789360]"
                   >
                     <div className="flex justify-center items-center gap-1">
@@ -316,7 +316,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
               <div className="flex h-1/2 md:h-full md:justify-center md:gap-1 justify-between md:flex-col ">
                 <form
                   encType="multipart/form-data"
-                  onSubmit={(e) => handleSubmit(e)}
+                  onSubmit={e => handleSubmit(e)}
                 >
                   <div className="flex items-center justify-center">
                     <LoadingButton
@@ -336,7 +336,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                           type="file"
                           name="file"
                           id="uploadInput"
-                          onChange={(e) => handleSubmit(e)}
+                          onChange={e => handleSubmit(e)}
                         />
                       ) : (
                         false
@@ -348,7 +348,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                   <button
                     className="hover:opacity-70"
                     name="deleteFiles"
-                    onClick={(e) => handleResetOrderModal(e)}
+                    onClick={e => handleResetOrderModal(e)}
                   >
                     <span className="text-[15px] underline text-black">
                       Eliminar mis archivos
@@ -381,7 +381,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
           <section className="w-full h-full">
             <DefaultSnack
               content={
-                labels?.find((label) => label.id === "snackbar_new_order_info")
+                labels?.find(label => label.id === "snackbar_new_order_info")
                   .content
               }
             />
@@ -471,7 +471,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                         variant="text"
                         color="primary"
                         className="text-sm font-light"
-                        onClick={(e) => setReview(false)}
+                        onClick={e => setReview(false)}
                       >
                         <span className="text-[#fff]">
                           Editar mi pedido {">"}
@@ -481,7 +481,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                         variant="contained"
                         color="primary"
                         className="text-sm font-light"
-                        onClick={(e) => handleSetOrder(e)}
+                        onClick={e => handleSetOrder(e)}
                       >
                         <span className="text-sm font-light">
                           Aceptar y agregar
@@ -506,7 +506,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
               sx={{ border: "2px solid white" }}
               className="w-1/2"
               disabled={newFiles?.length === 0}
-              onClick={(e) => handleSetOrder(e)}
+              onClick={e => handleSetOrder(e)}
             >
               <span className="text-lg font-lg">
                 Guardar y volver al carrito
@@ -530,7 +530,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
       <Dialog
         // fullScreen={fullScreen}
         open={resetModal}
-        onClose={(e) => setResetModal(false)}
+        onClose={e => setResetModal(false)}
         aria-labelledby="responsive-dialog-title"
       >
         <div className="flex flex-col justify-center items-center">
@@ -556,7 +556,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
               <Button
                 color="primary"
                 autoFocus
-                onClick={(e) => setResetModal(false)}
+                onClick={e => setResetModal(false)}
               >
                 <span className="text-md font-[200]">Cancelar</span>
               </Button>

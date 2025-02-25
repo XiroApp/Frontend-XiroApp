@@ -760,7 +760,11 @@ export function setOrderPlace(place) {
       };
 
       if (place.type == "Retiro") {
-        distance = { ...distance, uidPickup: place.address.userUid, text:"Retiro" };
+        distance = {
+          ...distance,
+          uidPickup: place.address.userUid,
+          text: "Retiro",
+        };
       } else {
         let { data } = await axios.get(
           `${baseUrl}/maps/distance?destinations=${destinationAddress}&lat=${lat}&lng=${lng}`
@@ -865,5 +869,14 @@ export function getInAppLabels() {
         },
       });
     }
+  };
+}
+
+// ------------ Library Cart ------------
+
+export function setLibraryCart(libraryCart) {
+  return {
+    type: action.SET_LIBRARY_CART,
+    payload: { libraryCart },
   };
 }

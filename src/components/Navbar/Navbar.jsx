@@ -24,7 +24,7 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
   const dispatch = useDispatch();
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [contactModal, setContactModal] = useState(false);
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector(state => state.cart);
 
   function handleLogout(e) {
     e.preventDefault();
@@ -33,7 +33,7 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
     navigate("/login");
   }
 
-  const handleOpenUserMenu = (event) => {
+  const handleOpenUserMenu = event => {
     setAnchorElUser(event.currentTarget);
   };
 
@@ -154,7 +154,9 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
                   key={"Pickup"}
                   onClick={() => navigate("/pickup")}
                 >
-                  <Typography textAlign="center">Vista de punto entrega</Typography>
+                  <Typography textAlign="center">
+                    Vista de punto entrega
+                  </Typography>
                 </MenuItem>
               )}
               {loggedUser?.roles?.includes("distribution") && (
@@ -163,7 +165,9 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
                   key={"Distribution"}
                   onClick={() => navigate("/distribucion")}
                 >
-                  <Typography textAlign="center">Vista de distribución</Typography>
+                  <Typography textAlign="center">
+                    Vista de distribución
+                  </Typography>
                 </MenuItem>
               )}
               {loggedUser?.roles?.includes("delivery") && (
@@ -193,7 +197,7 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
               <MenuItem
                 sx={{ ":hover": { backgroundColor: "#c9d9bb" } }}
                 key={"logout"}
-                onClick={(e) => handleLogout(e)}
+                onClick={e => handleLogout(e)}
               >
                 <Typography textAlign="center">Cerrar sesión</Typography>
               </MenuItem>

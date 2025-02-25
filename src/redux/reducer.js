@@ -25,6 +25,7 @@ const initialState = {
   printingUsers: [],
   deliveryUsers: [],
   labels: [],
+  libraryCart: [],
 };
 
 export default function rootReducer(state = initialState, { type, payload }) {
@@ -237,6 +238,13 @@ export default function rootReducer(state = initialState, { type, payload }) {
         dataBaseUser: payload.dataBaseUser,
         addresses: payload.dataBaseAddresses,
         cart: payload.dataBaseCart,
+      };
+    }
+
+    case action.SET_LIBRARY_CART: {
+      return {
+        ...state,
+        libraryCart: payload.libraryCart,
       };
     }
 

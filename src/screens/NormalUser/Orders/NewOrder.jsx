@@ -37,7 +37,7 @@ import SettingButtons from "../../../components/NewOrderSettings/SettingButtons"
 import ChoosePlaceModal from "../../../components/ChoosePlaceModal/ChoosePlaceModal";
 import NewOrderSettingsDesktop from "../../../components/NewOrderSettings/NewOrderSettingsDesktop";
 import DefaultSnack from "../../../components/Snackbars/DefaultSnack";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Chatbot from "../../../components/Chatbot/Chatbot";
 import { pricingSetter } from "../../../utils/controllers/pricing.controller.js";
 
@@ -66,11 +66,11 @@ const style = {
 export default function NewOrder() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.dataBaseUser);
-  const cart = useSelector((state) => state.cart);
-  const labels = useSelector((state) => state.labels);
-  const pricingState = useSelector((state) => state.pricing);
-  const place = useSelector((state) => state.place);
+  const user = useSelector(state => state.dataBaseUser);
+  const cart = useSelector(state => state.cart);
+  const labels = useSelector(state => state.labels);
+  const pricingState = useSelector(state => state.pricing);
+  const place = useSelector(state => state.place);
   const [resetModal, setResetModal] = useState(false);
   const [helpModal, setHelpModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -165,10 +165,10 @@ export default function NewOrder() {
         if (result === false) {
           formData.append("files", files[i]);
           await dispatch(uploadMulter(formData))
-            .then((newDocumentsName) =>
-              newDocumentsName.map((doc) => newArray.push(doc))
+            .then(newDocumentsName =>
+              newDocumentsName.map(doc => newArray.push(doc))
             )
-            .catch((error) =>
+            .catch(error =>
               dispatch(setToast("Error al subir el archivo", "error"))
             );
           // .finally(() => {
@@ -266,10 +266,11 @@ export default function NewOrder() {
           <div className="lg:flex  w-full md:p-4">
             <section className="bg-[#fff] flex flex-col md:flex-row-reverse md:justify-around md:items-cemter items-around  justify-center w-full p-4 gap-4 rounded-lg">
               <div className="flex items-center justify-around h-1/2 md:h-full">
+                {/* <Link to="/?libreria">Agregar artículos de librería</Link> */}
                 {place?.type === "Envío a domicilio" ||
                 place?.type === undefined ? (
                   <button
-                    onClick={(e) => setChoosePlace(true)}
+                    onClick={e => setChoosePlace(true)}
                     className="flex flex-col gap-1 items-center justify-center px-2 text-white rounded-md bg-[#789360] hover:bg-[#61774d]"
                   >
                     <div className="flex justify-center items-center gap-1">
@@ -279,7 +280,7 @@ export default function NewOrder() {
                   </button>
                 ) : (
                   <button
-                    onClick={(e) => setChoosePlace(true)}
+                    onClick={e => setChoosePlace(true)}
                     className="flex flex-col gap-1 items-center justify-center px-2 rounded-md text-white hover:bg-[#61774d] bg-[#789360]"
                   >
                     <div className="flex justify-center items-center gap-1">
@@ -326,7 +327,7 @@ export default function NewOrder() {
               <div className="flex h-1/2 md:h-full md:justify-center md:gap-1 justify-between md:flex-col ">
                 <form
                   encType="multipart/form-data"
-                  onSubmit={(e) => handleSubmit(e)}
+                  onSubmit={e => handleSubmit(e)}
                 >
                   <div className="flex items-center justify-center">
                     <LoadingButton
@@ -345,7 +346,7 @@ export default function NewOrder() {
                           type="file"
                           name="file"
                           id="uploadInput"
-                          onChange={(e) => handleSubmit(e)}
+                          onChange={e => handleSubmit(e)}
                         />
                       ) : (
                         false
@@ -357,7 +358,7 @@ export default function NewOrder() {
                   <button
                     className="hover:opacity-80 hover:underline"
                     name="deleteFiles"
-                    onClick={(e) => handleResetOrderModal(e)}
+                    onClick={e => handleResetOrderModal(e)}
                   >
                     <span className="text-[15px] underline text-black">
                       Eliminar mis archivos
@@ -390,7 +391,7 @@ export default function NewOrder() {
           <section className="w-full h-full">
             <DefaultSnack
               content={
-                labels?.find((label) => label.id === "snackbar_new_order_info")
+                labels?.find(label => label.id === "snackbar_new_order_info")
                   .content
               }
             />
@@ -483,7 +484,7 @@ export default function NewOrder() {
                         variant="text"
                         color="primary"
                         className="text-sm font-light"
-                        onClick={(e) => setReview(false)}
+                        onClick={e => setReview(false)}
                       >
                         <span className="text-[#fff]">
                           Editar mi pedido {">"}
@@ -493,7 +494,7 @@ export default function NewOrder() {
                         variant="contained"
                         color="primary"
                         className="text-sm font-light"
-                        onClick={(e) => handleSetOrder(e)}
+                        onClick={e => handleSetOrder(e)}
                       >
                         <span className="text-sm font-light">
                           Aceptar y agregar
@@ -519,7 +520,7 @@ export default function NewOrder() {
               sx={{ border: "2px solid white" }}
               className={cart?.length ? "w-1/3" : "w-1/2"}
               disabled={newFiles?.length === 0}
-              onClick={(e) => setReview(true)}
+              onClick={e => setReview(true)}
             >
               <span className="font-bold text-lg">Añadir al carrito</span>
             </LoadingButton>
@@ -530,7 +531,7 @@ export default function NewOrder() {
                 color="primary"
                 sx={{ border: "2px solid white" }}
                 className="w-1/3"
-                onClick={(e) => navigate("/carrito")}
+                onClick={e => navigate("/carrito")}
               >
                 <span className="font-bold text-lg">Avanzar</span>
               </LoadingButton>
@@ -548,7 +549,7 @@ export default function NewOrder() {
       <Dialog
         // fullScreen={fullScreen}
         open={resetModal}
-        onClose={(e) => setResetModal(false)}
+        onClose={e => setResetModal(false)}
         aria-labelledby="responsive-dialog-title"
       >
         <div className="flex flex-col justify-center items-center">
@@ -574,7 +575,7 @@ export default function NewOrder() {
               <Button
                 color="primary"
                 autoFocus
-                onClick={(e) => setResetModal(false)}
+                onClick={e => setResetModal(false)}
               >
                 <span className="text-md font-[200]">Cancelar</span>
               </Button>
