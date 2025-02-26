@@ -81,7 +81,7 @@ export default function Orders({ editor }) {
   };
   /* ---------------------------- */
 
-  //--------------- GET PRINTING ORDERS --------------------
+  //--------------- GET DELI ORDERS --------------------
   async function fetchOrders() {
     try {
       let response = await axios.get(`${baseUrl}/delivery/orders/${user.uid}`);
@@ -95,6 +95,7 @@ export default function Orders({ editor }) {
           const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
           const año = fecha.getFullYear();
           const fechaFormateada = `${dia}/${mes}/${año}`;
+          console.log(order.distributionUser);
 
           return {
             uid: order.uid,
@@ -111,6 +112,10 @@ export default function Orders({ editor }) {
             uidDelivery: order.uidDelivery,
             uidDistribution: order.uidDistribution,
             uidPickup: order.uidPickup,
+            deliveryUser: order.deliveryUser,
+            distributionUser: order.distributionUser,
+            pickupUser: order.pickupUser,
+            printingUser: order.printingUser,
             clientUser: order.clientUser,
             report: order.report,
             createdAt: fechaFormateada,

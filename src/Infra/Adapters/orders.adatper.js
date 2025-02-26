@@ -38,6 +38,7 @@ export class OrdersAdapter {
       const fechaFormateada = `${dia}/${mes}/${año}`;
 
       return {
+        uid: order.uid,
         order_number: order.order_number,
         orderStatus: order.orderStatus,
         cart: order.cart,
@@ -76,5 +77,9 @@ export class OrdersAdapter {
     console.log(data);
 
     return data;
+  }
+
+  static async setBatchToDelivery(batch, uidDelivery) {
+    let { data } = await axios.post(`${baseUrl}/batch`, { batch, uidDelivery });
   }
 }

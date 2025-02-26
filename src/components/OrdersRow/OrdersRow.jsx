@@ -28,16 +28,9 @@ import {
   getUserByUid,
 } from "../../redux/actions/adminActions";
 import {
-  CardTravelOutlined,
-  ChevronLeftSharp,
   Close,
-  Diversity1Outlined,
   Diversity3,
-  Diversity3Outlined,
-  EngineeringOutlined,
-  Inventory,
   Inventory2Outlined,
-  InventoryOutlined,
   MopedOutlined,
   PermIdentity,
   WarehouseOutlined,
@@ -93,8 +86,6 @@ export default function OrdersRow({
   fetchOrders,
   classes,
 }) {
-  console.log(order);
-
   const dispatch = useDispatch();
   /* VIEW FILES MODAL */
   const [open, setOpen] = useState(false);
@@ -110,7 +101,6 @@ export default function OrdersRow({
   };
   /* VIEW CLIENT MODAL */
   const [openClientModal, setOpenClientModal] = useState(false);
-  const [clientInfo, setClientInfo] = useState({});
 
   const handleOpenClientModal = async (uid) => {
     setOpenClientModal(true);
@@ -129,10 +119,8 @@ export default function OrdersRow({
   const [placeModal, setPlaceModal] = useState(false);
   const [printingSelectStatus, setPrintingSelectStatus] = useState(null);
   const [deliverySelectStatus, setDeliverySelectStatus] = useState(null);
-  const [distributionSelectStatus, setDistributionSelectStatus] =
-    useState(null);
-  const [pickupSelectStatus, setPickupSelectStatus] = useState(null);
   const [problemsSelectStatus, setProblemsSelectStatus] = useState(null);
+  console.log(order);
 
   const handleSetEdiStatus = (e) => {
     setEditStatus(false);
@@ -225,8 +213,6 @@ export default function OrdersRow({
     ).then(() => fetchOrders("refresh"));
     setEditStatus(false);
   }
-
-
 
   return (
     <td key={column.id} align={column.align} className={classes}>
@@ -353,103 +339,126 @@ export default function OrdersRow({
                       : "🚨 REVISAR ESTADO 🚨"}
                   </Typography>
                   <Typography>
-                    Motivo: "
                     {value === "problems" && !!input.report
-                      ? input.report
+                      ? "Motivo: " + input.report
                       : null}
-                    "
                   </Typography>
                   <div className="w-full">
                     {/* AUTOCOMPLETE DE ESTADOS */}
                     <div className="flex flex-col w-full">
-                      <label className="py-2" hrmlFor="orderStatus">
-                        Cambiar estado de orden
-                      </label>
-                      <select
-                        onChange={(e) => handleInput(e)}
-                        name="orderStatus"
-                        id="orderStatus"
-                        className="border rounded-l p-2 bg-white"
-                      >
-                        {editor === "pickupUser" ? (
-                          <>
-                            <option value="pickup">Seleccionar</option>
-                            <option value="received">
-                              Entregado a cliente ✅
-                            </option>
-                            <option value="problems">
-                              Reportar problemas 📛
-                            </option>
-                          </>
-                        ) : (
-                          false
-                        )}
-                        {editor === "deliveryUser" ? (
-                          <>
-                            <option value="in_delivery">Seleccionar</option>
-                            <option value="distribution">
-                              Regresar a punto de distribución 🏤
-                            </option>
-                            <option value="received">
-                              Entregado a cliente ✅
-                            </option>
-                            <option value="problems">
-                              Reportar problemas 📛
-                            </option>
-                          </>
-                        ) : (
-                          false
-                        )}
-                        {editor === "adminUser" ? (
-                          <>
-                            <option value="pending">Seleccionar</option>
-                            <option value="unassigned">No asignado 🚦</option>
-                            <option value="pending">Pendiente ⏳</option>
-                            <option value="process">En proceso 🔨</option>
-                            <option value="printed">Impreso 📄</option>
-                            <option value="problems">Con problemas 📛</option>
-                            <option value="in_delivery">En delivery 🛸</option>
-                            <option value="received">Recibido ✅</option>
-                          </>
-                        ) : (
-                          false
-                        )}
-                        {editor === "printingUser" ? (
-                          <>
-                            <option value="printed">Seleccionar</option>
-                            <option value="pending">Pendiente ⏳</option>
-                            <option value="process">En proceso 🔨</option>
-                            <option value="printed">Impreso 📄</option>
-                            <option value="problems">
-                              Reportar problemas 📛
-                            </option>
-                            {order.place.type === "Envío a domicilio" ? (
-                              <option value="distribution">
-                                Enviado a punto de distribución 🏤
-                              </option>
+                      {editor === "deliveryUser" && value == "distribution" ? (
+                        <div className="flex flex-col gap-1">
+                          <p>
+                            Dirígete al punto de distribución para retirar el
+                            pedido.
+                          </p>
+                          <Typography className="">
+                            <span className="font-bold"> Dirección: </span>
+                            {`${order.distributionUser.addresses[0].name} ${order.distributionUser.addresses[0].number}, ${order.distributionUser.addresses[0].locality}, ${order.distributionUser.addresses[0].city}`}
+                          </Typography>
+                        </div>
+                      ) : (
+                        <>
+                          <label className="py-2" hrmlFor="orderStatus">
+                            Cambiar estado de orden
+                          </label>
+                          <select
+                            onChange={(e) => handleInput(e)}
+                            name="orderStatus"
+                            id="orderStatus"
+                            className="border rounded-l p-2 bg-white"
+                          >
+                            {editor === "pickupUser" ? (
+                              <>
+                                <option value="pickup">Seleccionar</option>
+                                <option value="received">
+                                  Entregado a cliente ✅
+                                </option>
+                                <option value="problems">
+                                  Reportar problemas 📛
+                                </option>
+                              </>
                             ) : (
-                              <option value="pickup">
-                                Enviar a punto pickup 🏃‍♂️
-                              </option>
+                              false
                             )}
-                          </>
-                        ) : (
-                          false
-                        )}
-                        {editor === "distributionUser" ? (
-                          <>
-                            <option value="distribution">Seleccionar</option>
-                            <option value="in_delivery">
-                              Entregado a delivery 🛸
-                            </option>
-                            <option value="problems">
-                              Reportar problemas 📛
-                            </option>
-                          </>
-                        ) : (
-                          false
-                        )}
-                      </select>
+
+                            {editor === "deliveryUser" &&
+                            value !== "distribution" ? (
+                              <>
+                                <option value="in_delivery">Seleccionar</option>
+                                <option value="distribution">
+                                  Regresar a punto de distribución 🏤
+                                </option>
+                                <option value="received">
+                                  Entregado a cliente ✅
+                                </option>
+                                <option value="problems">
+                                  Reportar problemas 📛
+                                </option>
+                              </>
+                            ) : (
+                              false
+                            )}
+                            {editor === "adminUser" ? (
+                              <>
+                                <option value="pending">Seleccionar</option>
+                                <option value="unassigned">
+                                  No asignado 🚦
+                                </option>
+                                <option value="pending">Pendiente ⏳</option>
+                                <option value="process">En proceso 🔨</option>
+                                <option value="printed">Impreso 📄</option>
+                                <option value="problems">
+                                  Con problemas 📛
+                                </option>
+                                <option value="in_delivery">
+                                  En delivery 🛸
+                                </option>
+                                <option value="received">Recibido ✅</option>
+                              </>
+                            ) : (
+                              false
+                            )}
+                            {editor === "printingUser" ? (
+                              <>
+                                <option value="printed">Seleccionar</option>
+                                <option value="pending">Pendiente ⏳</option>
+                                <option value="process">En proceso 🔨</option>
+                                <option value="printed">Impreso 📄</option>
+                                <option value="problems">
+                                  Reportar problemas 📛
+                                </option>
+                                {order.place.type === "Envío a domicilio" ? (
+                                  <option value="distribution">
+                                    Enviado a punto de distribución 🏤
+                                  </option>
+                                ) : (
+                                  <option value="pickup">
+                                    Enviar a punto pickup 🏃‍♂️
+                                  </option>
+                                )}
+                              </>
+                            ) : (
+                              false
+                            )}
+                            {editor === "distributionUser" ? (
+                              <>
+                                <option value="distribution">
+                                  Seleccionar
+                                </option>
+                                <option value="in_delivery">
+                                  Entregado a delivery 🛸
+                                </option>
+                                <option value="problems">
+                                  Reportar problemas 📛
+                                </option>
+                              </>
+                            ) : (
+                              false
+                            )}
+                          </select>
+                        </>
+                      )}
                     </div>
                   </div>
 
@@ -713,30 +722,30 @@ export default function OrdersRow({
                   <ul className="flex flex-col gap-2">
                     <li>
                       Imprenta:{" "}
-                      {order?.printingUser?.length
-                        ? order.printingUser[0].displayName
+                      {order?.printingUser
+                        ? order.printingUser.displayName
                         : "Sin asignar"}
                     </li>
 
                     <li>
                       Punto de Distribución:{" "}
-                      {order?.distributionUser?.length
-                        ? order.distributionUser[0].displayName
+                      {order?.distributionUser
+                        ? order.distributionUser.displayName
                         : "Sin asignar"}
                     </li>
 
                     {order?.place?.type === "Envío a domicilio" ? (
                       <li>
                         Delivery:{" "}
-                        {order?.deliveryUser?.length
-                          ? order.deliveryUser[0].displayName
+                        {order?.deliveryUser
+                          ? order.deliveryUser.displayName
                           : "Sin asignar"}
                       </li>
                     ) : (
                       <li>
                         Punto Pick Up:{" "}
-                        {order?.pickupUser?.length
-                          ? order.pickupUser[0].displayName
+                        {order?.pickupUser
+                          ? order.pickupUser.displayName
                           : "Sin asignar"}
                       </li>
                     )}
@@ -784,25 +793,25 @@ export default function OrdersRow({
               <DialogContent dividers className="flex flex-col gap-8">
                 <section className="flex flex-col gap-4">
                   <ul>
-                    <li>Nombre: {order.clientUser[0]?.displayName}</li>
+                    <li>Nombre: {order.clientUser?.displayName}</li>
                     <li className="flex items-center gap-2">
-                      <span>Teléfono: {order.clientUser[0]?.phone}</span>
+                      <span>Teléfono: {order.clientUser?.phone}</span>
                     </li>
-                    <li>Email: {order.clientUser[0]?.email}</li>
+                    <li>Email: {order.clientUser?.email}</li>
                   </ul>
                 </section>
               </DialogContent>
               <DialogActions>
                 <Button variant="contained" color="success">
                   <a
-                    href={`https://wa.me/${order.clientUser[0].areaCode}${order.clientUser[0]?.phone}?text=Hola! Te escribimos desde XIRO para darte información sobre tu pedido.`}
+                    href={`https://wa.me/${order.clientUser.areaCode}${order.clientUser?.phone}?text=Hola! Te escribimos desde XIRO para darte información sobre tu pedido.`}
                   >
                     <WhatsAppIcon />
                   </a>
                 </Button>
                 <Button variant="contained" color="info">
                   <a
-                    href={`tel:+${order.clientUser[0].areaCode}${order.clientUser[0]?.phone}?`}
+                    href={`tel:+${order?.clientUser.areaCode}${order.clientUser?.phone}?`}
                   >
                     <PhoneForwardedIcon />
                   </a>

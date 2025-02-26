@@ -101,17 +101,16 @@ export default function Orders({ editor }) {
 
       let formatedOrders = response.data
         .map((order) => {
-          const fechaStr = order.paymentData.date_created;
+          const fechaStr = order.created_at;
           const fecha = new Date(fechaStr);
-
           const dia = fecha.getDate().toString().padStart(2, "0");
           const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
           const año = fecha.getFullYear();
-
           const fechaFormateada = `${dia}/${mes}/${año}`;
 
           return {
             uid: order.uid,
+            order_number: order.order_number,
             orderStatus: order.orderStatus,
             cart: order.cart,
             paymentId: order.paymentData.id,
