@@ -124,6 +124,7 @@ export default function Orders({ editor }) {
             uidDelivery: order.uidDelivery,
             uidDistribution: order.uidDistribution,
             uidPickup: order.uidPickup,
+            clientUser: order.clientUser,
             report: order.report,
             createdAt: fechaFormateada,
             place: order.place,

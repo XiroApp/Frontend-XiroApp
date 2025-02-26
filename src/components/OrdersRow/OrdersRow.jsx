@@ -27,6 +27,22 @@ import {
   changeOrderStatus,
   getUserByUid,
 } from "../../redux/actions/adminActions";
+import {
+  CardTravelOutlined,
+  ChevronLeftSharp,
+  Close,
+  Diversity1Outlined,
+  Diversity3,
+  Diversity3Outlined,
+  EngineeringOutlined,
+  Inventory,
+  Inventory2Outlined,
+  InventoryOutlined,
+  MopedOutlined,
+  PermIdentity,
+  WarehouseOutlined,
+} from "@mui/icons-material";
+import { OrdersAdapter } from "../../Infra/Adapters/orders.adatper";
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -75,6 +91,7 @@ export default function OrdersRow({
   order,
   editor,
   fetchOrders,
+  classes,
 }) {
   console.log(order);
 
@@ -85,14 +102,18 @@ export default function OrdersRow({
   const handleOpenFilesModal = (e) => {
     setOpen(true);
   };
+  /* VIEW ASSIGNED MODAL */
+  const [openAssignedModal, setOpenAssignedModal] = useState(false);
+
+  const handleOpenAssignedModal = async () => {
+    setOpenAssignedModal(true);
+  };
   /* VIEW CLIENT MODAL */
   const [openClientModal, setOpenClientModal] = useState(false);
   const [clientInfo, setClientInfo] = useState({});
 
   const handleOpenClientModal = async (uid) => {
     setOpenClientModal(true);
-    let clientData = await getUserByUid(uid);
-    setClientInfo(clientData);
   };
 
   /* FILES ACCORDION */
@@ -119,7 +140,6 @@ export default function OrdersRow({
     setDeliverySelectStatus(false);
     setProblemsSelectStatus(false);
   };
-  console.log(orderId);
 
   /* STATUS PRINTING */
   const [input, setInput] = useState({
@@ -206,12 +226,78 @@ export default function OrdersRow({
     setEditStatus(false);
   }
 
+
+
   return (
-    <>
-      <TableCell key={column.id} align={column.align} className="p-0 m-0">
+    <td key={column.id} align={column.align} className={classes}>
+      <div className="flex items-center">
+        {/* {column.id === "" && (
+          <span className="text-sm font-bold">{value}</span>
+        )} */}
         {column.id === "order_number" && (
+          <span className="font-bold">{order.order_number}</span>
+        )}
+        {column.id === "createdAt" && (
           <>
-            <span className="text-sm font-bold">{value}</span>
+            <span className="text-sm">{value}</span>
+          </>
+        )}
+        {column.id === "paymentId" && (
+          <span className="text-sm">{order.paymentId}</span>
+        )}
+        {column.id === "transactionAmount" && (
+          <>
+            <Button
+              color="inherit"
+              variant="text"
+              className="hover:underline"
+              onClick={(e) => setPriceModal(true)}
+            >
+              <span>$ {order.transactionAmount}</span>
+            </Button>
+
+            {/* MODAL FORMULARIO */}
+            <Dialog open={priceModal} onClose={(e) => setPriceModal(false)}>
+              <DialogTitle className="text-center">Monto</DialogTitle>
+              <DialogContent dividers className="flex flex-col gap-8">
+                <section className="flex flex-col justify-start items-start ">
+                  <ul className="flex flex-col items-start justify-start">
+                    <li>
+                      <span className="text-[12px] text-black">
+                        {`Subtotal: $${order.subtotal_price}`}
+                      </span>
+                    </li>
+                    <li>
+                      <span className="text-[12px] text-black">
+                        {`Envío: $${order.shipment_price}`}
+                      </span>
+                    </li>
+                    {order.cart.map((item, index) => (
+                      <li key={index}>
+                        <span className="text-[12px] text-black">
+                          {`Cupón ${index + 1}: ${
+                            item?.coupon_used?.type[0] || ""
+                          } ${item?.coupon_used?.ammount || 0}`}
+                        </span>
+                      </li>
+                    ))}
+                    {/* <li>
+                      <span className="text-[12px] text-black">
+                        {`Cupón: ${order.cart[0].details.coupon}`}
+                      </span>
+                    </li> */}
+                  </ul>
+                </section>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  variant="contained"
+                  onClick={(e) => setPriceModal(false)}
+                >
+                  Cerrar
+                </Button>
+              </DialogActions>
+            </Dialog>
           </>
         )}
         {column.id === "orderStatus" && (
@@ -448,7 +534,7 @@ export default function OrdersRow({
             </Dialog>
           </>
         )}
-        {typeof value === "object" && value?.length && (
+        {column.id === "cart" && (
           <>
             <Button
               color="inherit"
@@ -456,7 +542,7 @@ export default function OrdersRow({
               onClick={(e) => handleOpenFilesModal(e)}
               // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
-              <Typography>Ver Pedido</Typography>
+              <Inventory2Outlined />
             </Button>
 
             {/* MODAL FORMULARIO */}
@@ -466,7 +552,7 @@ export default function OrdersRow({
               </DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8">
                 <section className="flex flex-col gap-4">
-                  {value.map((order, index) => {
+                  {order?.cart?.map((order, index) => {
                     return (
                       <div key={index} className="flex flex-col gap-1">
                         <h3>Pedido {index + 1}</h3>
@@ -602,100 +688,65 @@ export default function OrdersRow({
             </Dialog>
           </>
         )}
-        {column.id === "paymentId" && (
-          <span className="font-bold">{value}</span>
-        )}
-        {column.id === "statusDetail" && (
-          <div>
-            {" "}
-            {value === "accredited" ? (
-              <div className="flex flex-col items-center gap-1">
-                {/* <DoneIcon
-                  sx={{ width: "1.4rem", height: "1.4rem" }}
-                  className="text-green-500"
-                /> */}
-                <span className="text-green-500 ">acreditado</span>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center gap-1">
-                <ErrorIcon
-                  sx={{ width: "1.4rem", height: "1.4rem" }}
-                  className="text-red-500"
-                />
-                <span className="text-red-500">{value}</span>
-              </div>
-            )}
-          </div>
-        )}
-        {column.id === "paymentStatus" && (
-          <div className="font-bold">
-            {value === "approved" ? (
-              <div className="flex flex-col items-center gap-1">
-                {/* <DoneIcon
-                  sx={{ width: "1.4rem", height: "1.4rem" }}
-                  className="text-green-500"
-                /> */}
-                <span className="text-green-500">aprobado</span>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center gap-1">
-                <ErrorIcon
-                  sx={{ width: "1.4rem", height: "1.4rem" }}
-                  className="text-red-500"
-                />
-                <span className="text-red-500">{value}</span>
-              </div>
-            )}
-          </div>
-        )}
-        {column.id === "transactionAmount" && (
+
+        {column.id === "assigned" && (
           <>
             <Button
               color="inherit"
               variant="text"
-              className="hover:underline"
-              onClick={(e) => setPriceModal(true)}
+              onClick={() => {
+                handleOpenAssignedModal();
+              }}
+              // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
-              <Typography>${order.transactionAmount}</Typography>
+              <Diversity3 />
             </Button>
 
             {/* MODAL FORMULARIO */}
-            <Dialog open={priceModal} onClose={(e) => setPriceModal(false)}>
-              <DialogTitle className="text-center">Monto</DialogTitle>
+            <Dialog
+              open={openAssignedModal}
+              onClose={(e) => setOpenAssignedModal(false)}
+            >
+              <DialogTitle className="text-center">Responsables</DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8">
-                <section className="flex flex-col justify-start items-start ">
-                  <ul className="flex flex-col items-start justify-start">
+                <section className="flex flex-col gap-4">
+                  <ul className="flex flex-col gap-2">
                     <li>
-                      <span className="text-[12px] text-black">
-                        {`Subtotal: $${order.subtotal_price}`}
-                      </span>
+                      Imprenta:{" "}
+                      {order?.printingUser?.length
+                        ? order.printingUser[0].displayName
+                        : "Sin asignar"}
                     </li>
+
                     <li>
-                      <span className="text-[12px] text-black">
-                        {`Envío: $${order.shipment_price}`}
-                      </span>
+                      Punto de Distribución:{" "}
+                      {order?.distributionUser?.length
+                        ? order.distributionUser[0].displayName
+                        : "Sin asignar"}
                     </li>
-                    {order.cart.map((item, index) => (
-                      <li key={index}>
-                        <span className="text-[12px] text-black">
-                          {`Cupón ${index + 1}: ${
-                            item?.coupon_used?.type[0] || ""
-                          } ${item?.coupon_used?.ammount || 0}`}
-                        </span>
+
+                    {order?.place?.type === "Envío a domicilio" ? (
+                      <li>
+                        Delivery:{" "}
+                        {order?.deliveryUser?.length
+                          ? order.deliveryUser[0].displayName
+                          : "Sin asignar"}
                       </li>
-                    ))}
-                    {/* <li>
-                      <span className="text-[12px] text-black">
-                        {`Cupón: ${order.cart[0].details.coupon}`}
-                      </span>
-                    </li> */}
+                    ) : (
+                      <li>
+                        Punto Pick Up:{" "}
+                        {order?.pickupUser?.length
+                          ? order.pickupUser[0].displayName
+                          : "Sin asignar"}
+                      </li>
+                    )}
                   </ul>
                 </section>
               </DialogContent>
               <DialogActions>
                 <Button
                   variant="contained"
-                  onClick={(e) => setPriceModal(false)}
+                  onClick={(e) => setOpenAssignedModal(false)}
                 >
                   Cerrar
                 </Button>
@@ -713,7 +764,7 @@ export default function OrdersRow({
               }}
               // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
-              <Typography> Ver cliente</Typography>
+              <PermIdentity />
             </Button>
 
             {/* MODAL FORMULARIO */}
@@ -721,49 +772,46 @@ export default function OrdersRow({
               open={openClientModal}
               onClose={(e) => setOpenClientModal(false)}
             >
-              <DialogTitle className="text-center">
-                Información del cliente
+              <DialogTitle className="text-center flex items-center justify-between">
+                <Typography variant="h6">Información del Cliente </Typography>
+                <Button
+                  variant="text"
+                  onClick={(e) => setOpenClientModal(false)}
+                >
+                  <Close />
+                </Button>
               </DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8">
                 <section className="flex flex-col gap-4">
                   <ul>
-                    <li>Nombre: {clientInfo?.displayName}</li>
+                    <li>Nombre: {order.clientUser[0]?.displayName}</li>
                     <li className="flex items-center gap-2">
-                      <span>Teléfono: {clientInfo?.phone}</span>
-                      <a
-                        className="underline hover:text-green-500 flex items-center p-1 border rounded-md "
-                        href={`https://wa.me/${clientInfo.areaCode}${clientInfo?.phone}?text=Hola, deseo comunicarme con el soporte de XIRO.`}
-                      >
-                        <WhatsAppIcon />
-                      </a>
-                      <a
-                        className="underline hover:text-blue-500 flex items-center p-1 border rounded-md "
-                        href={`tel:+${clientInfo.areaCode}${clientInfo?.phone}?`}
-                      >
-                        <PhoneForwardedIcon />
-                      </a>
+                      <span>Teléfono: {order.clientUser[0]?.phone}</span>
                     </li>
-                    <li>Email: {clientInfo?.email}</li>
+                    <li>Email: {order.clientUser[0]?.email}</li>
                   </ul>
                 </section>
               </DialogContent>
               <DialogActions>
-                <Button
-                  variant="contained"
-                  onClick={(e) => setOpenClientModal(false)}
-                >
-                  Cerrar
+                <Button variant="contained" color="success">
+                  <a
+                    href={`https://wa.me/${order.clientUser[0].areaCode}${order.clientUser[0]?.phone}?text=Hola! Te escribimos desde XIRO para darte información sobre tu pedido.`}
+                  >
+                    <WhatsAppIcon />
+                  </a>
+                </Button>
+                <Button variant="contained" color="info">
+                  <a
+                    href={`tel:+${order.clientUser[0].areaCode}${order.clientUser[0]?.phone}?`}
+                  >
+                    <PhoneForwardedIcon />
+                  </a>
                 </Button>
               </DialogActions>
             </Dialog>
           </>
         )}
 
-        {column.id === "createdAt" && (
-          <>
-            <span className="text-sm">{value}</span>
-          </>
-        )}
         {column.id === "place" && (
           <>
             <Button
@@ -772,16 +820,19 @@ export default function OrdersRow({
               onClick={() => {
                 setPlaceModal(true);
               }}
-              // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
-              <div className="flex justify-center items-start">
-                <span className="">
-                  {`${
-                    value.type === "Envío a domicilio" ? "Envío" : value.type
-                  } | `}
-                </span>
-                <span className="">{`${order?.availability}`}</span>
-              </div>
+              {order?.place?.type === "Envío a domicilio" ? (
+                <>
+                  <MopedOutlined className="h-4 w-4" /> | Envío
+                </>
+              ) : order?.place?.type === "Retiro" ? (
+                <>
+                  <WarehouseOutlined className="h-4 w-4" /> |{" "}
+                  {order?.place?.type}
+                </>
+              ) : (
+                order?.place?.type || "Revisar pedido"
+              )}
             </Button>
 
             {/* MODAL FORMULARIO */}
@@ -800,20 +851,20 @@ export default function OrdersRow({
                         Disponibilidad: {`${order?.availability}`}
                       </li>
                       <li className="text-[12px] text-start">
-                        Ciudad: {value.address.city}{" "}
+                        Ciudad: {value?.address?.city}{" "}
                       </li>
                       <li className="text-[12px] text-start">
-                        Localidad: {value.address.locality}
+                        Localidad: {value?.address?.locality}
                       </li>
                       <li className="text-[12px] text-start">
                         Calle:
-                        {` ${value.address.name} ${value.address.number}`}
+                        {` ${value?.address?.name} ${value?.address?.number}`}
                       </li>
                       <li className="text-[12px] text-start">
-                        Piso/Casa: {value.address.floorOrApartment}{" "}
+                        Piso/Casa: {value?.address?.floorOrApartment}{" "}
                       </li>
                       <li className="text-[12px] text-start">
-                        C.P: {value.address.zipCode}{" "}
+                        C.P: {value?.address?.zipCode}{" "}
                       </li>
                     </ul>
                   </div>
@@ -830,7 +881,25 @@ export default function OrdersRow({
             </Dialog>
           </>
         )}
-      </TableCell>
-    </>
+
+        {column.id === "paymentStatus" && (
+          <div className=" flex flex-col justify-center items-center ">
+            {order.paymentStatus === "approved" ? (
+              <span className="text-green-500 text-sm">aprobado</span>
+            ) : (
+              <span className="text-red-500 text-sm">
+                {order.paymentStatus}
+              </span>
+            )}
+
+            {order.statusDetail === "accredited" ? (
+              <span className="text-green-500 text-sm ">acreditado</span>
+            ) : (
+              <span className="text-red-500 text-sm">{order.statusDetail}</span>
+            )}
+          </div>
+        )}
+      </div>
+    </td>
   );
 }

@@ -391,7 +391,7 @@ export default function NewOrder() {
             <DefaultSnack
               content={
                 labels?.find((label) => label.id === "snackbar_new_order_info")
-                  .content
+                  ?.content
               }
             />
             {/* {loadingCard?.length > 0 ? (

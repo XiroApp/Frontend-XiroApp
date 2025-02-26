@@ -4,7 +4,6 @@ import "./index.css";
 import { useDispatch, useSelector } from "react-redux";
 import ProtectedRoute from "./context/ProtectedRoute";
 import Login from "./screens/NormalUser/Login/Login";
-
 import { ThemeProvider } from "@mui/material";
 import { mainTheme } from "./utils/themes/main-theme";
 import Register from "./screens/NormalUser/Login/Register";

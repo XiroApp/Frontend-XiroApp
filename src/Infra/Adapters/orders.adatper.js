@@ -6,23 +6,22 @@ const baseUrl = Settings.SERVER_URL;
 export class OrdersAdapter {
   static async getOrdersPaginated(
     pageSize,
-    nextVisible,
-    prevVisible,
-    direction,
+    page,
+    lastDocument,
     role,
+    direction,
     uid
   ) {
     let url = "";
+
     if (uid) {
-      url = `${baseUrl}/${role}/orders/${uid}?pageSize=${pageSize}`;
+      url = `${baseUrl}/${role}/orders/${uid}?pageSize=${pageSize}&direction=${direction}&lastVisible=${
+        lastDocument ? lastDocument : ""
+      }`;
     } else {
-      url = `${baseUrl}/${role}/orders?pageSize=${pageSize}`;
-    }
-    // Agregar parámetros según la dirección de la paginación
-    if (direction === "next" && nextVisible) {
-      url += `&lastVisible=${nextVisible}&direction=next`;
-    } else if (direction === "prev" && prevVisible) {
-      url += `&firstVisible=${prevVisible}&direction=prev`;
+      url = `${baseUrl}/${role}/orders?pageSize=${pageSize}&direction=${direction}&lastVisible=${
+        lastDocument ? lastDocument : ""
+      }`;
     }
 
     const response = await axios.get(url);
@@ -52,6 +51,11 @@ export class OrdersAdapter {
         uidDelivery: order.uidDelivery,
         uidDistribution: order.uidDistribution,
         uidPickup: order.uidPickup,
+        deliveryUser: order.deliverUser,
+        distributionUser: order.distributionUser,
+        pickupUser: order.pickupUser,
+        printingUser: order.printingUser,
+        clientUser: order.clientUser,
         report: order.report,
         createdAt: fechaFormateada,
         place: order.place,
@@ -66,7 +70,6 @@ export class OrdersAdapter {
   }
 
   static async getUnassignedOrders() {
-    
     const response = await axios.get(`${baseUrl}/delivery/orders-unassigned`);
 
     const data = response.data;

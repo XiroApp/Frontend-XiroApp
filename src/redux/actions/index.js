@@ -846,7 +846,7 @@ export function getInAppLabels() {
   return async function (dispatch) {
     try {
       let response = await axios.get(`${baseUrl}/labels/all`);
-
+      
       return dispatch({
         type: action.GET_LABELS,
         payload: {
