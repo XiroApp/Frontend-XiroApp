@@ -120,7 +120,7 @@ export default function OrdersRow({
   const [printingSelectStatus, setPrintingSelectStatus] = useState(null);
   const [deliverySelectStatus, setDeliverySelectStatus] = useState(null);
   const [problemsSelectStatus, setProblemsSelectStatus] = useState(null);
-  console.log(order);
+ 
 
   const handleSetEdiStatus = (e) => {
     setEditStatus(false);
@@ -216,7 +216,7 @@ export default function OrdersRow({
 
   return (
     <td key={column.id} align={column.align} className={classes}>
-      <div className="flex items-center">
+      <div className="flex items-center w-fit">
         {/* {column.id === "" && (
           <span className="text-sm font-bold">{value}</span>
         )} */}
@@ -386,9 +386,9 @@ export default function OrdersRow({
                             value !== "distribution" ? (
                               <>
                                 <option value="in_delivery">Seleccionar</option>
-                                <option value="distribution">
+                                {/* <option value="distribution">
                                   Regresar a punto de distribución 🏤
-                                </option>
+                                </option> */}
                                 <option value="received">
                                   Entregado a cliente ✅
                                 </option>
@@ -804,14 +804,14 @@ export default function OrdersRow({
               <DialogActions>
                 <Button variant="contained" color="success">
                   <a
-                    href={`https://wa.me/${order.clientUser.areaCode}${order.clientUser?.phone}?text=Hola! Te escribimos desde XIRO para darte información sobre tu pedido.`}
+                    href={`https://wa.me/${order?.clientUser?.areaCode}${order?.clientUser?.phone}?text=Hola! Te escribimos desde XIRO para darte información sobre tu pedido.`}
                   >
                     <WhatsAppIcon />
                   </a>
                 </Button>
                 <Button variant="contained" color="info">
                   <a
-                    href={`tel:+${order?.clientUser.areaCode}${order.clientUser?.phone}?`}
+                    href={`tel:+${order?.clientUser?.areaCode}${order?.clientUser?.phone}?`}
                   >
                     <PhoneForwardedIcon />
                   </a>

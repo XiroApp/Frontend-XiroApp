@@ -17,7 +17,7 @@ import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
 import { Backdrop, CircularProgress, Input, Typography } from "@mui/material";
 
 const columns = [
-  { id: "order_number", label: "N°", minWidth: 50, align: "center" },
+  { id: "order_number", label: "N° de orden", minWidth: 50, align: "center" },
   {
     id: "orderStatus",
     label: "Estado de Orden",
@@ -150,13 +150,13 @@ export default function Orders({ editor }) {
         <TableContainer sx={{ maxHeight: 600 }}>
           <table className="w-full min-w-max table-auto text-left">
             <thead>
-              <tr>
+              <tr className="w-fit">
                 {columns.map((column, index) => (
                   <th
                     key={index}
                     align={column.align}
                     style={{ minWidth: column.minWidth }}
-                    className=" cursor-pointer border-y border-blue-gray-400 p-4 transition-colors"
+                    className=" cursor-pointer border-y border-blue-gray-400 p-4 transition-colors w-fit"
                   >
                     <Typography
                       variant="small"

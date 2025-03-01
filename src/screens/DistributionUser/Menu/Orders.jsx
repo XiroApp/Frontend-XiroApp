@@ -17,7 +17,7 @@ import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
 import { Input } from "@mui/material";
 
 const columns = [
-  { id: "order_number", label: "N°", minWidth: 50, align: "center" },
+  { id: "order_number", label: "N° de orden", minWidth: 50, align: "center" },
   // { id: "paymentId", label: "ID orden", minWidth: 50, align: "center" },
 
   {

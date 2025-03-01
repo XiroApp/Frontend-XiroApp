@@ -21,7 +21,7 @@ import { ChevronLeftSharp } from "@mui/icons-material";
 const columns = [
   {
     id: "order_number",
-    label: "N°",
+    label: "N° de orden",
     align: "center",
   },
   {
@@ -79,6 +79,7 @@ export default function Orders({ editor, role }) {
 
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(0);
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const fetchOrders = async (direction = "next") => {
     setLoading(true);
@@ -298,7 +299,16 @@ export default function Orders({ editor, role }) {
                       role="button"
                       tabIndex={-1}
                       key={index}
-                      className="p-0 m-0 hover:bg-green-900/80 hover:text-white"
+                      className={
+                        index === selectedRow
+                          ? "p-0 m-0 bg-green-900/80 text-white "
+                          : "p-0 m-0 hover:bg-green-900/50 "
+                      }
+                      onClick={(e) =>
+                        selectedRow == index
+                          ? setSelectedRow(null)
+                          : setSelectedRow(index)
+                      }
                     >
                       {columns.map((column, index) => {
                         const value = order[column.id];

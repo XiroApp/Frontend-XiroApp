@@ -146,20 +146,7 @@ export default function Delivery({ cart, dataBaseUser }) {
               aria-labelledby="nested-list-subheader"
             >
            MENÚ
-              <ListItemButton
-                onClick={(e) => setDataRender("orders")}
-                sx={
-                  dataRender === "orders"
-                    ? { backgroundColor: "#458552", borderRadius: "10px" }
-                    : { borderRadius: "10px" }
-                }
-                className="h-16"
-              >
-                <ListItemIcon>
-                  <PriceChangeIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
-                </ListItemIcon>
-                <ListItemText primary="Pedidos Asignados" />
-              </ListItemButton>
+
               <ListItemButton
                 onClick={(e) => setDataRender("pool")}
                 sx={
@@ -173,6 +160,20 @@ export default function Delivery({ cart, dataBaseUser }) {
                   <AddBusiness sx={{ width: "2.5rem", height: "2.5rem" }} />
                 </ListItemIcon>
                 <ListItemText primary="Asignar lote de pedidos" />
+              </ListItemButton>
+              <ListItemButton
+                onClick={(e) => setDataRender("orders")}
+                sx={
+                  dataRender === "orders"
+                    ? { backgroundColor: "#458552", borderRadius: "10px" }
+                    : { borderRadius: "10px" }
+                }
+                className="h-16"
+              >
+                <ListItemIcon>
+                  <PriceChangeIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
+                </ListItemIcon>
+                <ListItemText primary="Pedidos Asignados" />
               </ListItemButton>
               <ListItemButton
                 onClick={(e) => setDataRender("entregas")}

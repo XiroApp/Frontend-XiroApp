@@ -746,7 +746,6 @@ export function setOrderPlace(place) {
     try {
       const { name, number, city, lat, lng } = place.address;
       let destinationAddress = `${name} ${number}, ${city}`;
-      console.log(place);
 
       let distance = {
         uidDistribution: null,
@@ -760,11 +759,17 @@ export function setOrderPlace(place) {
       };
 
       if (place.type == "Retiro") {
-        distance = { ...distance, uidPickup: place.address.userUid, text:"Retiro" };
+        distance = {
+          ...distance,
+          uidPickup: place.address.userUid,
+          text: "Retiro",
+        };
       } else {
         let { data } = await axios.get(
           `${baseUrl}/maps/distance?destinations=${destinationAddress}&lat=${lat}&lng=${lng}`
         );
+        console.log(data);
+
         distance = data;
       }
 
@@ -846,7 +851,7 @@ export function getInAppLabels() {
   return async function (dispatch) {
     try {
       let response = await axios.get(`${baseUrl}/labels/all`);
-      
+
       return dispatch({
         type: action.GET_LABELS,
         payload: {

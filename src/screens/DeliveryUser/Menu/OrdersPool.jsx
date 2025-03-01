@@ -4,13 +4,15 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
-import { Button, Typography } from "@mui/material";
+import { Button, Tooltip, Typography } from "@mui/material";
 import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper";
 import { useSelector } from "react-redux";
+import { Inventory2Outlined, MopedOutlined } from "@mui/icons-material";
 
 const OrdersPool = () => {
   const user = useSelector((state) => state.loggedUser);
   const [batchOrders, setBatchOrders] = useState([]);
+
   const fetchOrders = async () => {
     const response = await OrdersAdapter.getUnassignedOrders();
     const batchOrders = clasificarPedidos(response);
@@ -43,40 +45,61 @@ const OrdersPool = () => {
   }
 
   function clasificarPedidos(pedidos) {
-    const pedidosPorSemana = [];
-    let semanaActual = [];
-    let fechaInicioSemana = null;
+    const pedidosPorSemanaYDistribuidor = {};
 
     pedidos.forEach((pedido) => {
       const fechaPedido = new Date(pedido.created_at);
+      const uidDistribution = pedido.uidDistribution;
 
-      // Si es el primer pedido de la semana, establece la fecha de inicio
-      if (!fechaInicioSemana) {
-        fechaInicioSemana = new Date(fechaPedido);
-        fechaInicioSemana.setHours(0, 0, 0, 0); // Inicio de la semana a las 00:00:00
+      // Si no existe un grupo para este distribuidor, lo creamos
+      if (!pedidosPorSemanaYDistribuidor[uidDistribution]) {
+        pedidosPorSemanaYDistribuidor[uidDistribution] = [];
       }
 
-      // Si el pedido es de una semana diferente, guarda la semana anterior y comienza una nueva
-      if (
-        fechaPedido.getTime() < fechaInicioSemana.getTime() ||
-        (fechaPedido.getDay() === 1 && fechaPedido.getHours() < 17)
-      ) {
-        pedidosPorSemana.push(semanaActual);
-        semanaActual = [];
-        fechaInicioSemana = new Date(fechaPedido);
-        fechaInicioSemana.setHours(0, 0, 0, 0);
+      const semanasDelDistribuidor =
+        pedidosPorSemanaYDistribuidor[uidDistribution];
+      let semanaActual = null;
+
+      // Buscamos si existe una semana que coincida con la fecha del pedido
+      for (let i = 0; i < semanasDelDistribuidor.length; i++) {
+        const semana = semanasDelDistribuidor[i];
+        const fechaInicioSemana = semana.fechaInicio;
+
+        if (
+          fechaPedido.getTime() >= fechaInicioSemana.getTime() &&
+          !(fechaPedido.getDay() === 1 && fechaPedido.getHours() < 17)
+        ) {
+          semanaActual = semana;
+          break;
+        }
+      }
+
+      // Si no encontramos una semana válida, creamos una nueva
+      if (!semanaActual) {
+        semanaActual = {
+          fechaInicio: new Date(fechaPedido),
+          pedidos: [],
+        };
+        semanaActual.fechaInicio.setHours(0, 0, 0, 0); // Inicio de la semana a las 00:00:00
+        semanasDelDistribuidor.push(semanaActual);
       }
 
       const color = determinarColor(fechaPedido);
       pedido.color = color; // Añade el color al pedido
-      semanaActual.push(pedido);
+      semanaActual.pedidos.push(pedido);
     });
 
-    // Guarda la última semana
+    // Convertimos el objeto de distribuidores en un array de lotes
+    const lotes = [];
+    Object.values(pedidosPorSemanaYDistribuidor).forEach(
+      (semanasDelDistribuidor) => {
+        semanasDelDistribuidor.forEach((semana) => {
+          lotes.push(semana.pedidos);
+        });
+      }
+    );
 
-    pedidosPorSemana.push(semanaActual);
-
-    return pedidosPorSemana;
+    return lotes;
   }
 
   async function handleAssignBatch(batch) {
@@ -84,16 +107,17 @@ const OrdersPool = () => {
   }
 
   return (
-    <section className="w-full h-full text-balance flex flex-col justify-start items-start p-4 gap-2">
-      <Typography variant="h2" className="">
+    <section className="w-full text-balance flex flex-col justify-start items-start p-4 gap-4">
+      <Typography variant="h4" className="">
         Lotes disponibles
       </Typography>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 w-full">
         {batchOrders?.map((batch, index) => (
           <div key={index}>
             {batch?.map((order, index) => (
               <div key={index} className="flex flex-col">
+                {console.log(order)}
                 <Card variant="outlined" sx={{ maxWidth: 500 }}>
                   <Box sx={{ p: 2 }}>
                     <Stack
@@ -104,7 +128,7 @@ const OrdersPool = () => {
                       }}
                     >
                       <Typography gutterBottom variant="h5" component="div">
-                        LOTE
+                        LOTE ZONA ??? | 
                       </Typography>
                       <Typography gutterBottom variant="h6" component="div">
                         ${order.shipment_price || 0.0}
@@ -116,6 +140,12 @@ const OrdersPool = () => {
                     >
                       Cantidad de pedidos {batch.length}
                     </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "text.secondary" }}
+                    >
+                      numero orden: {order.order_number}
+                    </Typography>
                   </Box>
                   <Divider />
                   <Box sx={{ p: 2 }}>
@@ -123,9 +153,34 @@ const OrdersPool = () => {
                       Información
                     </Typography>
                     <Stack direction="row" spacing={1}>
-                      <Chip color="primary" label="Soft" size="small" />
-                      <Chip label="Medium" size="small" />
-                      <Chip label="Hard" size="small" />
+                      <Chip
+                        color="primary"
+                        label={
+                          <Tooltip title="Cantidad de pedidos">
+                            <div className="flex items-center gap-1">
+                              <Inventory2Outlined
+                                style={{ height: "1em", width: "1em" }}
+                              />
+                              <span className="text-lg">{batch.length}</span>
+                            </div>
+                          </Tooltip>
+                        }
+                        size="small"
+                      />
+                      <Chip
+                        color="primary"
+                        label={
+                          <Tooltip title="Cantidad de pedidos">
+                            <div className="flex items-center gap-1">
+                              <MopedOutlined
+                                style={{ height: "1em", width: "1em" }}
+                              />
+                              {/* <span className="text-lg">{batch.length}</span> */}
+                            </div>
+                          </Tooltip>
+                        }
+                        size="small"
+                      />
                     </Stack>
                   </Box>
                   <Divider />
