@@ -4,103 +4,102 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
-import { Button, Tooltip, Typography } from "@mui/material";
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper";
 import { useSelector } from "react-redux";
-import { Inventory2Outlined, MopedOutlined } from "@mui/icons-material";
+import {
+  AttachMoney,
+  Inventory2Outlined,
+  MopedOutlined,
+  Straighten,
+} from "@mui/icons-material";
 
 const OrdersPool = () => {
   const user = useSelector((state) => state.loggedUser);
   const [batchOrders, setBatchOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchOrders = async () => {
-    const response = await OrdersAdapter.getUnassignedOrders();
-    const batchOrders = clasificarPedidos(response);
-    setBatchOrders(batchOrders);
+    setLoading(true);
+    try {
+      const orders = await OrdersAdapter.getUnassignedOrders();
+      console.log(orders);
+      const batches = groupOrdersIntoBatches(orders);
+      setBatchOrders(batches);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // Función para determinar la fecha de entrega según las condiciones
+  function getDeliveryDate(orderDate) {
+    const date = new Date(orderDate);
+    const dayOfWeek = date.getDay(); // 0 (Domingo) a 6 (Sábado)
+    const hour = date.getHours();
+
+    // Condición 1: Desde lunes 17hrs hasta jueves 17hrs (entregar el viernes de esa semana)
+    if (
+      (dayOfWeek === 1 && hour >= 17) || // Lunes desde las 17hrs
+      dayOfWeek === 2 ||
+      dayOfWeek === 3 || // Martes y Miércoles
+      (dayOfWeek === 4 && hour < 17) // Jueves antes de las 17hrs
+    ) {
+      const friday = new Date(date);
+      friday.setDate(date.getDate() + (5 - dayOfWeek)); // Viernes de esa semana
+      return friday.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+    }
+
+    // Condición 2: Desde jueves 17hrs hasta lunes 17hrs (entregar el martes próximo)
+    const nextTuesday = new Date(date);
+    nextTuesday.setDate(date.getDate() + ((2 - dayOfWeek + 7) % 7 || 7)); // Martes próximo
+    return nextTuesday.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+  }
+
+  // Función para agrupar los pedidos en lotes
+  function groupOrdersIntoBatches(orders) {
+    const batches = {};
+
+    orders.forEach((order) => {
+      const deliveryDate = getDeliveryDate(order.created_at);
+      const uidDistribution = order.uidDistribution;
+      const distributionUser = order.distributionUser;
+
+      // Crear clave única para el lote (fecha de entrega + uidDistribution)
+      const batchKey = `${deliveryDate}_${uidDistribution}`;
+
+      // Inicializar el lote si no existe
+      if (!batches[batchKey]) {
+        batches[batchKey] = {
+          fechaEntrega: deliveryDate.split("-").reverse().join("/"),
+          uidDistribution: uidDistribution,
+          distributionUser: distributionUser,
+          orders: [], // Lista de pedidos en este lote
+          totalShipmentPrice: 0,
+          distance: order?.cart[0]?.distance?.value,
+        };
+      }
+
+      // Agregar el pedido al lote correspondiente
+      batches[batchKey].orders.push(order);
+
+      // Sumar el shipment_price al total del lote
+      batches[batchKey].totalShipmentPrice += order.cart[0].distance.value || 0;
+    });
+
+    return Object.values(batches); // Convertir a array de lotes
+  }
 
   useEffect(() => {
     fetchOrders();
   }, []);
-
-  function determinarColor(fecha) {
-    const diaSemana = fecha.getDay(); // 0 (Domingo) - 6 (Sábado)
-    const hora = fecha.getHours();
-
-    if (diaSemana === 1 && hora < 17) {
-      // Lunes antes de las 17h
-      return "verde";
-    } else if (diaSemana === 4 && hora >= 17) {
-      // Jueves a partir de las 17h
-      return "verde";
-    } else if (diaSemana >= 1 && diaSemana <= 3) {
-      // Martes, Miércoles, Jueves antes de las 17h
-      return "amarillo";
-    } else if (diaSemana >= 5 || diaSemana === 0) {
-      // Viernes, Sábado, Domingo, Lunes después de las 17h
-      return "verde";
-    } else {
-      return "amarillo"; // Jueves antes de las 17h
-    }
-  }
-
-  function clasificarPedidos(pedidos) {
-    const pedidosPorSemanaYDistribuidor = {};
-
-    pedidos.forEach((pedido) => {
-      const fechaPedido = new Date(pedido.created_at);
-      const uidDistribution = pedido.uidDistribution;
-
-      // Si no existe un grupo para este distribuidor, lo creamos
-      if (!pedidosPorSemanaYDistribuidor[uidDistribution]) {
-        pedidosPorSemanaYDistribuidor[uidDistribution] = [];
-      }
-
-      const semanasDelDistribuidor =
-        pedidosPorSemanaYDistribuidor[uidDistribution];
-      let semanaActual = null;
-
-      // Buscamos si existe una semana que coincida con la fecha del pedido
-      for (let i = 0; i < semanasDelDistribuidor.length; i++) {
-        const semana = semanasDelDistribuidor[i];
-        const fechaInicioSemana = semana.fechaInicio;
-
-        if (
-          fechaPedido.getTime() >= fechaInicioSemana.getTime() &&
-          !(fechaPedido.getDay() === 1 && fechaPedido.getHours() < 17)
-        ) {
-          semanaActual = semana;
-          break;
-        }
-      }
-
-      // Si no encontramos una semana válida, creamos una nueva
-      if (!semanaActual) {
-        semanaActual = {
-          fechaInicio: new Date(fechaPedido),
-          pedidos: [],
-        };
-        semanaActual.fechaInicio.setHours(0, 0, 0, 0); // Inicio de la semana a las 00:00:00
-        semanasDelDistribuidor.push(semanaActual);
-      }
-
-      const color = determinarColor(fechaPedido);
-      pedido.color = color; // Añade el color al pedido
-      semanaActual.pedidos.push(pedido);
-    });
-
-    // Convertimos el objeto de distribuidores en un array de lotes
-    const lotes = [];
-    Object.values(pedidosPorSemanaYDistribuidor).forEach(
-      (semanasDelDistribuidor) => {
-        semanasDelDistribuidor.forEach((semana) => {
-          lotes.push(semana.pedidos);
-        });
-      }
-    );
-
-    return lotes;
-  }
 
   async function handleAssignBatch(batch) {
     await OrdersAdapter.setBatchToDelivery(batch, user.uid).then(fetchOrders());
@@ -108,101 +107,130 @@ const OrdersPool = () => {
 
   return (
     <section className="w-full text-balance flex flex-col justify-start items-start p-4 gap-4">
+      {/* LOADER */}
+      {loading ? (
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      ) : (
+        false
+      )}
       <Typography variant="h4" className="">
         Lotes disponibles
       </Typography>
 
       <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 w-full">
         {batchOrders?.map((batch, index) => (
-          <div key={index}>
-            {batch?.map((order, index) => (
-              <div key={index} className="flex flex-col">
-                {console.log(order)}
-                <Card variant="outlined" sx={{ maxWidth: 500 }}>
-                  <Box sx={{ p: 2 }}>
-                    <Stack
-                      direction="row"
-                      sx={{
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography gutterBottom variant="h5" component="div">
-                        LOTE ZONA ??? | 
-                      </Typography>
-                      <Typography gutterBottom variant="h6" component="div">
-                        ${order.shipment_price || 0.0}
-                      </Typography>
-                    </Stack>
-                    <Typography
-                      variant="body2"
-                      sx={{ color: "text.secondary" }}
-                    >
-                      Cantidad de pedidos {batch.length}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{ color: "text.secondary" }}
-                    >
-                      numero orden: {order.order_number}
-                    </Typography>
-                  </Box>
-                  <Divider />
-                  <Box sx={{ p: 2 }}>
-                    <Typography gutterBottom variant="body2">
-                      Información
-                    </Typography>
-                    <Stack direction="row" spacing={1}>
-                      <Chip
-                        color="primary"
-                        label={
-                          <Tooltip title="Cantidad de pedidos">
-                            <div className="flex items-center gap-1">
-                              <Inventory2Outlined
-                                style={{ height: "1em", width: "1em" }}
-                              />
-                              <span className="text-lg">{batch.length}</span>
-                            </div>
-                          </Tooltip>
-                        }
-                        size="small"
-                      />
-                      <Chip
-                        color="primary"
-                        label={
-                          <Tooltip title="Cantidad de pedidos">
-                            <div className="flex items-center gap-1">
-                              <MopedOutlined
-                                style={{ height: "1em", width: "1em" }}
-                              />
-                              {/* <span className="text-lg">{batch.length}</span> */}
-                            </div>
-                          </Tooltip>
-                        }
-                        size="small"
-                      />
-                    </Stack>
-                  </Box>
-                  <Divider />
-                  <Box
-                    sx={{
-                      width: "100%",
-                      p: 2,
-                      display: "flex",
-                      justifyContent: "end",
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      className="w-full"
-                      onClick={(e) => handleAssignBatch(batch)}
-                    >
-                      Asignar lote
-                    </Button>
-                  </Box>
-                </Card>
-              </div>
-            ))}
+          <div
+            key={index}
+            className="flex flex-col lg:flex-row gap-4 flex-wrap p-8 items-center justify-center "
+          >
+            {console.log(Object.keys(batch.orders[0].cart[0]))}
+            {console.log(batch.orders[0].cart[0].distance.value)}
+            <Card variant="outlined" sx={{ maxWidth: 500 }}>
+              <Box sx={{ p: 2 }}>
+                <Stack
+                  direction="column"
+                  sx={{
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography gutterBottom variant="h5" component="div">
+                    {batch?.distributionUser?.displayName}
+                  </Typography>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                  ></Typography>
+                  <Typography gutterBottom variant="h6" component="div">
+                    {/* ${order.shipment_price || 0.0} */}
+                    Fecha de entrega: {batch?.fechaEntrega}
+                  </Typography>
+                </Stack>
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                  {` ${batch?.distributionUser?.addresses[0].name} ${batch?.distributionUser?.addresses[0].number}, ${batch?.distributionUser?.addresses[0].locality}, ${batch?.distributionUser?.addresses[0].city}`}
+                </Typography>
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                  {/* numero orden: {order.order_number} */}
+                </Typography>
+              </Box>
+              <Divider />
+              <Box sx={{ p: 2 }}>
+                <Typography gutterBottom variant="body2">
+                  Información general:
+                </Typography>
+                <Stack direction="row" spacing={1}>
+                  <Chip
+                    color="primary"
+                    label={
+                      <Tooltip title="Cantidad de pedidos">
+                        <div className="flex items-center gap-1">
+                          <Inventory2Outlined
+                            style={{ height: "1em", width: "1em" }}
+                          />
+                          <span className="text-lg">
+                            {batch?.orders?.length}
+                          </span>
+                        </div>
+                      </Tooltip>
+                    }
+                    size="small"
+                  />
+
+                  <Chip
+                    color="primary"
+                    label={
+                      <Tooltip title="Cantidad de pedidos">
+                        <div className="flex items-center gap-1">
+                          <Straighten style={{ height: "1em", width: "1em" }} />
+                          <span className="text-lg">{batch.distance}</span>
+                        </div>
+                      </Tooltip>
+                    }
+                    size="small"
+                  />
+
+                  <Chip
+                    color="primary"
+                    label={
+                      <Tooltip title="Cantidad de pedidos">
+                        <div className="flex items-center gap-1">
+                          <AttachMoney
+                            style={{ height: "1em", width: "1em" }}
+                          />
+                          <span className="text-lg">
+                            {batch.totalShipmentPrice}
+                          </span>
+                        </div>
+                      </Tooltip>
+                    }
+                    size="small"
+                  />
+                </Stack>
+              </Box>
+              <Divider />
+              <Box
+                sx={{
+                  width: "100%",
+                  p: 2,
+                  display: "flex",
+                  justifyContent: "end",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  className="w-full"
+                  onClick={(e) => handleAssignBatch(batch)}
+                >
+                  Asignar lote
+                </Button>
+              </Box>
+            </Card>
           </div>
         ))}
       </div>
