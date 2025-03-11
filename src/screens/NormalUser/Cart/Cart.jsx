@@ -286,7 +286,22 @@ export default function Cart() {
                   }
                   return (
                     <Step key={label} {...stepProps}>
-                      <StepLabel {...labelProps}>{label}</StepLabel>
+                      <StepLabel
+                        sx={{
+                          "& .MuiStepIcon-root.Mui-completed": {
+                            color: "green", // Cambia el color del check aquí
+                          },
+                          "& .MuiStepIcon-root.Mui-active": {
+                            color: "green", // Cambia el color del icono activo
+                          },
+                          "& .MuiStepIcon-root": {
+                            color: "gray", // Cambia el color del icono inactivo
+                          },
+                        }}
+                        {...labelProps}
+                      >
+                        {label}
+                      </StepLabel>
                     </Step>
                   );
                 })}

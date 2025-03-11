@@ -11,7 +11,7 @@ import { Worker } from "@react-pdf-viewer/core";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <AuthProvider>
-      <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+      <Worker workerUrl="/worker-pdf.js">
         <BrowserRouter>
           <App />
         </BrowserRouter>

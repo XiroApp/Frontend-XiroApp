@@ -34,7 +34,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
   };
 
   return (
-    <div className="bg-[#fff] relative max-h-[85vh] w-full p-4 flex flex-col gap-4 rounded-xl text-white overflow-y-auto">
+    <div className="bg-[#fff] relative h-[85vh] w-full p-4 flex flex-col gap-4 rounded-xl text-white overflow-y-auto">
       <NewOrderSettingsHelpDesktop
         helpModal={helpModalDesktop}
         setHelpModal={setHelpModalDesktop}

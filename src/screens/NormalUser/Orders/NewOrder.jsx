@@ -38,7 +38,10 @@ import ChoosePlaceModal from "../../../components/ChoosePlaceModal/ChoosePlaceMo
 import NewOrderSettingsDesktop from "../../../components/NewOrderSettings/NewOrderSettingsDesktop";
 import DefaultSnack from "../../../components/Snackbars/DefaultSnack";
 import { useNavigate } from "react-router-dom";
-import { pricingSetter, validateFileSize } from "../../../utils/controllers/pricing.controller.js";
+import {
+  pricingSetter,
+  validateFileSize,
+} from "../../../utils/controllers/pricing.controller.js";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -162,10 +165,10 @@ export default function NewOrder() {
   }
 
   async function handleSubmit(e, origin) {
-        e.preventDefault();
+    e.preventDefault();
     e.persist();
     const files = e.target.files;
-    const maxSizeMB = 50; // Tamaño máximo permitido en megabytes
+    const maxSizeMB = 2; // Tamaño máximo permitido en megabytes
 
     try {
       setLoading(true);
@@ -173,7 +176,7 @@ export default function NewOrder() {
 
       const uploadPromises = Array.from(files).map(async (file) => {
         if (!validateFileSize(file, maxSizeMB)) {
-          dispatch(setToast("El archivo no puede superar los 50MB", "error"));
+          dispatch(setToast(`El archivo no puede superar los ${maxSizeMB}MB`, "error"));
           return; // Salta este archivo si la validación falla
         }
 
