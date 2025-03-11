@@ -3,6 +3,8 @@ import HelpIcon from "@mui/icons-material/Help";
 import NewOrderSettingsHelp from "../Help/NewOrderSettingsHelp";
 import { setToast } from "../../redux/actions";
 import { useDispatch } from "react-redux";
+import { Tooltip } from "@mui/material";
+
 export default function NewOrderSettings({
   resume,
   setResume,
@@ -98,10 +100,13 @@ export default function NewOrderSettings({
                   : "flex flex-col items-center w-24 justify-center px-1  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
-                setResume({
-                  ...resume,
-                  ["color"]: "Color",
-                })
+                setResume(
+                  {
+                    ...resume,
+                    ["color"]: "Color",
+                  },
+                  true
+                )
               }
             >
               <span className="text-[12px] ">Color</span>
@@ -321,8 +326,8 @@ export default function NewOrderSettings({
             <button
               className={
                 resume.finishing === "Sin anillado"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
+                  ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  py-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -334,31 +339,82 @@ export default function NewOrderSettings({
               <span className="text-[12px] ">Sin Anillado</span>
               <span className="text-[10px] opacity-70 ">Solo impresión</span>
             </button>
+            <button
+              className={
+                resume.finishing === "Engrampado"
+                  ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  py-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
+              }
+              onClick={(e) =>
+                setResume({
+                  ...resume,
+                  ["finishing"]: "Engrampado",
+                })
+              }
+            >
+              <span className="text-[12px] ">Engrampado</span>
+              <span className="text-[10px] opacity-70 ">Sin cargo</span>
+            </button>
             {resume?.totalPages * resume?.numberOfCopies >= 20 ? (
-              <button
-                className={
-                  resume.finishing === "Anillado"
-                    ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
-                    : "flex flex-col items-center w-24 justify-center px-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
-                }
-                onClick={(e) =>
-                  setResume({
-                    ...resume,
-                    ["finishing"]: "Anillado",
-                  })
-                }
-              >
-                <span className="text-[12px] ">Anillado</span>
-                <span className="text-[10px] opacity-70 ">Lado largo</span>
-              </button>
+              <>
+                <button
+                  className={
+                    resume.finishing === "Agrupado"
+                      ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                      : "flex flex-col items-center w-24 justify-center px-2  py-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
+                  }
+                  onClick={(e) =>
+                    setResume({
+                      ...resume,
+                      ["finishing"]: "Agrupado",
+                    })
+                  }
+                >
+                  <span className="text-[12px] ">Agrupado</span>
+                  <span className="text-[10px] opacity-70 ">Todos juntos</span>
+                </button>
+                <button
+                  className={
+                    resume.finishing === "Individual"
+                      ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                      : "flex flex-col items-center w-24 justify-center px-2  py-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
+                  }
+                  onClick={(e) =>
+                    setResume({
+                      ...resume,
+                      ["finishing"]: "Individual",
+                    })
+                  }
+                >
+                  <span className="text-[12px] ">Individual</span>
+                  <span className="text-[10px] opacity-70 ">
+                    Uno por archivo
+                  </span>
+                  {/* <span className="text-[10px] opacity-70 ">Lado largo</span> */}
+                </button>
+              </>
             ) : (
-              <button
-                disabled
-                className="flex flex-col items-center w-24 justify-center px-2  bg-[#313131] rounded-lg"
-              >
-                <span className="text-[12px] ">Anillado</span>
-                <span className="text-[10px] opacity-70 ">Lado largo</span>
-              </button>
+              <>
+                <button
+                  disabled
+                  className="flex flex-col cursor-not-allowed  items-center w-24 justify-center px-2  bg-[#61774d]/70 rounded-lg"
+                >
+                  <span className="text-[12px] ">Agrupado</span>
+                  <span className="text-[10px] opacity-70 ">Todos juntos</span>
+                  {/* <span className="text-[10px] opacity-70 ">Lado largo</span> */}
+                </button>
+
+                <button
+                  disabled
+                  className="flex flex-col cursor-not-allowed items-center w-24 justify-center px-2  bg-[#61774d]/70 rounded-lg"
+                >
+                  <span className="text-[12px] ">Individual</span>
+                  <span className="text-[10px] opacity-70 ">
+                    Uno por archivo
+                  </span>
+                  {/* <span className="text-[10px] opacity-70 ">Lado largo</span> */}
+                </button>
+              </>
             )}
           </div>
         </section>

@@ -29,13 +29,11 @@ export class OrdersAdapter {
 
     // Formatear las órdenes
     const sortedOrders = data.orders.map((order) => {
-      const fechaStr = order.created_at;
-      const fecha = new Date(fechaStr);
-      const dia = fecha.getDate().toString().padStart(2, "0");
-      const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
-      const año = fecha.getFullYear();
-
-      const fechaFormateada = `${dia}/${mes}/${año}`;
+      const fechaFormateada = order.created_at
+        .split("T")[0]
+        .split("-")
+        .reverse()
+        .join("/");
 
       return {
         uid: order.uid,

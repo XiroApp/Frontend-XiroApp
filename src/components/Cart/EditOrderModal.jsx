@@ -32,6 +32,7 @@ import {
   DialogContentText,
   DialogTitle,
   Modal,
+  Typography,
 } from "@mui/material";
 import NewOrderSettings from "../../components/NewOrderSettings/NewOrderSettings";
 import SettingButtons from "../../components/NewOrderSettings/SettingButtons";
@@ -78,6 +79,11 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
     orderToEdit ? orderToEdit.files : null
   ); //files converted to PDF.
   const [currentSetting, setCurrentSetting] = useState("numberOfCopies");
+  const [openColorAlertModal, setOpenColorAlertModal] = useState(false);
+  const handleColorAlert = () => {
+    setOpenColorAlertModal(!openColorAlertModal);
+  };
+
   const [pricing, setPricing] = useState({
     BIG_ringed: Number(pricingState?.BIG_ringed),
     SMALL_ringed: Number(pricingState?.SMALL_ringed),
@@ -107,6 +113,13 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
     orientacion: orderToEdit.orientacion,
     finishing: orderToEdit.finishing,
   });
+
+  const handleSetResume = (newResume, colorAlert) => {
+    setResume(newResume);
+    if (colorAlert) {
+      setOpenColorAlertModal(true);
+    }
+  };
 
   useEffect(() => {
     dispatch(getPricing());
@@ -222,6 +235,34 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
 
   return (
     <div className="absolute h-screen w-screen flex flex-col justify-between ">
+      {openColorAlertModal ? (
+        <Dialog open={openColorAlertModal} onClose={handleColorAlert}>
+          <DialogTitle className="text-center relative">
+            Aviso cobertura color mayor 50%
+            <Button
+              onClick={handleColorAlert}
+              variant="text"
+              sx={{ position: "absolute", right: 0 }}
+            >
+              X
+            </Button>
+          </DialogTitle>
+          <DialogContent dividers className="flex flex-col gap-6">
+            <Typography>
+              Xiro se reserva el derecho de admisión con trabajos color cuya
+              cobertura sobre la hoja sea superior al 50% de la misma, pudiendo
+              la empresa hacer la devolución del dinero sin mediar comunicación
+              al respecto.
+            </Typography>
+            <Typography align="right">Muchas gracias.</Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleColorAlert} variant="outlined">
+              Aceptar
+            </Button>
+          </DialogActions>
+        </Dialog>
+      ) : null}
       {choosePlace ? (
         <ChoosePlaceModal
           choosePlace={choosePlace}
@@ -327,7 +368,6 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                       startIcon={
                         <UploadIcon sx={{ height: "1em", width: "1em" }} />
                       }
-                      className=" h-8 "
                     >
                       <span className="text-lg font-bold">Cargar archivos</span>
                       {!loading ? (
@@ -372,7 +412,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                   setHelpModal={setHelpModal}
                   currentSetting={currentSetting}
                   resume={resume}
-                  setResume={setResume}
+                  setResume={handleSetResume}
                 />
               </section>
             </section>
@@ -521,7 +561,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
             currentSetting={currentSetting}
             handleSettings={handleSettings}
             resume={resume}
-            setResume={setResume}
+            setResume={handleSetResume}
           />
         </section>
       </section>

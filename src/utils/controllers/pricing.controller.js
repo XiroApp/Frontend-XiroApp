@@ -1,7 +1,7 @@
 function pricingSetter(pricing, config) {
   const {
-    totalPages,
-    numberOfCopies,
+    totalPages: totalDePaginas,
+    numberOfCopies: numeroDeCopias,
     color,
     size,
     printWay,
@@ -27,7 +27,7 @@ function pricingSetter(pricing, config) {
   } = pricing;
 
   try {
-    let paper_price =
+    let precioPapel =
       size === "A4" && printWay === "Simple faz" && color === "BN"
         ? simple_do
         : size === "A4" && printWay === "Simple faz" && color === "Color"
@@ -54,18 +54,18 @@ function pricingSetter(pricing, config) {
         ? OF_double_does_color
         : simple_do;
 
-    let ringed =
+    let anillado =
       finishing === "Anillado"
-        ? totalPages <= 300
+        ? totalDePaginas <= 300
           ? SMALL_ringed
-          : totalPages > 300 && totalPages <= 800
+          : totalDePaginas > 300 && totalDePaginas <= 800
           ? BIG_ringed
-          : totalPages > 800
+          : totalDePaginas > 800
           ? SMALL_ringed * 2
           : BIG_ringed /* OJO PRECIO DEFAULT ?? */
         : 0;
 
-    let NcopiesPerPage =
+    let copiasPorCarilla =
       copiesPerPage === "Normal"
         ? 1
         : copiesPerPage === "2 copias"
@@ -75,7 +75,9 @@ function pricingSetter(pricing, config) {
         : 1;
 
     let price =
-      ((totalPages / NcopiesPerPage) * paper_price + ringed) * numberOfCopies;
+      // ((totalPages / NcopiesPerPage) * paper_price + ringed) * numberOfCopies;
+      ((totalDePaginas / copiasPorCarilla) * precioPapel + anillado) *
+      numeroDeCopias;
 
     // console.log(paper_price);
     // console.log(ringed);
@@ -92,4 +94,15 @@ function pricingSetter(pricing, config) {
   }
 }
 
-export { pricingSetter };
+function getDeliveryPricingByDistance(km, pricing) {
+  if (km >= 10) {
+    return pricing["distance_10_to_15"];
+  } else if (km < 10 && km > 5) {
+    return pricing["distance_5_to_10"];
+  } else if (km < 5) {
+    return pricing["distance_0_to_5"];
+  } else {
+    return pricing["distance_0_to_5"];
+  }
+}
+export { pricingSetter, getDeliveryPricingByDistance };

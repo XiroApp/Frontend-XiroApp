@@ -218,7 +218,7 @@ export function changeOrderStatus({
   report,
   editor,
 }) {
-  return async function (dispatch) {  
+  return async function (dispatch) {
     try {
       let response = await axios.post(
         `${baseUrl}/orders/edit/status/${idOrder}`,
@@ -391,10 +391,13 @@ export function getPricing() {
 }
 
 //--------------- EDIT PRICING --------------------
-export function editPricing(pricing) {
+export function editPricing(pricing, collection) {
   return async function (dispatch) {
     try {
-      let response = await axios.post(`${baseUrl}/pricing/paper`, pricing);
+      let response = await axios.post(
+        `${baseUrl}/pricing/${collection}`,
+        pricing
+      );
 
       dispatch({
         type: action.EDIT_PRICE,

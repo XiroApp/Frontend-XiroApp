@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper.js";
 import { UsersAdapter } from "../../../Infra/Adapters/users.adapter.js";
-import { ChevronLeftSharp } from "@mui/icons-material";
 
 const columns = [
   {

@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Link, Modal, NativeSelect } from "@mui/material";
+import {
+  Backdrop,
+  Box,
+  Button,
+  CircularProgress,
+  Link,
+  Modal,
+  NativeSelect,
+} from "@mui/material";
 import { FaMotorcycle as MopedIcon } from "react-icons/fa6";
 import { FaStore as StoreIcon } from "react-icons/fa6";
 import PlaceIcon from "@mui/icons-material/PlaceOutlined";
@@ -16,17 +24,24 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
   const [pickupUsers, setPickupUsers] = useState([]);
   const addresses = useSelector((state) => state.addresses);
   const place = useSelector((state) => state.place);
+  const [loading, setLoading] = useState(false);
 
   // const user = useSelector((state) => state.dataBaseUser);
 
   function handleChoice(e) {
-    if (resume?.place?.type && resume?.place?.address) {
-      dispatch(setOrderPlace(resume.place));
-      setChoosePlace(false);
-    } else if (!place) {
-      dispatch(setToast("Debes elegir una dirección de envío.", "error"));
-      setChoosePlace(false);
-    } else {
+    setLoading(true);
+    try {
+      if (resume?.place?.type && resume?.place?.address) {
+        dispatch(setOrderPlace(resume.place));
+      } else if (!place) {
+        dispatch(setToast("Debes elegir una dirección de envío.", "error"));
+      } else {
+        setChoosePlace(false);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
       setChoosePlace(false);
     }
   }
@@ -41,6 +56,14 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
 
   return (
     <>
+      {/* LOADER */}
+      {loading ? (
+        <Backdrop sx={{ color: "#fff", zIndex: "999999" }} open={loading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      ) : (
+        false
+      )}
       <Modal
         open={choosePlace}
         onClose={(e) => handleChoice(e)}

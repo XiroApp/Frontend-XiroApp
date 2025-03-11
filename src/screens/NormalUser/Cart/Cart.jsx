@@ -10,9 +10,7 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-// import MopedIcon from "@mui/icons-material/Moped";
 import { FaMotorcycle as MopedIcon } from "react-icons/fa6";
-// import StoreIcon from "@mui/icons-material/Store";
 import { FaStore as StoreIcon } from "react-icons/fa6";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -32,13 +30,13 @@ import ChoosePlaceModal from "../../../components/ChoosePlaceModal/ChoosePlaceMo
 import { Settings } from "../../../config";
 import axios from "axios";
 
-/* MERCADOPAGO */
+/* -------------------MERCADOPAGO---------------------- */
 const baseUrl = Settings.SERVER_URL;
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
-import { NativeSelect } from "@mui/material";
 import { ApiConstants } from "../../../Common/constants";
-
-/* ------------------------ */
+import { getDeliveryPricingByDistance } from "../../../utils/controllers/pricing.controller";
+import { Backdrop, CircularProgress } from "@mui/material";
+/* ---------------------------------------------------- */
 const steps = ["Detalles", "Resumen", "Pago"];
 const PUBLIC_KEY = ApiConstants.MERCADOPAGO_PUBLIC_KEY;
 
@@ -83,6 +81,7 @@ export default function Cart() {
     show: false,
     orderToEdit: null,
   });
+  const [loading, setLoading] = useState(false);
   const [choosePlace, setChoosePlace] = useState(false);
   const [editComment, setEditComment] = useState(false);
   const [cuponInput, setCuponInput] = useState(false);
@@ -102,7 +101,9 @@ export default function Cart() {
       setShipment(500); // PELIGRO! CAMBIAR POR PRECIO DE DB NUEVO DE RETIROS EN PUNTO DE ENTREGA
       setDelivery_distance(distance);
     } else {
-      setShipment(pricing.delivery_km * (distance?.value / 1000));
+      let km_value = distance?.value / 1000;
+      let price_per_km = getDeliveryPricingByDistance(km_value, pricing);
+      setShipment(price_per_km * km_value);
       setDelivery_distance(distance);
     }
   }, [place]);
@@ -207,6 +208,7 @@ export default function Cart() {
         shipment_price: shipment,
         subtotal_price: subtotal,
         coupon_used: coupon,
+        description: orderToSend.description,
         distance: delivery_distance,
         availability: orderToSend.availability,
       });
@@ -237,6 +239,17 @@ export default function Cart() {
 
   return (
     <div className={"h-screen w-screen flex flex-col items-center"}>
+      {/* LOADER */}
+      {loading ? (
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      ) : (
+        false
+      )}
       {showEditModal.show ? (
         <EditOrderModal
           orderToEdit={showEditModal.orderToEdit}
@@ -295,16 +308,16 @@ export default function Cart() {
                       <div className="flex  flex-col gap-4">
                         {/* 1 */}
                         <div className="flex flex-col gap-3">
-                          <section className="flex items-center">
+                          <section className="flex items-center border-b border-[#789360] pb-2 gap-2">
                             <img
                               src={xiro_outline_green}
                               alt=""
                               className="w-8 h-8 object-contain"
                             />
-                            <span className="w-8 h-8 p-2 flex items-center justify-center rounded-full">
-                              1
-                            </span>
-                            <span>Personalización de archivos</span>
+                            <Typography variant="h6">1</Typography>
+                            <Typography variant="h6">
+                              Personalización de archivos
+                            </Typography>
                           </section>
                           <section className="flex h-full gap-4 overflow-auto">
                             {cart?.map((order, index) => (
@@ -317,30 +330,30 @@ export default function Cart() {
                               />
                             ))}
                           </section>
-                          <Link to="/imprimir">
-                            <span className="text-[#789360] text-[14px] hover:text-green-700 underline">
-                              +Agregar más productos
-                            </span>
+                          <Link to="/imprimir" className="w-fit">
+                            <Button variant="text">
+                              <Typography className="hover:underline">
+                                +Agregar más productos
+                              </Typography>
+                            </Button>
                           </Link>
                         </div>
                         {/* 2 */}
                         <div className="flex flex-col gap-3">
-                          <section className="flex gap-2 justify-between items-center">
-                            <section className="flex items-center">
-                              <img
-                                src={xiro_outline_green}
-                                alt=""
-                                className="w-8 h-8 object-contain"
-                              />
-                              <span className=" w-8 h-8 p-2 flex items-center justify-center rounded-full">
-                                2
-                              </span>
-                              <span>Forma de entrega</span>
-                            </section>
+                          <section className="flex items-center border-b border-[#789360] pb-2 gap-2">
+                            <img
+                              src={xiro_outline_green}
+                              alt=""
+                              className="w-8 h-8 object-contain"
+                            />
+                            <Typography variant="h6">2</Typography>
+                            <Typography variant="h6">
+                              Forma de entrega
+                            </Typography>
                           </section>
                           <section className="flex flex-col gap-5">
-                            <div className="flex flex-col gap-1 border border-gray-500 rounded-md p-3">
-                              <div className="flex  justify-between items-center ">
+                            <div className="flex flex-col gap-1 border-2 border-[#789360] rounded-md p-3 shadow-xl drop-shadow-xl">
+                              <div className="flex  justify-between items-center">
                                 <div className="flex flex-col justify-center">
                                   <span className="text-[16px] text-black ">
                                     {place?.address?.name ||
@@ -388,7 +401,7 @@ export default function Cart() {
                           </section>
                         </div>
                         {/* 3 */}
-                        <div>
+                        {/* <div>
                           <section className="flex items-center">
                             <img
                               src={xiro_outline_green}
@@ -418,19 +431,17 @@ export default function Cart() {
                               </option>
                             </NativeSelect>
                           </section>
-                        </div>
+                        </div> */}
                         {/* 4 */}
                         <div className="flex flex-col gap-3">
-                          <section className="flex items-center">
+                          <section className="flex items-center border-b border-[#789360] pb-2 gap-2">
                             <img
                               src={xiro_outline_green}
                               alt=""
                               className="w-8 h-8 object-contain"
                             />
-                            <span className=" w-8 h-8 p-2 flex items-center justify-center rounded-full">
-                              4
-                            </span>
-                            <span>Comentarios</span>
+                            <Typography variant="h6">3</Typography>
+                            <Typography variant="h6">Comentarios</Typography>
                           </section>
                           <section className="flex flex-col justify-start">
                             <span className="text-[14px] font-[400]">
@@ -495,7 +506,7 @@ export default function Cart() {
                               {`${orderToSend?.place?.address?.name} N°${orderToSend?.place?.address?.number}, ${orderToSend?.place?.address?.locality}, ${orderToSend?.place?.address?.city}`}
                             </span>
                           </section>
-                          <section className="flex flex-col">
+                          {/* <section className="flex flex-col">
                             <span className="opacitytext-[16px] font-[400]">
                               Preferencia horaria (El horario concreto se
                               coordinará por WhatsApp)
@@ -505,7 +516,7 @@ export default function Cart() {
                                 De {orderToSend.availability}
                               </span>
                             </section>
-                          </section>
+                          </section> */}
                           <section className="flex flex-col">
                             <div className="flex justify-between">
                               <span className="opacitytext-[16px] font-[400] mb-1">
@@ -650,7 +661,7 @@ export default function Cart() {
                         </span>
                         <button
                           onClick={handleBuy}
-                          className="flex justify-between border border-gray-400 p-8 rounded-md hover:bg-[#789360] hover:border-black"
+                          className="flex justify-between border-2  border-gray-400 p-8 rounded-md hover:bg-[#789360] hover:text-white hover:border-black"
                         >
                           <span>Mercado Pago</span>
                           <span className="text-[20px] font-[600]">{">"}</span>
@@ -718,9 +729,9 @@ export default function Cart() {
                   </section>
                   <Box className="bg-[#fff] rounded-b-md p-4 flex justify-between items-center">
                     <section onClick={(e) => handleDeleteCart(e)}>
-                      <button className="text-[#789360] text-[14px] hover:text-black underline">
+                      <Button variant="text" color="error">
                         Vaciar carrito
-                      </button>
+                      </Button>
                     </section>
                     <section>
                       {activeStep === 0 ? false : false}

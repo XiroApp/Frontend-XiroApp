@@ -798,7 +798,7 @@ export function setOrderPlace(place) {
 export function getPricing() {
   return async function (dispatch) {
     try {
-      let response = await axios.get(`${baseUrl}/pricing/paper`);
+      let response = await axios.get(`${baseUrl}/pricing`);
 
       return dispatch({
         type: action.SET_PRICE,

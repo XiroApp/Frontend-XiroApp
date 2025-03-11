@@ -30,15 +30,14 @@ import {
   DialogContentText,
   DialogTitle,
   Modal,
+  Typography,
 } from "@mui/material";
-
 import NewOrderSettings from "../../../components/NewOrderSettings/NewOrderSettings";
 import SettingButtons from "../../../components/NewOrderSettings/SettingButtons";
 import ChoosePlaceModal from "../../../components/ChoosePlaceModal/ChoosePlaceModal";
 import NewOrderSettingsDesktop from "../../../components/NewOrderSettings/NewOrderSettingsDesktop";
 import DefaultSnack from "../../../components/Snackbars/DefaultSnack";
 import { useNavigate } from "react-router-dom";
-import Chatbot from "../../../components/Chatbot/Chatbot";
 import { pricingSetter } from "../../../utils/controllers/pricing.controller.js";
 
 const VisuallyHiddenInput = styled("input")({
@@ -78,6 +77,11 @@ export default function NewOrder() {
   const [review, setReview] = useState(false);
   const [newFiles, setNewFiles] = useState([]); //files converted to PDF.
   const [currentSetting, setCurrentSetting] = useState("numberOfCopies");
+  const [openColorAlertModal, setOpenColorAlertModal] = useState(false);
+  const handleColorAlert = () => {
+    setOpenColorAlertModal(!openColorAlertModal);
+  };
+
   const [pricing, setPricing] = useState({
     BIG_ringed: Number(pricingState?.BIG_ringed),
     SMALL_ringed: Number(pricingState?.SMALL_ringed),
@@ -107,6 +111,13 @@ export default function NewOrder() {
     orientacion: "Vertical",
     finishing: "Sin anillado",
   });
+
+  const handleSetResume = (newResume, colorAlert) => {
+    setResume(newResume);
+    if (colorAlert) {
+      setOpenColorAlertModal(true);
+    }
+  };
 
   useEffect(() => {
     dispatch(getPricing());
@@ -231,14 +242,41 @@ export default function NewOrder() {
   return (
     <div className="h-screen w-screen flex flex-col justify-between ">
       {/* {loading ? <FilesLoader progressValue={newFiles?.length || 0} /> : false} */}
+
+      {openColorAlertModal ? (
+        <Dialog open={openColorAlertModal} onClose={handleColorAlert}>
+          <DialogTitle className="text-center relative">
+            Aviso cobertura color mayor 50%
+            <Button
+              onClick={handleColorAlert}
+              variant="text"
+              sx={{ position: "absolute", right: 0 }}
+            >
+              X
+            </Button>
+          </DialogTitle>
+          <DialogContent dividers className="flex flex-col gap-6">
+            <Typography>
+              Xiro se reserva el derecho de admisión con trabajos color cuya
+              cobertura sobre la hoja sea superior al 50% de la misma, pudiendo
+              la empresa hacer la devolución del dinero sin mediar comunicación
+              al respecto.
+            </Typography>
+            <Typography align="right">Muchas gracias.</Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleColorAlert} variant="outlined">
+              Aceptar
+            </Button>
+          </DialogActions>
+        </Dialog>
+      ) : null}
       {choosePlace ? (
         <ChoosePlaceModal
           choosePlace={choosePlace}
           setChoosePlace={setChoosePlace}
         />
-      ) : (
-        false
-      )}
+      ) : null}
 
       <Navbar title="Nuevo pedido" loggedUser={user} cart={cart} />
       {/* <Chatbot /> */}
@@ -337,7 +375,6 @@ export default function NewOrder() {
                       startIcon={
                         <UploadIcon sx={{ height: "1em", width: "1em" }} />
                       }
-                      className=" h-8 "
                     >
                       <span className="text-lg font-bold">Cargar archivos</span>
                       {!loading ? (
@@ -381,7 +418,7 @@ export default function NewOrder() {
                   setHelpModal={setHelpModal}
                   currentSetting={currentSetting}
                   resume={resume}
-                  setResume={setResume}
+                  setResume={handleSetResume}
                 />
               </section>
             </section>
@@ -429,9 +466,13 @@ export default function NewOrder() {
                 >
                   <Box sx={{ ...style, width: 400 }}>
                     <section className="border-b border-gray-600 p-4 ">
-                      <h2 id="parent-modal-title" className="text-center ">
+                      <Typography
+                      variant="h6"
+                        id="parent-modal-title"
+                        className="text-center"
+                      >
                         Tu pedido
-                      </h2>
+                      </Typography>
                     </section>
                     <section className="flex flex-col px-5 py-10 gap-10">
                       <div className="flex justify-between">
@@ -482,22 +523,16 @@ export default function NewOrder() {
                       <Button
                         variant="text"
                         color="primary"
-                        className="text-sm font-light"
                         onClick={(e) => setReview(false)}
                       >
-                        <span className="text-[#fff]">
-                          Editar mi pedido {">"}
-                        </span>
+                        {"< "}Editar mi pedido
                       </Button>
                       <Button
                         variant="contained"
                         color="primary"
-                        className="text-sm font-light"
                         onClick={(e) => handleSetOrder(e)}
                       >
-                        <span className="text-sm font-light">
-                          Aceptar y agregar
-                        </span>
+                        Aceptar y agregar
                       </Button>
                     </section>
                   </Box>
@@ -540,7 +575,10 @@ export default function NewOrder() {
           </section>
         </div>
         <section className="hidden lg:flex lg:flex-col p-4">
-          <NewOrderSettingsDesktop resume={resume} setResume={setResume} />
+          <NewOrderSettingsDesktop
+            resume={resume}
+            setResume={handleSetResume}
+          />
         </section>
       </section>
 
