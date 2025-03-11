@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function DefaultSnack({ content = [] }) {
+export default function DefaultSnack({ content = "" }) {
   const [open, setOpen] = useState(true);
 
   const handleClose = () => {
