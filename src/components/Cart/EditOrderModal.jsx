@@ -39,7 +39,11 @@ import SettingButtons from "../../components/NewOrderSettings/SettingButtons";
 import ChoosePlaceModal from "../../components/ChoosePlaceModal/ChoosePlaceModal";
 import NewOrderSettingsDesktop from "../../components/NewOrderSettings/NewOrderSettingsDesktop";
 import DefaultSnack from "../Snackbars/DefaultSnack";
-import { pricingSetter } from "../../utils/controllers/pricing.controller";
+import {
+  pricingSetter,
+  validateFileSize,
+} from "../../utils/controllers/pricing.controller";
+import { useNavigate } from "react-router-dom";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -65,6 +69,7 @@ const style = {
 
 export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector((state) => state.dataBaseUser);
   const cart = useSelector((state) => state.cart);
   const pricingState = useSelector((state) => state.pricing);
@@ -162,46 +167,60 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
   function handleSettings(e) {
     setCurrentSetting(e.target.name);
   }
+
   async function handleSubmit(e) {
     e.preventDefault();
     e.persist();
     const files = e.target.files;
-
-    const formData = new FormData();
+    const maxSizeMB = 2; // Tamaño máximo permitido en megabytes
 
     try {
       setLoading(true);
       let newArray = [];
-      for (let i = 0; i < files.length; i++) {
-        let result = validatePDFFile(files[i].name);
+
+      const uploadPromises = Array.from(files).map(async (file) => {
+        if (!validateFileSize(file, maxSizeMB)) {
+          dispatch(
+            setToast(`El archivo no puede superar los ${maxSizeMB}MB`, "error")
+          );
+          return; // Salta este archivo si la validación falla
+        }
+
+        const formData = new FormData();
+        let result = validatePDFFile(file.name);
 
         if (result === false) {
-          formData.append("files", files[i]);
-          await dispatch(uploadMulter(formData))
-            .then((newDocumentsName) =>
-              newDocumentsName.map((doc) => newArray.push(doc))
-            )
-            .catch((error) =>
-              dispatch(setToast("Error al subir el archivo", "error"))
-            );
-          // .finally(() => {
-          //   setLoading(false);
-          // });
+          formData.append("files", file);
+          try {
+            const newDocumentsName = await dispatch(uploadMulter(formData));
+            newDocumentsName.map((doc) => newArray.push(doc));
+          } catch (error) {
+            dispatch(setToast("Error al subir el archivo", "error"));
+            console.error("Error al subir el archivo:", error);
+            // throw error; // Re-lanza el error para que el catch principal lo capture
+          }
         } else {
-          let uploadedFile = await uploadFile(files[i]);
-
-          newArray.unshift(uploadedFile);
-          // setLoading(false);
+          try {
+            const uploadedFile = await uploadFile(file);
+            newArray.unshift(uploadedFile);
+          } catch (error) {
+            console.error("Error al cargar el archivo localmente:", error);
+            // throw error; // Re-lanza el error para que el catch principal lo capture
+          }
         }
-      }
+      });
+
+      await Promise.all(uploadPromises); // Espera a que todas las cargas se completen
+
       setNewFiles([...newFiles, newArray].flat(4));
-      // setLoading(false)
     } catch (error) {
-      console.error(error);
-      alert("error subiendo archivo");
+      alert("Error general al subir archivos. Consulta la consola.");
+      console.error("Error general:", error);
+    } finally {
       setLoading(false);
     }
   }
+
   function handleResetOrderModal(e) {
     setResetModal(true);
   }
@@ -355,10 +374,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                 </section>
               </div>
               <div className="flex h-1/2 md:h-full md:justify-center md:gap-1 justify-between md:flex-col ">
-                <form
-                  encType="multipart/form-data"
-                  onSubmit={(e) => handleSubmit(e)}
-                >
+                <form encType="multipart/form-data">
                   <div className="flex items-center justify-center">
                     <LoadingButton
                       loading={loading}
@@ -376,6 +392,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                           type="file"
                           name="file"
                           id="uploadInput"
+                          accept=".pdf, .doc, .docx, .xls, .xlsx, image/*, .txt"
                           onChange={(e) => handleSubmit(e)}
                         />
                       ) : (
@@ -419,30 +436,24 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
           </div>
           {/* ------------------------------------------PDF VIEWER------------------------------ */}
           <section className="w-full h-full">
-            <DefaultSnack
-              content={
-                labels?.find((label) => label.id === "snackbar_new_order_info")
-                  .content
-              }
-            />
+            <DefaultSnack content={labels?.snackbar_new_order_info} />
+
             {newFiles && newFiles?.length > 0 ? (
-              <div className="flex flex-col items-center justify-center h-[26em] lg:h-[32em]">
-                <section className="flex justify-center w-full h-full rounded-lg px-6">
-                  <div className="flex flex-col items-start rounded-lg overflow-x-auto w-full md:w-full ">
-                    <div className="flex justify-start md:justify-center gap-8 md:flex-wrap">
+              <div className="flex flex-col items-center justify-center">
+                <section className="flex justify-center w-screen h-full rounded-lg lg:px-6 lg:w-full">
+                  <div className="flex flex-col items-start rounded-lg overflow-x-auto w-full md:w-full px-6 py-4">
+                    <div className="flex justify-start  gap-8">
                       {newFiles.map((newFile, index) => (
-                        <>
-                          <PDFViewer
-                            key={index + newFile}
-                            index={index}
-                            newFile={newFile}
-                            resume={resume}
-                            setResume={setResume}
-                            setNewFiles={setNewFiles}
-                            newFiles={newFiles}
-                            setLoading={setLoading}
-                          />
-                        </>
+                        <PDFViewer
+                          key={index + newFile}
+                          index={index}
+                          newFile={newFile}
+                          resume={resume}
+                          setResume={setResume}
+                          setNewFiles={setNewFiles}
+                          newFiles={newFiles}
+                          setLoading={setLoading}
+                        />
                       ))}
                     </div>
                   </div>
@@ -453,55 +464,59 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                   onClose={() => setReview(false)}
                   aria-labelledby="parent-modal-title"
                   aria-describedby="parent-modal-description"
+                  className=""
                 >
                   <Box sx={{ ...style, width: 400 }}>
                     <section className="border-b border-gray-600 p-4 ">
-                      <h2 id="parent-modal-title" className="text-center ">
+                      <Typography
+                        variant="h6"
+                        id="parent-modal-title"
+                        className="text-center"
+                      >
                         Tu pedido
-                      </h2>
+                      </Typography>
                     </section>
                     <section className="flex flex-col px-5 py-10 gap-10">
-                      VER PLACE
                       <div className="flex justify-between">
-                        <span className="font-[300]">Copias</span>
-                        <span className="opacity-70 font-[300]">
+                        <span className="font-[500]">Copias</span>
+                        <span className="opacity-70 font-[500]">
                           {" "}
                           {resume.numberOfCopies}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="font-[300]">Color</span>
-                        <span className="opacity-70 font-[300]">
+                        <span className="font-[500]">Color</span>
+                        <span className="opacity-70 font-[500]">
                           {resume.color}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="font-[300]">Tamaño</span>
-                        <span className="opacity-70 font-[300]">
+                        <span className="font-[500]">Tamaño</span>
+                        <span className="opacity-70 font-[500]">
                           {resume.size}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="font-[300]">Forma de impresión</span>
-                        <span className="opacity-70 font-[300]">
+                        <span className="font-[500]">Forma de impresión</span>
+                        <span className="opacity-70 font-[500]">
                           {resume.printWay}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="font-[300]">Copias por carilla</span>
-                        <span className="opacity-70 font-[300]">
+                        <span className="font-[500]">Copias por carilla</span>
+                        <span className="opacity-70 font-[500]">
                           {resume.copiesPerPage}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="font-[300]">Orientación</span>
-                        <span className="opacity-70 font-[300]">
+                        <span className="font-[500]">Orientación</span>
+                        <span className="opacity-70 font-[500]">
                           {resume.orientacion}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="font-[300]">Anillado</span>
-                        <span className="opacity-70 font-[300]">
+                        <span className="font-[500]">Anillado</span>
+                        <span className="opacity-70 font-[500]">
                           {resume.finishing}
                         </span>
                       </div>
@@ -510,22 +525,16 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
                       <Button
                         variant="text"
                         color="primary"
-                        className="text-sm font-light"
                         onClick={(e) => setReview(false)}
                       >
-                        <span className="text-[#fff]">
-                          Editar mi pedido {">"}
-                        </span>
+                        {"< "}Editar mi pedido
                       </Button>
                       <Button
                         variant="contained"
                         color="primary"
-                        className="text-sm font-light"
                         onClick={(e) => handleSetOrder(e)}
                       >
-                        <span className="text-sm font-light">
-                          Aceptar y agregar
-                        </span>
+                        Aceptar y agregar
                       </Button>
                     </section>
                   </Box>

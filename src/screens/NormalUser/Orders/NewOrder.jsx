@@ -164,7 +164,7 @@ export default function NewOrder() {
     setCurrentSetting(e.target.name);
   }
 
-  async function handleSubmit(e, origin) {
+  async function handleSubmit(e) {
     e.preventDefault();
     e.persist();
     const files = e.target.files;

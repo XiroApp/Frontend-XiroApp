@@ -171,14 +171,19 @@ export default function OrderCard({
           <section className="flex flex-col px-5 py-10 gap-10">
             {order?.files?.map((file, index) => (
               <div key={index} className="flex justify-between">
-                <span className="text-[12px] font-[500]">{file.slice(11)}</span>
+                <span className="text-[12px] font-[500]">
+                  {" "}
+                  {file?.slice(20).length > 37
+                    ? `${file?.slice(20, 25)}...`
+                    : `${file?.slice(20, -4)}`}
+                </span>
                 <Tooltip placement="top" title="Ver en pantalla completa">
                   <a
                     target="_blank"
                     href={`https://firebasestorage.googleapis.com/v0/b/xiro-app-2ec87.firebasestorage.app/o/${file}?alt=media&token=e7b0f280-413a-4546-aa2b-da0cd3523289`}
                   >
                     <VisibilityIcon
-                      className="hover:bg-gray-500 rounded-lg"
+                      className="hover:bg-green-700 rounded-lg"
                       sx={{ height: "0.7em", width: "0.7em" }}
                     />
                   </a>

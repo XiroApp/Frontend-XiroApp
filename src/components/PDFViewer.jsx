@@ -98,8 +98,8 @@ const PDFViewer = ({
           </div>
         </section>
         <span className="text-[10px] ">
-          {newFile?.slice(20).length > 37
-            ? `${newFile?.slice(20, 40)}...`
+          {newFile?.slice(20).length > 35
+            ? `${newFile?.slice(20, 46)}...`
             : `${newFile?.slice(20, -4)}`}
         </span>
         <section className="flex justify-center items-center gap-6">
