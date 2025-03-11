@@ -425,12 +425,7 @@ export default function NewOrder() {
           </div>
           {/* ------------------------------------------PDF VIEWER------------------------------ */}
           <section className="w-full h-full">
-            <DefaultSnack
-              content={
-                labels?.find((label) => label.id === "snackbar_new_order_info")
-                  ?.content
-              }
-            />
+            <DefaultSnack content={labels.snackbar_new_order_info} />
             {/* {loadingCard?.length > 0 ? (
               <div className="pulse bg-red-500">Cargando</div>
             ) : (
@@ -467,7 +462,7 @@ export default function NewOrder() {
                   <Box sx={{ ...style, width: 400 }}>
                     <section className="border-b border-gray-600 p-4 ">
                       <Typography
-                      variant="h6"
+                        variant="h6"
                         id="parent-modal-title"
                         className="text-center"
                       >

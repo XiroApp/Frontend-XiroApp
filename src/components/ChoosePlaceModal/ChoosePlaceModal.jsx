@@ -100,16 +100,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               />
               <span className="text-[14px] font-bold">Envío a domicilio</span>
               <div className="flex flex-col">
-                {!!labels
-                  ? labels
-                      ?.find((label) => label.id === "delivery_description")
-                      .content?.split("//")
-                      .map((text, index) => (
-                        <p key={index} className="text-sm">
-                          {text}
-                        </p>
-                      ))
-                  : false}
+                {labels?.delivery_description}
               </div>
             </button>
             <button
@@ -135,18 +126,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                 Retiro en punto cercano
               </span>
               <div className="flex flex-col">
-                {!!labels
-                  ? labels
-                      ?.find(
-                        (label) => label.id === "pick_up_point_description"
-                      )
-                      .content?.split("//")
-                      .map((text, index) => (
-                        <p key={index} className="text-sm">
-                          {text}
-                        </p>
-                      ))
-                  : false}
+                {labels?.pick_up_point_description}
               </div>
             </button>
           </section>
