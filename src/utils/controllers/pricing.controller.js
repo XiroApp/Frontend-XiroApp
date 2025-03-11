@@ -105,4 +105,17 @@ function getDeliveryPricingByDistance(km, pricing) {
     return pricing["distance_0_to_5"];
   }
 }
-export { pricingSetter, getDeliveryPricingByDistance };
+
+function validateFileSize(file, maxSizeMB) {
+  const maxSize = maxSizeMB * 1024 * 1024; // Tamaño máximo en bytes
+
+  if (file.size > maxSize) {
+    // alert(
+    //   `El archivo "${file.name}" excede el tamaño máximo permitido de ${maxSizeMB} MB.`
+    // );
+    return false; // Indica que la validación falló
+  }
+
+  return true; // Indica que la validación fue exitosa
+}
+export { pricingSetter, getDeliveryPricingByDistance ,validateFileSize};

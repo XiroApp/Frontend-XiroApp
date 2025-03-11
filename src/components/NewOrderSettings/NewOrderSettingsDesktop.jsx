@@ -34,7 +34,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
   };
 
   return (
-    <div className="bg-[#fff] relative h-full w-full p-4 flex flex-col gap-4 rounded-xl text-white">
+    <div className="bg-[#fff] relative max-h-[85vh] w-full p-4 flex flex-col gap-4 rounded-xl text-white overflow-y-auto">
       <NewOrderSettingsHelpDesktop
         helpModal={helpModalDesktop}
         setHelpModal={setHelpModalDesktop}
@@ -112,10 +112,13 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
                   : "flex flex-col items-center w-24 justify-center px-1  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
-                setResume({
-                  ...resume,
-                  ["color"]: "Color",
-                })
+                setResume(
+                  {
+                    ...resume,
+                    ["color"]: "Color",
+                  },
+                  true
+                )
               }
             >
               <span className="text-[12px] ">Color</span>

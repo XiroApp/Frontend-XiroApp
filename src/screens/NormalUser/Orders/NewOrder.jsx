@@ -38,7 +38,7 @@ import ChoosePlaceModal from "../../../components/ChoosePlaceModal/ChoosePlaceMo
 import NewOrderSettingsDesktop from "../../../components/NewOrderSettings/NewOrderSettingsDesktop";
 import DefaultSnack from "../../../components/Snackbars/DefaultSnack";
 import { useNavigate } from "react-router-dom";
-import { pricingSetter } from "../../../utils/controllers/pricing.controller.js";
+import { pricingSetter, validateFileSize } from "../../../utils/controllers/pricing.controller.js";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -160,48 +160,58 @@ export default function NewOrder() {
   function handleSettings(e) {
     setCurrentSetting(e.target.name);
   }
-  async function handleSubmit(e) {
-    e.preventDefault();
+
+  async function handleSubmit(e, origin) {
+        e.preventDefault();
     e.persist();
     const files = e.target.files;
-
-    const formData = new FormData();
+    const maxSizeMB = 50; // Tamaño máximo permitido en megabytes
 
     try {
       setLoading(true);
       let newArray = [];
-      for (let i = 0; i < files?.length; i++) {
-        let result = validatePDFFile(files[i].name);
-        // setLoadingCard([...loadingCard, ["Cargando"]].flat(4));
-        if (result === false) {
-          formData.append("files", files[i]);
-          await dispatch(uploadMulter(formData))
-            .then((newDocumentsName) =>
-              newDocumentsName.map((doc) => newArray.push(doc))
-            )
-            .catch((error) =>
-              dispatch(setToast("Error al subir el archivo", "error"))
-            );
-          // .finally(() => {
-          //   setLoading(false);
-          //   // setLoadingCard([]);
-          // });
-        } else {
-          let uploadedFile = await uploadFile(files[i]);
 
-          newArray.unshift(uploadedFile);
-          // setLoading(false);
-          // setLoadingCard([]);
+      const uploadPromises = Array.from(files).map(async (file) => {
+        if (!validateFileSize(file, maxSizeMB)) {
+          dispatch(setToast("El archivo no puede superar los 50MB", "error"));
+          return; // Salta este archivo si la validación falla
         }
-      }
+
+        const formData = new FormData();
+        let result = validatePDFFile(file.name);
+
+        if (result === false) {
+          formData.append("files", file);
+          try {
+            const newDocumentsName = await dispatch(uploadMulter(formData));
+            newDocumentsName.map((doc) => newArray.push(doc));
+          } catch (error) {
+            dispatch(setToast("Error al subir el archivo", "error"));
+            console.error("Error al subir el archivo:", error);
+            // throw error; // Re-lanza el error para que el catch principal lo capture
+          }
+        } else {
+          try {
+            const uploadedFile = await uploadFile(file);
+            newArray.unshift(uploadedFile);
+          } catch (error) {
+            console.error("Error al cargar el archivo localmente:", error);
+            // throw error; // Re-lanza el error para que el catch principal lo capture
+          }
+        }
+      });
+
+      await Promise.all(uploadPromises); // Espera a que todas las cargas se completen
+
       setNewFiles([...newFiles, newArray].flat(4));
-      // setLoading(false)
     } catch (error) {
-      alert("error subiendo archivo");
+      alert("Error general al subir archivos. Consulta la consola.");
+      console.error("Error general:", error);
+    } finally {
       setLoading(false);
-      // setLoadingCard([]);
     }
   }
+
   function handleResetOrderModal(e) {
     setResetModal(true);
   }
@@ -362,10 +372,7 @@ export default function NewOrder() {
                 </section>
               </div>
               <div className="flex h-1/2 md:h-full md:justify-center md:gap-1 justify-between md:flex-col ">
-                <form
-                  encType="multipart/form-data"
-                  onSubmit={(e) => handleSubmit(e)}
-                >
+                <form encType="multipart/form-data">
                   <div className="flex items-center justify-center">
                     <LoadingButton
                       loading={loading}
@@ -382,6 +389,7 @@ export default function NewOrder() {
                           type="file"
                           name="file"
                           id="uploadInput"
+                          accept=".pdf, .doc, .docx, .xls, .xlsx, image/*, .txt"
                           onChange={(e) => handleSubmit(e)}
                         />
                       ) : (
@@ -405,7 +413,7 @@ export default function NewOrder() {
             </section>
             <section className="lg:hidden flex flex-col lg:w-1/2 ">
               {/* -------------SETTING BUTTONS-------------- */}
-              <section className="w-full ">
+              <section className="w-full">
                 <SettingButtons
                   handleSettings={handleSettings}
                   currentSetting={currentSetting}
@@ -432,10 +440,10 @@ export default function NewOrder() {
               false
             )} */}
             {newFiles && newFiles?.length > 0 ? (
-              <div className="flex flex-col items-center justify-center h-[26em] lg:h-[32em]">
-                <section className="flex justify-center w-full h-full rounded-lg px-6">
-                  <div className="flex flex-col items-start rounded-lg overflow-x-auto w-full md:w-full ">
-                    <div className="flex justify-start md:justify-center gap-8 md:flex-wrap">
+              <div className="flex flex-col items-center justify-center">
+                <section className="flex justify-center w-screen h-full rounded-lg lg:px-6 lg:w-full">
+                  <div className="flex flex-col items-start rounded-lg overflow-x-auto w-full md:w-full px-6 py-4">
+                    <div className="flex justify-start  gap-8">
                       {newFiles.map((newFile, index) => (
                         <PDFViewer
                           key={index + newFile}
@@ -569,6 +577,7 @@ export default function NewOrder() {
             )}
           </section>
         </div>
+        {/* MENÚ DESKTOP */}
         <section className="hidden lg:flex lg:flex-col p-4">
           <NewOrderSettingsDesktop
             resume={resume}
