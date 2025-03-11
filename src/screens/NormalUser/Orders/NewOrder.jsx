@@ -425,7 +425,7 @@ export default function NewOrder() {
           </div>
           {/* ------------------------------------------PDF VIEWER------------------------------ */}
           <section className="w-full h-full">
-            <DefaultSnack content={labels.snackbar_new_order_info} />
+            <DefaultSnack content={labels?.snackbar_new_order_info} />
             {/* {loadingCard?.length > 0 ? (
               <div className="pulse bg-red-500">Cargando</div>
             ) : (
