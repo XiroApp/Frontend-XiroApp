@@ -103,7 +103,7 @@ export default function Cart() {
     } else {
       let km_value = distance?.value / 1000;
       let price_per_km = getDeliveryPricingByDistance(km_value, pricing);
-      setShipment(price_per_km * km_value);
+      setShipment(price_per_km);
       setDelivery_distance(distance);
     }
   }, [place]);
@@ -113,7 +113,7 @@ export default function Cart() {
       ? setTotal(
           subtotal + shipment - (subtotal * (coupon?.ammount / 100) || 0)
         )
-      : setTotal(subtotal + shipment - (coupon?.ammount || 0));
+      : setTotal(subtotal - (coupon?.ammount || 0) + shipment);
   }, [shipment, coupon]);
 
   const isStepOptional = (step) => {

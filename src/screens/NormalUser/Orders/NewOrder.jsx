@@ -152,7 +152,7 @@ export default function NewOrder() {
   }, [newFiles]);
 
   useEffect(() => {
-    let newTotal = pricingSetter(pricing, resume);
+    let newTotal = pricingSetter(pricing, resume, newFiles.length);
     if (!isNaN(newTotal)) {
       setPricing({ ...pricing, ["total"]: Number(newTotal) });
     } else {
@@ -168,7 +168,7 @@ export default function NewOrder() {
     e.preventDefault();
     e.persist();
     const files = e.target.files;
-    const maxSizeMB = 2; // Tamaño máximo permitido en megabytes
+    const maxSizeMB = 500; // Tamaño máximo permitido en megabytes
 
     try {
       setLoading(true);
@@ -176,7 +176,9 @@ export default function NewOrder() {
 
       const uploadPromises = Array.from(files).map(async (file) => {
         if (!validateFileSize(file, maxSizeMB)) {
-          dispatch(setToast(`El archivo no puede superar los ${maxSizeMB}MB`, "error"));
+          dispatch(
+            setToast(`El archivo no puede superar los ${maxSizeMB}MB`, "error")
+          );
           return; // Salta este archivo si la validación falla
         }
 
@@ -321,7 +323,7 @@ export default function NewOrder() {
                 place?.type === undefined ? (
                   <button
                     onClick={(e) => setChoosePlace(true)}
-                    className="flex flex-col gap-1 items-center justify-center px-2 text-white rounded-md bg-[#789360] hover:bg-[#61774d]"
+                    className="flex flex-col gap-1 items-center justify-center px-2 text-black rounded-md border-2 border-[#789360] hover:bg-[#61774d]"
                   >
                     <div className="flex justify-center items-center gap-1">
                       <MopedIcon style={{ height: "1.5em", width: "1.5em" }} />
@@ -331,7 +333,7 @@ export default function NewOrder() {
                 ) : (
                   <button
                     onClick={(e) => setChoosePlace(true)}
-                    className="flex flex-col gap-1 items-center justify-center px-2 rounded-md text-white hover:bg-[#61774d] bg-[#789360]"
+                    className="flex flex-col gap-1 items-center justify-center px-2 rounded-md text-black hover:bg-[#61774d] border-2 border-[#789360]"
                   >
                     <div className="flex justify-center items-center gap-1">
                       <StoreIcon style={{ height: "1.5em", width: "1.5em" }} />
@@ -364,7 +366,7 @@ export default function NewOrder() {
                   </div>
                   <span className="text-[14px]">Páginas</span>
                 </section>
-                <section className="flex flex-col gap-1 items-center justify-center px-2 ">
+                <section className="flex flex-col gap-1 items-center justify-center px-2 font-bold border-2 rounded-lg p-2 bg-[#799361] text-black shadow-xl">
                   <div className="flex justify-center items-center gap-1">
                     <PrintSharpIcon
                       style={{ height: "1.5em", width: "1.5em" }}

@@ -172,7 +172,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
     e.preventDefault();
     e.persist();
     const files = e.target.files;
-    const maxSizeMB = 2; // Tamaño máximo permitido en megabytes
+    const maxSizeMB = 500; // Tamaño máximo permitido en megabytes
 
     try {
       setLoading(true);

@@ -420,7 +420,9 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
                   }
                 >
                   <span className="text-[12px] ">Agrupado</span>
-                  <span className="text-[10px] opacity-70 ">Todos juntos</span>
+                  <span className="text-[10px] opacity-70 ">
+                    Anillado todo junto
+                  </span>
                 </button>
                 <button
                   className={
@@ -437,7 +439,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
                 >
                   <span className="text-[12px] ">Individual</span>
                   <span className="text-[10px] opacity-70 ">
-                    Uno por archivo
+                    Un anillado por archivo
                   </span>
                   {/* <span className="text-[10px] opacity-70 ">Lado largo</span> */}
                 </button>
@@ -449,8 +451,9 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
                   className="flex flex-col cursor-not-allowed  items-center w-24 justify-center px-2  bg-[#61774d]/70 rounded-lg"
                 >
                   <span className="text-[12px] ">Agrupado</span>
-                  <span className="text-[10px] opacity-70 ">Todos juntos</span>
-                  {/* <span className="text-[10px] opacity-70 ">Lado largo</span> */}
+                  <span className="text-[10px] opacity-70 ">
+                    Anillado todo junto
+                  </span>
                 </button>
 
                 <button
@@ -459,9 +462,8 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
                 >
                   <span className="text-[12px] ">Individual</span>
                   <span className="text-[10px] opacity-70 ">
-                    Uno por archivo
+                    Un anillado por archivo
                   </span>
-                  {/* <span className="text-[10px] opacity-70 ">Lado largo</span> */}
                 </button>
               </>
             )}

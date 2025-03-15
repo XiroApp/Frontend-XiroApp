@@ -1,4 +1,4 @@
-function pricingSetter(pricing, config) {
+function pricingSetter(pricing, config, numberOfFiles) {
   const {
     totalPages: totalDePaginas,
     numberOfCopies: numeroDeCopias,
@@ -53,17 +53,41 @@ function pricingSetter(pricing, config) {
         : size === "Oficio" && printWay === "Doble faz" && color === "Color"
         ? OF_double_does_color
         : simple_do;
+    console.log(numberOfFiles);
 
-    let anillado =
-      finishing === "Anillado"
-        ? totalDePaginas <= 300
-          ? SMALL_ringed
-          : totalDePaginas > 300 && totalDePaginas <= 800
-          ? BIG_ringed
-          : totalDePaginas > 800
-          ? SMALL_ringed * 2
-          : BIG_ringed /* OJO PRECIO DEFAULT ?? */
-        : 0;
+    function getRingedPrice() {
+      let ringedPrice = 0;
+      console.log(finishing);
+
+      if (finishing === "Agrupado") {
+        if (totalDePaginas <= 300) {
+          ringedPrice = SMALL_ringed;
+        } else if (totalDePaginas > 300 && totalDePaginas <= 800) {
+          ringedPrice = BIG_ringed;
+        } else if (totalDePaginas > 800) {
+          ringedPrice = SMALL_ringed * 2;
+        } else {
+          ringedPrice = BIG_ringed; // OJO PRECIO DEFAULT ??
+        }
+      }
+
+      if (finishing === "Individual") {
+        if (totalDePaginas <= 300) {
+          ringedPrice = SMALL_ringed * numberOfFiles;
+        } else if (totalDePaginas > 300 && totalDePaginas <= 800) {
+          ringedPrice = BIG_ringed * numberOfFiles;
+        } else if (totalDePaginas > 800) {
+          ringedPrice = SMALL_ringed * 2 * numberOfFiles;
+        } else {
+          ringedPrice = BIG_ringed * numberOfFiles; // OJO PRECIO DEFAULT ??
+        }
+      }
+
+      return ringedPrice;
+    }
+
+    let anillado = getRingedPrice();
+    console.log(anillado);
 
     let copiasPorCarilla =
       copiesPerPage === "Normal"
@@ -118,4 +142,4 @@ function validateFileSize(file, maxSizeMB) {
 
   return true; // Indica que la validación fue exitosa
 }
-export { pricingSetter, getDeliveryPricingByDistance ,validateFileSize};
+export { pricingSetter, getDeliveryPricingByDistance, validateFileSize };
