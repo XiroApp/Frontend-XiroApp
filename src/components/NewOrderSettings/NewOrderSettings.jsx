@@ -341,18 +341,18 @@ export default function NewOrderSettings({
             </button>
             <button
               className={
-                resume.finishing === "Engrampado"
+                resume.finishing === "Abrochado"
                   ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
                   : "flex flex-col items-center w-24 justify-center px-2  py-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
                 setResume({
                   ...resume,
-                  ["finishing"]: "Engrampado",
+                  ["finishing"]: "Abrochado",
                 })
               }
             >
-              <span className="text-[12px] ">Engrampado</span>
+              <span className="text-[12px] ">Abrochado</span>
               <span className="text-[10px] opacity-70 ">Sin cargo</span>
             </button>
             {resume?.totalPages * resume?.numberOfCopies >= 20 ? (

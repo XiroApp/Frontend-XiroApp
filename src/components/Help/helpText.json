@@ -32,17 +32,12 @@
     "content": [
       {
         "title": "A4",
-        "subtitle": "297 x 210 mm",
+        "subtitle": "297 x 210 mm - 75 g",
         "text": "Dimensiones en vertical 297mm alto x 210mm ancho y en horizontal 210 alto x 297 mm de ancho."
       },
       {
-        "title": "A3",
-        "subtitle": "420 x 297 mm",
-        "text": "Dimensiones en vertical 420mm alto x 297mm ancho y en horizontal 210 alto x 297 mm de ancho."
-      },
-      {
         "title": "Oficio",
-        "subtitle": "216 x 340 mm",
+        "subtitle": "216 x 340 mm - 75 g",
         "text": "Dimensiones en vertical 216mm ancho x 340mm alto y en horizontal 216 alto x 340 mm de ancho."
       }
     ]
@@ -112,7 +107,28 @@
       {
         "title": "Anillado",
         "subtitle": "Por el lado largo del papel (a partir de 20 hojas)",
-        "text": "Las páginas impresas irán anilladas del lado más largo del papel."
+        "text": "Las páginas impresas irán anilladas del lado más largo del papel. \r\n Anillado chico: hasta 300 páginas. \r\n Anillado grande: De 301 hasta 600 páginas, anillado .\r\n Anillado extra grande: más de 600 páginas (se divide la impresión en dos anillados)"
+      },
+      {
+        "title": "Abrochado",
+        "subtitle": "En la esquina (cada 75 hojas)",
+        "text": "Se coloca un broche para agrupar las hojas."
+      }
+    ]
+  },
+  {
+    "setting": "group",
+    "title": "Agrupación",
+    "content": [
+      {
+        "title": "Individual",
+        "subtitle": "Un anillado por archivo",
+        "text": "Se coloca un anillado por cada archivo impreso."
+      },
+      {
+        "title": "Anillado",
+        "subtitle": "Se anillan todos juntos",
+        "text": "Se colocan todos los archivos impresos en un solo anillado"
       }
     ]
   }

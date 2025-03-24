@@ -19,6 +19,12 @@ import { Backdrop, CircularProgress, Input, Typography } from "@mui/material";
 const columns = [
   { id: "order_number", label: "N° de orden", minWidth: 50, align: "center" },
   {
+    id: "price",
+    label: "Precio",
+    minWidth: 50,
+    align: "center",
+  },
+  {
     id: "orderStatus",
     label: "Estado de Orden",
     minWidth: 50,
@@ -83,6 +89,7 @@ export default function Orders({ editor }) {
 
   //--------------- GET DELI ORDERS --------------------
   async function fetchOrders() {
+    setLoading(true);
     try {
       let response = await axios.get(`${baseUrl}/delivery/orders/${user.uid}`);
 
@@ -95,13 +102,16 @@ export default function Orders({ editor }) {
           const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
           const año = fecha.getFullYear();
           const fechaFormateada = `${dia}/${mes}/${año}`;
-          console.log(order.distributionUser);
+          // console.log(order.shipment_price);
+          // Calcula el 90% para el delivery
+          const delivery_price = (order?.shipment_price || 1500) * 0.9;
 
           return {
             uid: order.uid,
             orderStatus: order.orderStatus,
             order_number: order.order_number,
             cart: order.cart,
+            price: delivery_price,
             paymentId: order.paymentData.id,
             paymentStatus: order.paymentData.status,
             transactionAmount:
@@ -128,11 +138,20 @@ export default function Orders({ editor }) {
       console.log(error);
 
       return error;
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl p-4">
+      {/* LOADER */}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <span className="text-2xl lg:text-3xl ">Pedidos asignados</span>
       <div className="flex flex-col lg:flex-row  rounded-lg  lg:w-full p-2 gap-2">
         <div>

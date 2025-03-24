@@ -120,7 +120,6 @@ export default function OrdersRow({
   const [printingSelectStatus, setPrintingSelectStatus] = useState(null);
   const [deliverySelectStatus, setDeliverySelectStatus] = useState(null);
   const [problemsSelectStatus, setProblemsSelectStatus] = useState(null);
- 
 
   const handleSetEdiStatus = (e) => {
     setEditStatus(false);
@@ -217,9 +216,9 @@ export default function OrdersRow({
   return (
     <td key={column.id} align={column.align} className={classes}>
       <div className="flex items-center w-fit">
-        {/* {column.id === "" && (
-          <span className="text-sm font-bold">{value}</span>
-        )} */}
+        {column.id === "price" && (
+          <span className="text-sm font-bold">${value}</span>
+        )}
         {column.id === "order_number" && (
           <span className="font-bold">{order.order_number}</span>
         )}

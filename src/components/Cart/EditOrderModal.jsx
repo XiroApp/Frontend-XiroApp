@@ -257,7 +257,7 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
       {openColorAlertModal ? (
         <Dialog open={openColorAlertModal} onClose={handleColorAlert}>
           <DialogTitle className="text-center relative">
-            Aviso cobertura color mayor 50%
+            Aviso cobertura de color mayor 50%
             <Button
               onClick={handleColorAlert}
               variant="text"
@@ -268,10 +268,10 @@ export default function EditOrderModal({ orderToEdit, setShowEditModal }) {
           </DialogTitle>
           <DialogContent dividers className="flex flex-col gap-6">
             <Typography>
-              Xiro se reserva el derecho de admisión con trabajos color cuya
+              Xiro se reserva el derecho de admisión con trabajos a color cuya
               cobertura sobre la hoja sea superior al 50% de la misma, pudiendo
-              la empresa hacer la devolución del dinero sin mediar comunicación
-              al respecto.
+              la empresa comunicarse por WhatsApp y realizar la
+              devolución del dinero.
             </Typography>
             <Typography align="right">Muchas gracias.</Typography>
           </DialogContent>

@@ -8,19 +8,22 @@ import {
   Backdrop,
   Button,
   CircularProgress,
+  Link,
   Tooltip,
   Typography,
 } from "@mui/material";
 import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   AttachMoney,
   Inventory2Outlined,
   MopedOutlined,
   Straighten,
 } from "@mui/icons-material";
+import { setToast } from "../../../redux/actions";
 
 const OrdersPool = () => {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.loggedUser);
   const [batchOrders, setBatchOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -29,7 +32,7 @@ const OrdersPool = () => {
     setLoading(true);
     try {
       const orders = await OrdersAdapter.getUnassignedOrders();
-      console.log(orders);
+      // console.log(orders);
       const batches = groupOrdersIntoBatches(orders);
       setBatchOrders(batches);
     } catch (error) {
@@ -102,7 +105,17 @@ const OrdersPool = () => {
   }, []);
 
   async function handleAssignBatch(batch) {
-    await OrdersAdapter.setBatchToDelivery(batch, user.uid).then(fetchOrders());
+    console.log(batch);
+    setLoading(true);
+    try {
+      await OrdersAdapter.setBatchToDelivery(batch, user.uid).then(
+        fetchOrders()
+      );
+    } catch (error) {
+      dispatch(setToast("Error al asignar lote de pedidos", "error"));
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -128,8 +141,8 @@ const OrdersPool = () => {
             key={index}
             className="flex flex-col lg:flex-row gap-4 flex-wrap p-8 items-center justify-center "
           >
-            {console.log(Object.keys(batch.orders[0].cart[0]))}
-            {console.log(batch.orders[0].cart[0].distance.value)}
+            {/* {console.log(Object.keys(batch.orders[0].cart[0]))}
+            {console.log(batch.orders[0].cart[0].distance.value)} */}
             <Card variant="outlined" sx={{ maxWidth: 500 }}>
               <Box sx={{ p: 2 }}>
                 <Stack
@@ -211,6 +224,8 @@ const OrdersPool = () => {
                     }
                     size="small"
                   />
+
+                  {/* <Link>Ver ruta</Link> */}
                 </Stack>
               </Box>
               <Divider />
@@ -220,8 +235,14 @@ const OrdersPool = () => {
                   p: 2,
                   display: "flex",
                   justifyContent: "end",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap:"5px"
                 }}
               >
+                {/* <Button variant="text" className="w-full">Ver ruta</Button> */}
+                <Button variant="outlined" className="w-full">Ver ruta</Button>
+
                 <Button
                   variant="contained"
                   className="w-full"

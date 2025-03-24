@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Modal } from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
 import helpJson from "./helpText.json";
 
 const style = {
@@ -28,22 +28,32 @@ export default function NewOrderSettingsHelpDesktop({
       className="md:w-1/3 md:ml-96"
     >
       <Box sx={{ ...style }}>
-        <section className=" p-4 ">
+        <section className="p-4 flex justify-between w-full">
           <h2
             id="parent-modal-title"
             className="text-start text-white text-[20px] font-[300] "
           >
             {renderHelp?.title}
           </h2>
+          <Button
+            className="absolute top-0 right-0"
+            color="white"
+            variant="text"
+            onClick={(e) => setHelpModal(false)}
+          >
+            X
+          </Button>
         </section>
         <section className="flex flex-col items-center px-5 pb-8 gap-5">
           {renderHelp?.content?.map((content, index) => (
             <div
               key={index}
-              className="flex flex-col gap-2 w-11/12 bg-[#fff] p-4 rounded-lg"
+              className="flex flex-col gap-2 w-11/12 p-4 rounded-lg border border-black bg-white"
             >
               <span className="text-[14px]">{content?.title}</span>
-              <span className="opacity-70 text-[14px]">{content?.subtitle}</span>
+              <span className="opacity-70 text-[14px]">
+                {content?.subtitle}
+              </span>
               <span className="text-[12px]">{content?.text}</span>
             </div>
           ))}

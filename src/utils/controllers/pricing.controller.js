@@ -82,7 +82,6 @@ function pricingSetter(pricing, config, numberOfFiles) {
           ringedPrice = BIG_ringed * numberOfFiles; // OJO PRECIO DEFAULT ??
         }
       }
-
       return ringedPrice;
     }
 

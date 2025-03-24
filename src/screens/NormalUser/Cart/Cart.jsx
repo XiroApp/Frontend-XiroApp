@@ -98,7 +98,7 @@ export default function Cart() {
   useEffect(() => {
     setOrderTosend({ ...orderToSend, place: place });
     if (place?.type === "Retiro") {
-      setShipment(500); // PELIGRO! CAMBIAR POR PRECIO DE DB NUEVO DE RETIROS EN PUNTO DE ENTREGA
+      setShipment(600); // PELIGRO! CAMBIAR POR PRECIO DE DB NUEVO DE RETIROS EN PUNTO DE ENTREGA
       setDelivery_distance(distance);
     } else {
       let km_value = distance?.value / 1000;
