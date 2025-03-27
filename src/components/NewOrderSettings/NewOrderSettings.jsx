@@ -327,8 +327,8 @@ export default function NewOrderSettings({
               <button
               className={
                 resume.finishing === "Sin anillado"
-                  ? "flex flex-col items-center w-26 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-26 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+                ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                : "flex flex-col items-center w-26 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -344,8 +344,8 @@ export default function NewOrderSettings({
             <button
               className={
                 resume.finishing === "Abrochado"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+                ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -362,8 +362,8 @@ export default function NewOrderSettings({
             <button
               className={
                 resume.finishing === "Anillado"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+                ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -388,7 +388,7 @@ export default function NewOrderSettings({
                 <button
                   className={
                     resume.group === "Individual"
-                      ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                    ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
                       : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
                   }
                   onClick={(e) =>
@@ -406,7 +406,7 @@ export default function NewOrderSettings({
                 <button
                   className={
                     resume.group === "Agrupado"
-                      ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                    ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
                       : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
                   }
                   onClick={(e) =>

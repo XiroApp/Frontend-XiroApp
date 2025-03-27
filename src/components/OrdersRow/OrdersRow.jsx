@@ -639,6 +639,12 @@ export default function OrdersRow({
                                     {order.finishing}
                                   </span>
                                 </li>
+                                <li>
+                                  <span className="font-light">Agrupación:</span>
+                                  <span className="font-bold">
+                                    {order?.group || 'Sin información'}
+                                  </span>
+                                </li>
                               </ul>
                             </AccordionDetails>
                           </Accordion>

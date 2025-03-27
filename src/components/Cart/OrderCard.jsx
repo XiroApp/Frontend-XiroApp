@@ -88,9 +88,6 @@ export default function OrderCard({
           {order?.size}
         </div>
         <div className="border-2 border-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
-          {order?.finishing}
-        </div>
-        <div className="border-2 border-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
           {order?.copiesPerPage === "Normal"
             ? order?.copiesPerPage
             : order?.copiesPerPage + " por cara"}
@@ -98,6 +95,10 @@ export default function OrderCard({
         <div className="border-2 border-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
           {order?.orientacion}
         </div>
+        <div className="border-2 border-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
+          {order?.finishing} {order?.group}
+        </div>
+        {/* <div className="border-2 border-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center"></div> */}
         {/* <div className="bg-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
           
         </div> */}

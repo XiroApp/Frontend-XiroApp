@@ -412,7 +412,7 @@ export default function NewOrder() {
                   </div>
                   <span className="text-[14px]">Páginas</span>
                 </section>
-                <section className="flex flex-col gap-1 items-center justify-center px-2 font-bold border-2 rounded-lg p-2 bg-[#799361] text-black shadow-xl">
+                <section className="flex flex-col gap-1 items-center justify-center px-2 font-bold border-2 rounded-lg p-2 bg-[#799361] text-white shadow-xl">
                   <div className="flex justify-center items-center gap-1">
                     <PrintSharpIcon
                       style={{ height: "1.5em", width: "1.5em" }}
@@ -571,6 +571,12 @@ export default function NewOrder() {
                         <span className="font-[500]">Anillado</span>
                         <span className="opacity-70 font-[500]">
                           {resume.finishing}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-[500]">Agrupación</span>
+                        <span className="opacity-70 font-[500]">
+                          {resume.group}
                         </span>
                       </div>
                     </section>
