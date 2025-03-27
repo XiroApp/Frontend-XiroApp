@@ -81,6 +81,7 @@ export default function NewOrder() {
   const [newFiles, setNewFiles] = useState([]); //files converted to PDF.
   const [currentSetting, setCurrentSetting] = useState("numberOfCopies");
   const [openColorAlertModal, setOpenColorAlertModal] = useState(false);
+  const [filesDetail, setFilesDetail] = useState([]);
   const handleColorAlert = () => {
     setOpenColorAlertModal(!openColorAlertModal);
   };
@@ -113,6 +114,7 @@ export default function NewOrder() {
     copiesPerPage: "Normal",
     orientacion: "Vertical",
     finishing: "Sin anillado",
+    group: "Sin agrupar",
   });
 
   const handleSetResume = (newResume, colorAlert) => {
@@ -135,9 +137,10 @@ export default function NewOrder() {
       setResume({
         ...resume,
         ["finishing"]: "Sin anillado",
+        group: "Sin agrupar",
       });
     }
-    if (newFiles.length === 0) {
+    if (filesDetail.length === 0) {
       setResume({
         totalPages: 0,
         numberOfCopies: 1,
@@ -147,12 +150,14 @@ export default function NewOrder() {
         copiesPerPage: "Normal",
         orientacion: "Vertical",
         finishing: "Sin anillado",
+        group: "Sin agrupar",
       });
+      setPricing({ ...pricing, ["total"]: 0 });
     }
-  }, [newFiles]);
+  }, [filesDetail]);
 
   useEffect(() => {
-    let newTotal = pricingSetter(pricing, resume, newFiles.length);
+    let newTotal = pricingSetter(pricing, resume, filesDetail);
     if (!isNaN(newTotal)) {
       setPricing({ ...pricing, ["total"]: Number(newTotal) });
     } else {
@@ -163,8 +168,7 @@ export default function NewOrder() {
   function handleSettings(e) {
     setCurrentSetting(e.target.name);
   }
-
-  async function handleSubmit(e) {
+  async function handleSubmitLoadFile(e) {
     e.preventDefault();
     e.persist();
     const files = e.target.files;
@@ -212,11 +216,9 @@ export default function NewOrder() {
     } catch (error) {
       alert("Error general al subir archivos. Consulta la consola.");
       console.error("Error general:", error);
-    } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
-
   function handleResetOrderModal(e) {
     setResetModal(true);
   }
@@ -231,6 +233,7 @@ export default function NewOrder() {
       copiesPerPage: "Normal",
       orientacion: "Vertical",
       finishing: "Sin anillado",
+      group: "Sin agrupar",
     });
     setPricing({ ...pricing, total: 0 });
     setResetModal(false);
@@ -249,9 +252,52 @@ export default function NewOrder() {
       copiesPerPage: "Normal",
       orientacion: "Vertical",
       finishing: "Sin anillado",
+      group: "Sin agrupar",
     });
     setPricing({ ...pricing, total: 0 });
     setReview(false);
+  }
+  /*///////////////////////////////// */
+  function eliminarPorNombre(archivos, nombreBuscado) {
+    const indice = archivos.findIndex(
+      (archivo) => archivo.name === nombreBuscado
+    );
+    if (indice !== -1) {
+      archivos.splice(indice, 1); // Elimina el objeto en la posición encontrada
+    }
+    return archivos;
+  }
+
+  function handleDeleteFile(newFile, index) {
+    try {
+      setLoading(true);
+      const newFilesArray = eliminarPorNombre(filesDetail, newFile);
+      console.log("----------------");
+
+      console.log(newFiles);
+
+      console.log(newFile);
+      console.log(newFiles.indexOf(newFile));
+
+      console.log("----------------");
+
+      setNewFiles(newFilesArray.map((file) => file.name));
+
+      const totalPaginas = newFilesArray.reduce(
+        (suma, archivo) => suma + archivo.pages,
+        0
+      );
+
+      setResume({
+        ...resume,
+        ["totalPages"]: totalPaginas,
+      });
+      setFilesDetail(newFilesArray);
+    } catch (error) {
+      dispatch(setToast("Error al eliminar el archivo", "error"));
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -395,7 +441,7 @@ export default function NewOrder() {
                           name="file"
                           id="uploadInput"
                           accept=".pdf, .doc, .docx, .xls, .xlsx, image/*, .txt"
-                          onChange={(e) => handleSubmit(e)}
+                          onChange={(e) => handleSubmitLoadFile(e)}
                         />
                       ) : (
                         false
@@ -452,13 +498,14 @@ export default function NewOrder() {
                       {newFiles.map((newFile, index) => (
                         <PDFViewer
                           key={index + newFile}
-                          index={index}
                           newFile={newFile}
+                          index={index}
                           resume={resume}
                           setResume={setResume}
-                          setNewFiles={setNewFiles}
-                          newFiles={newFiles}
                           setLoading={setLoading}
+                          setFilesDetail={setFilesDetail}
+                          filesDetail={filesDetail}
+                          handleDeleteFile={handleDeleteFile}
                         />
                       ))}
                     </div>
@@ -561,7 +608,7 @@ export default function NewOrder() {
               color="primary"
               sx={{ border: "2px solid white" }}
               className={cart?.length ? "w-1/3" : "w-1/2"}
-              disabled={newFiles?.length === 0}
+              disabled={filesDetail?.length === 0}
               onClick={(e) => setReview(true)}
             >
               <span className="font-bold text-lg">Añadir al carrito</span>

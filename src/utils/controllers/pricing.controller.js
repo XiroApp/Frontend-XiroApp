@@ -1,6 +1,6 @@
-function pricingSetter(pricing, config, numberOfFiles) {
+function pricingSetter(pricing, config, filesDetail) {
   const {
-    totalPages: totalDePaginas,
+    totalPages,
     numberOfCopies: numeroDeCopias,
     color,
     size,
@@ -8,6 +8,7 @@ function pricingSetter(pricing, config, numberOfFiles) {
     copiesPerPage,
     orientacion,
     finishing,
+    group,
   } = config;
   const {
     BIG_ringed,
@@ -27,6 +28,17 @@ function pricingSetter(pricing, config, numberOfFiles) {
   } = pricing;
 
   try {
+    let copiasPorCarilla =
+      copiesPerPage === "Normal"
+        ? 1
+        : copiesPerPage === "2 copias"
+        ? 2
+        : copiesPerPage === "4 copias"
+        ? 4
+        : 1;
+
+    const totalDePaginas = totalPages / copiasPorCarilla;
+
     let precioPapel =
       size === "A4" && printWay === "Simple faz" && color === "BN"
         ? simple_do
@@ -53,59 +65,56 @@ function pricingSetter(pricing, config, numberOfFiles) {
         : size === "Oficio" && printWay === "Doble faz" && color === "Color"
         ? OF_double_does_color
         : simple_do;
-    console.log(numberOfFiles);
 
     function getRingedPrice() {
-      let ringedPrice = 0;
-      console.log(finishing);
+      let totalRingedPrice = 0;
 
-      if (finishing === "Agrupado") {
+      if (group === "Agrupado" && finishing == "Anillado") {
         if (totalDePaginas <= 300) {
-          ringedPrice = SMALL_ringed;
+          totalRingedPrice = SMALL_ringed;
         } else if (totalDePaginas > 300 && totalDePaginas <= 800) {
-          ringedPrice = BIG_ringed;
+          totalRingedPrice = BIG_ringed;
         } else if (totalDePaginas > 800) {
-          ringedPrice = SMALL_ringed * 2;
+          totalRingedPrice = SMALL_ringed * 2;
         } else {
-          ringedPrice = BIG_ringed; // OJO PRECIO DEFAULT ??
+          totalRingedPrice = BIG_ringed; // OJO PRECIO DEFAULT ??
         }
       }
 
-      if (finishing === "Individual") {
-        if (totalDePaginas <= 300) {
-          ringedPrice = SMALL_ringed * numberOfFiles;
-        } else if (totalDePaginas > 300 && totalDePaginas <= 800) {
-          ringedPrice = BIG_ringed * numberOfFiles;
-        } else if (totalDePaginas > 800) {
-          ringedPrice = SMALL_ringed * 2 * numberOfFiles;
-        } else {
-          ringedPrice = BIG_ringed * numberOfFiles; // OJO PRECIO DEFAULT ??
-        }
+      if (group === "Individual" && finishing == "Anillado") {
+        let arrayDePrecios =
+          filesDetail.length &&
+          filesDetail.map((file) => {
+            let totalDePaginas = file.pages;
+            let ringedPrice = 0;
+
+            if (totalDePaginas <= 300) {
+              ringedPrice = SMALL_ringed;
+            } else if (totalDePaginas > 300 && totalDePaginas <= 800) {
+              ringedPrice = BIG_ringed;
+            } else if (totalDePaginas > 800) {
+              ringedPrice = SMALL_ringed * 2;
+            } else {
+              ringedPrice = BIG_ringed; // OJO PRECIO DEFAULT ??
+            }
+
+            return ringedPrice;
+          });
+
+        totalRingedPrice = arrayDePrecios.length
+          ? arrayDePrecios.reduce(
+              (acumulador, valorActual) => acumulador + valorActual,
+              0
+            )
+          : 0;
       }
-      return ringedPrice;
+
+      return totalRingedPrice;
     }
 
     let anillado = getRingedPrice();
-    console.log(anillado);
 
-    let copiasPorCarilla =
-      copiesPerPage === "Normal"
-        ? 1
-        : copiesPerPage === "2 copias"
-        ? 2
-        : copiesPerPage === "4 copias"
-        ? 4
-        : 1;
-
-    let price =
-      // ((totalPages / NcopiesPerPage) * paper_price + ringed) * numberOfCopies;
-      ((totalDePaginas / copiasPorCarilla) * precioPapel + anillado) *
-      numeroDeCopias;
-
-    // console.log(paper_price);
-    // console.log(ringed);
-    // console.log(NcopiesPerPage);
-    // console.log(price);
+    let price = (totalDePaginas * precioPapel + anillado) * numeroDeCopias;
 
     if (price !== NaN) {
       return price.toFixed();

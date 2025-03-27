@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import FileCopySharpIcon from "@mui/icons-material/FileCopySharp";
 import PDFRender from "./PDFRender";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -12,50 +12,43 @@ import "react-pdf/dist/Page/TextLayer.css";
 import { Spinner } from "@react-pdf-viewer/core";
 import { useDispatch } from "react-redux";
 import { setToast } from "../redux/actions";
-import * as PDFJS from "pdfjs-dist"; // Asegúrate de instalarlo con npm install pdfjs-dist
 
 const PDFViewer = ({
   newFile,
   resume,
-  setResume,
-  setNewFiles,
-  newFiles,
   index,
+  setResume,
   setLoading,
+  setFilesDetail,
+  filesDetail,
+  handleDeleteFile,
 }) => {
-  const dispatch = useDispatch();
   const [numPages, setNumPages] = useState();
 
   function onDocumentLoadSuccess(PDFMetadata) {
     try {
+      const newFilesArray = [
+        ...filesDetail,
+        { name: newFile, pages: PDFMetadata.numPages },
+      ];
+
+      const totalPaginas = newFilesArray.reduce(
+        (suma, archivo) => suma + archivo.pages,
+        0
+      );
+
       setNumPages(PDFMetadata.numPages);
       setResume({
         ...resume,
-        ["totalPages"]: resume.totalPages + PDFMetadata.numPages,
+        ["totalPages"]: totalPaginas,
       });
+      setFilesDetail(newFilesArray);
     } catch (error) {
       console.log(error);
     }
     // finally {
     //   setLoading(false);
     // }
-  }
-
-  function handleDeleteFile() {
-    try {
-      setLoading(true);
-      let array = new Array(newFiles.slice()).flat(1);
-      array.splice(index, 1);
-      setNewFiles(array);
-      setResume({
-        ...resume,
-        ["totalPages"]: resume.totalPages - numPages,
-      });
-    } catch (error) {
-      dispatch(setToast("Error al eliminar el archivo", "error"));
-    } finally {
-      setLoading(false);
-    }
   }
 
   return (
@@ -75,7 +68,7 @@ const PDFViewer = ({
             </Tooltip>
             <Tooltip placement="top" title="Eliminar documento">
               <DeleteIcon
-                onClick={(e) => handleDeleteFile()}
+                onClick={(e) => handleDeleteFile(newFile,index)}
                 className="hover:bg-red-500 rounded-lg hover:text-white"
                 sx={{ height: "0.9em", width: "0.9em" }}
               />
