@@ -81,6 +81,17 @@ export default function SettingButtons({ currentSetting, handleSettings }) {
       >
         Anillado
       </button>
+      <button
+        name="group"
+        className={
+          currentSetting === "group"
+            ? "rounded-full whitespace-nowrap w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#61774d] border-2 border-white text-white text-sm"
+            : "rounded-full whitespace-nowrap w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-white hover:bg-[#61774d] hover:text-white text-sm"
+        }
+        onClick={(e) => handleSettings(e)}
+      >
+        Agrupación
+      </button>
     </div>
   );
 }

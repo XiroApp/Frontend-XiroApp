@@ -403,6 +403,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
                 setResume({
                   ...resume,
                   ["finishing"]: "Abrochado",
+                  ['group']:'Individual'
                 })
               }
             >
@@ -420,6 +421,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
                 setResume({
                   ...resume,
                   ["finishing"]: "Anillado",
+                  ['group']:'Individual'
                 })
               }
             >
