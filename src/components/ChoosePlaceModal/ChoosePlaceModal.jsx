@@ -71,7 +71,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
         aria-describedby="parent-modal-description"
         className=" flex items-center justify-center"
       >
-        <Box className="bg-[#fff] rounded-lg w-10/12 md:w-1/2 lg:w-1/3">
+        <Box className="bg-[#fff] rounded-lg w-10/12 md:w-1/2 lg:w-1/3 overflow-y-auto  h-[80%] flex flex-col justify-between">
           <section className=" p-4 ">
             <h2
               id="parent-modal-title"

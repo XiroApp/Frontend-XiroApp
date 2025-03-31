@@ -34,6 +34,7 @@ export class OrdersAdapter {
         .split("-")
         .reverse()
         .join("/");
+      console.log(order);
 
       return {
         uid: order.uid,

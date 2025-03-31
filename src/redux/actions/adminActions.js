@@ -104,6 +104,8 @@ export function getAllOrders(pageToken) {
 
       let sortedOrders = response.data
         .map((order) => {
+          console.log(order);
+
           const fechaStr = order.paymentData.date_created;
           const fecha = new Date(fechaStr);
 
