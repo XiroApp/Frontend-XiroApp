@@ -272,14 +272,6 @@ export default function NewOrder() {
     try {
       setLoading(true);
       const newFilesArray = eliminarPorNombre(filesDetail, newFile);
-      console.log("----------------");
-
-      console.log(newFiles);
-
-      console.log(newFile);
-      console.log(newFiles.indexOf(newFile));
-
-      console.log("----------------");
 
       setNewFiles(newFilesArray.map((file) => file.name));
 
@@ -292,6 +284,7 @@ export default function NewOrder() {
         ...resume,
         ["totalPages"]: totalPaginas,
       });
+      
       setFilesDetail(newFilesArray);
     } catch (error) {
       dispatch(setToast("Error al eliminar el archivo", "error"));
