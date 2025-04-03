@@ -105,6 +105,24 @@ export default function NewOrder() {
 
   const [resume, setResume] = useState(initialResumeState);
 
+  const removeDuplicateDetails = (currentFiles) => {
+    const uniqueDetails = [];
+    const seenNames = new Set();
+
+    // Filtrar details para mantener solo los únicos
+    currentFiles.details.forEach((file) => {
+      if (!seenNames.has(file.name)) {
+        seenNames.add(file.name);
+        uniqueDetails.push(file);
+      }
+    });
+
+    return {
+      ...currentFiles,
+      details: uniqueDetails,
+    };
+  };
+
   // Pricing calculado
   const pricing = useMemo(() => {
     const basePricing = {
@@ -136,16 +154,21 @@ export default function NewOrder() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (files.details.length === 0) {
+    const cleanedFiles = removeDuplicateDetails(files);
+    if (cleanedFiles.details.length !== files.details.length) {
+      setFiles(cleanedFiles);
+      return; // Salir temprano porque setFiles disparará otro efecto
+    }
+    // Resto de tu lógica actual
+    if (cleanedFiles.details.length === 0) {
       setResume(initialResumeState);
+      setState((prev) => ({ ...prev, loading: false }));
     } else {
-      console.log(files);
-
-      const totalPages = files.details.reduce(
+      const totalPages = cleanedFiles.details.reduce(
         (sum, file) => sum + file.pages,
         0
       );
-      console.log(totalPages);
+
       setResume((prev) => ({
         ...prev,
         totalPages,
@@ -169,20 +192,15 @@ export default function NewOrder() {
 
   const handleDeleteFile = useCallback((fileToDelete) => {
     setState((prev) => ({ ...prev, loading: true }));
+    setFiles((prevFiles) => {
+      const newDetails = prevFiles.details.filter((f) => {
+        console.log(f.name);
+        return f.name !== fileToDelete;
+      });
+      const newPreviews = prevFiles.previews.filter((f) => f !== fileToDelete);
 
-    setFiles((prev) => {
-      const newDetails = prev.details.filter((f) => f.name !== fileToDelete);
-      const newPreviews = prev.previews.filter((f) => f !== fileToDelete);
-      console.log("details con eliminado", newDetails);
-      console.log("prevs scon eliminado", newPreviews);
-
-      return {
-        details: newDetails,
-        previews: newPreviews,
-      };
+      return { previews: newPreviews, details: newDetails };
     });
-
-    setState((prev) => ({ ...prev, loading: false }));
   }, []);
 
   const handleSubmitLoadFile = useCallback(
@@ -234,7 +252,7 @@ export default function NewOrder() {
         dispatch(setToast("Error al subir archivos", "error"));
         console.error("Error:", error);
       } finally {
-        setState((prev) => ({ ...prev, loading: false }));
+        // setState((prev) => ({ ...prev, loading: false }));
       }
     },
     [dispatch]
