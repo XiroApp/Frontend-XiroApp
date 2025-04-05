@@ -122,12 +122,12 @@
     "content": [
       {
         "title": "Individual",
-        "subtitle": "Un anillado por archivo",
+        "subtitle": "Un anillado/abrochado por archivo",
         "text": "Se coloca un anillado por cada archivo impreso."
       },
       {
-        "title": "Anillado",
-        "subtitle": "Se anillan todos juntos",
+        "title": "Agrupado",
+        "subtitle": "Se anillan/abrochan todos juntos",
         "text": "Se colocan todos los archivos impresos en un solo anillado"
       }
     ]

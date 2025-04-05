@@ -65,12 +65,11 @@ export default function OrderCard({
           {order.size} x {order?.numberOfCopies}
         </span>
         <div className="flex items-center gap-2">
-          {/* <Tooltip arrow placement="top" title="Editar" sx={{}}>
-          
+          <Tooltip arrow placement="top" title="Editar" sx={{}}>
             <button onClick={(e) => handleEditOrder(e)}>
               <EditIcon sx={{ width: "0.8em", height: "0.8em" }} />
             </button>
-          </Tooltip> */}
+          </Tooltip>
           <Tooltip arrow placement="top" title="Eliminar" sx={{}}>
             <button onClick={(e) => setDeleteOrderModal(true)}>
               <DeleteIcon sx={{ width: "0.8em", height: "0.8em" }} />
