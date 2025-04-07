@@ -71,7 +71,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
         aria-describedby="parent-modal-description"
         className=" flex items-center justify-center"
       >
-        <Box className="bg-[#fff] rounded-lg w-10/12 md:w-1/2 lg:w-1/3 overflow-y-auto  h-[80%] flex flex-col justify-between">
+        <Box className="bg-[#fff] rounded-lg w-10/12 md:w-1/2 lg:w-1/3  h-[80%] flex flex-col justify-between">
           <section className=" p-4 ">
             <h2
               id="parent-modal-title"
@@ -130,7 +130,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               </div>
             </button>
           </section>
-          <section className="flex flex-col items-center">
+          <section className="flex flex-col items-center overflow-y-auto py-2">
             {resume?.place?.type === "Envío a domicilio" ? (
               <div className="flex flex-col items-center">
                 <span className="font-[500]">Seleccioná tu domicilio</span>
@@ -188,8 +188,9 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                 </span>
                 {/* {console.log(pickupUsers)} */}
                 {pickupUsers?.length > 0
-                  ? pickupUsers?.map((pickup) => (
+                  ? pickupUsers?.map((pickup, index) => (
                       <button
+                        key={index}
                         className={
                           resume.place.address === pickup.address
                             ? " p-2 rounded-md  bg-[#81A165] border-2 border-[#000] hover:bg-[#81A165] text-white "
@@ -215,9 +216,9 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                               {pickup?.displayName}
                             </span>
                             <span className="text-sm opacity-80">
-                              {pickup.address?.name?.length < 15
+                              {pickup.address?.name?.length < 80
                                 ? pickup.address.name
-                                : `${pickup.address.name.slice(0, 15)}...`}{" "}
+                                : `${pickup.address.name.slice(0, 80)}...`}{" "}
                               {pickup.address.number}
                             </span>
                             <span className="text-sm opacity-80">
@@ -234,24 +235,6 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                       </button>
                     ))
                   : false}
-
-                {/* <div className="flex flex-col justify-start p-2 w-2/3">
-                  <span className="text-sm">CIUDAD</span>
-                  <NativeSelect
-                    defaultValue={30}
-                    inputProps={{
-                      name: "age",
-                      id: "uncontrolled-native",
-                    }}
-                  >
-                    <option value={""}>Seleccioná tu ciudad</option>
-                    <option value={20}>Mendoza</option>
-                    <option value={10}>Guaymallén</option>
-                    <option value={30}>Godoy Cruz</option>
-                    <option value={30}>Lujan</option>
-                    <option value={30}>Las Heras</option>
-                  </NativeSelect>
-                </div> */}
               </div>
             ) : (
               false

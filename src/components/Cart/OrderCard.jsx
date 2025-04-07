@@ -57,19 +57,27 @@ export default function OrderCard({
     setShowEditModal({ show: true, orderToEdit: order });
   }
 
+  console.log(order);
+
   return (
     <div className="flex flex-col gap-2 border-2 border-[#789360] rounded-md p-3 drop-shadow-2xl shadow-2xl">
-      <div className="flex gap-2 items-center justify-between">
-        <span className="text-black text-[12px] font-[600]">
-          Impresión {order.color === "BN" ? "en blanco y negro" : "a color"}{" "}
-          {order.size} x {order?.numberOfCopies}
-        </span>
+      <div className="flex gap-2 items-start justify-between">
+        <div className="flex flex-col">
+          <span className="text-black text-[12px] font-[600]">
+            Impresión {order.color === "BN" ? "en blanco y negro" : "a color"}{" "}
+            {order.size} x {order?.numberOfCopies}.
+          </span>
+          <span className="text-black text-[12px] font-[600]">
+            Total de páginas:{`${order?.totalPages}`}
+            {/* ${order?.totalPages > 1 ? "páginas" : "página"} */}
+          </span>
+        </div>
         <div className="flex items-center gap-2">
-          <Tooltip arrow placement="top" title="Editar" sx={{}}>
+          {/* <Tooltip arrow placement="top" title="Editar" sx={{}}>
             <button onClick={(e) => handleEditOrder(e)}>
               <EditIcon sx={{ width: "0.8em", height: "0.8em" }} />
             </button>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip arrow placement="top" title="Eliminar" sx={{}}>
             <button onClick={(e) => setDeleteOrderModal(true)}>
               <DeleteIcon sx={{ width: "0.8em", height: "0.8em" }} />

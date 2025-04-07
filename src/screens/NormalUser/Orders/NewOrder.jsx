@@ -201,6 +201,7 @@ export default function NewOrder() {
 
       return { previews: newPreviews, details: newDetails };
     });
+    setState((prev) => ({ ...prev, loading: false }));
   }, []);
 
   const handleSubmitLoadFile = useCallback(
@@ -230,7 +231,7 @@ export default function NewOrder() {
           .map(async (file) => {
             if (validatePDFFile(file.name)) {
               const uploadedFile = await uploadFile(file);
-              return { preview: uploadedFile.name };
+              return { preview: uploadedFile };
             } else {
               const formData = new FormData();
               formData.append("files", file);
@@ -251,8 +252,7 @@ export default function NewOrder() {
       } catch (error) {
         dispatch(setToast("Error al subir archivos", "error"));
         console.error("Error:", error);
-      } finally {
-        // setState((prev) => ({ ...prev, loading: false }));
+        setState((prev) => ({ ...prev, loading: false }));
       }
     },
     [dispatch]
@@ -336,8 +336,9 @@ export default function NewOrder() {
       <section className="relative w-full h-full lg:flex">
         {/* Overlay de carga */}
         {state.loading && (
-          <div className="absolute w-screen h-screen z-[9999] bg-gray-600/50 flex items-center justify-center">
+          <div className="absolute w-screen h-screen z-[9999] bg-gray-600/50 flex flex-col items-center justify-center">
             <CircularProgress color="primary" size={50} />
+            <span className="text-white">...Cargando...</span>
           </div>
         )}
 
@@ -515,14 +516,60 @@ export default function NewOrder() {
                     </section>
 
                     <section className="flex flex-col px-5 py-10 gap-10">
-                      {Object.entries(resume).map(([key, value]) => (
-                        <div key={key} className="flex justify-between">
-                          <span className="font-[500] capitalize">
-                            {key.replace(/([A-Z])/g, " $1").trim()}
-                          </span>
-                          <span className="opacity-70 font-[500]">{value}</span>
-                        </div>
-                      ))}
+                      <div className="flex justify-between">
+                        <span className="font-[500]">Precio de impresión:</span>
+                        <span className="opacity-70 font-[500]">
+                          ${pricing?.total.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-[500]">Copias</span>
+                        <span className="opacity-70 font-[500]">
+                          {resume.numberOfCopies}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-[500]">Color</span>
+                        <span className="opacity-70 font-[500]">
+                          {resume.color}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-[500]">Tamaño</span>
+                        <span className="opacity-70 font-[500]">
+                          {resume.size}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-[500]">Forma de impresión</span>
+                        <span className="opacity-70 font-[500]">
+                          {resume.printWay}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-[500]">Copias por carilla</span>
+                        <span className="opacity-70 font-[500]">
+                          {resume.copiesPerPage}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-[500]">Orientación</span>
+                        <span className="opacity-70 font-[500]">
+                          {resume.orientacion}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-[500]">Anillado</span>
+                        <span className="opacity-70 font-[500]">
+                          {resume.finishing}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-[500]">Agrupación</span>
+                        <span className="opacity-70 font-[500]">
+                          {resume.group}
+                        </span>
+                      </div>
                     </section>
 
                     <section className="flex justify-between items-center px-5 pb-5">
