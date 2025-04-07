@@ -171,6 +171,7 @@ export default function NewOrder() {
 
       setResume((prev) => ({
         ...prev,
+        printWay: totalPages > 1 ? prev.printWay : "Simple faz",
         totalPages,
         finishing:
           totalPages * prev.numberOfCopies < 20

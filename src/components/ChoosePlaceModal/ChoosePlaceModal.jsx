@@ -71,7 +71,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
         aria-describedby="parent-modal-description"
         className=" flex items-center justify-center"
       >
-        <Box className="bg-[#fff] rounded-lg w-10/12 md:w-1/2 lg:w-1/3  h-[80%] flex flex-col justify-between">
+        <Box className="bg-[#fff] rounded-lg w-10/12 md:w-1/2 lg:w-1/3 overflow-y-auto   h-[80%] flex flex-col justify-between">
           <section className=" p-4 ">
             <h2
               id="parent-modal-title"
@@ -130,7 +130,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               </div>
             </button>
           </section>
-          <section className="flex flex-col items-center overflow-y-auto py-2">
+          <section className="flex flex-col items-center py-2">
             {resume?.place?.type === "Envío a domicilio" ? (
               <div className="flex flex-col items-center">
                 <span className="font-[500]">Seleccioná tu domicilio</span>

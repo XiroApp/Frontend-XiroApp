@@ -216,23 +216,32 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               <span className="text-[12px] ">Simple faz</span>
               <span className="text-[10px] opacity-70 ">Una sola cara</span>
             </button>
-
-            <button
-              className={
-                resume.printWay === "Doble faz"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
-              }
-              onClick={(e) =>
-                setResume({
-                  ...resume,
-                  ["printWay"]: "Doble faz",
-                })
-              }
-            >
-              <span className="text-[12px] ">Doble faz</span>
-              <span className="text-[10px] opacity-70 ">Ambas caras</span>
-            </button>
+            {resume?.totalPages > 1 ? (
+              <button
+                className={
+                  resume.printWay === "Doble faz"
+                    ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                    : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+                }
+                onClick={(e) =>
+                  setResume({
+                    ...resume,
+                    ["printWay"]: "Doble faz",
+                  })
+                }
+              >
+                <span className="text-[12px] ">Doble faz</span>
+                <span className="text-[10px] opacity-70 ">Ambas caras</span>
+              </button>
+            ) : (
+              <button
+                disabled
+                className="flex flex-col cursor-not-allowed items-center w-24 justify-center px-2  bg-[#61774d]/70 rounded-lg"
+              >
+                <span className="text-[12px] ">Doble faz</span>
+                <span className="text-[10px] opacity-70 ">Ambas caras</span>
+              </button>
+            )}
           </div>
         </section>
         {/* COPIAS POR SILLA */}
@@ -403,7 +412,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
                 setResume({
                   ...resume,
                   ["finishing"]: "Abrochado",
-                  ['group']:'Individual'
+                  ["group"]: "Individual",
                 })
               }
             >
@@ -421,7 +430,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
                 setResume({
                   ...resume,
                   ["finishing"]: "Anillado",
-                  ['group']:'Individual'
+                  ["group"]: "Individual",
                 })
               }
             >
