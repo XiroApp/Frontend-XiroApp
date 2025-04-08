@@ -14,13 +14,14 @@ import Navbar from "../../components/Navbar/Navbar";
 import Coupons from "./Menu/Coupons";
 import Pricing from "./Menu/Pricing";
 import Orders from "./Menu/Orders";
-import { StickyNote2 } from "@mui/icons-material";
+import { ShoppingBag, StickyNote2 } from "@mui/icons-material";
 import Texts from "./Menu/Texts";
+import LibraryPanel from "../../components/Admin/LibraryPanel";
 
 export default function Admin({ cart, dataBaseUser }) {
-  const user = useSelector((state) => state.dataBaseUser);
+  const user = useSelector(state => state.dataBaseUser);
 
-  const users = useSelector((state) => state.usersApp);
+  const users = useSelector(state => state.usersApp);
 
   let { photoURL, email, displayName } = user;
 
@@ -29,7 +30,7 @@ export default function Admin({ cart, dataBaseUser }) {
   const [state, setState] = useState({
     left: false,
   });
-  const toggleDrawer = (anchor, open) => (event) => {
+  const toggleDrawer = (anchor, open) => event => {
     if (
       event.type === "keydown" &&
       (event.key === "Tab" || event.key === "Shift")
@@ -40,7 +41,7 @@ export default function Admin({ cart, dataBaseUser }) {
     setState({ ...state, [anchor]: open });
   };
 
-  const list = (anchor) => (
+  const list = anchor => (
     <Box
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
@@ -66,7 +67,7 @@ export default function Admin({ cart, dataBaseUser }) {
           >
             DATOS
             <ListItemButton
-              onClick={(e) => setDataRender("users")}
+              onClick={e => setDataRender("users")}
               sx={
                 dataRender === "users"
                   ? { backgroundColor: "#458552", borderRadius: "10px" }
@@ -80,7 +81,21 @@ export default function Admin({ cart, dataBaseUser }) {
               <ListItemText primary="Usuarios" />
             </ListItemButton>
             <ListItemButton
-              onClick={(e) => setDataRender("orders")}
+              onClick={() => setDataRender("library")}
+              sx={
+                dataRender === "library"
+                  ? { backgroundColor: "#458552", borderRadius: "10px" }
+                  : { borderRadius: "10px" }
+              }
+              className="h-16"
+            >
+              <ListItemIcon>
+                <ShoppingBag sx={{ width: "2.5rem", height: "2.5rem" }} />
+              </ListItemIcon>
+              <ListItemText style={{}} primary="Librería" />
+            </ListItemButton>
+            <ListItemButton
+              onClick={e => setDataRender("orders")}
               sx={
                 dataRender === "orders"
                   ? { backgroundColor: "#458552", borderRadius: "10px" }
@@ -94,7 +109,7 @@ export default function Admin({ cart, dataBaseUser }) {
               <ListItemText primary="Pedidos" />
             </ListItemButton>
             <ListItemButton
-              onClick={(e) => setDataRender("pricing")}
+              onClick={e => setDataRender("pricing")}
               sx={
                 dataRender === "pricing"
                   ? { backgroundColor: "#458552", borderRadius: "10px" }
@@ -108,7 +123,7 @@ export default function Admin({ cart, dataBaseUser }) {
               <ListItemText primary="Precios" />
             </ListItemButton>
             <ListItemButton
-              onClick={(e) => setDataRender("coupons")}
+              onClick={e => setDataRender("coupons")}
               sx={
                 dataRender === "coupons"
                   ? { backgroundColor: "#458552", borderRadius: "10px" }
@@ -125,7 +140,7 @@ export default function Admin({ cart, dataBaseUser }) {
             </ListItemButton>
             TEXTOS IN APP
             <ListItemButton
-              onClick={(e) => setDataRender("Texts")}
+              onClick={e => setDataRender("Texts")}
               sx={
                 dataRender === "Texts"
                   ? { backgroundColor: "#458552", borderRadius: "10px" }
@@ -177,6 +192,8 @@ export default function Admin({ cart, dataBaseUser }) {
             <Coupons user={user} />
           ) : dataRender === "Texts" ? (
             <Texts user={user} />
+          ) : dataRender === "library" ? (
+            <LibraryPanel />
           ) : (
             <UsersApp user={user} />
           )}

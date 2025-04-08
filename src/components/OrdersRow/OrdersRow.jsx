@@ -28,7 +28,7 @@ import {
   getUserByUid,
 } from "../../redux/actions/adminActions";
 
-const Accordion = styled((props) => (
+const Accordion = styled(props => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
@@ -40,7 +40,7 @@ const Accordion = styled((props) => (
   },
 }));
 
-const AccordionSummary = styled((props) => (
+const AccordionSummary = styled(props => (
   <MuiAccordionSummary
     expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
     {...props}
@@ -76,20 +76,20 @@ export default function OrdersRow({
   editor,
   fetchOrders,
 }) {
-  console.log(order);
+  //  console.log(order);
 
   const dispatch = useDispatch();
   /* VIEW FILES MODAL */
   const [open, setOpen] = useState(false);
 
-  const handleOpenFilesModal = (e) => {
+  const handleOpenFilesModal = e => {
     setOpen(true);
   };
   /* VIEW CLIENT MODAL */
   const [openClientModal, setOpenClientModal] = useState(false);
   const [clientInfo, setClientInfo] = useState({});
 
-  const handleOpenClientModal = async (uid) => {
+  const handleOpenClientModal = async uid => {
     setOpenClientModal(true);
     let clientData = await getUserByUid(uid);
     setClientInfo(clientData);
@@ -98,7 +98,7 @@ export default function OrdersRow({
   /* FILES ACCORDION */
   const [expanded, setExpanded] = useState(false);
 
-  const handleChange = (panel) => (event, newExpanded) => {
+  const handleChange = panel => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
 
@@ -113,13 +113,13 @@ export default function OrdersRow({
   const [pickupSelectStatus, setPickupSelectStatus] = useState(null);
   const [problemsSelectStatus, setProblemsSelectStatus] = useState(null);
 
-  const handleSetEdiStatus = (e) => {
+  const handleSetEdiStatus = e => {
     setEditStatus(false);
     setPrintingSelectStatus(false);
     setDeliverySelectStatus(false);
     setProblemsSelectStatus(false);
   };
-  console.log(orderId);
+  // console.log(orderId);
 
   /* STATUS PRINTING */
   const [input, setInput] = useState({
@@ -136,15 +136,15 @@ export default function OrdersRow({
   /* AUTOCOMPLETE STATE */
   const printingProps = {
     options: printingUsers,
-    getOptionLabel: (option) => option?.displayName ?? "N/A",
+    getOptionLabel: option => option?.displayName ?? "N/A",
   };
   const deliveryProps = {
     options: deliveryUsers,
-    getOptionLabel: (option) => option?.displayName ?? "N/A",
+    getOptionLabel: option => option?.displayName ?? "N/A",
   };
 
   function handleInput(e) {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     if (e.target.value === "pending") {
       setProblemsSelectStatus(false);
       setDeliverySelectStatus(false);
@@ -173,20 +173,20 @@ export default function OrdersRow({
 
   function handleAssignStatus(e) {
     let selectedPrinting = printingUsers.find(
-      (user) =>
+      user =>
         user.displayName === input.uidPrinting || user.uid === input.uidPrinting
     );
 
     let selectedDelivery = deliveryUsers.find(
-      (user) =>
+      user =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
     let selectedDistribution = distributionUsers.find(
-      (user) =>
+      user =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
     let selectedPickup = pickupUsers.find(
-      (user) =>
+      user =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
 
@@ -219,7 +219,7 @@ export default function OrdersRow({
             <Button
               color="inherit"
               variant="text"
-              onClick={(e) => setEditStatus(true)}
+              onClick={e => setEditStatus(true)}
             >
               <Typography className="">
                 {value === "pending"
@@ -242,7 +242,7 @@ export default function OrdersRow({
               </Typography>
             </Button>
             {/* MODAL FORMULARIO EDITAR ESTADO DE ORDEN */}
-            <Dialog open={editStatus} onClose={(e) => setEditStatus(false)}>
+            <Dialog open={editStatus} onClose={e => setEditStatus(false)}>
               <DialogTitle className="text-center">Editar estado</DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8">
                 <section className="flex flex-col items-center gap-4 w-96">
@@ -280,7 +280,7 @@ export default function OrdersRow({
                         Cambiar estado de orden
                       </label>
                       <select
-                        onChange={(e) => handleInput(e)}
+                        onChange={e => handleInput(e)}
                         name="orderStatus"
                         id="orderStatus"
                         className="border rounded-l p-2 bg-white"
@@ -376,8 +376,8 @@ export default function OrdersRow({
                           {...printingProps}
                           id="auto-complete"
                           name="uidPrinting"
-                          onSelect={(e) => handleInput(e)}
-                          renderInput={(params) => (
+                          onSelect={e => handleInput(e)}
+                          renderInput={params => (
                             <TextField
                               // error={error.city}
                               name="uidPrinting"
@@ -400,8 +400,8 @@ export default function OrdersRow({
                           {...deliveryProps}
                           id="auto-complete"
                           name="uidDelivery"
-                          onSelect={(e) => handleInput(e)}
-                          renderInput={(params) => (
+                          onSelect={e => handleInput(e)}
+                          renderInput={params => (
                             <TextField
                               // error={error.city}
                               name="uidDelivery"
@@ -422,7 +422,7 @@ export default function OrdersRow({
                         name="report"
                         id="report"
                         placeholder={"Ingrese su problema aquí..."}
-                        onChange={(e) => handleInput(e)}
+                        onChange={e => handleInput(e)}
                         className="w-full"
                       />
                     </>
@@ -434,13 +434,13 @@ export default function OrdersRow({
               <DialogActions>
                 <Button
                   variant="outlined"
-                  onClick={(e) => handleSetEdiStatus(false)}
+                  onClick={e => handleSetEdiStatus(false)}
                 >
                   Cancelar
                 </Button>
                 <Button
                   variant="contained"
-                  onClick={(e) => handleAssignStatus(e)}
+                  onClick={e => handleAssignStatus(e)}
                 >
                   Aceptar
                 </Button>
@@ -453,20 +453,20 @@ export default function OrdersRow({
             <Button
               color="inherit"
               variant="text"
-              onClick={(e) => handleOpenFilesModal(e)}
+              onClick={e => handleOpenFilesModal(e)}
               // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
               <Typography>Ver Pedido</Typography>
             </Button>
 
             {/* MODAL FORMULARIO */}
-            <Dialog open={open} onClose={(e) => setOpen(false)}>
+            <Dialog open={open} onClose={e => setOpen(false)}>
               <DialogTitle className="text-center">
                 Detalles del pedido
               </DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8">
                 <section className="flex flex-col gap-4">
-                  {value.map((order, index) => {
+                  {value?.map((order, index) => {
                     return (
                       <div key={index} className="flex flex-col gap-1">
                         <h3>Pedido {index + 1}</h3>
@@ -595,7 +595,7 @@ export default function OrdersRow({
                 </section>
               </DialogContent>
               <DialogActions>
-                <Button variant="contained" onClick={(e) => setOpen(false)}>
+                <Button variant="contained" onClick={e => setOpen(false)}>
                   Cerrar
                 </Button>
               </DialogActions>
@@ -654,13 +654,13 @@ export default function OrdersRow({
               color="inherit"
               variant="text"
               className="hover:underline"
-              onClick={(e) => setPriceModal(true)}
+              onClick={e => setPriceModal(true)}
             >
               <Typography>${order.transactionAmount}</Typography>
             </Button>
 
             {/* MODAL FORMULARIO */}
-            <Dialog open={priceModal} onClose={(e) => setPriceModal(false)}>
+            <Dialog open={priceModal} onClose={e => setPriceModal(false)}>
               <DialogTitle className="text-center">Monto</DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8">
                 <section className="flex flex-col justify-start items-start ">
@@ -693,10 +693,7 @@ export default function OrdersRow({
                 </section>
               </DialogContent>
               <DialogActions>
-                <Button
-                  variant="contained"
-                  onClick={(e) => setPriceModal(false)}
-                >
+                <Button variant="contained" onClick={e => setPriceModal(false)}>
                   Cerrar
                 </Button>
               </DialogActions>
@@ -719,7 +716,7 @@ export default function OrdersRow({
             {/* MODAL FORMULARIO */}
             <Dialog
               open={openClientModal}
-              onClose={(e) => setOpenClientModal(false)}
+              onClose={e => setOpenClientModal(false)}
             >
               <DialogTitle className="text-center">
                 Información del cliente
@@ -750,7 +747,7 @@ export default function OrdersRow({
               <DialogActions>
                 <Button
                   variant="contained"
-                  onClick={(e) => setOpenClientModal(false)}
+                  onClick={e => setOpenClientModal(false)}
                 >
                   Cerrar
                 </Button>
@@ -777,7 +774,7 @@ export default function OrdersRow({
               <div className="flex justify-center items-start">
                 <span className="">
                   {`${
-                    value.type === "Envío a domicilio" ? "Envío" : value.type
+                    value?.type === "Envío a domicilio" ? "Envío" : value?.type
                   } | `}
                 </span>
                 <span className="">{`${order?.availability}`}</span>
@@ -785,7 +782,7 @@ export default function OrdersRow({
             </Button>
 
             {/* MODAL FORMULARIO */}
-            <Dialog open={placeModal} onClose={(e) => setPlaceModal(false)}>
+            <Dialog open={placeModal} onClose={e => setPlaceModal(false)}>
               <DialogTitle className="text-center">
                 Información del cliente
               </DialogTitle>
@@ -800,30 +797,27 @@ export default function OrdersRow({
                         Disponibilidad: {`${order?.availability}`}
                       </li>
                       <li className="text-[12px] text-start">
-                        Ciudad: {value.address.city}{" "}
+                        Ciudad: {value?.address.city}{" "}
                       </li>
                       <li className="text-[12px] text-start">
-                        Localidad: {value.address.locality}
+                        Localidad: {value?.address.locality}
                       </li>
                       <li className="text-[12px] text-start">
                         Calle:
-                        {` ${value.address.name} ${value.address.number}`}
+                        {` ${value?.address.name} ${value?.address.number}`}
                       </li>
                       <li className="text-[12px] text-start">
-                        Piso/Casa: {value.address.floorOrApartment}{" "}
+                        Piso/Casa: {value?.address.floorOrApartment}{" "}
                       </li>
                       <li className="text-[12px] text-start">
-                        C.P: {value.address.zipCode}{" "}
+                        C.P: {value?.address.zipCode}{" "}
                       </li>
                     </ul>
                   </div>
                 </section>
               </DialogContent>
               <DialogActions>
-                <Button
-                  variant="contained"
-                  onClick={(e) => setPlaceModal(false)}
-                >
+                <Button variant="contained" onClick={e => setPlaceModal(false)}>
                   Cerrar
                 </Button>
               </DialogActions>
