@@ -1,6 +1,7 @@
 import { Rabbit, enc } from "crypto-js";
 
-const key = import.meta.env.VITE_DECRYPT_KEY;
+const key = "6f0cde73-0044-4337-90e7-e8440c6181db";
+// const key = import.meta.env.VITE_DECRYPT_KEY;
 
 function decrypt(data) {
   if (data == null) return null;
