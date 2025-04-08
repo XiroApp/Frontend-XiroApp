@@ -339,6 +339,16 @@ export default function TyC() {
             prueba suficiente que XIRO cumplió con el envio del pedido y el
             cliente se ausentó o no dio respuestas)
           </p>
+          Entregas: Martes y viernes entre las 9hs a 13hs y 15hs a 20hs. Los
+          pedidos ingresados hasta las 12pm del día previo al de entrega, se
+          entregarán en el día previsto. Los que ingresan después de las 12pm se
+          entregarán el día de entrega siguiente. Si querés saber el estado de
+          tu pedido escribimos al WhatsApp indicando tu <strong>nombre</strong>.
+          Para entregas a domicilio el cadete se contactará por el mismo medio
+          para coordinar la entrega y horario el día de entrega. Para retiros
+          por punto de entrega, recibirás notificación: “pedido listo para
+          retirar” ya sea por Mail o por WhatsApp. Una vez recibida podes pasar
+          a retirar en los horarios comerciales del local.
           <p>8.5. Exclusión de garantías:</p>
           <p>
             XIRO no garantiza que el servicio cumpla con todas las expectativas

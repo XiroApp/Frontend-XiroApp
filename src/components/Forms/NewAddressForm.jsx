@@ -289,7 +289,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                       )}
                     </div>
                     <div className="flex flex-col w-full">
-                      <span className="text-sm ">PISO/DEPARTAMENTO</span>
+                      <span className="text-sm ">PISO/CASA</span>
                       <Input
                         error={error.floorOrApartment}
                         name="floorOrApartment"
@@ -328,7 +328,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                     </div>
                     {/* AUTOCOMPLETE DE CIUDADES */}
                     <div className="flex flex-col w-full">
-                      <span className="text-sm">LOCALIDAD</span>
+                      <span className="text-sm">DEPARTAMENTO</span>
                       <Autocomplete
                         inputValue={inputCityValue}
                         onInputChange={(event, newInputValue) => {

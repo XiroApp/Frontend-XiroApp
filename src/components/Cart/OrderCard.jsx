@@ -57,21 +57,27 @@ export default function OrderCard({
     setShowEditModal({ show: true, orderToEdit: order });
   }
 
+  console.log(order);
+
   return (
-    <div className="flex flex-col gap-2 border border-gray-500 rounded-md p-3">
-      <div className="flex gap-2 items-center justify-between">
-        <span className="text-black text-[12px] font-[400]">
-          Impresión {order.color === "BN" ? "en blanco y negro" : "a color"}{" "}
-          {order.size} x {order?.numberOfCopies}
-        </span>
+    <div className="flex flex-col gap-2 border-2 border-[#789360] rounded-md p-3 drop-shadow-2xl shadow-2xl">
+      <div className="flex gap-2 items-start justify-between">
+        <div className="flex flex-col">
+          <span className="text-black text-[12px] font-[600]">
+            Impresión {order.color === "BN" ? "en blanco y negro" : "a color"}{" "}
+            {order.size} x {order?.numberOfCopies}.
+          </span>
+          <span className="text-black text-[12px] font-[600]">
+            Total de páginas:{`${order?.totalPages}`}
+            {/* ${order?.totalPages > 1 ? "páginas" : "página"} */}
+          </span>
+        </div>
         <div className="flex items-center gap-2">
-          <Tooltip arrow placement="top" title="Editar" sx={{}}>
-            {/* <Link to={`/editarPedido/${order.orderUid}`}> */}
+          {/* <Tooltip arrow placement="top" title="Editar" sx={{}}>
             <button onClick={(e) => handleEditOrder(e)}>
               <EditIcon sx={{ width: "0.8em", height: "0.8em" }} />
             </button>
-            {/* </Link> */}
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip arrow placement="top" title="Eliminar" sx={{}}>
             <button onClick={(e) => setDeleteOrderModal(true)}>
               <DeleteIcon sx={{ width: "0.8em", height: "0.8em" }} />
@@ -80,36 +86,34 @@ export default function OrderCard({
         </div>
       </div>
 
-      <div className="flex flex-wrap w-72 gap-2">
-        <div className="bg-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
+      <div className="flex flex-wrap w-72 gap-2 text-black font-bold">
+        <div className="border-2 border-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
           {order?.color}
         </div>
-        <div className="bg-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
+        <div className="border-2 border-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
           {order?.size}
         </div>
-        <div className="bg-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
-          {order?.finishing}
-        </div>
-        <div className="bg-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
+        <div className="border-2 border-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
           {order?.copiesPerPage === "Normal"
             ? order?.copiesPerPage
             : order?.copiesPerPage + " por cara"}
         </div>
-        <div className="bg-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
+        <div className="border-2 border-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
           {order?.orientacion}
         </div>
+        <div className="border-2 border-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
+          {order?.finishing} {order?.group}
+        </div>
+        {/* <div className="border-2 border-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center"></div> */}
         {/* <div className="bg-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
           
         </div> */}
       </div>
       <div>
-        <button
-          onClick={() => setFilesModal(true)}
-          className="flex items-center border border-gray-500 hover:bg-[#789360] rounded-md p-2 text-[12px]"
-        >
+        <Button variant="contained" onClick={() => setFilesModal(true)}>
           <AttachFileIcon sx={{ width: "0.8em", height: "0.8em" }} />
           <span>Ver documentos adjuntos</span>
-        </button>
+        </Button>
       </div>
       {/* DELETE MODAL  */}
       <Dialog
@@ -156,9 +160,7 @@ export default function OrderCard({
           </div>
         </div>
       </Dialog>
-
       {/* FILES MODAL */}
-
       <Modal
         open={filesModal}
         onClose={() => setFilesModal(false)}
@@ -174,14 +176,19 @@ export default function OrderCard({
           <section className="flex flex-col px-5 py-10 gap-10">
             {order?.files?.map((file, index) => (
               <div key={index} className="flex justify-between">
-                <span className="text-[12px] font-[500]">{file.slice(11)}</span>
+                <span className="text-[12px] font-[500]">
+                  {" "}
+                  {file?.slice(20).length > 37
+                    ? `${file?.slice(20, 25)}...`
+                    : `${file?.slice(20, -4)}`}
+                </span>
                 <Tooltip placement="top" title="Ver en pantalla completa">
                   <a
                     target="_blank"
                     href={`https://firebasestorage.googleapis.com/v0/b/xiro-app-2ec87.firebasestorage.app/o/${file}?alt=media&token=e7b0f280-413a-4546-aa2b-da0cd3523289`}
-                    >
+                  >
                     <VisibilityIcon
-                      className="hover:bg-gray-500 rounded-lg"
+                      className="hover:bg-green-700 rounded-lg"
                       sx={{ height: "0.7em", width: "0.7em" }}
                     />
                   </a>

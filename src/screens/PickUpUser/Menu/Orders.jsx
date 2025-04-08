@@ -81,6 +81,7 @@ export default function Orders({ editor }) {
             clientUid: order.clientUid,
             uidPrinting: order.uidPrinting,
             uidDelivery: order.uidDelivery,
+            clientUser: order.clientUser,
             report: order.report,
             createdAt: fechaFormateada,
             place: order.place,

@@ -27,6 +27,15 @@ import {
   changeOrderStatus,
   getUserByUid,
 } from "../../redux/actions/adminActions";
+import {
+  Close,
+  Diversity3,
+  Inventory2Outlined,
+  MopedOutlined,
+  PermIdentity,
+  WarehouseOutlined,
+} from "@mui/icons-material";
+import { OrdersAdapter } from "../../Infra/Adapters/orders.adatper";
 
 const Accordion = styled(props => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -75,9 +84,8 @@ export default function OrdersRow({
   order,
   editor,
   fetchOrders,
+  classes,
 }) {
-  //  console.log(order);
-
   const dispatch = useDispatch();
   /* VIEW FILES MODAL */
   const [open, setOpen] = useState(false);
@@ -85,14 +93,17 @@ export default function OrdersRow({
   const handleOpenFilesModal = e => {
     setOpen(true);
   };
+  /* VIEW ASSIGNED MODAL */
+  const [openAssignedModal, setOpenAssignedModal] = useState(false);
+
+  const handleOpenAssignedModal = async () => {
+    setOpenAssignedModal(true);
+  };
   /* VIEW CLIENT MODAL */
   const [openClientModal, setOpenClientModal] = useState(false);
-  const [clientInfo, setClientInfo] = useState({});
 
   const handleOpenClientModal = async uid => {
     setOpenClientModal(true);
-    let clientData = await getUserByUid(uid);
-    setClientInfo(clientData);
   };
 
   /* FILES ACCORDION */
@@ -108,9 +119,6 @@ export default function OrdersRow({
   const [placeModal, setPlaceModal] = useState(false);
   const [printingSelectStatus, setPrintingSelectStatus] = useState(null);
   const [deliverySelectStatus, setDeliverySelectStatus] = useState(null);
-  const [distributionSelectStatus, setDistributionSelectStatus] =
-    useState(null);
-  const [pickupSelectStatus, setPickupSelectStatus] = useState(null);
   const [problemsSelectStatus, setProblemsSelectStatus] = useState(null);
 
   const handleSetEdiStatus = e => {
@@ -119,7 +127,6 @@ export default function OrdersRow({
     setDeliverySelectStatus(false);
     setProblemsSelectStatus(false);
   };
-  // console.log(orderId);
 
   /* STATUS PRINTING */
   const [input, setInput] = useState({
@@ -207,11 +214,72 @@ export default function OrdersRow({
   }
 
   return (
-    <>
-      <TableCell key={column.id} align={column.align} className="p-0 m-0">
+    <td key={column.id} align={column.align} className={classes}>
+      <div className="flex items-center w-fit">
+        {column.id === "price" && (
+          <span className="text-sm font-bold">${value}</span>
+        )}
         {column.id === "order_number" && (
+          <span className="font-bold">{order.order_number}</span>
+        )}
+        {column.id === "createdAt" && (
           <>
-            <span className="text-sm font-bold">{value}</span>
+            <span className="text-sm">{value}</span>
+          </>
+        )}
+        {column.id === "paymentId" && (
+          <span className="text-sm">{order.paymentId}</span>
+        )}
+        {column.id === "transactionAmount" && (
+          <>
+            <Button
+              color="inherit"
+              variant="text"
+              className="hover:underline"
+              onClick={e => setPriceModal(true)}
+            >
+              <span>$ {order.transactionAmount}</span>
+            </Button>
+
+            {/* MODAL FORMULARIO */}
+            <Dialog open={priceModal} onClose={e => setPriceModal(false)}>
+              <DialogTitle className="text-center">Monto</DialogTitle>
+              <DialogContent dividers className="flex flex-col gap-8">
+                <section className="flex flex-col justify-start items-start ">
+                  <ul className="flex flex-col items-start justify-start">
+                    <li>
+                      <span className="text-[12px] text-black">
+                        {`Subtotal: $${order.subtotal_price}`}
+                      </span>
+                    </li>
+                    <li>
+                      <span className="text-[12px] text-black">
+                        {`Envío: $${order.shipment_price}`}
+                      </span>
+                    </li>
+                    {order.cart.map((item, index) => (
+                      <li key={index}>
+                        <span className="text-[12px] text-black">
+                          {`Cupón ${index + 1}: ${
+                            item?.coupon_used?.type[0] || ""
+                          } ${item?.coupon_used?.ammount || 0}`}
+                        </span>
+                      </li>
+                    ))}
+                    {/* <li>
+                      <span className="text-[12px] text-black">
+                        {`Cupón: ${order.cart[0].details.coupon}`}
+                      </span>
+                    </li> */}
+                  </ul>
+                </section>
+              </DialogContent>
+              <DialogActions>
+                <Button variant="contained" onClick={e => setPriceModal(false)}>
+                  Cerrar
+                </Button>
+              </DialogActions>
+            </Dialog>
           </>
         )}
         {column.id === "orderStatus" && (
@@ -267,103 +335,126 @@ export default function OrdersRow({
                       : "🚨 REVISAR ESTADO 🚨"}
                   </Typography>
                   <Typography>
-                    Motivo: "
                     {value === "problems" && !!input.report
-                      ? input.report
+                      ? "Motivo: " + input.report
                       : null}
-                    "
                   </Typography>
                   <div className="w-full">
                     {/* AUTOCOMPLETE DE ESTADOS */}
                     <div className="flex flex-col w-full">
-                      <label className="py-2" hrmlFor="orderStatus">
-                        Cambiar estado de orden
-                      </label>
-                      <select
-                        onChange={e => handleInput(e)}
-                        name="orderStatus"
-                        id="orderStatus"
-                        className="border rounded-l p-2 bg-white"
-                      >
-                        {editor === "pickupUser" ? (
-                          <>
-                            <option value="pickup">Seleccionar</option>
-                            <option value="received">
-                              Entregado a cliente ✅
-                            </option>
-                            <option value="problems">
-                              Reportar problemas 📛
-                            </option>
-                          </>
-                        ) : (
-                          false
-                        )}
-                        {editor === "deliveryUser" ? (
-                          <>
-                            <option value="in_delivery">Seleccionar</option>
-                            <option value="distribution">
-                              Regresar a punto de distribución 🏤
-                            </option>
-                            <option value="received">
-                              Entregado a cliente ✅
-                            </option>
-                            <option value="problems">
-                              Reportar problemas 📛
-                            </option>
-                          </>
-                        ) : (
-                          false
-                        )}
-                        {editor === "adminUser" ? (
-                          <>
-                            <option value="pending">Seleccionar</option>
-                            <option value="unassigned">No asignado 🚦</option>
-                            <option value="pending">Pendiente ⏳</option>
-                            <option value="process">En proceso 🔨</option>
-                            <option value="printed">Impreso 📄</option>
-                            <option value="problems">Con problemas 📛</option>
-                            <option value="in_delivery">En delivery 🛸</option>
-                            <option value="received">Recibido ✅</option>
-                          </>
-                        ) : (
-                          false
-                        )}
-                        {editor === "printingUser" ? (
-                          <>
-                            <option value="printed">Seleccionar</option>
-                            <option value="pending">Pendiente ⏳</option>
-                            <option value="process">En proceso 🔨</option>
-                            <option value="printed">Impreso 📄</option>
-                            <option value="problems">
-                              Reportar problemas 📛
-                            </option>
-                            {order.place.type === "Envío a domicilio" ? (
-                              <option value="distribution">
-                                Enviado a punto de distribución 🏤
-                              </option>
+                      {editor === "deliveryUser" && value == "distribution" ? (
+                        <div className="flex flex-col gap-1">
+                          <p>
+                            Dirígete al punto de distribución para retirar el
+                            pedido.
+                          </p>
+                          <Typography className="">
+                            <span className="font-bold"> Dirección: </span>
+                            {`${order.distributionUser.addresses[0].name} ${order.distributionUser.addresses[0].number}, ${order.distributionUser.addresses[0].locality}, ${order.distributionUser.addresses[0].city}`}
+                          </Typography>
+                        </div>
+                      ) : (
+                        <>
+                          <label className="py-2" hrmlFor="orderStatus">
+                            Cambiar estado de orden
+                          </label>
+                          <select
+                            onChange={e => handleInput(e)}
+                            name="orderStatus"
+                            id="orderStatus"
+                            className="border rounded-l p-2 bg-white"
+                          >
+                            {editor === "pickupUser" ? (
+                              <>
+                                <option value="pickup">Seleccionar</option>
+                                <option value="received">
+                                  Entregado a cliente ✅
+                                </option>
+                                <option value="problems">
+                                  Reportar problemas 📛
+                                </option>
+                              </>
                             ) : (
-                              <option value="pickup">
-                                Enviar a punto pickup 🏃‍♂️
-                              </option>
+                              false
                             )}
-                          </>
-                        ) : (
-                          false
-                        )}
-                        {editor === "distributionUser" ? (
-                          <>
-                            <option value="distribution">Seleccionar</option>
-                            <option value="in_delivery">
-                              Entregado a delivery 🛸
-                            </option>
-                            <option value="problems">
-                              Reportar problemas 📛
-                            </option>
-                          </>
-                        ) : (
-                          false
-                        )}
-                      </select>
+
+                            {editor === "deliveryUser" &&
+                            value !== "distribution" ? (
+                              <>
+                                <option value="in_delivery">Seleccionar</option>
+                                {/* <option value="distribution">
+                                  Regresar a punto de distribución 🏤
+                                </option> */}
+                                <option value="received">
+                                  Entregado a cliente ✅
+                                </option>
+                                <option value="problems">
+                                  Reportar problemas 📛
+                                </option>
+                              </>
+                            ) : (
+                              false
+                            )}
+                            {editor === "adminUser" ? (
+                              <>
+                                <option value="pending">Seleccionar</option>
+                                <option value="unassigned">
+                                  No asignado 🚦
+                                </option>
+                                <option value="pending">Pendiente ⏳</option>
+                                <option value="process">En proceso 🔨</option>
+                                <option value="printed">Impreso 📄</option>
+                                <option value="problems">
+                                  Con problemas 📛
+                                </option>
+                                <option value="in_delivery">
+                                  En delivery 🛸
+                                </option>
+                                <option value="received">Recibido ✅</option>
+                              </>
+                            ) : (
+                              false
+                            )}
+                            {editor === "printingUser" ? (
+                              <>
+                                <option value="printed">Seleccionar</option>
+                                <option value="pending">Pendiente ⏳</option>
+                                <option value="process">En proceso 🔨</option>
+                                <option value="printed">Impreso 📄</option>
+                                <option value="problems">
+                                  Reportar problemas 📛
+                                </option>
+                                {order.place.type === "Envío a domicilio" ? (
+                                  <option value="distribution">
+                                    Enviado a punto de distribución 🏤
+                                  </option>
+                                ) : (
+                                  <option value="pickup">
+                                    Enviar a punto pickup 🏃‍♂️
+                                  </option>
+                                )}
+                              </>
+                            ) : (
+                              false
+                            )}
+                            {editor === "distributionUser" ? (
+                              <>
+                                <option value="distribution">
+                                  Seleccionar
+                                </option>
+                                <option value="in_delivery">
+                                  Entregado a delivery 🛸
+                                </option>
+                                <option value="problems">
+                                  Reportar problemas 📛
+                                </option>
+                              </>
+                            ) : (
+                              false
+                            )}
+                          </select>
+                        </>
+                      )}
                     </div>
                   </div>
 
@@ -448,7 +539,7 @@ export default function OrdersRow({
             </Dialog>
           </>
         )}
-        {typeof value === "object" && value?.length && (
+        {column.id === "cart" && (
           <>
             <Button
               color="inherit"
@@ -456,7 +547,7 @@ export default function OrdersRow({
               onClick={e => handleOpenFilesModal(e)}
               // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
-              <Typography>Ver Pedido</Typography>
+              <Inventory2Outlined />
             </Button>
 
             {/* MODAL FORMULARIO */}
@@ -466,7 +557,7 @@ export default function OrdersRow({
               </DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8">
                 <section className="flex flex-col gap-4">
-                  {value?.map((order, index) => {
+                  {order?.cart?.map((order, index) => {
                     return (
                       <div key={index} className="flex flex-col gap-1">
                         <h3>Pedido {index + 1}</h3>
@@ -545,6 +636,14 @@ export default function OrdersRow({
                                     {order.finishing}
                                   </span>
                                 </li>
+                                <li>
+                                  <span className="font-light">
+                                    Agrupación:
+                                  </span>
+                                  <span className="font-bold">
+                                    {order?.group || "Sin información"}
+                                  </span>
+                                </li>
                               </ul>
                             </AccordionDetails>
                           </Accordion>
@@ -602,98 +701,66 @@ export default function OrdersRow({
             </Dialog>
           </>
         )}
-        {column.id === "paymentId" && (
-          <span className="font-bold">{value}</span>
-        )}
-        {column.id === "statusDetail" && (
-          <div>
-            {" "}
-            {value === "accredited" ? (
-              <div className="flex flex-col items-center gap-1">
-                {/* <DoneIcon
-                  sx={{ width: "1.4rem", height: "1.4rem" }}
-                  className="text-green-500"
-                /> */}
-                <span className="text-green-500 ">acreditado</span>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center gap-1">
-                <ErrorIcon
-                  sx={{ width: "1.4rem", height: "1.4rem" }}
-                  className="text-red-500"
-                />
-                <span className="text-red-500">{value}</span>
-              </div>
-            )}
-          </div>
-        )}
-        {column.id === "paymentStatus" && (
-          <div className="font-bold">
-            {value === "approved" ? (
-              <div className="flex flex-col items-center gap-1">
-                {/* <DoneIcon
-                  sx={{ width: "1.4rem", height: "1.4rem" }}
-                  className="text-green-500"
-                /> */}
-                <span className="text-green-500">aprobado</span>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center gap-1">
-                <ErrorIcon
-                  sx={{ width: "1.4rem", height: "1.4rem" }}
-                  className="text-red-500"
-                />
-                <span className="text-red-500">{value}</span>
-              </div>
-            )}
-          </div>
-        )}
-        {column.id === "transactionAmount" && (
+
+        {column.id === "assigned" && (
           <>
             <Button
               color="inherit"
               variant="text"
-              className="hover:underline"
-              onClick={e => setPriceModal(true)}
+              onClick={() => {
+                handleOpenAssignedModal();
+              }}
+              // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
-              <Typography>${order.transactionAmount}</Typography>
+              <Diversity3 />
             </Button>
 
             {/* MODAL FORMULARIO */}
-            <Dialog open={priceModal} onClose={e => setPriceModal(false)}>
-              <DialogTitle className="text-center">Monto</DialogTitle>
+            <Dialog
+              open={openAssignedModal}
+              onClose={e => setOpenAssignedModal(false)}
+            >
+              <DialogTitle className="text-center">Responsables</DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8">
-                <section className="flex flex-col justify-start items-start ">
-                  <ul className="flex flex-col items-start justify-start">
+                <section className="flex flex-col gap-4">
+                  <ul className="flex flex-col gap-2">
                     <li>
-                      <span className="text-[12px] text-black">
-                        {`Subtotal: $${order.subtotal_price}`}
-                      </span>
+                      Imprenta:{" "}
+                      {order?.printingUser
+                        ? order.printingUser.displayName
+                        : "Sin asignar"}
                     </li>
+
                     <li>
-                      <span className="text-[12px] text-black">
-                        {`Envío: $${order.shipment_price}`}
-                      </span>
+                      Punto de Distribución:{" "}
+                      {order?.distributionUser
+                        ? order.distributionUser.displayName
+                        : "Sin asignar"}
                     </li>
-                    {order.cart.map((item, index) => (
-                      <li key={index}>
-                        <span className="text-[12px] text-black">
-                          {`Cupón ${index + 1}: ${
-                            item?.coupon_used?.type[0] || ""
-                          } ${item?.coupon_used?.ammount || 0}`}
-                        </span>
+
+                    {order?.place?.type === "Envío a domicilio" ? (
+                      <li>
+                        Delivery:{" "}
+                        {order?.deliveryUser
+                          ? order.deliveryUser.displayName
+                          : "Sin asignar"}
                       </li>
-                    ))}
-                    {/* <li>
-                      <span className="text-[12px] text-black">
-                        {`Cupón: ${order.cart[0].details.coupon}`}
-                      </span>
-                    </li> */}
+                    ) : (
+                      <li>
+                        Punto Pick Up:{" "}
+                        {order?.pickupUser
+                          ? order.pickupUser.displayName
+                          : "Sin asignar"}
+                      </li>
+                    )}
                   </ul>
                 </section>
               </DialogContent>
               <DialogActions>
-                <Button variant="contained" onClick={e => setPriceModal(false)}>
+                <Button
+                  variant="contained"
+                  onClick={e => setOpenAssignedModal(false)}
+                >
                   Cerrar
                 </Button>
               </DialogActions>
@@ -710,7 +777,7 @@ export default function OrdersRow({
               }}
               // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
-              <Typography> Ver cliente</Typography>
+              <PermIdentity />
             </Button>
 
             {/* MODAL FORMULARIO */}
@@ -718,49 +785,43 @@ export default function OrdersRow({
               open={openClientModal}
               onClose={e => setOpenClientModal(false)}
             >
-              <DialogTitle className="text-center">
-                Información del cliente
+              <DialogTitle className="text-center flex items-center justify-between">
+                <Typography variant="h6">Información del Cliente </Typography>
+                <Button variant="text" onClick={e => setOpenClientModal(false)}>
+                  <Close />
+                </Button>
               </DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8">
                 <section className="flex flex-col gap-4">
                   <ul>
-                    <li>Nombre: {clientInfo?.displayName}</li>
+                    <li>Nombre: {order.clientUser?.displayName}</li>
                     <li className="flex items-center gap-2">
-                      <span>Teléfono: {clientInfo?.phone}</span>
-                      <a
-                        className="underline hover:text-green-500 flex items-center p-1 border rounded-md "
-                        href={`https://wa.me/${clientInfo.areaCode}${clientInfo?.phone}?text=Hola, deseo comunicarme con el soporte de XIRO.`}
-                      >
-                        <WhatsAppIcon />
-                      </a>
-                      <a
-                        className="underline hover:text-blue-500 flex items-center p-1 border rounded-md "
-                        href={`tel:+${clientInfo.areaCode}${clientInfo?.phone}?`}
-                      >
-                        <PhoneForwardedIcon />
-                      </a>
+                      <span>Teléfono: {order.clientUser?.phone}</span>
                     </li>
-                    <li>Email: {clientInfo?.email}</li>
+                    <li>Email: {order.clientUser?.email}</li>
                   </ul>
                 </section>
               </DialogContent>
               <DialogActions>
-                <Button
-                  variant="contained"
-                  onClick={e => setOpenClientModal(false)}
-                >
-                  Cerrar
+                <Button variant="contained" color="success">
+                  <a
+                    href={`https://wa.me/${order?.clientUser?.areaCode}${order?.clientUser?.phone}?text=Hola! Te escribimos desde XIRO para darte información sobre tu pedido.`}
+                  >
+                    <WhatsAppIcon />
+                  </a>
+                </Button>
+                <Button variant="contained" color="info">
+                  <a
+                    href={`tel:+${order?.clientUser?.areaCode}${order?.clientUser?.phone}?`}
+                  >
+                    <PhoneForwardedIcon />
+                  </a>
                 </Button>
               </DialogActions>
             </Dialog>
           </>
         )}
 
-        {column.id === "createdAt" && (
-          <>
-            <span className="text-sm">{value}</span>
-          </>
-        )}
         {column.id === "place" && (
           <>
             <Button
@@ -769,16 +830,19 @@ export default function OrdersRow({
               onClick={() => {
                 setPlaceModal(true);
               }}
-              // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
-              <div className="flex justify-center items-start">
-                <span className="">
-                  {`${
-                    value?.type === "Envío a domicilio" ? "Envío" : value?.type
-                  } | `}
-                </span>
-                <span className="">{`${order?.availability}`}</span>
-              </div>
+              {order?.place?.type === "Envío a domicilio" ? (
+                <>
+                  <MopedOutlined className="h-4 w-4" /> | Envío
+                </>
+              ) : order?.place?.type === "Retiro" ? (
+                <>
+                  <WarehouseOutlined className="h-4 w-4" /> |{" "}
+                  {order?.place?.type}
+                </>
+              ) : (
+                order?.place?.type || "Revisar pedido"
+              )}
             </Button>
 
             {/* MODAL FORMULARIO */}
@@ -797,20 +861,20 @@ export default function OrdersRow({
                         Disponibilidad: {`${order?.availability}`}
                       </li>
                       <li className="text-[12px] text-start">
-                        Ciudad: {value?.address.city}{" "}
+                        Ciudad: {value?.address?.city}{" "}
                       </li>
                       <li className="text-[12px] text-start">
-                        Localidad: {value?.address.locality}
+                        Localidad: {value?.address?.locality}
                       </li>
                       <li className="text-[12px] text-start">
                         Calle:
-                        {` ${value?.address.name} ${value?.address.number}`}
+                        {` ${value?.address?.name} ${value?.address?.number}`}
                       </li>
                       <li className="text-[12px] text-start">
-                        Piso/Casa: {value?.address.floorOrApartment}{" "}
+                        Piso/Casa: {value?.address?.floorOrApartment}{" "}
                       </li>
                       <li className="text-[12px] text-start">
-                        C.P: {value?.address.zipCode}{" "}
+                        C.P: {value?.address?.zipCode}{" "}
                       </li>
                     </ul>
                   </div>
@@ -824,7 +888,25 @@ export default function OrdersRow({
             </Dialog>
           </>
         )}
-      </TableCell>
-    </>
+
+        {column.id === "paymentStatus" && (
+          <div className=" flex flex-col justify-center items-center ">
+            {order.paymentStatus === "approved" ? (
+              <span className="text-green-500 text-sm">aprobado</span>
+            ) : (
+              <span className="text-red-500 text-sm">
+                {order.paymentStatus}
+              </span>
+            )}
+
+            {order.statusDetail === "accredited" ? (
+              <span className="text-green-500 text-sm ">acreditado</span>
+            ) : (
+              <span className="text-red-500 text-sm">{order.statusDetail}</span>
+            )}
+          </div>
+        )}
+      </div>
+    </td>
   );
 }

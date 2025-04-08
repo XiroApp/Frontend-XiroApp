@@ -40,8 +40,8 @@ function App() {
   useEffect(() => {
     if (sessionUser) {
       dispatch(getLoggedUser(sessionUser));
-      dispatch(getInAppLabels());
     }
+    dispatch(getInAppLabels());
   }, []);
 
   useEffect(() => {

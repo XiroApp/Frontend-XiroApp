@@ -7,60 +7,60 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
-import { Input } from "@mui/material";
+import {
+  Backdrop,
+  CircularProgress,
+  Input,
+  TableFooter,
+  Typography,
+} from "@mui/material";
 import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper.js";
 import { UsersAdapter } from "../../../Infra/Adapters/users.adapter.js";
 
 const columns = [
   {
     id: "order_number",
-    label: "N° Orden",
-    minWidth: 100,
+    label: "N° de orden",
     align: "center",
   },
   {
     id: "createdAt",
-    label: "Fecha de llegada",
-    minWidth: 100,
+    label: "Fecha ingreso",
     align: "center",
   },
-  { id: "paymentId", label: "ID de pago", minWidth: 100, align: "center" },
-  {
-    id: "paymentStatus",
-    label: "Estado de Pago",
-    minWidth: 100,
-    align: "center",
-  },
-  {
-    id: "statusDetail",
-    label: "Detalle de Pago",
-    minWidth: 100,
-    align: "center",
-  },
+  { id: "paymentId", label: "ID de pago", align: "center" },
   {
     id: "transactionAmount",
     label: "Monto",
-    minWidth: 50,
     align: "center",
   },
   {
     id: "orderStatus",
     label: "Estado de Orden",
-    minWidth: 300,
     align: "center",
   },
+
   {
     id: "place",
     label: "Tipo de entrega",
-    minWidth: 150,
+
     align: "center",
   },
-  { id: "cart", label: "Pedido", minWidth: 100, align: "center" },
+  { id: "cart", label: "Productos", align: "center" },
 
+  {
+    id: "assigned",
+    label: "Responsables",
+    align: "center",
+  },
   {
     id: "clientUid",
     label: "Cliente",
-    minWidth: 150,
+  },
+  {
+    id: "paymentStatus",
+    label: "Estado de Pago",
+
     align: "center",
   },
 ];
@@ -72,39 +72,38 @@ export default function Orders({ editor, role }) {
   const [pickupUsers, setPickupUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [pageSize, setPageSize] = useState(10); // Tamaño de la página
-  const [nextVisible, setNextVisible] = useState(null); // Último documento visible para la paginación hacia adelante
-  const [prevVisible, setPrevVisible] = useState(null); // Primer documento visible para la paginación hacia atrás
-  const [hasNext, setHasNext] = useState(false); // Indica si hay más páginas hacia adelante
-  const [hasPrev, setHasPrev] = useState(false); // Indica si hay más páginas hacia atrás
+  const [pageSize, setPageSize] = useState(15); // Tamaño de la página
+  const [lastDocument, setLastDocument] = useState(null); //
+  const [hasMore, setHasMore] = useState(true); // Track if there are more pages
+
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const fetchOrders = async (direction = "next") => {
     setLoading(true);
     setError(null);
+    setOrders([]);
 
     try {
       const data = await OrdersAdapter.getOrdersPaginated(
         pageSize,
-        nextVisible,
-        prevVisible,
-        direction,
-        "admin"
+        page,
+        lastDocument,
+        "admin",
+        direction
       );
 
-      // Actualizar el estado de las órdenes
-      setOrders(data.orders);
-      // Actualizar los valores de paginación
-      // console.log(data.nextLastVisible);
-      // console.log(data.firstVisible);
-      // console.log(!!data.nextLastVisible);
-      // console.log(!!data.firstVisible);
-      setNextVisible(data.nextLastVisible || null);
-      setPrevVisible(data.firstVisible || null);
-      setHasNext(!!data.nextLastVisible);
-      setHasPrev(!!data.firstVisible);
+      const { orders: fetchedOrders, lastVisible: newLastVisible } = data;
+
+      // if (direction === "next") {
+      //   setOrders([...orders, ...fetchedOrders]);
+      // } else {
+      setOrders(fetchedOrders);
+      // }
+
+      setLastDocument(newLastVisible);
+      setHasMore(fetchedOrders.length === pageSize); // Update hasMore
     } catch (err) {
       setError(err.message);
     } finally {
@@ -122,7 +121,7 @@ export default function Orders({ editor, role }) {
   };
 
   useEffect(() => {
-    fetchOrders();
+    fetchOrders("next");
     fetchUsersByRole();
   }, []);
 
@@ -255,74 +254,114 @@ export default function Orders({ editor, role }) {
       </div>
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: 650, backgroundColor: "#f2f2f4" }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
+          <table className="w-full min-w-max table-auto text-left">
+            <thead>
+              <tr>
                 {columns.map((column, index) => (
-                  <TableCell
+                  <th
                     key={index}
                     align={column.align}
                     style={{ minWidth: column.minWidth }}
-                    sx={{ maxHeight: 650, backgroundColor: "#f2f2f4" }}
+                    className=" cursor-pointer border-y border-blue-gray-400 p-4 transition-colors"
                   >
-                    {column.label}
-                  </TableCell>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
+                      id={column.label}
+                      // onClick={(e) => handleSortUsers(e)}
+                    >
+                      {column.label}
+                      {/* {index !== column.length - 1 && (
+                        <ChevronLeftSharp
+                          strokeWidth={2}
+                          className="h-4 w-4"
+                          id={column.filterName}
+                          onClick={(e) => handleSortUsers(e)}
+                        />
+                      )} */}
+                    </Typography>
+                  </th>
                 ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orders?.length
-                ? orders.map((order, index) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="button"
-                        tabIndex={-1}
-                        key={index}
-                        className="p-0 m-0"
-                      >
-                        {columns.map((column, index) => {
-                          const value = order[column.id];
-                          return (
-                            <OrdersRow
-                              key={index}
-                              value={value}
-                              column={column}
-                              printingUsers={printingUsers}
-                              deliveryUsers={deliveryUsers}
-                              distributionUsers={distributionUsers}
-                              pickupUsers={pickupUsers}
-                              orderId={order.paymentId}
-                              order={order}
-                              editor={editor}
-                              fetchOrders={fetchOrders}
-                            />
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })
-                : null}
-            </TableBody>
-          </Table>
+              </tr>
+            </thead>
+            <tbody>
+              {orders?.length ? (
+                orders.map((order, index) => {
+                  const isLast = index === orders.length - 1;
+                  const classes = isLast
+                    ? "w-fit px-4"
+                    : "w-fit px-4 border-y border-green-500/50";
+
+                  return (
+                    <tr
+                      role="button"
+                      tabIndex={-1}
+                      key={index}
+                      className={
+                        index === selectedRow
+                          ? "p-0 m-0 bg-green-900/80 text-white "
+                          : "p-0 m-0 hover:bg-green-900/50 "
+                      }
+                      onClick={(e) =>
+                        selectedRow == index
+                          ? setSelectedRow(null)
+                          : setSelectedRow(index)
+                      }
+                    >
+                      {columns.map((column, index) => {
+                        const value = order[column.id];
+                        return (
+                          <OrdersRow
+                            key={index}
+                            value={value}
+                            column={column}
+                            printingUsers={printingUsers}
+                            deliveryUsers={deliveryUsers}
+                            distributionUsers={distributionUsers}
+                            pickupUsers={pickupUsers}
+                            orderId={order.paymentId}
+                            order={order}
+                            editor={editor}
+                            fetchOrders={fetchOrders}
+                            classes={classes}
+                          />
+                        );
+                      })}
+                    </tr>
+                  );
+                })
+              ) : (
+                <Backdrop
+                  sx={{
+                    color: "#fff",
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                  }}
+                  open={loading}
+                >
+                  <CircularProgress color="inherit" />
+                </Backdrop>
+              )}
+            </tbody>
+            <TableFooter>
+              <div className="flex w-full gap-4">
+                <button
+                  onClick={() => fetchOrders("prev")}
+                  disabled={!lastDocument || loading}
+                >
+                  Anterior
+                </button>
+
+                <button
+                  onClick={() => fetchOrders("next")}
+                  disabled={!hasMore || loading}
+                >
+                  Siguiente
+                </button>
+              </div>
+            </TableFooter>
+          </table>
         </TableContainer>
-        <div className="flex gap-4">
-          <button
-            onClick={() => fetchOrders("prev")}
-            // disabled={!hasPrev || loading}
-            disabled={loading}
-          >
-            Anterior
-          </button>{" "}
-          |
-          <button
-            onClick={() => fetchOrders("next")}
-            // disabled={!hasNext || loading}
-            disabled={loading}
-          >
-            Siguiente
-          </button>
-        </div>
       </Paper>
     </div>
   );

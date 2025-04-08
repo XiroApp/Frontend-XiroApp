@@ -3,6 +3,7 @@ import HelpIcon from "@mui/icons-material/Help";
 import NewOrderSettingsHelpDesktop from "../Help/NewOrderSettingsHelpDesktop";
 import { useDispatch } from "react-redux";
 import { setToast } from "../../redux/actions";
+import { Tooltip } from "@mui/material";
 
 export default function NewOrderSettingsDesktop({ resume, setResume }) {
   const [helpModalDesktop, setHelpModalDesktop] = useState(false);
@@ -33,7 +34,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
   };
 
   return (
-    <div className="bg-[#fff] relative h-full w-full p-4 flex flex-col gap-4 rounded-xl text-white">
+    <div className="bg-[#fff] relative h-[85vh] w-full p-4 flex flex-col gap-4 rounded-xl text-white overflow-y-auto">
       <NewOrderSettingsHelpDesktop
         helpModal={helpModalDesktop}
         setHelpModal={setHelpModalDesktop}
@@ -111,10 +112,13 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
                   : "flex flex-col items-center w-24 justify-center px-1  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
-                setResume({
-                  ...resume,
-                  ["color"]: "Color",
-                })
+                setResume(
+                  {
+                    ...resume,
+                    ["color"]: "Color",
+                  },
+                  true
+                )
               }
             >
               <span className="text-[12px] ">Color</span>
@@ -212,25 +216,35 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               <span className="text-[12px] ">Simple faz</span>
               <span className="text-[10px] opacity-70 ">Una sola cara</span>
             </button>
-
-            <button
-              className={
-                resume.printWay === "Doble faz"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
-              }
-              onClick={(e) =>
-                setResume({
-                  ...resume,
-                  ["printWay"]: "Doble faz",
-                })
-              }
-            >
-              <span className="text-[12px] ">Doble faz</span>
-              <span className="text-[10px] opacity-70 ">Ambas caras</span>
-            </button>
+            {resume?.totalPages > 1 ? (
+              <button
+                className={
+                  resume.printWay === "Doble faz"
+                    ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                    : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+                }
+                onClick={(e) =>
+                  setResume({
+                    ...resume,
+                    ["printWay"]: "Doble faz",
+                  })
+                }
+              >
+                <span className="text-[12px] ">Doble faz</span>
+                <span className="text-[10px] opacity-70 ">Ambas caras</span>
+              </button>
+            ) : (
+              <button
+                disabled
+                className="flex flex-col cursor-not-allowed items-center w-24 justify-center px-2  bg-[#61774d]/70 rounded-lg"
+              >
+                <span className="text-[12px] ">Doble faz</span>
+                <span className="text-[10px] opacity-70 ">Ambas caras</span>
+              </button>
+            )}
           </div>
         </section>
+        {/* COPIAS POR SILLA */}
         <section className="flex  flex-col gap-2 items-start justify-start">
           <div className="flex gap-2 items-center">
             <span className="text-black">Copias por carilla</span>
@@ -295,6 +309,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
             </button>
           </div>
         </section>
+        {/* ORIENTACIÓN */}
         <section className="flex  flex-col gap-2 items-start justify-start">
           <div className="flex gap-2 items-center">
             <span className="text-black">Orientación</span>
@@ -357,6 +372,7 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
             </button>
           </div>
         </section>
+        {/* ANILLADO */}
         <section className="flex  flex-col gap-2 items-start justify-start">
           <div className="flex gap-2 items-center">
             <span className="text-black">Anillado</span>
@@ -367,12 +383,13 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               onClick={(e) => handleHelp("finishing")}
             />
           </div>
-          <div className="flex gap-2 items-center">
+          <div className="flex flex-wrap gap-2 items-center">
+            {/* Sin anillado */}
             <button
               className={
                 resume.finishing === "Sin anillado"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+                  ? "flex flex-col items-center w-26 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-26 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -384,31 +401,117 @@ export default function NewOrderSettingsDesktop({ resume, setResume }) {
               <span className="text-[12px] ">Sin Anillado</span>
               <span className="text-[10px] opacity-70 ">Solo impresión</span>
             </button>
-            {resume?.totalPages * resume?.numberOfCopies >= 20 ? (
-              <button
-                className={
-                  resume.finishing === "Anillado"
-                    ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
-                    : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
-                }
-                onClick={(e) =>
-                  setResume({
-                    ...resume,
-                    ["finishing"]: "Anillado",
-                  })
-                }
-              >
-                <span className="text-[12px] ">Anillado</span>
-                <span className="text-[10px] opacity-70 ">Lado largo</span>
-              </button>
+            {/* Abrochado */}
+            <button
+              className={
+                resume.finishing === "Abrochado"
+                  ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+              }
+              onClick={(e) =>
+                setResume({
+                  ...resume,
+                  ["finishing"]: "Abrochado",
+                  ["group"]: "Individual",
+                })
+              }
+            >
+              <span className="text-[12px] ">Abrochado</span>
+              <span className="text-[10px] opacity-70 ">Sin cargo</span>
+            </button>
+            {/* Anillado */}
+            <button
+              className={
+                resume.finishing === "Anillado"
+                  ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+              }
+              onClick={(e) =>
+                setResume({
+                  ...resume,
+                  ["finishing"]: "Anillado",
+                  ["group"]: "Individual",
+                })
+              }
+            >
+              <span className="text-[12px] ">Anillado</span>
+              <span className="text-[10px] opacity-70 ">Con anillado</span>
+            </button>
+          </div>
+        </section>
+        {/* AGRUPACIÓN */}
+        <section className="flex  flex-col gap-2 items-start justify-start">
+          <div className="flex gap-2 items-center">
+            <span className="text-black">Agrupación</span>
+            <HelpIcon
+              color="primary"
+              className="hover:opacity-50"
+              sx={{ width: "0.8em", height: "0.8em" }}
+              onClick={(e) => handleHelp("group")}
+            />
+          </div>
+          <div className="flex gap-2 items-center">
+            {resume?.finishing === "Anillado" ||
+            resume.finishing === "Abrochado" ? (
+              <>
+                <button
+                  className={
+                    resume.group === "Individual"
+                      ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                      : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+                  }
+                  onClick={(e) =>
+                    setResume({
+                      ...resume,
+                      ["group"]: "Individual",
+                    })
+                  }
+                >
+                  <span className="text-[12px] ">Individual</span>
+                  <span className="text-[10px] opacity-70 ">
+                    Un anillado por archivo
+                  </span>
+                </button>
+                <button
+                  className={
+                    resume.group === "Agrupado"
+                      ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                      : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+                  }
+                  onClick={(e) =>
+                    setResume({
+                      ...resume,
+                      ["group"]: "Agrupado",
+                    })
+                  }
+                >
+                  <span className="text-[12px] ">Agrupado</span>
+                  <span className="text-[10px] opacity-70 ">
+                    Anillado todo junto
+                  </span>
+                </button>
+              </>
             ) : (
-              <button
-                disabled
-                className="flex flex-col items-center w-24 justify-center px-2  bg-[#61774d]/70 rounded-lg"
-              >
-                <span className="text-[12px] ">Anillado</span>
-                <span className="text-[10px] opacity-70 ">Lado largo</span>
-              </button>
+              <>
+                <button
+                  disabled
+                  className="flex flex-col cursor-not-allowed items-center w-24 justify-center px-2  bg-[#61774d]/70 rounded-lg"
+                >
+                  <span className="text-[12px] ">Individual</span>
+                  <span className="text-[10px] opacity-70 ">
+                    Un anillado por archivo
+                  </span>
+                </button>
+                <button
+                  disabled
+                  className="flex flex-col cursor-not-allowed  items-center w-24 justify-center px-2  bg-[#61774d]/70 rounded-lg"
+                >
+                  <span className="text-[12px] ">Agrupado</span>
+                  <span className="text-[10px] opacity-70 ">
+                    Anillado todo junto
+                  </span>
+                </button>
+              </>
             )}
           </div>
         </section>

@@ -13,7 +13,7 @@ dev-dist
 dist
 dist-ssr
 *.local
-
+*.cache
 
 # Editor directories and files
 .vscode/*

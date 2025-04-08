@@ -14,18 +14,22 @@ import axios from "axios";
 
 // import OrdersRow from "./OrdersRow";
 import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
-import { Input } from "@mui/material";
+import { Backdrop, CircularProgress, Input, Typography } from "@mui/material";
 
 const columns = [
-  { id: "paymentId", label: "ID orden", minWidth: 50, align: "center" },
-
+  { id: "order_number", label: "N° de orden", minWidth: 50, align: "center" },
+  {
+    id: "price",
+    label: "Precio",
+    minWidth: 50,
+    align: "center",
+  },
   {
     id: "orderStatus",
     label: "Estado de Orden",
     minWidth: 50,
     align: "center",
   },
-  { id: "cart", label: "Archivos", minWidth: 50, align: "center" },
   {
     id: "place",
     label: "Tipo de entrega",
@@ -33,7 +37,7 @@ const columns = [
     align: "center",
   },
 
-  { id: "clientUid", label: "UID de cliente", minWidth: 50, align: "center" },
+  { id: "clientUid", label: "Cliente", minWidth: 50, align: "center" },
 ];
 
 export default function Orders({ editor }) {
@@ -42,6 +46,7 @@ export default function Orders({ editor }) {
 
   const user = useSelector((state) => state.loggedUser);
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -82,12 +87,11 @@ export default function Orders({ editor }) {
   };
   /* ---------------------------- */
 
-  //--------------- GET PRINTING ORDERS --------------------
+  //--------------- GET DELI ORDERS --------------------
   async function fetchOrders() {
+    setLoading(true);
     try {
-      let response = await axios.get(
-        `${baseUrl}/delivery/orders/${user.uid}`
-      );
+      let response = await axios.get(`${baseUrl}/delivery/orders/${user.uid}`);
 
       let formatedOrders = response.data
         .map((order) => {
@@ -98,11 +102,16 @@ export default function Orders({ editor }) {
           const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
           const año = fecha.getFullYear();
           const fechaFormateada = `${dia}/${mes}/${año}`;
+          // console.log(order.shipment_price);
+          // Calcula el 90% para el delivery
+          const delivery_price = (order?.shipment_price || 1500) * 0.9;
 
           return {
             uid: order.uid,
             orderStatus: order.orderStatus,
+            order_number: order.order_number,
             cart: order.cart,
+            price: delivery_price,
             paymentId: order.paymentData.id,
             paymentStatus: order.paymentData.status,
             transactionAmount:
@@ -113,6 +122,11 @@ export default function Orders({ editor }) {
             uidDelivery: order.uidDelivery,
             uidDistribution: order.uidDistribution,
             uidPickup: order.uidPickup,
+            deliveryUser: order.deliveryUser,
+            distributionUser: order.distributionUser,
+            pickupUser: order.pickupUser,
+            printingUser: order.printingUser,
+            clientUser: order.clientUser,
             report: order.report,
             createdAt: fechaFormateada,
             place: order.place,
@@ -124,12 +138,21 @@ export default function Orders({ editor }) {
       console.log(error);
 
       return error;
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl p-4">
-      <span className="text-2xl lg:text-3xl ">Estado de órdenes</span>
+      {/* LOADER */}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <span className="text-2xl lg:text-3xl ">Pedidos asignados</span>
       <div className="flex flex-col lg:flex-row  rounded-lg  lg:w-full p-2 gap-2">
         <div>
           <label htmlFor="">Buscar órdenes</label>
@@ -141,124 +164,57 @@ export default function Orders({ editor }) {
             className="w-full"
           />
         </div>
-        <div>
-          <label htmlFor="">Filtrar órdenes</label>
-          <div className="flex flex-wrap gap-2">
-            <button
-              name="in_delivery"
-              className={
-                filter === "in_delivery"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
-              }
-              onClick={(e) => handleFilter(e)}
-            >
-              En delivery
-            </button>
-            <button
-              name="pending"
-              className={
-                filter === "pending"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
-              }
-              onClick={(e) => handleFilter(e)}
-            >
-              Pendientes
-            </button>
-            <button
-              name="unassigned"
-              className={
-                filter === "unassigned"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
-              }
-              onClick={(e) => handleFilter(e)}
-            >
-              Sin Asignar
-            </button>
-            <button
-              name="process"
-              className={
-                filter === "process"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
-              }
-              onClick={(e) => handleFilter(e)}
-            >
-              En proceso
-            </button>
-            <button
-              name="printed"
-              className={
-                filter === "printed"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
-              }
-              onClick={(e) => handleFilter(e)}
-            >
-              Impresas
-            </button>
-            <button
-              name="received"
-              className={
-                filter === "received"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
-              }
-              onClick={(e) => handleFilter(e)}
-            >
-              Recibidas
-            </button>
-            <button
-              name="problems"
-              className={
-                filter === "problems"
-                  ? "border p-1 rounded-md text-[12px] bg-gray-500"
-                  : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
-              }
-              onClick={(e) => handleFilter(e)}
-            >
-              Con problemas
-            </button>
-
-            <button
-              name="no_filter"
-              className={
-                "underline p-1 rounded-md text-[12px] hover:bg-gray-500"
-              }
-              onClick={(e) => handleFilter(e)}
-            >
-              Quitar filtros
-            </button>
-          </div>
-        </div>
       </div>
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: 600 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
+          <table className="w-full min-w-max table-auto text-left">
+            <thead>
+              <tr className="w-fit">
+                {columns.map((column, index) => (
+                  <th
+                    key={index}
                     align={column.align}
                     style={{ minWidth: column.minWidth }}
+                    className=" cursor-pointer border-y border-blue-gray-400 p-4 transition-colors w-fit"
                   >
-                    {column.label}
-                  </TableCell>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
+                      id={column.label}
+                      // onClick={(e) => handleSortUsers(e)}
+                    >
+                      {column.label}
+                      {/* {index !== column.length - 1 && (
+                        <ChevronLeftSharp
+                          strokeWidth={2}
+                          className="h-4 w-4"
+                          id={column.filterName}
+                          onClick={(e) => handleSortUsers(e)}
+                        />
+                      )} */}
+                    </Typography>
+                  </th>
                 ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orders
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((order, index) => {
+              </tr>
+            </thead>
+            <tbody>
+              {orders?.length ? (
+                orders.map((order, index) => {
+                  const isLast = index === orders.length - 1;
+                  const classes = isLast
+                    ? "w-fit px-4"
+                    : "w-fit px-4 border-y border-green-500/50";
+
                   return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                    <tr
+                      role="button"
+                      tabIndex={-1}
+                      key={index}
+                      className="p-0 m-0 hover:bg-green-900/80 hover:text-white"
+                    >
                       {columns.map((column, index) => {
                         const value = order[column.id];
-
                         return (
                           <OrdersRow
                             editor={editor}
@@ -273,13 +229,24 @@ export default function Orders({ editor }) {
                           />
                         );
                       })}
-                    </TableRow>
+                    </tr>
                   );
-                })}
-            </TableBody>
-          </Table>
+                })
+              ) : (
+                <Backdrop
+                  sx={{
+                    color: "#fff",
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                  }}
+                  open={loading}
+                >
+                  <CircularProgress color="inherit" />
+                </Backdrop>
+              )}
+            </tbody>
+          </table>
         </TableContainer>
-        <TablePagination
+        {/* <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
           count={orders.length}
@@ -287,7 +254,7 @@ export default function Orders({ editor }) {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        /> */}
       </Paper>
     </div>
   );

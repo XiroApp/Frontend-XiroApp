@@ -135,9 +135,8 @@ export default function Login({ loggedUser, dataBaseUser }) {
 
   return (
     <div className="bg-white flex flex-row h-full pb-5">
-      <span className=" text-sm absolute bottom-0 left-0">V 2.1.0</span>
+      <span className=" text-sm absolute bottom-0 left-0">V 3.0.5(beta)</span>
       {/* LOADER */}
-
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loader}

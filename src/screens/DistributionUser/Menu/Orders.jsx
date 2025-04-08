@@ -17,7 +17,8 @@ import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
 import { Input } from "@mui/material";
 
 const columns = [
-  { id: "paymentId", label: "ID orden", minWidth: 50, align: "center" },
+  { id: "order_number", label: "N° de orden", minWidth: 50, align: "center" },
+  // { id: "paymentId", label: "ID orden", minWidth: 50, align: "center" },
 
   {
     id: "orderStatus",
@@ -101,6 +102,7 @@ export default function Orders({ editor }) {
 
           return {
             uid: order.uid,
+            order_number: order.order_number,
             orderStatus: order.orderStatus,
             cart: order.cart,
             paymentId: order.paymentData.id,
@@ -113,6 +115,7 @@ export default function Orders({ editor }) {
             uidDelivery: order.uidDelivery,
             uidDistribution: order.uidDistribution,
             uidPickup: order.uidPickup,
+            clientUser: order.clientUser,
             report: order.report,
             createdAt: fechaFormateada,
             place: order.place,

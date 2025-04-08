@@ -3,6 +3,8 @@ import HelpIcon from "@mui/icons-material/Help";
 import NewOrderSettingsHelp from "../Help/NewOrderSettingsHelp";
 import { setToast } from "../../redux/actions";
 import { useDispatch } from "react-redux";
+import { Tooltip } from "@mui/material";
+
 export default function NewOrderSettings({
   resume,
   setResume,
@@ -34,7 +36,7 @@ export default function NewOrderSettings({
   return (
     <div className=" relative flex py-2 ">
       <HelpIcon
-        color="primary"
+        color="white"
         className="absolute right-1/2 md:right-2/3 hover:opacity-50"
         onClick={() => setHelpModal(true)}
       />
@@ -45,7 +47,7 @@ export default function NewOrderSettings({
       />
       {currentSetting === "numberOfCopies" ? (
         <section className="flex  flex-col gap-3 items-start justify-start">
-          <span className="text-sm">Cantidad de copias</span>
+          <span className="text-md text-white">Cantidad de copias</span>
           <div className="flex gap-2 text-black">
             <button
               className="h-8 w-8 bg-[#fff] rounded-lg"
@@ -72,7 +74,7 @@ export default function NewOrderSettings({
         </section>
       ) : currentSetting === "color" ? (
         <section className="flex  flex-col gap-3 items-start justify-start">
-          <span className="text-sm">Color de copias</span>
+          <span className="text-md text-white">Color de copias</span>
           <div className="flex gap-2">
             <button
               className={
@@ -98,10 +100,13 @@ export default function NewOrderSettings({
                   : "flex flex-col items-center w-24 justify-center px-1  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
               }
               onClick={(e) =>
-                setResume({
-                  ...resume,
-                  ["color"]: "Color",
-                })
+                setResume(
+                  {
+                    ...resume,
+                    ["color"]: "Color",
+                  },
+                  true
+                )
               }
             >
               <span className="text-[12px] ">Color</span>
@@ -111,7 +116,7 @@ export default function NewOrderSettings({
         </section>
       ) : currentSetting === "size" ? (
         <section className="flex  flex-col gap-3 items-start justify-start">
-          <span className="text-sm">Tamaño de copias</span>
+          <span className="text-md text-white">Tamaño de copias</span>
           <div className="flex gap-1  overflow-x-auto overscroll-auto">
             <button
               className={
@@ -165,7 +170,7 @@ export default function NewOrderSettings({
         </section>
       ) : currentSetting === "printWay" ? (
         <section className="flex  flex-col gap-3 items-start justify-start">
-          <span className="text-sm">Forma de impresión</span>
+          <span className="text-md text-white">Forma de impresión</span>
           <div className="flex gap-2">
             <button
               className={
@@ -183,28 +188,37 @@ export default function NewOrderSettings({
               <span className="text-[12px] ">Simple faz</span>
               <span className="text-[10px] opacity-70 ">Una sola cara</span>
             </button>
-
-            <button
-              className={
-                resume.printWay === "Doble faz"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
-              }
-              onClick={(e) =>
-                setResume({
-                  ...resume,
-                  ["printWay"]: "Doble faz",
-                })
-              }
-            >
-              <span className="text-[12px] ">Doble faz</span>
-              <span className="text-[10px] opacity-70 ">Ambas caras</span>
-            </button>
+            {resume?.totalPages > 1 ? (
+              <button
+                className={
+                  resume.printWay === "Doble faz"
+                    ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                    : "flex flex-col items-center w-24 justify-center px-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
+                }
+                onClick={(e) =>
+                  setResume({
+                    ...resume,
+                    ["printWay"]: "Doble faz",
+                  })
+                }
+              >
+                <span className="text-[12px] ">Doble faz</span>
+                <span className="text-[10px] opacity-70 ">Ambas caras</span>
+              </button>
+            ) : (
+              <button
+                disabled
+                className="flex flex-col cursor-not-allowed items-center w-24 justify-center px-2  bg-[#61774d]/70 rounded-lg"
+              >
+                <span className="text-[12px] ">Doble faz</span>
+                <span className="text-[10px] opacity-70 ">Ambas caras</span>
+              </button>
+            )}
           </div>
         </section>
       ) : currentSetting === "copiesPerPage" ? (
         <section className="flex  flex-col gap-3 items-start justify-start">
-          <span className="text-sm">Copias por carilla</span>
+          <span className="text-md text-white">Copias por carilla</span>
           <div className="flex gap-2">
             <button
               className={
@@ -261,7 +275,7 @@ export default function NewOrderSettings({
         </section>
       ) : currentSetting === "orientacion" ? (
         <section className="flex  flex-col gap-3 items-start justify-start">
-          <span className="text-sm">Orientación</span>
+          <span className="text-md text-white">Orientación</span>
           <div className="flex gap-2">
             {resume.copiesPerPage !== "Normal" ? (
               <button
@@ -316,13 +330,14 @@ export default function NewOrderSettings({
         </section>
       ) : currentSetting === "finishing" ? (
         <section className="flex  flex-col gap-3 items-start justify-start">
-          <span className="text-sm">Anillado</span>
+          <span className="text-md text-white">Anillado</span>
           <div className="flex gap-2">
+            {/* Sin anillado */}
             <button
               className={
                 resume.finishing === "Sin anillado"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
+                  ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-26 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
               }
               onClick={(e) =>
                 setResume({
@@ -334,31 +349,109 @@ export default function NewOrderSettings({
               <span className="text-[12px] ">Sin Anillado</span>
               <span className="text-[10px] opacity-70 ">Solo impresión</span>
             </button>
-            {resume?.totalPages * resume?.numberOfCopies >= 20 ? (
-              <button
-                className={
-                  resume.finishing === "Anillado"
-                    ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
-                    : "flex flex-col items-center w-24 justify-center px-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
-                }
-                onClick={(e) =>
-                  setResume({
-                    ...resume,
-                    ["finishing"]: "Anillado",
-                  })
-                }
-              >
-                <span className="text-[12px] ">Anillado</span>
-                <span className="text-[10px] opacity-70 ">Lado largo</span>
-              </button>
+            {/* Abrochado */}
+            <button
+              className={
+                resume.finishing === "Abrochado"
+                  ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+              }
+              onClick={(e) =>
+                setResume({
+                  ...resume,
+                  ["finishing"]: "Abrochado",
+                  ["group"]: "Individual",
+                })
+              }
+            >
+              <span className="text-[12px] ">Abrochado</span>
+              <span className="text-[10px] opacity-70 ">Sin cargo</span>
+            </button>
+            {/* Anillado */}
+            <button
+              className={
+                resume.finishing === "Anillado"
+                  ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                  : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+              }
+              onClick={(e) =>
+                setResume({
+                  ...resume,
+                  ["finishing"]: "Anillado",
+                  ["group"]: "Individual",
+                })
+              }
+            >
+              <span className="text-[12px] ">Anillado</span>
+              <span className="text-[10px] opacity-70 ">Con anillado</span>
+            </button>
+          </div>
+        </section>
+      ) : currentSetting === "group" ? (
+        <section className="flex  flex-col gap-3 items-start justify-start">
+          <span className="text-md text-white">Agrupación</span>
+          <div className="flex gap-2">
+            {resume?.finishing === "Anillado" ||
+            resume.finishing === "Abrochado" ? (
+              <>
+                <button
+                  className={
+                    resume.group === "Individual"
+                      ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                      : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+                  }
+                  onClick={(e) =>
+                    setResume({
+                      ...resume,
+                      ["group"]: "Individual",
+                    })
+                  }
+                >
+                  <span className="text-[12px] ">Individual</span>
+                  <span className="text-[10px] opacity-70 ">
+                    Un anillado por archivo
+                  </span>
+                </button>
+                <button
+                  className={
+                    resume.group === "Agrupado"
+                      ? "flex flex-col items-center w-24 justify-center px-2  py-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
+                      : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+                  }
+                  onClick={(e) =>
+                    setResume({
+                      ...resume,
+                      ["group"]: "Agrupado",
+                    })
+                  }
+                >
+                  <span className="text-[12px] ">Agrupado</span>
+                  <span className="text-[10px] opacity-70 ">
+                    Anillado todo junto
+                  </span>
+                </button>
+              </>
             ) : (
-              <button
-                disabled
-                className="flex flex-col items-center w-24 justify-center px-2  bg-[#313131] rounded-lg"
-              >
-                <span className="text-[12px] ">Anillado</span>
-                <span className="text-[10px] opacity-70 ">Lado largo</span>
-              </button>
+              <>
+                <button
+                  disabled
+                  className="flex flex-col cursor-not-allowed items-center w-24 justify-center px-2  bg-[#61774d]/70 rounded-lg"
+                >
+                  <span className="text-[12px] ">Individual</span>
+                  <span className="text-[10px] opacity-70 ">
+                    Un anillado por archivo
+                  </span>
+                </button>
+                <button
+                  disabled
+                  className="flex flex-col cursor-not-allowed  items-center w-24 justify-center px-2  bg-[#61774d]/70 rounded-lg"
+                >
+                  <span className="text-[12px] ">Agrupado</span>
+                  <span className="text-[10px] opacity-70 ">
+                    Anillado todo junto
+                  </span>
+                </button>
+              </>
             )}
           </div>
         </section>

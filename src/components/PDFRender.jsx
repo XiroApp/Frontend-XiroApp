@@ -7,7 +7,9 @@ import { pageNavigationPlugin } from "@react-pdf-viewer/page-navigation";
 export default function PDFRender({ newFile, setLoading }) {
   const pageNavigationPluginInstance = pageNavigationPlugin();
   const handleLoadedDocument = () => {
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   };
   return (
     <div className="w-full h-full rounded-lg bg-white p-2">

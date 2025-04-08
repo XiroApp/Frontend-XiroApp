@@ -1,13 +1,14 @@
-function pricingSetter(pricing, config) {
+function pricingSetter(pricing, config, filesDetail) {
   const {
     totalPages,
-    numberOfCopies,
+    numberOfCopies: numeroDeCopias,
     color,
     size,
     printWay,
     copiesPerPage,
     orientacion,
     finishing,
+    group,
   } = config;
   const {
     BIG_ringed,
@@ -27,7 +28,18 @@ function pricingSetter(pricing, config) {
   } = pricing;
 
   try {
-    let paper_price =
+    let copiasPorCarilla =
+      copiesPerPage === "Normal"
+        ? 1
+        : copiesPerPage === "2 copias"
+        ? 2
+        : copiesPerPage === "4 copias"
+        ? 4
+        : 1;
+
+    const totalDePaginas = totalPages / copiasPorCarilla;
+
+    let precioPapel =
       size === "A4" && printWay === "Simple faz" && color === "BN"
         ? simple_do
         : size === "A4" && printWay === "Simple faz" && color === "Color"
@@ -54,33 +66,55 @@ function pricingSetter(pricing, config) {
         ? OF_double_does_color
         : simple_do;
 
-    let ringed =
-      finishing === "Anillado"
-        ? totalPages <= 300
-          ? SMALL_ringed
-          : totalPages > 300 && totalPages <= 800
-          ? BIG_ringed
-          : totalPages > 800
-          ? SMALL_ringed * 2
-          : BIG_ringed /* OJO PRECIO DEFAULT ?? */
-        : 0;
+    function getRingedPrice() {
+      let totalRingedPrice = 0;
 
-    let NcopiesPerPage =
-      copiesPerPage === "Normal"
-        ? 1
-        : copiesPerPage === "2 copias"
-        ? 2
-        : copiesPerPage === "4 copias"
-        ? 4
-        : 1;
+      if (group === "Agrupado" && finishing == "Anillado") {
+        if (totalDePaginas <= 300) {
+          totalRingedPrice = SMALL_ringed;
+        } else if (totalDePaginas > 300 && totalDePaginas <= 800) {
+          totalRingedPrice = BIG_ringed;
+        } else if (totalDePaginas > 800) {
+          totalRingedPrice = SMALL_ringed * 2;
+        } else {
+          totalRingedPrice = BIG_ringed; // OJO PRECIO DEFAULT ??
+        }
+      }
 
-    let price =
-      ((totalPages / NcopiesPerPage) * paper_price + ringed) * numberOfCopies;
+      if (group === "Individual" && finishing == "Anillado") {
+        let arrayDePrecios =
+          filesDetail.length &&
+          filesDetail.map((file) => {
+            let totalDePaginas = file.pages;
+            let ringedPrice = 0;
 
-    // console.log(paper_price);
-    // console.log(ringed);
-    // console.log(NcopiesPerPage);
-    // console.log(price);
+            if (totalDePaginas <= 300) {
+              ringedPrice = SMALL_ringed;
+            } else if (totalDePaginas > 300 && totalDePaginas <= 800) {
+              ringedPrice = BIG_ringed;
+            } else if (totalDePaginas > 800) {
+              ringedPrice = SMALL_ringed * 2;
+            } else {
+              ringedPrice = BIG_ringed; // OJO PRECIO DEFAULT ??
+            }
+
+            return ringedPrice;
+          });
+
+        totalRingedPrice = arrayDePrecios.length
+          ? arrayDePrecios.reduce(
+              (acumulador, valorActual) => acumulador + valorActual,
+              0
+            )
+          : 0;
+      }
+
+      return totalRingedPrice;
+    }
+
+    let anillado = getRingedPrice();
+
+    let price = (totalDePaginas * precioPapel + anillado) * numeroDeCopias;
 
     if (price !== NaN) {
       return price.toFixed();
@@ -92,4 +126,28 @@ function pricingSetter(pricing, config) {
   }
 }
 
-export { pricingSetter };
+function getDeliveryPricingByDistance(km, pricing) {
+  if (km >= 10) {
+    return pricing["distance_10_to_15"];
+  } else if (km < 10 && km > 5) {
+    return pricing["distance_5_to_10"];
+  } else if (km < 5) {
+    return pricing["distance_0_to_5"];
+  } else {
+    return pricing["distance_0_to_5"];
+  }
+}
+
+function validateFileSize(file, maxSizeMB) {
+  const maxSize = maxSizeMB * 1024 * 1024; // Tamaño máximo en bytes
+
+  if (file.size > maxSize) {
+    // alert(
+    //   `El archivo "${file.name}" excede el tamaño máximo permitido de ${maxSizeMB} MB.`
+    // );
+    return false; // Indica que la validación falló
+  }
+
+  return true; // Indica que la validación fue exitosa
+}
+export { pricingSetter, getDeliveryPricingByDistance, validateFileSize };
