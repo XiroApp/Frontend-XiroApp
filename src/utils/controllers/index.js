@@ -1,26 +1,32 @@
 import { signOutFunction } from "../../config/firebase";
 import { auth } from "../../config/firebase";
+import { decrypt, encrypt } from "../encrypt";
 
-export const startSession = ({
+function startSession({
   email,
   displayName = null,
   accessToken,
   photoURL = null,
   uid,
-}) => {
-  localStorage.setItem(
-    "loggedUser",
-    JSON.stringify({ email, accessToken, displayName, photoURL, uid })
-  );
-};
+}) {
+  const data = { email, accessToken, displayName, photoURL, uid };
+  localStorage.setItem("logged-user", encrypt(data));
+}
 
-export const getSession = () => {
-  let loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-  return loggedUser;
-};
-export const endSession = () => {
-  localStorage.removeItem("loggedUser");
+function getSession() {
+  try {
+    const data = decrypt(localStorage.getItem("logged-user"));
+    return data;
+  } catch (err) {
+    localStorage.removeItem("loggedUser"); //* Remover datos antiguos no encriptados.
+    localStorage.removeItem("logged-user");
+    return null;
+  }
+}
+
+function endSession() {
+  localStorage.removeItem("logged-user");
   signOutFunction(auth);
+}
 
-  return console.log("Has cerrado sesión, vuelve pronto!");
-};
+export { startSession, getSession, endSession };
