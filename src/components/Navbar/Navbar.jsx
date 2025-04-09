@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,10 +14,19 @@ import logo from "../../utils/assets/images/xiro-head.png";
 import { logout } from "../../redux/actions";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import { Button, DialogActions, DialogContent } from "@mui/material";
-import { Mail, WhatsApp } from "@mui/icons-material";
+import {
+  Mail as MailIcon,
+  WhatsApp as WhatsAppIcon,
+} from "@mui/icons-material";
+import propTypes from "prop-types";
+
+Navbar.propTypes = {
+  loggedUser: propTypes.object,
+  title: propTypes.string,
+  hideLogo: propTypes.bool,
+};
 
 export default function Navbar({ loggedUser, title, hideLogo = false }) {
   const navigate = useNavigate();
@@ -218,45 +227,55 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
       </Container>
 
       <Dialog onClose={handleContactModal} open={contactModal}>
-        <DialogTitle className="text-center">Contacto</DialogTitle>
-        <DialogContent className="flex flex-col items-center gap-3">
-          <Typography className="text-center">
-            ¿Necesitas ayuda? Contactate con nuestro soporte por alguno de los
-            siguientes medios:
-          </Typography>
+        <p className="text-2xl w-full text-center pt-4">Contacto</p>
+        <DialogContent className="flex flex-col items-center gap-y-3">
+          <p className="text-center w-full pb-4 px-2">
+            ¿Necesitas ayuda?
+            <br />
+            Contacta con nuestro soporte por alguno de estos medios:
+          </p>
           <a
+            rel="noopener noreferrer"
             target="_blank"
             href="https://wa.me/5492616362351?text=Hola, deseo comunicarme con el soporte de XIRO."
+            className="w-full max-w-[215px]"
           >
             <Button
               variant="outlined"
-              // sx={{ borderRadius: "100%", height: "5em", width: "5em" }}
+              className="flex items-start gap-x-2 justify-center w-full"
             >
-              <WhatsApp
-                sx={{ borderRadius: "100%", height: "1.6em", width: "1.6em" }}
+              <WhatsAppIcon
+                sx={{ borderRadius: "100%", height: "1.5em", width: "1.5em" }}
               />
 
-              <Typography className="text-black">+549-261-636-2351</Typography>
+              <p className="text-black w-full text-lg">
+                +54&nbsp;9&nbsp;261&nbsp;636-2351
+              </p>
             </Button>
           </a>
-          <a target="_blank" href="mailto:appxiro@gmail.com">
+          <a
+            rel="noopener noreferrer"
+            target="_blank"
+            href="mailto:appxiro@gmail.com"
+            className="w-full max-w-[215px]"
+          >
             <Button
               variant="outlined"
-              // color="primary"
-              // sx={{ borderRadius: "100%", height: "5em", width: "5em" }}
-              className="flex items-center gap-2"
+              className="flex items-start gap-x-2 justify-center w-full"
             >
-              <Mail
-                sx={{ borderRadius: "100%", height: "1.6em", width: "1.6em" }}
+              <MailIcon
+                sx={{ borderRadius: "100%", height: "1.5em", width: "1.5em" }}
               />
 
-              <Typography className="text-black">appxiro@gmail.com</Typography>
+              <address className="text-black w-full font-sans text-lg">
+                appxiro@gmail.com
+              </address>
             </Button>
           </a>
         </DialogContent>
         <DialogActions>
           <Button color="inherit" onClick={handleContactModal}>
-            Cerrar
+            <p className="text-lg">Cerrar</p>
           </Button>
         </DialogActions>
       </Dialog>

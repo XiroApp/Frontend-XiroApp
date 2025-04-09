@@ -18,12 +18,12 @@ import { UsersAdapter } from "../../Infra/Adapters/users.adapter";
 
 export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
   const dispatch = useDispatch();
-  const labels = useSelector((state) => state.labels);
+  const labels = useSelector(state => state.labels);
   const [open, setOpen] = useState(false);
   const [resume, setResume] = useState({ place: null });
   const [pickupUsers, setPickupUsers] = useState([]);
-  const addresses = useSelector((state) => state.addresses);
-  const place = useSelector((state) => state.place);
+  const addresses = useSelector(state => state.addresses);
+  const place = useSelector(state => state.place);
   const [loading, setLoading] = useState(false);
 
   // const user = useSelector((state) => state.dataBaseUser);
@@ -47,7 +47,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
   }
 
   const fetchPickupPoints = async () => {
-    UsersAdapter.getPickupUsers().then((res) => setPickupUsers(res));
+    UsersAdapter.getPickupUsers().then(res => setPickupUsers(res));
   };
 
   useEffect(() => {
@@ -66,18 +66,18 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
       )}
       <Modal
         open={choosePlace}
-        onClose={(e) => handleChoice(e)}
+        onClose={e => handleChoice(e)}
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
         className=" flex items-center justify-center"
       >
         <Box className="bg-[#fff] rounded-lg w-10/12 md:w-1/2 lg:w-1/3 overflow-y-auto   h-[80%] flex flex-col justify-between">
-          <section className=" p-4 ">
+          <section className="p-4">
             <h2
               id="parent-modal-title"
               className="text-center text-[20px] font-bold "
             >
-              ¿Donde queres recibir tu pedido?
+              ¿Dónde querés recibir tu pedido?
             </h2>
           </section>
           <section className="flex px-5 py-5 gap-10">
@@ -87,7 +87,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                   ? "flex flex-col gap-5 items-center w-1/2 justify-center p-4  border-2 border-[#000] bg-[#81A165] rounded-lg text-white"
                   : "flex flex-col gap-5 items-center w-1/2 justify-center p-4  border border-[#000] bg-[#fff]/50 rounded-lg hover:bg-[#81A165]"
               }
-              onClick={(e) =>
+              onClick={e =>
                 setResume({
                   ...resume,
                   ["place"]: { ...resume.place, type: "Envío a domicilio" },
@@ -109,7 +109,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                   ? "flex flex-col gap-5 items-center w-1/2 justify-center p-4  border-2 border-[#000] bg-[#81A165] rounded-lg text-white"
                   : "flex flex-col gap-5 items-center w-1/2 justify-center p-4  border border-[#000] bg-[#fff]/50 rounded-lg hover:bg-[#81A165]"
               }
-              onClick={(e) =>
+              onClick={e =>
                 setResume({
                   ...resume,
                   ["place"]: { ...resume.place, type: "Retiro" },
@@ -144,7 +144,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                             ? " p-2 rounded-md  bg-[#81A165] border-2 border-[#000] hover:bg-[#81A165] text-white "
                             : " p-2 rounded-md border border-gray-400 hover:bg-[#81A165] bg-[#fff]/60 "
                         }
-                        onClick={(e) =>
+                        onClick={e =>
                           setResume({
                             ...resume,
                             ["place"]: { ...resume.place, address: address },
@@ -177,7 +177,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                     </span>
                   )}
                 </div>
-                <button onClick={(e) => setOpen(!open)}>
+                <button onClick={e => setOpen(!open)}>
                   <Link className="font-[600]">Añadir dirección</Link>
                 </button>
               </div>
@@ -196,7 +196,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                             ? " p-2 rounded-md  bg-[#81A165] border-2 border-[#000] hover:bg-[#81A165] text-white "
                             : " p-2 rounded-md border border-gray-400 hover:bg-[#81A165] bg-[#fff]/60 "
                         }
-                        onClick={(e) =>
+                        onClick={e =>
                           setResume({
                             ...resume,
                             ["place"]: {
@@ -242,7 +242,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
           </section>
           <section className="flex justify-end items-center px-5 pb-5">
             <Button
-              onClick={(e) => handleChoice(e)}
+              onClick={e => handleChoice(e)}
               variant="text"
               color="primary"
               disabled={!resume?.place?.type || !resume?.place?.address}
