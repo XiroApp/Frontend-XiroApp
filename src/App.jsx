@@ -28,6 +28,7 @@ import Delivery from "./screens/DeliveryUser/Delivery";
 import TyC from "./screens/TermsAndConditions/TyC";
 import PickUp from "./screens/PickUpUser/Pickup";
 import Distribution from "./screens/DistributionUser/Distribution";
+import { roleIs } from "./Common/helpers";
 
 function App() {
   const navigate = useNavigate();
@@ -51,10 +52,6 @@ function App() {
   }, [cart]);
 
   useEffect(() => handleRole(), [dataBaseUser]);
-
-  function roleIs(permission) {
-    return dataBaseUser?.roles?.includes(permission);
-  }
 
   function handleRole() {
     if (!dataBaseUser) return;

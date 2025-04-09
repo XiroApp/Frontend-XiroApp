@@ -1,9 +1,9 @@
-// Función para ordenar por fecha (descendente)
+import store from "../redux/store";
+
 const sortByDateDesc = (a, b) => {
-  /* DD/MM/AAAA */
-  const fechaA = new Date(a.createdAt.split("/").reverse().join("-"));
-  const fechaB = new Date(b.createdAt.split("/").reverse().join("-"));
-  return fechaB - fechaA;
+  const dateA = new Date(a.createdAt.split("/").reverse().join("-"));
+  const dateB = new Date(b.createdAt.split("/").reverse().join("-"));
+  return dateB - dateA;
 };
 
 const len = str => str.length;
@@ -24,4 +24,9 @@ function normalizeStr(str) {
     .toLowerCase();
 }
 
-export { sortByDateDesc, len, formatPrice, normalizeStr };
+function roleIs(permission) {
+  const user = store.getState().dataBaseUser;
+  return user?.roles?.includes(permission);
+}
+
+export { sortByDateDesc, len, formatPrice, normalizeStr, roleIs };
