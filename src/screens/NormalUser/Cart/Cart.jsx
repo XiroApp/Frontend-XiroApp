@@ -43,12 +43,12 @@ const PUBLIC_KEY = ApiConstants.MERCADOPAGO_PUBLIC_KEY;
 export default function Cart() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.dataBaseUser);
-  const place = useSelector((state) => state.place);
-  const cart = useSelector((state) => state.cart);
-  const coupon = useSelector((state) => state.coupon);
-  const pricing = useSelector((state) => state.pricing);
-  const distance = useSelector((state) => state.distance);
+  const user = useSelector(state => state.dataBaseUser);
+  const place = useSelector(state => state.place);
+  const cart = useSelector(state => state.cart);
+  const coupon = useSelector(state => state.coupon);
+  const pricing = useSelector(state => state.pricing);
+  const distance = useSelector(state => state.distance);
   const [shipment, setShipment] = useState(null);
   const [delivery_distance, setDelivery_distance] = useState({
     text: null,
@@ -116,11 +116,11 @@ export default function Cart() {
       : setTotal(subtotal - (coupon?.ammount || 0) + shipment);
   }, [shipment, coupon]);
 
-  const isStepOptional = (step) => {
+  const isStepOptional = step => {
     return step === 4;
   }; //AQUI LOS INDICES DE PASOS OPCIONALES
 
-  const isStepSkipped = (step) => {
+  const isStepSkipped = step => {
     return skipped.has(step);
   };
 
@@ -131,12 +131,12 @@ export default function Cart() {
       newSkipped.delete(activeStep);
     }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
 
   const handleSkip = () => {
@@ -146,8 +146,8 @@ export default function Cart() {
       throw new Error("You can't skip a step that isn't optional.");
     }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setSkipped(prevSkipped => {
       const newSkipped = new Set(prevSkipped.values());
       newSkipped.add(activeStep);
       return newSkipped;
@@ -242,7 +242,7 @@ export default function Cart() {
       {/* LOADER */}
       {loading ? (
         <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          sx={{ color: "#fff", zIndex: theme => theme.zIndex.drawer + 1 }}
           open={loading}
         >
           <CircularProgress color="inherit" />
@@ -379,7 +379,7 @@ export default function Cart() {
                                     {place?.address?.city}
                                   </span>
                                 </div>
-                                <button onClick={(e) => handleEditPlace(e)}>
+                                <button onClick={e => handleEditPlace(e)}>
                                   <EditIcon
                                     className={
                                       place?.address
@@ -430,7 +430,7 @@ export default function Cart() {
                           </section>
                           <section className="flex items-center gap-5 p-2">
                             <NativeSelect
-                              onChange={(e) => handleInput(e)}
+                              onChange={e => handleInput(e)}
                               defaultValue={"Mañana"}
                               inputProps={{
                                 name: "availability",
@@ -463,7 +463,7 @@ export default function Cart() {
                               Notas adicionales para el pedido
                             </span>
                             <TextField
-                              onChange={(e) => handleInput(e)}
+                              onChange={e => handleInput(e)}
                               id="standard-basic"
                               label="Añadir un comentario"
                               name="description"
@@ -538,14 +538,14 @@ export default function Cart() {
                                 Instrucciones de entrega
                               </span>
                               <button
-                                onClick={(e) => setEditComment(!editComment)}
+                                onClick={e => setEditComment(!editComment)}
                               >
                                 <EditIcon className="hover:text-green-700" />
                               </button>
                             </div>
                             {editComment ? (
                               <TextField
-                                onChange={(e) => handleInput(e)}
+                                onChange={e => handleInput(e)}
                                 id="standard-basic"
                                 label="Editar comentario"
                                 name="description"
@@ -567,7 +567,7 @@ export default function Cart() {
                           </span>
                           <section className="flex justify-between gap-4">
                             <TextField
-                              onChange={(e) => setCuponInput(e.target.value)}
+                              onChange={e => setCuponInput(e.target.value)}
                               id="standard-basic"
                               label={"Código de cupón"}
                               name="cupon"
@@ -579,7 +579,7 @@ export default function Cart() {
                               variant="outlined"
                               color="primary"
                               className="w-1/2 n-w-full flex items-center gap-1"
-                              onClick={(e) => handleCupon(e)}
+                              onClick={e => handleCupon(e)}
                             >
                               <LocalOfferIcon
                                 sx={{ width: "1rem", height: "1rem" }}
@@ -646,6 +646,7 @@ export default function Cart() {
 
                               <section className="flex justify-between">
                                 <span className=" text-[16px] font-[400]">
+                                  Entrega: {orderToSend.place.type}
                                   Forma de Entrega: {orderToSend.place.type}
                                 </span>
                                 <span>
@@ -743,7 +744,7 @@ export default function Cart() {
                     )}
                   </section>
                   <Box className="bg-[#fff] rounded-b-md p-4 flex justify-between items-center">
-                    <section onClick={(e) => handleDeleteCart(e)}>
+                    <section onClick={e => handleDeleteCart(e)}>
                       <Button variant="text" color="error">
                         Vaciar carrito
                       </Button>

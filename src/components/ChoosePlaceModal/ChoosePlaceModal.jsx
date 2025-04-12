@@ -77,7 +77,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               id="parent-modal-title"
               className="text-center text-[20px] font-bold "
             >
-              ¿Donde queres recibir tu pedido?
+              ¿Dónde querés recibir tu pedido?
             </h2>
             <p>
               Envíos domicilio y puntos: Martes y Viernes entre las 9-14hs o las
@@ -211,6 +211,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                 <span className="font-[500]">
                   Seleccioná donde retirar tu pedido
                 </span>
+
                 <div className="flex flex-col justify-start p-2 gap-2 h-56 overflow-y-auto">
                   {pickupUsers?.length > 0
                     ? pickupUsers?.map((pickup, index) => (
@@ -256,6 +257,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                                 {pickup.address.city}
                               </span>
                               {/* <span className="text-sm opacity-80">
+
                               {pickup.address.tag}
                             </span> */}
                             </div>

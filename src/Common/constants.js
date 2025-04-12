@@ -1,4 +1,4 @@
-export const ApiConstants = {
+const ApiConstants = {
   MERCADOPAGO_PUBLIC_KEY: import.meta.env.VITE_MERCADOPAGO_PUBLIC_KEY,
   FIREBASE_STORAGE_TOKEN: import.meta.env.VITE_FIREBASE_STORAGE_TOKEN,
   PDF_CONVERTER_API_URL: import.meta.env.VITE_PDF_CONVERTER_API_URL,
@@ -7,3 +7,15 @@ export const ApiConstants = {
   BASE_URL_PROD:
     "https://us-central1-xiro-app-2ec87.cloudfunctions.net/api/xiro-app",
 };
+
+const initProd = {
+  id: "",
+  code: "",
+  name: "",
+  description: "",
+  price: 0,
+  cover: "",
+  visible: true,
+};
+
+export { ApiConstants, initProd };

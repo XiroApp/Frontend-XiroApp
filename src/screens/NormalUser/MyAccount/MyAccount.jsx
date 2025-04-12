@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import List from "@mui/material/List";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -14,38 +14,43 @@ import { FaMapLocationDot as LocationOnIcon } from "react-icons/fa6";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { FaMedal } from "react-icons/fa6";
-import { Avatar, Box, Button, Collapse, Drawer, Tooltip } from "@mui/material";
+import { Avatar, Box, Button, Collapse, Drawer } from "@mui/material";
 
 import PersonalData from "./PersonalData";
 import AccountData from "./AccountData";
 import AddressData from "./AddressData";
 import Navbar from "../../../components/Navbar/Navbar";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import FAQ from "./FAQ";
 import Notifications from "./Notifications";
 import Chatbot from "../../../components/Chatbot/Chatbot";
 import { useEffect } from "react";
 import { getOrdersByClientUid, setToast } from "../../../redux/actions";
+import LibraryStore from "./LibraryStore";
+import { twMerge } from "tailwind-merge";
+import propTypes from "prop-types";
 
 export default function MyAccount({ cart, dataBaseUser }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.dataBaseUser);
-  const clientOrders = useSelector((state) => state.clientOrders);
+  const user = useSelector(state => state.dataBaseUser);
+  const clientOrders = useSelector(state => state.clientOrders);
   let { photoURL, email, displayName } = user;
-
   const [openCollapse, setOpenCollapse] = useState(false);
+  const cartReferral = useLocation().search == "?libreria";
   /* Lógica de hamburguesa */
-  const [dataRender, setDataRender] = useState("personalData");
+  const [dataRender, setDataRender] = useState(
+    cartReferral ? "libraryStore" : "personalData"
+  );
   const [state, setState] = useState({
     left: false,
   });
 
   useEffect(() => {
     dispatch(getOrdersByClientUid(dataBaseUser.uid));
-  }, []);
+  }, []); // eslint-disable-line
 
-  const toggleDrawer = (anchor, open) => (event) => {
+  const toggleDrawer = (anchor, open) => event => {
     if (
       event.type === "keydown" &&
       (event.key === "Tab" || event.key === "Shift")
@@ -56,10 +61,9 @@ export default function MyAccount({ cart, dataBaseUser }) {
     setState({ ...state, [anchor]: open });
   };
 
-  const list = (anchor) => (
+  const list = anchor => (
     <Box
       sx={{
-
         borderRadius: "10px",
         ":hover": { backgroundColor: "#c9d9bb" },
       }}
@@ -84,15 +88,10 @@ export default function MyAccount({ cart, dataBaseUser }) {
             sx={{ opacity: 1 }}
             component="nav"
             aria-labelledby="nested-list-subheader"
-            // subheader={
-            //   <ListSubheader component="div" id="nested-list-subheader">
-            //     Nested List Items
-            //   </ListSubheader>
-            // }
           >
             MI PERFIL
             <ListItemButton
-              onClick={(e) => setDataRender("personalData")}
+              onClick={() => setDataRender("personalData")}
               sx={
                 dataRender === "personalData"
                   ? {
@@ -112,8 +111,29 @@ export default function MyAccount({ cart, dataBaseUser }) {
               </ListItemIcon>
               <ListItemText primary="Datos personales" />
             </ListItemButton>
+            {/* <ListItemButton
+              onClick={() => setDataRender("libraryStore")}
+              sx={
+                dataRender === "libraryStore"
+                  ? {
+                      backgroundColor: "#81A165",
+                      borderRadius: "10px",
+                      ":hover": { backgroundColor: "#c9d9bb" },
+                    }
+                  : {
+                      borderRadius: "10px",
+                      ":hover": { backgroundColor: "#c9d9bb" },
+                    }
+              }
+              className="h-16"
+            >
+              <ListItemIcon>
+                <CartIcon style={{ width: "2.5rem", height: "2.5rem" }} />
+              </ListItemIcon>
+              <ListItemText style={{}} primary="Librería" />
+            </ListItemButton> */}
             <ListItemButton
-              onClick={(e) => setDataRender("accountData")}
+              onClick={() => setDataRender("accountData")}
               sx={
                 dataRender === "accountData"
                   ? {
@@ -134,7 +154,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
               <ListItemText primary="Historial" />
             </ListItemButton>
             <ListItemButton
-              onClick={(e) => setDataRender("addressData")}
+              onClick={() => setDataRender("addressData")}
               sx={
                 dataRender === "addressData"
                   ? {
@@ -154,32 +174,10 @@ export default function MyAccount({ cart, dataBaseUser }) {
               </ListItemIcon>
               <ListItemText style={{}} primary="Direcciones de envío" />
             </ListItemButton>
-            {/* CONFIGURACIONES
-            <ListItemButton
-              onClick={(e) => setDataRender("Notifications")}
-              sx={
-                dataRender === "Notifications"
-                  ? {
-                      backgroundColor: "#81A165",
-                      borderRadius: "10px",
-                      ":hover": { backgroundColor: "#c9d9bb" },
-                    }
-                  : {
-                      borderRadius: "10px",
-                      ":hover": { backgroundColor: "#c9d9bb" },
-                    }
-              }
-              className="h-16 "
-            >
-              <ListItemIcon>
-                <NotificationsIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
-              </ListItemIcon>
-              <ListItemText primary="Notificaciones" />
-            </ListItemButton> */}
           </List>
         </div>
         <button
-          onClick={(e) => setDataRender("FAQ")}
+          onClick={() => setDataRender("FAQ")}
           className="hover:bg-[#81A165] hover:text-white self-center flex items-center justify-around rounded-lg p-2 w-fit  border border-gray-300"
         >
           <div className="flex gap-1">
@@ -198,40 +196,6 @@ export default function MyAccount({ cart, dataBaseUser }) {
           >
             Términos y condiciones de uso
           </Link>
-          {/* <div className="flex justify-center gap-2">
-            <Tooltip title="Librería Móvil">
-              <a
-                target="_blank"
-                href="https://www.linkedin.com/company/limo-librer%C3%ADa-m%C3%B3vil/"
-              >
-                <LinkedInIcon sx={{ height: "2rem", width: "2rem" }} />
-              </a>
-            </Tooltip>
-            <Tooltip title="@limoapp_">
-              <a
-                target="_blank"
-                href="https://www.instagram.com/limoapp_?igsh=dTQ2YTQzbWx3bTZm"
-              >
-                <InstagramIcon sx={{ height: "2rem", width: "2rem" }} />
-              </a>
-            </Tooltip>
-            <Tooltip title="@LimoApp_">
-              <a
-                target="_blank"
-                href="https://x.com/limoapp_?s=11&t=tDuHR48qsjNrcpXZ5m605A"
-              >
-                <XIcon sx={{ height: "2rem", width: "2rem" }} />
-              </a>
-            </Tooltip>
-            <Tooltip title="Whatsapp LIMO">
-              <a
-                target="_blank"
-                href="https://wa.me/5492617231539?text=Hola, deseo comunicarme con un representante de LIMO."
-              >
-                <WhatsAppIcon sx={{ height: "2rem", width: "2rem" }} />
-              </a>
-            </Tooltip>
-          </div> */}
         </div>
       </section>
     </Box>
@@ -241,7 +205,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
     setOpenCollapse(!openCollapse);
   }
 
-  function handleNewOrderButton(e) {
+  function handleNewOrderButton() {
     if (dataBaseUser.phone) {
       navigate("/imprimir");
     } else {
@@ -288,15 +252,10 @@ export default function MyAccount({ cart, dataBaseUser }) {
               sx={{ opacity: 0.8 }}
               component="nav"
               aria-labelledby="nested-list-subheader"
-              // subheader={
-              //   <ListSubheader component="div" id="nested-list-subheader">
-              //     Nested List Items
-              //   </ListSubheader>
-              // }
             >
               MI PERFIL
               <ListItemButton
-                onClick={(e) => setDataRender("personalData")}
+                onClick={() => setDataRender("personalData")}
                 sx={
                   dataRender === "personalData"
                     ? {
@@ -316,8 +275,29 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 </ListItemIcon>
                 <ListItemText primary="Datos personales" />
               </ListItemButton>
+              {/* <ListItemButton
+                onClick={() => setDataRender("libraryStore")}
+                sx={
+                  dataRender === "libraryStore"
+                    ? {
+                        backgroundColor: "#81A165",
+                        borderRadius: "10px",
+                        ":hover": { backgroundColor: "#c9d9bb" },
+                      }
+                    : {
+                        borderRadius: "10px",
+                        ":hover": { backgroundColor: "#c9d9bb" },
+                      }
+                }
+                className="h-16"
+              >
+                <ListItemIcon>
+                  <CartIcon style={{ width: "2.5rem", height: "2.5rem" }} />
+                </ListItemIcon>
+                <ListItemText style={{}} primary="Librería" />
+              </ListItemButton> */}
               <ListItemButton
-                onClick={(e) => setDataRender("accountData")}
+                onClick={() => setDataRender("accountData")}
                 sx={
                   dataRender === "accountData"
                     ? {
@@ -338,7 +318,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 <ListItemText primary="Historial" />
               </ListItemButton>
               <ListItemButton
-                onClick={(e) => setDataRender("addressData")}
+                onClick={() => setDataRender("addressData")}
                 sx={
                   dataRender === "addressData"
                     ? {
@@ -360,35 +340,11 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 </ListItemIcon>
                 <ListItemText style={{}} primary="Direcciones de envío" />
               </ListItemButton>
-              {/* CONFIGURACIONES
-              <ListItemButton
-                onClick={(e) => setDataRender("Notifications")}
-                sx={
-                  dataRender === "Notifications"
-                    ? {
-                        backgroundColor: "#81A165",
-                        borderRadius: "10px",
-                        ":hover": { backgroundColor: "#c9d9bb" },
-                      }
-                    : {
-                        borderRadius: "10px",
-                        ":hover": { backgroundColor: "#c9d9bb" },
-                      }
-                }
-                className="h-16 "
-              >
-                <ListItemIcon>
-                  <NotificationsIcon
-                    sx={{ width: "2.5rem", height: "2.5rem" }}
-                  />
-                </ListItemIcon>
-                <ListItemText primary="Notificaciones" />
-              </ListItemButton> */}
             </List>
           </div>
 
           <button
-            onClick={(e) => setDataRender("FAQ")}
+            onClick={() => setDataRender("FAQ")}
             className="hover:bg-[#81A165] self-center flex items-center justify-around rounded-lg p-2 w-fit  border border-gray-300"
           >
             <div className="flex gap-1">
@@ -399,40 +355,6 @@ export default function MyAccount({ cart, dataBaseUser }) {
             </div>
           </button>
           <div className="flex flex-col gap-1">
-            {/* <div className="flex justify-center gap-2">
-              <Tooltip title="Librería Móvil">
-                <a
-                  target="_blank"
-                  href="https://www.linkedin.com/company/limo-librer%C3%ADa-m%C3%B3vil/"
-                >
-                  <LinkedInIcon sx={{ height: "2rem", width: "2rem" }} />
-                </a>
-              </Tooltip>
-              <Tooltip title="@limoapp_">
-                <a
-                  target="_blank"
-                  href="https://www.instagram.com/limoapp_?igsh=dTQ2YTQzbWx3bTZm"
-                >
-                  <InstagramIcon sx={{ height: "2rem", width: "2rem" }} />
-                </a>
-              </Tooltip>
-              <Tooltip title="@LimoApp_">
-                <a
-                  target="_blank"
-                  href="https://x.com/limoapp_?s=11&t=tDuHR48qsjNrcpXZ5m605A"
-                >
-                  <XIcon sx={{ height: "2rem", width: "2rem" }} />
-                </a>
-              </Tooltip>
-              <Tooltip title="Whatsapp LIMO">
-                <a
-                  target="_blank"
-                  href="https://wa.me/5492617231539?text=Hola, deseo comunicarme con un representante de LIMO."
-                >
-                  <WhatsAppIcon sx={{ height: "2rem", width: "2rem" }} />
-                </a>
-              </Tooltip>
-            </div> */}
             <h4 className="text-sm font-medium self-center hover:underline">
               XIRO®
             </h4>
@@ -447,11 +369,16 @@ export default function MyAccount({ cart, dataBaseUser }) {
         {/* --------- */}
 
         {/* ALL DATA */}
-        <section className="flex flex-col gap-5 justify-center lg:w-9/12 z-10">
-          <div className="flex flex-col gap-5 bg-[#fff] rounded-2xl lg:h-1/3 p-5">
+        <section className="flex flex-col gap-5 justify-start lg:w-9/12 z-10">
+          <div
+            className={twMerge(
+              dataRender == "libraryStore" ? "hidden" : "flex",
+              "flex-col gap-5 bg-[#fff] rounded-2xl lg:h-1/3 p-5"
+            )}
+          >
             <div className="flex">
               {/* NUEVO PEDIDO */}
-              <div className="flex flex-col w-full lg:w-1/3 gap-6">
+              <div className="flex flex-col w-full lg:w-1/3 gap-6 ">
                 <span className="text-2xl lg:text-3xl w-52">¡Bienvenid@!</span>
                 <Button
                   variant="contained"
@@ -463,16 +390,11 @@ export default function MyAccount({ cart, dataBaseUser }) {
                     ":hover": { backgroundColor: "#c9d9bb" },
                   }}
                   color="primary"
-                  onClick={(e) => handleNewOrderButton(e)}
+                  onClick={e => handleNewOrderButton(e)}
                 >
                   <span className="text-white lg:text-lg font-bold">
                     Nuevo pedido
                   </span>
-                  {/* <img
-                    src={cuatePedido}
-                    alt="limo"
-                    className="md:flex h-28 w-28 object-contain"
-                  /> */}
                 </Button>
               </div>
               {/* MIS PEDIDOS VISTA PC */}
@@ -489,7 +411,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                       <span className="text-3xl ">
                         {
                           clientOrders?.filter(
-                            (order) => order.orderStatus !== "received"
+                            order => order.orderStatus !== "received"
                           ).length
                         }
                       </span>
@@ -511,7 +433,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
               </div>
             </div>
             {/* MIS PEDIDOS VISTA MOBILE */}
-            {dataRender === "accountData" && (
+            {dataRender == "accountData" && (
               <div className="lg:hidden">
                 <List>
                   <ListItemButton onClick={handleOpenCollapse}>
@@ -527,7 +449,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                         <span className="text-xl ">
                           {
                             clientOrders?.filter(
-                              (order) => order.orderStatus !== "received"
+                              order => order.orderStatus !== "received"
                             ).length
                           }
                         </span>
@@ -542,16 +464,18 @@ export default function MyAccount({ cart, dataBaseUser }) {
               </div>
             )}
           </div>
-          {dataRender === "personalData" ? (
+          {dataRender == "personalData" ? (
             <PersonalData user={user} />
-          ) : dataRender === "accountData" ? (
+          ) : dataRender == "accountData" ? (
             <AccountData user={user} />
-          ) : dataRender === "addressData" ? (
+          ) : dataRender == "addressData" ? (
             <AddressData user={user} />
-          ) : dataRender === "FAQ" ? (
+          ) : dataRender == "FAQ" ? (
             <FAQ />
-          ) : dataRender === "Notifications" ? (
+          ) : dataRender == "Notifications" ? (
             <Notifications user={user} />
+          ) : dataRender == "libraryStore" ? (
+            <LibraryStore />
           ) : (
             <PersonalData user={user} />
           )}
@@ -560,3 +484,8 @@ export default function MyAccount({ cart, dataBaseUser }) {
     </>
   );
 }
+
+MyAccount.propTypes = {
+  cart: propTypes.array,
+  dataBaseUser: propTypes.object,
+};

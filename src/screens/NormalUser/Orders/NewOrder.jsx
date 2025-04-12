@@ -81,11 +81,11 @@ const initialResumeState = {
 export default function NewOrder() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.dataBaseUser);
-  const cart = useSelector((state) => state.cart);
-  const labels = useSelector((state) => state.labels);
-  const pricingState = useSelector((state) => state.pricing);
-  const place = useSelector((state) => state.place);
+  const user = useSelector(state => state.dataBaseUser);
+  const cart = useSelector(state => state.cart);
+  const labels = useSelector(state => state.labels);
+  const pricingState = useSelector(state => state.pricing);
+  const place = useSelector(state => state.place);
 
   // Estados consolidados
   const [state, setState] = useState({
@@ -105,12 +105,12 @@ export default function NewOrder() {
 
   const [resume, setResume] = useState(initialResumeState);
 
-  const removeDuplicateDetails = (currentFiles) => {
+  const removeDuplicateDetails = currentFiles => {
     const uniqueDetails = [];
     const seenNames = new Set();
 
     // Filtrar details para mantener solo los únicos
-    currentFiles.details.forEach((file) => {
+    currentFiles.details.forEach(file => {
       if (!seenNames.has(file.name)) {
         seenNames.add(file.name);
         uniqueDetails.push(file);
@@ -162,14 +162,14 @@ export default function NewOrder() {
     // Resto de tu lógica actual
     if (cleanedFiles.details.length === 0) {
       setResume(initialResumeState);
-      setState((prev) => ({ ...prev, loading: false }));
+      setState(prev => ({ ...prev, loading: false }));
     } else {
       const totalPages = cleanedFiles.details.reduce(
         (sum, file) => sum + file.pages,
         0
       );
 
-      setResume((prev) => ({
+      setResume(prev => ({
         ...prev,
         printWay: totalPages > 1 ? prev.printWay : "Simple faz",
         totalPages,
@@ -187,37 +187,37 @@ export default function NewOrder() {
   const handleSetResume = useCallback((newResume, colorAlert = false) => {
     setResume(newResume);
     if (colorAlert) {
-      setState((prev) => ({ ...prev, openColorAlertModal: true }));
+      setState(prev => ({ ...prev, openColorAlertModal: true }));
     }
   }, []);
 
-  const handleDeleteFile = useCallback((fileToDelete) => {
-    setState((prev) => ({ ...prev, loading: true }));
-    setFiles((prevFiles) => {
-      const newDetails = prevFiles.details.filter((f) => {
+  const handleDeleteFile = useCallback(fileToDelete => {
+    setState(prev => ({ ...prev, loading: true }));
+    setFiles(prevFiles => {
+      const newDetails = prevFiles.details.filter(f => {
         console.log(f.name);
         return f.name !== fileToDelete;
       });
-      const newPreviews = prevFiles.previews.filter((f) => f !== fileToDelete);
+      const newPreviews = prevFiles.previews.filter(f => f !== fileToDelete);
 
       return { previews: newPreviews, details: newDetails };
     });
-    setState((prev) => ({ ...prev, loading: false }));
+    setState(prev => ({ ...prev, loading: false }));
   }, []);
 
   const handleSubmitLoadFile = useCallback(
-    async (e) => {
+    async e => {
       e.preventDefault();
       const filesInput = e.target.files;
       const maxSizeMB = 500;
 
       if (!filesInput || filesInput.length === 0) return;
 
-      setState((prev) => ({ ...prev, loading: true }));
+      setState(prev => ({ ...prev, loading: true }));
 
       try {
         const uploadPromises = Array.from(filesInput)
-          .filter((file) => {
+          .filter(file => {
             if (!validateFileSize(file, maxSizeMB)) {
               dispatch(
                 setToast(
@@ -229,7 +229,7 @@ export default function NewOrder() {
             }
             return true;
           })
-          .map(async (file) => {
+          .map(async file => {
             if (validatePDFFile(file.name)) {
               const uploadedFile = await uploadFile(file);
               return { preview: uploadedFile };
@@ -239,21 +239,21 @@ export default function NewOrder() {
               const newDocuments = await dispatch(uploadMulter(formData));
               console.log("new dowcuments", newDocuments);
 
-              return newDocuments.map((doc) => ({ preview: doc }));
+              return newDocuments.map(doc => ({ preview: doc }));
             }
           });
 
         const results = await Promise.all(uploadPromises);
         const newFiles = results.flat();
 
-        setFiles((prev) => ({
+        setFiles(prev => ({
           ...prev,
-          previews: [...prev?.previews, ...newFiles.map((f) => f.preview)],
+          previews: [...prev?.previews, ...newFiles.map(f => f.preview)],
         }));
       } catch (error) {
         dispatch(setToast("Error al subir archivos", "error"));
         console.error("Error:", error);
-        setState((prev) => ({ ...prev, loading: false }));
+        setState(prev => ({ ...prev, loading: false }));
       }
     },
     [dispatch]
@@ -262,7 +262,7 @@ export default function NewOrder() {
   const handleResetOrder = useCallback(() => {
     setFiles({ details: [], previews: [] });
     setResume(initialResumeState);
-    setState((prev) => ({ ...prev, resetModal: false }));
+    setState(prev => ({ ...prev, resetModal: false }));
   }, []);
 
   const handleSetOrder = useCallback(() => {
@@ -275,22 +275,22 @@ export default function NewOrder() {
     );
     setFiles({ details: [], previews: [] });
     setResume(initialResumeState);
-    setState((prev) => ({ ...prev, review: false }));
+    setState(prev => ({ ...prev, review: false }));
   }, [dispatch, user, resume, files.previews, pricing.total]);
 
   const updateState = useCallback((key, value) => {
-    setState((prev) => ({ ...prev, [key]: value }));
+    setState(prev => ({ ...prev, [key]: value }));
   }, []);
 
   const handleColorAlert = useCallback(() => {
-    setState((prev) => ({
+    setState(prev => ({
       ...prev,
       openColorAlertModal: !prev.openColorAlertModal,
     }));
   }, []);
 
-  const handleSettings = useCallback((e) => {
-    setState((prev) => ({ ...prev, currentSetting: e.target.name }));
+  const handleSettings = useCallback(e => {
+    setState(prev => ({ ...prev, currentSetting: e.target.name }));
   }, []);
 
   return (
@@ -328,7 +328,7 @@ export default function NewOrder() {
       {state.choosePlace && (
         <ChoosePlaceModal
           choosePlace={state.choosePlace}
-          setChoosePlace={(value) => updateState("choosePlace", value)}
+          setChoosePlace={value => updateState("choosePlace", value)}
         />
       )}
 
@@ -455,7 +455,7 @@ export default function NewOrder() {
               <section className="w-full">
                 <NewOrderSettings
                   helpModal={state.helpModal}
-                  setHelpModal={(value) => updateState("helpModal", value)}
+                  setHelpModal={value => updateState("helpModal", value)}
                   currentSetting={state.currentSetting}
                   resume={resume}
                   setResume={handleSetResume}
@@ -480,9 +480,9 @@ export default function NewOrder() {
                           index={index}
                           resume={resume}
                           setResume={setResume}
-                          setLoading={(value) => updateState("loading", value)}
-                          setFilesDetail={(detail) =>
-                            setFiles((prev) => {
+                          setLoading={value => updateState("loading", value)}
+                          setFilesDetail={detail =>
+                            setFiles(prev => {
                               console.log(detail);
                               return {
                                 ...prev,

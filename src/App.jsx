@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import "./index.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,14 +28,15 @@ import Delivery from "./screens/DeliveryUser/Delivery";
 import TyC from "./screens/TermsAndConditions/TyC";
 import PickUp from "./screens/PickUpUser/Pickup";
 import Distribution from "./screens/DistributionUser/Distribution";
+import { roleIs } from "./Common/helpers";
 
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const loggedUser = useSelector((state) => state.loggedUser);
-  const dataBaseUser = useSelector((state) => state.dataBaseUser);
-  const cart = useSelector((state) => state.cart);
   const sessionUser = getSession();
+  const cart = useSelector(state => state.cart);
+  const loggedUser = useSelector(state => state.loggedUser);
+  const dataBaseUser = useSelector(state => state.dataBaseUser);
 
   useEffect(() => {
     if (sessionUser) {
@@ -50,21 +51,37 @@ function App() {
     }
   }, [cart]);
 
-  useEffect(() => {
-    if (dataBaseUser) {
-      dataBaseUser.roles.includes("admin")
-        ? navigate("/admin")
-        : dataBaseUser.roles.includes("printing")
-        ? navigate("/imprenta")
-        : dataBaseUser.roles.includes("distribution")
-        ? navigate("/distribucion")
-        : dataBaseUser.roles.includes("delivery")
-        ? navigate("/delivery")
-        : dataBaseUser.roles.includes("pickup")
-        ? navigate("/pickup")
-        : navigate("/");
+  useEffect(() => handleRole(), [dataBaseUser]);
+
+  function handleRole() {
+    if (!dataBaseUser) return;
+
+    switch (true) {
+      case roleIs("admin"):
+        navigate("/admin");
+        break;
+
+      case roleIs("printing"):
+        navigate("/imprenta");
+        break;
+
+      case roleIs("distribution"):
+        navigate("/distribucion");
+        break;
+
+      case roleIs("delivery"):
+        navigate("/delivery");
+        break;
+
+      case roleIs("pickup"):
+        navigate("/pickup");
+        break;
+
+      default:
+        navigate("/");
+        break;
     }
-  }, [dataBaseUser]);
+  }
 
   return (
     <ThemeProvider theme={mainTheme}>
@@ -98,7 +115,7 @@ function App() {
           />
           <Route
             element={
-              <ProtectedRoute isAllowed={!!loggedUser} redirectTo={"/login"} />
+              <ProtectedRoute isAllowed={!!loggedUser} redirectTo="/login" />
             }
           >
             <Route
@@ -122,10 +139,8 @@ function App() {
             path="/admin"
             element={
               <ProtectedRoute
-                isAllowed={
-                  !!loggedUser && dataBaseUser?.roles?.includes("admin")
-                }
-                redirectTo={"/login"}
+                isAllowed={!!loggedUser && roleIs("admin")}
+                redirectTo="/login"
               >
                 <Admin dataBaseUser={dataBaseUser} />
               </ProtectedRoute>
@@ -135,10 +150,8 @@ function App() {
             path="/imprenta"
             element={
               <ProtectedRoute
-                isAllowed={
-                  !!loggedUser && dataBaseUser?.roles?.includes("printing")
-                }
-                redirectTo={"/login"}
+                isAllowed={!!loggedUser && roleIs("printing")}
+                redirectTo="/login"
               >
                 <Printing dataBaseUser={dataBaseUser} />
               </ProtectedRoute>
@@ -148,10 +161,8 @@ function App() {
             path="/distribucion"
             element={
               <ProtectedRoute
-                isAllowed={
-                  !!loggedUser && dataBaseUser?.roles?.includes("distribution")
-                }
-                redirectTo={"/login"}
+                isAllowed={!!loggedUser && roleIs("distribution")}
+                redirectTo="/login"
               >
                 <Distribution dataBaseUser={dataBaseUser} />
               </ProtectedRoute>
@@ -161,10 +172,8 @@ function App() {
             path="/pickup"
             element={
               <ProtectedRoute
-                isAllowed={
-                  !!loggedUser && dataBaseUser?.roles?.includes("pickup")
-                }
-                redirectTo={"/login"}
+                isAllowed={!!loggedUser && roleIs("pickup")}
+                redirectTo="/login"
               >
                 <PickUp dataBaseUser={dataBaseUser} />
               </ProtectedRoute>
@@ -174,10 +183,8 @@ function App() {
             path="/delivery"
             element={
               <ProtectedRoute
-                isAllowed={
-                  !!loggedUser && dataBaseUser?.roles?.includes("delivery")
-                }
-                redirectTo={"/login"}
+                isAllowed={!!loggedUser && roleIs("delivery")}
+                redirectTo="/login"
               >
                 <Delivery dataBaseUser={dataBaseUser} />
               </ProtectedRoute>

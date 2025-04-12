@@ -8,7 +8,7 @@ export function validateBio(bio) {
   return regex.test(bio);
 }
 export function validatePhone(phone) {
-  const regex = /^[0-9]{10}$/;
+  const regex = /^[0-9]{1,20}$/;
   return regex.test(phone);
 }
 export function validateEmail(email) {
@@ -101,12 +101,12 @@ export function updateUserValidator(
   let bio = !validateBio(userBio);
   let birthdate = !validateBirthdate(userBirthdate);
 
-  // if (!displayName && !phone && !bio && !birthdate)
+  console.log(birthdate);
+
   if (!displayName && !phone && !bio)
     return { error: false, allowUpdate: true };
   else
     return {
-      // error: { displayName, phone, bio, birthdate },
       error: { displayName, phone, bio },
       allowUpdate: false,
     };

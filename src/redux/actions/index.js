@@ -173,7 +173,7 @@ export function createUser(user) {
   };
 }
 //---------------UpdateUser--------------------
-export function updateUser(user) {
+export function updateUser(user, showNoti) {
   return async function (dispatch) {
     try {
       let response = await axios.patch(`${baseUrl}/users/${user.uid}`, user);
@@ -182,6 +182,8 @@ export function updateUser(user) {
         type: action.PATCH_USER,
         payload: response.data[0],
       });
+
+      if (!showNoti) return;
 
       return dispatch({
         type: action.TOAST_ALERT,
@@ -870,5 +872,14 @@ export function getInAppLabels() {
         },
       });
     }
+  };
+}
+
+// ------------ Library Cart ------------
+
+export function setLibraryCart(libraryCart) {
+  return {
+    type: action.SET_LIBRARY_CART,
+    payload: { libraryCart },
   };
 }
