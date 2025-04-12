@@ -26,7 +26,6 @@ import Notifications from "./Notifications";
 import Chatbot from "../../../components/Chatbot/Chatbot";
 import { useEffect } from "react";
 import { getOrdersByClientUid, setToast } from "../../../redux/actions";
-import { ShoppingCart as CartIcon } from "@mui/icons-material";
 import LibraryStore from "./LibraryStore";
 import { twMerge } from "tailwind-merge";
 import propTypes from "prop-types";
@@ -112,7 +111,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
               </ListItemIcon>
               <ListItemText primary="Datos personales" />
             </ListItemButton>
-            <ListItemButton
+            {/* <ListItemButton
               onClick={() => setDataRender("libraryStore")}
               sx={
                 dataRender === "libraryStore"
@@ -132,7 +131,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 <CartIcon style={{ width: "2.5rem", height: "2.5rem" }} />
               </ListItemIcon>
               <ListItemText style={{}} primary="Librería" />
-            </ListItemButton>
+            </ListItemButton> */}
             <ListItemButton
               onClick={() => setDataRender("accountData")}
               sx={
@@ -276,7 +275,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 </ListItemIcon>
                 <ListItemText primary="Datos personales" />
               </ListItemButton>
-              <ListItemButton
+              {/* <ListItemButton
                 onClick={() => setDataRender("libraryStore")}
                 sx={
                   dataRender === "libraryStore"
@@ -296,7 +295,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                   <CartIcon style={{ width: "2.5rem", height: "2.5rem" }} />
                 </ListItemIcon>
                 <ListItemText style={{}} primary="Librería" />
-              </ListItemButton>
+              </ListItemButton> */}
               <ListItemButton
                 onClick={() => setDataRender("accountData")}
                 sx={

@@ -24,7 +24,7 @@ const initialState = {
   adminCoupons: null,
   printingUsers: [],
   deliveryUsers: [],
-  labels: {},
+  // labels: {},
   labels: [],
   libraryCart: [],
 };

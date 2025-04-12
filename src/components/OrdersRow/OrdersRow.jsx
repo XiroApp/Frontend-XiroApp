@@ -1,14 +1,6 @@
-import {
-  Autocomplete,
-  Button,
-  Input,
-  TableCell,
-  TextField,
-  Tooltip,
-} from "@mui/material";
+import { Autocomplete, Button, Input, TextField, Tooltip } from "@mui/material";
 import PhoneForwardedIcon from "@mui/icons-material/PhoneForwarded";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import React from "react";
 import { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -21,12 +13,8 @@ import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import ErrorIcon from "@mui/icons-material/Error";
 import { useDispatch } from "react-redux";
-import {
-  changeOrderStatus,
-  getUserByUid,
-} from "../../redux/actions/adminActions";
+import { changeOrderStatus } from "../../redux/actions/adminActions";
 import {
   Close,
   Diversity3,
@@ -35,7 +23,8 @@ import {
   PermIdentity,
   WarehouseOutlined,
 } from "@mui/icons-material";
-import { OrdersAdapter } from "../../Infra/Adapters/orders.adatper";
+import propTypes from "prop-types";
+import { formatPrice } from "../../Common/helpers";
 
 const Accordion = styled(props => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -90,9 +79,8 @@ export default function OrdersRow({
   /* VIEW FILES MODAL */
   const [open, setOpen] = useState(false);
 
-  const handleOpenFilesModal = e => {
-    setOpen(true);
-  };
+  const handleOpenFilesModal = () => setOpen(true);
+
   /* VIEW ASSIGNED MODAL */
   const [openAssignedModal, setOpenAssignedModal] = useState(false);
 
@@ -102,9 +90,7 @@ export default function OrdersRow({
   /* VIEW CLIENT MODAL */
   const [openClientModal, setOpenClientModal] = useState(false);
 
-  const handleOpenClientModal = async uid => {
-    setOpenClientModal(true);
-  };
+  const handleOpenClientModal = () => setOpenClientModal(true);
 
   /* FILES ACCORDION */
   const [expanded, setExpanded] = useState(false);
@@ -121,12 +107,12 @@ export default function OrdersRow({
   const [deliverySelectStatus, setDeliverySelectStatus] = useState(null);
   const [problemsSelectStatus, setProblemsSelectStatus] = useState(null);
 
-  const handleSetEdiStatus = e => {
+  function handleSetEdiStatus() {
     setEditStatus(false);
     setPrintingSelectStatus(false);
     setDeliverySelectStatus(false);
     setProblemsSelectStatus(false);
-  };
+  }
 
   /* STATUS PRINTING */
   const [input, setInput] = useState({
@@ -178,7 +164,7 @@ export default function OrdersRow({
     setInput({ ...input, [e.target.name]: e.target.value });
   }
 
-  function handleAssignStatus(e) {
+  function handleAssignStatus() {
     let selectedPrinting = printingUsers.find(
       user =>
         user.displayName === input.uidPrinting || user.uid === input.uidPrinting
@@ -236,46 +222,35 @@ export default function OrdersRow({
               color="inherit"
               variant="text"
               className="hover:underline"
-              onClick={e => setPriceModal(true)}
+              onClick={() => setPriceModal(true)}
             >
-              <span>$ {order.transactionAmount}</span>
+              <span className="min-w-20 w-full text-start">
+                ${formatPrice(order.transactionAmount)}
+              </span>
             </Button>
 
             {/* MODAL FORMULARIO */}
-            <Dialog open={priceModal} onClose={e => setPriceModal(false)}>
+            <Dialog open={priceModal} onClose={() => setPriceModal(false)}>
               <DialogTitle className="text-center">Monto</DialogTitle>
-              <DialogContent dividers className="flex flex-col gap-8">
+              <DialogContent dividers className="flex flex-col gap-8 w-[300px]">
                 <section className="flex flex-col justify-start items-start ">
-                  <ul className="flex flex-col items-start justify-start">
-                    <li>
-                      <span className="text-[12px] text-black">
-                        {`Subtotal: $${order.subtotal_price}`}
-                      </span>
-                    </li>
-                    <li>
-                      <span className="text-[12px] text-black">
-                        {`Envío: $${order.shipment_price}`}
-                      </span>
-                    </li>
+                  <ul className="flex flex-col items-start justify-start [&>li]:text-lg gap-y-4">
+                    <li>Subtotal: ${formatPrice(order.subtotal_price)}</li>
+                    <li>Envío: ${formatPrice(order.shipment_price)}</li>
                     {order.cart.map((item, index) => (
                       <li key={index}>
-                        <span className="text-[12px] text-black">
-                          {`Cupón ${index + 1}: ${
-                            item?.coupon_used?.type[0] || ""
-                          } ${item?.coupon_used?.ammount || 0}`}
-                        </span>
+                        Cupón {index + 1}: {item?.coupon_used?.type[0] || ""}
+                        {item?.coupon_used?.ammount || 0}
                       </li>
                     ))}
-                    {/* <li>
-                      <span className="text-[12px] text-black">
-                        {`Cupón: ${order.cart[0].details.coupon}`}
-                      </span>
-                    </li> */}
                   </ul>
                 </section>
               </DialogContent>
               <DialogActions>
-                <Button variant="contained" onClick={e => setPriceModal(false)}>
+                <Button
+                  variant="contained"
+                  onClick={() => setPriceModal(false)}
+                >
                   Cerrar
                 </Button>
               </DialogActions>
@@ -287,7 +262,7 @@ export default function OrdersRow({
             <Button
               color="inherit"
               variant="text"
-              onClick={e => setEditStatus(true)}
+              onClick={() => setEditStatus(true)}
             >
               <Typography className="">
                 {value === "pending"
@@ -310,7 +285,7 @@ export default function OrdersRow({
               </Typography>
             </Button>
             {/* MODAL FORMULARIO EDITAR ESTADO DE ORDEN */}
-            <Dialog open={editStatus} onClose={e => setEditStatus(false)}>
+            <Dialog open={editStatus} onClose={() => setEditStatus(false)}>
               <DialogTitle className="text-center">Editar estado</DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8">
                 <section className="flex flex-col items-center gap-4 w-96">
@@ -355,7 +330,7 @@ export default function OrdersRow({
                         </div>
                       ) : (
                         <>
-                          <label className="py-2" hrmlFor="orderStatus">
+                          <label className="py-2" htmlFor="orderStatus">
                             Cambiar estado de orden
                           </label>
                           <select
@@ -525,7 +500,7 @@ export default function OrdersRow({
               <DialogActions>
                 <Button
                   variant="outlined"
-                  onClick={e => handleSetEdiStatus(false)}
+                  onClick={() => handleSetEdiStatus(false)}
                 >
                   Cancelar
                 </Button>
@@ -551,7 +526,7 @@ export default function OrdersRow({
             </Button>
 
             {/* MODAL FORMULARIO */}
-            <Dialog open={open} onClose={e => setOpen(false)}>
+            <Dialog open={open} onClose={() => setOpen(false)}>
               <DialogTitle className="text-center">
                 Detalles del pedido
               </DialogTitle>
@@ -669,6 +644,7 @@ export default function OrdersRow({
                                       >
                                         <a
                                           target="_blank"
+                                          rel="noreferrer"
                                           download
                                           href={`https://firebasestorage.googleapis.com/v0/b/xiro-app-2ec87.firebasestorage.app/o/${file}?alt=media&token=e7b0f280-413a-4546-aa2b-da0cd3523289`}
                                         >
@@ -694,7 +670,7 @@ export default function OrdersRow({
                 </section>
               </DialogContent>
               <DialogActions>
-                <Button variant="contained" onClick={e => setOpen(false)}>
+                <Button variant="contained" onClick={() => setOpen(false)}>
                   Cerrar
                 </Button>
               </DialogActions>
@@ -718,7 +694,7 @@ export default function OrdersRow({
             {/* MODAL FORMULARIO */}
             <Dialog
               open={openAssignedModal}
-              onClose={e => setOpenAssignedModal(false)}
+              onClose={() => setOpenAssignedModal(false)}
             >
               <DialogTitle className="text-center">Responsables</DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8">
@@ -759,7 +735,7 @@ export default function OrdersRow({
               <DialogActions>
                 <Button
                   variant="contained"
-                  onClick={e => setOpenAssignedModal(false)}
+                  onClick={() => setOpenAssignedModal(false)}
                 >
                   Cerrar
                 </Button>
@@ -783,11 +759,14 @@ export default function OrdersRow({
             {/* MODAL FORMULARIO */}
             <Dialog
               open={openClientModal}
-              onClose={e => setOpenClientModal(false)}
+              onClose={() => setOpenClientModal(false)}
             >
               <DialogTitle className="text-center flex items-center justify-between">
                 <Typography variant="h6">Información del Cliente </Typography>
-                <Button variant="text" onClick={e => setOpenClientModal(false)}>
+                <Button
+                  variant="text"
+                  onClick={() => setOpenClientModal(false)}
+                >
                   <Close />
                 </Button>
               </DialogTitle>
@@ -846,7 +825,7 @@ export default function OrdersRow({
             </Button>
 
             {/* MODAL FORMULARIO */}
-            <Dialog open={placeModal} onClose={e => setPlaceModal(false)}>
+            <Dialog open={placeModal} onClose={() => setPlaceModal(false)}>
               <DialogTitle className="text-center">
                 Información del cliente
               </DialogTitle>
@@ -881,7 +860,10 @@ export default function OrdersRow({
                 </section>
               </DialogContent>
               <DialogActions>
-                <Button variant="contained" onClick={e => setPlaceModal(false)}>
+                <Button
+                  variant="contained"
+                  onClick={() => setPlaceModal(false)}
+                >
                   Cerrar
                 </Button>
               </DialogActions>
@@ -910,3 +892,17 @@ export default function OrdersRow({
     </td>
   );
 }
+
+OrdersRow.propTypes = {
+  value: propTypes.any,
+  column: propTypes.any,
+  printingUsers: propTypes.array,
+  deliveryUsers: propTypes.array,
+  distributionUsers: propTypes.array,
+  pickupUsers: propTypes.array,
+  orderId: propTypes.any,
+  order: propTypes.any,
+  editor: propTypes.any,
+  fetchOrders: propTypes.any,
+  classes: propTypes.any,
+};

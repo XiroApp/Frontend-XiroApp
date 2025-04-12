@@ -27,14 +27,12 @@ export class OrdersAdapter {
     const response = await axios.get(url);
     const data = response.data;
 
-    // Formatear las órdenes
-    const sortedOrders = data.orders.map((order) => {
+    const sortedOrders = data.orders.map(order => {
       const fechaFormateada = order.created_at
         .split("T")[0]
         .split("-")
         .reverse()
         .join("/");
-      console.log(order);
 
       return {
         uid: order.uid,
@@ -80,5 +78,6 @@ export class OrdersAdapter {
 
   static async setBatchToDelivery(batch, uidDelivery) {
     let { data } = await axios.post(`${baseUrl}/batch`, { batch, uidDelivery });
+    console.log(data);
   }
 }

@@ -8,6 +8,8 @@ const sortByDateDesc = (a, b) => {
 
 const len = str => str.length;
 
+const tLC = str => str.toString().toLowerCase().trim();
+
 function formatPrice(price) {
   return new Intl.NumberFormat("es-AR", {
     style: "decimal",
@@ -29,4 +31,4 @@ function roleIs(permission) {
   return user?.roles?.includes(permission);
 }
 
-export { sortByDateDesc, len, formatPrice, normalizeStr, roleIs };
+export { sortByDateDesc, len, formatPrice, normalizeStr, roleIs, tLC };

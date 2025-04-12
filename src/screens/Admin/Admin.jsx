@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import List from "@mui/material/List";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -14,7 +14,7 @@ import Navbar from "../../components/Navbar/Navbar";
 import Coupons from "./Menu/Coupons";
 import Pricing from "./Menu/Pricing";
 import Orders from "./Menu/Orders";
-import { ShoppingBag, StickyNote2 } from "@mui/icons-material";
+import { StickyNote2 } from "@mui/icons-material";
 import Texts from "./Menu/Texts";
 import LibraryPanel from "../../components/Admin/LibraryPanel";
 
@@ -80,7 +80,7 @@ export default function Admin({ cart, dataBaseUser }) {
               </ListItemIcon>
               <ListItemText primary="Usuarios" />
             </ListItemButton>
-            <ListItemButton
+            {/* <ListItemButton
               onClick={() => setDataRender("library")}
               sx={
                 dataRender === "library"
@@ -93,7 +93,7 @@ export default function Admin({ cart, dataBaseUser }) {
                 <ShoppingBag sx={{ width: "2.5rem", height: "2.5rem" }} />
               </ListItemIcon>
               <ListItemText style={{}} primary="Librería" />
-            </ListItemButton>
+            </ListItemButton> */}
             <ListItemButton
               onClick={e => setDataRender("orders")}
               sx={

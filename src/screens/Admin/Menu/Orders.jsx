@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
 import {
   Backdrop,
@@ -16,71 +11,34 @@ import {
 } from "@mui/material";
 import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper.js";
 import { UsersAdapter } from "../../../Infra/Adapters/users.adapter.js";
+import { twMerge } from "tailwind-merge";
+import propTypes from "prop-types";
+import { tLC } from "../../../Common/helpers.js";
 
-const columns = [
-  {
-    id: "order_number",
-    label: "N° de orden",
-    align: "center",
-  },
-  {
-    id: "createdAt",
-    label: "Fecha ingreso",
-    align: "center",
-  },
-  { id: "paymentId", label: "ID de pago", align: "center" },
-  {
-    id: "transactionAmount",
-    label: "Monto",
-    align: "center",
-  },
-  {
-    id: "orderStatus",
-    label: "Estado de Orden",
-    align: "center",
-  },
-
-  {
-    id: "place",
-    label: "Tipo de entrega",
-
-    align: "center",
-  },
-  { id: "cart", label: "Productos", align: "center" },
-
-  {
-    id: "assigned",
-    label: "Responsables",
-    align: "center",
-  },
-  {
-    id: "clientUid",
-    label: "Cliente",
-  },
-  {
-    id: "paymentStatus",
-    label: "Estado de Pago",
-
-    align: "center",
-  },
-];
-
-export default function Orders({ editor, role }) {
+export default function Orders({ editor }) {
   const [printingUsers, setPrintingUsers] = useState([]);
   const [deliveryUsers, setDeliveryUsers] = useState([]);
   const [distributionUsers, setDistributionUsers] = useState([]);
   const [pickupUsers, setPickupUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [pageSize, setPageSize] = useState(15); // Tamaño de la página
-  const [lastDocument, setLastDocument] = useState(null); //
-  const [hasMore, setHasMore] = useState(true); // Track if there are more pages
-
+  const [, setError] = useState(null);
+  const [pageSize] = useState(15);
+  const [lastDocument, setLastDocument] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
   const [orders, setOrders] = useState([]);
-  const [page, setPage] = useState(0);
+  const [page] = useState(0);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [filter, setFilter] = useState("no_filter");
+  const [allOrders, setAllOrders] = useState([]);
 
-  const fetchOrders = async (direction = "next") => {
+  //! Falta obtener todos las ordenes (no por paginación).
+
+  useEffect(() => {
+    fetchOrders("next");
+    fetchUsersByRole();
+  }, []);
+
+  async function fetchOrders(direction = "next") {
     setLoading(true);
     setError(null);
     setOrders([]);
@@ -96,147 +54,141 @@ export default function Orders({ editor, role }) {
 
       const { orders: fetchedOrders, lastVisible: newLastVisible } = data;
 
-      // if (direction === "next") {
-      //   setOrders([...orders, ...fetchedOrders]);
-      // } else {
       setOrders(fetchedOrders);
-      // }
-
+      setAllOrders(fetchedOrders);
       setLastDocument(newLastVisible);
-      setHasMore(fetchedOrders.length === pageSize); // Update hasMore
+      setHasMore(fetchedOrders.length === pageSize);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  const fetchUsersByRole = () => {
-    UsersAdapter.getSpecialUsers().then((res) => {
+  function fetchUsersByRole() {
+    UsersAdapter.getSpecialUsers().then(res => {
       setDeliveryUsers(res.deliveryUsers);
       setPrintingUsers(res.printingUsers);
       setDistributionUsers(res.distributionUsers);
       setPickupUsers(res.pickupUsers);
     });
-  };
+  }
 
-  useEffect(() => {
-    fetchOrders("next");
-    fetchUsersByRole();
-  }, []);
+  function handleSearch(term) {
+    const searchTerm = tLC(term);
 
-  /* CHANGE ORDER STATUS */
-  const [filter, setFilter] = useState("no_filter");
-  /* SEARCH  */
-  const handleSearch = (e) => {
-    setFilter("no_filter");
-    e.target.value.length > 2
-      ? setOrders(
-          orders.filter((order) =>
-            order.paymentId.toString().includes(e.target.value)
-          )
-        )
-      : setOrders(orders);
-  };
+    if (searchTerm == "") return setOrders(allOrders);
 
-  const handleFilter = (e) => {
-    setFilter(e.target.name);
-    e.target.name !== "no_filter"
-      ? setOrders(orders.filter((order) => order.orderStatus === e.target.name))
-      : setOrders(orders);
-  };
+    const filteredOrders = allOrders.filter(
+      o =>
+        tLC(o?.order_number ?? "").includes(searchTerm) ||
+        tLC(o?.clientUser?.email ?? "").includes(searchTerm) ||
+        tLC(o?.clientUser?.displayName ?? "").includes(searchTerm) ||
+        tLC(o?.clientUser?.phone ?? "").includes(searchTerm)
+    );
+
+    setOrders(filteredOrders);
+  }
+
+  function handleFilter(status) {
+    setFilter(status);
+    return status != "no_filter"
+      ? setOrders(allOrders.filter(o => o?.orderStatus == tLC(status)))
+      : setOrders(allOrders);
+  }
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl p-4 ">
-      <span className="text-2xl lg:text-2xl ">Asignar órdenes</span>
-      <div className="flex flex-col lg:flex-row  rounded-lg  lg:w-full p-2 gap-2">
+      <span className="text-2xl lg:text-2xl">Asignar órdenes</span>
+      <div className="flex flex-col lg:flex-row  rounded-lg lg:w-full p-2 gap-2">
         <div>
-          <label htmlFor="">Buscar órdenes</label>
+          <label htmlFor="search-orders">Buscar órdenes</label>
           <Input
+            id="search-orders"
             name="email"
-            type="number"
-            placeholder={"Ingresa número de orden ..."}
-            onChange={(e) => handleSearch(e)}
+            type="text"
+            placeholder="Ingresa número de orden..."
+            onChange={e => handleSearch(e.target.value)}
             className="w-full"
           />
         </div>
         <div>
-          <label htmlFor="">Filtrar órdenes</label>
+          <label htmlFor="filter-orders">Filtrar órdenes</label>
           <div className="flex flex-wrap gap-2">
             <button
               name="in_delivery"
               className={
-                filter === "in_delivery"
+                filter == "in_delivery"
                   ? "border p-1 rounded-md text-[12px] bg-green-300"
                   : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={() => handleFilter("in_delivery")}
             >
               En delivery
             </button>
             <button
               name="pending"
               className={
-                filter === "pending"
+                filter == "pending"
                   ? "border p-1 rounded-md text-[12px] bg-green-300"
                   : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={() => handleFilter("pending")}
             >
               Pendientes
             </button>
             <button
               name="unassigned"
               className={
-                filter === "unassigned"
+                filter == "unassigned"
                   ? "border p-1 rounded-md text-[12px] bg-green-300"
                   : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={() => handleFilter("unassigned")}
             >
               Sin Asignar
             </button>
             <button
               name="process"
               className={
-                filter === "process"
+                filter == "process"
                   ? "border p-1 rounded-md text-[12px] bg-green-300"
                   : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={() => handleFilter("process")}
             >
               En proceso
             </button>
             <button
               name="printed"
               className={
-                filter === "printed"
+                filter == "printed"
                   ? "border p-1 rounded-md text-[12px] bg-green-300"
                   : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={() => handleFilter("printed")}
             >
               Impresas
             </button>
             <button
               name="received"
               className={
-                filter === "received"
+                filter == "received"
                   ? "border p-1 rounded-md text-[12px] bg-green-300"
                   : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={() => handleFilter("received")}
             >
               Recibidas
             </button>
             <button
               name="problems"
               className={
-                filter === "problems"
+                filter == "problems"
                   ? "border p-1 rounded-md text-[12px] bg-green-300"
                   : "border p-1 rounded-md text-[12px] hover:bg-green-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={() => handleFilter("problems")}
             >
               Con problemas
             </button>
@@ -245,7 +197,7 @@ export default function Orders({ editor, role }) {
               className={
                 "underline p-1 rounded-md text-[12px] hover:bg-green-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={() => handleFilter("no_filter")}
             >
               Quitar filtros
             </button>
@@ -298,16 +250,16 @@ export default function Orders({ editor, role }) {
                       role="button"
                       tabIndex={-1}
                       key={index}
-                      className={
-                        index === selectedRow
-                          ? "p-0 m-0 bg-green-900/80 text-white "
-                          : "p-0 m-0 hover:bg-green-900/50 "
-                      }
-                      onClick={(e) =>
-                        selectedRow == index
-                          ? setSelectedRow(null)
-                          : setSelectedRow(index)
-                      }
+                      className={twMerge(
+                        index == selectedRow
+                          ? "bg-green-900/80 text-white "
+                          : "hover:bg-green-900/30",
+                        "p-0 m-0"
+                      )}
+                      onClick={() => {
+                        if (selectedRow == index) return;
+                        else return setSelectedRow(index);
+                      }}
                     >
                       {columns.map((column, index) => {
                         const value = order[column.id];
@@ -335,7 +287,7 @@ export default function Orders({ editor, role }) {
                 <Backdrop
                   sx={{
                     color: "#fff",
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                    zIndex: theme => theme.zIndex.drawer + 1,
                   }}
                   open={loading}
                 >
@@ -344,16 +296,24 @@ export default function Orders({ editor, role }) {
               )}
             </tbody>
             <TableFooter>
-              <div className="flex w-full gap-4">
+              <div className="flex w-full gap-2 mt-2 mb-4 ml-2">
                 <button
-                  onClick={() => fetchOrders("prev")}
+                  className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-md"
+                  onClick={() => {
+                    setSelectedRow(null);
+                    fetchOrders("prev");
+                  }}
                   disabled={!lastDocument || loading}
                 >
                   Anterior
                 </button>
 
                 <button
-                  onClick={() => fetchOrders("next")}
+                  className="bg-green-200 hover:bg-green-300 px-4 py-2 rounded-md"
+                  onClick={() => {
+                    setSelectedRow(null);
+                    fetchOrders("next");
+                  }}
                   disabled={!hasMore || loading}
                 >
                   Siguiente
@@ -366,3 +326,56 @@ export default function Orders({ editor, role }) {
     </div>
   );
 }
+
+const columns = [
+  {
+    id: "order_number",
+    label: "N° de orden",
+    align: "center",
+  },
+  {
+    id: "createdAt",
+    label: "Fecha ingreso",
+    align: "center",
+  },
+  { id: "paymentId", label: "ID de pago", align: "center" },
+  {
+    id: "transactionAmount",
+    label: "Monto",
+    align: "center",
+  },
+  {
+    id: "orderStatus",
+    label: "Estado de Orden",
+    align: "center",
+  },
+
+  {
+    id: "place",
+    label: "Tipo de entrega",
+
+    align: "center",
+  },
+  { id: "cart", label: "Productos", align: "center" },
+
+  {
+    id: "assigned",
+    label: "Responsables",
+    align: "center",
+  },
+  {
+    id: "clientUid",
+    label: "Cliente",
+  },
+  {
+    id: "paymentStatus",
+    label: "Estado de Pago",
+
+    align: "center",
+  },
+];
+
+Orders.propTypes = {
+  editor: propTypes.any,
+  role: propTypes.any,
+};
