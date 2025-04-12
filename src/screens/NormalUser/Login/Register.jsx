@@ -1,5 +1,5 @@
 import "./Login.css";
-import { React, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../../../context/authContext";
 import { useNavigate } from "react-router-dom";
 import logoGoogle from "../../../utils/assets/images/icon-google.png";
@@ -22,7 +22,7 @@ import {
 } from "@mui/material";
 import { registerValidator } from "../../../utils/inputValidator";
 import { useDispatch } from "react-redux";
-import { createUser, limoLogin } from "../../../redux/actions";
+import { createUser, xiroLogin } from "../../../redux/actions";
 import { startSession } from "../../../utils/controllers";
 
 export default function Login() {
@@ -37,8 +37,6 @@ export default function Login() {
     conditionsChecked: true,
     instagram: "",
   });
-
-  const [allowRegister, setAllowRegister] = useState(false);
   const [error, setError] = useState(false);
 
   async function handleGoogleLogin() {
@@ -53,7 +51,6 @@ export default function Login() {
           photoURL = null,
           phoneNumber = null,
           uid,
-          reloadUserInfo,
         } = loginResponse.user;
         const user = loginResponse.user;
 
@@ -72,13 +69,13 @@ export default function Login() {
             })
           );
         }
-        dispatch(limoLogin(user));
+        dispatch(xiroLogin(user));
         navigate("/registrocompletadoexitosamente");
       } else {
         setError({ ...error, conditionsChecked: true });
       }
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error(`catch 'handleGoogleLogin' ${err.message}`);
     }
   }
 
@@ -96,10 +93,9 @@ export default function Login() {
           input.password,
           input.name
         );
-        // console.log(registerResponse);
+
         if (registerResponse.error) {
           setError({ ...error, ...registerResponse.error });
-          setAllowRegister(false);
           continueRegister = false;
         }
 
@@ -111,12 +107,9 @@ export default function Login() {
             phoneNumber = null,
             uid,
             providerData,
-            reloadUserInfo,
           } = registerResponse.user;
 
-          // startSession(user);
           const { isNewUser } = getAdditionalUserInfo(registerResponse);
-          const adInfo = getAdditionalUserInfo(registerResponse);
 
           if (isNewUser) {
             dispatch(
@@ -143,16 +136,11 @@ export default function Login() {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+  const handleClickShowPassword = () => setShowPassword(show => !show);
 
   function handleInput(e) {
     const { name, value, checked } = e.target;
-
-    e.target.type === "checkbox"
+    return e.target.type == "checkbox"
       ? setInput({ ...input, [name]: checked })
       : setInput({ ...input, [name]: value });
   }
@@ -161,22 +149,21 @@ export default function Login() {
     <div className="bg-white flex flex-row h-full pb-5">
       <section
         id="svg-container"
-        className="hidden md:hidden lg:flex h-screen w-1/2 pl-16"
-      >
-        {/* BACKGROUND CONTAINER */}
-      </section>
+        className="hidden md:hidden lg:flex h-[98vh] w-1/2 pl-16"
+      />
 
-      {/* ------------------------------------------------------------------------------------------------------------------------------------------ */}
       <section className="w-screen lg:w-1/2 flex flex-col justify-center items-center lg:gap-4 lg:pr-32">
         <div className="flex flex-col lg:gap-4 gap-2 ">
           <div>
             <section className="flex flex-col items-center justify-center gap-1">
-              <img src={loginImage} alt="" className="h-56 object-contain " />
+              <img
+                src={loginImage}
+                alt="logo"
+                className="h-56 object-contain "
+              />
 
-              {/* <h1 className="text-3xl">¡Bienvenido a LIMO!</h1> */}
-              <h2 className="text-lg font-md opacity-60">Registro</h2>
+              <p className="text-lg font-md opacity-60">Registro</p>
             </section>
-            {/* INPUT SECTION */}
 
             <section className="flex flex-col gap-1 ">
               <TextField
@@ -193,14 +180,14 @@ export default function Login() {
                 autoComplete="current-name"
                 variant="standard"
                 fullWidth
-                onChange={(e) => handleInput(e)}
+                onChange={handleInput}
               />
 
               <TextField
                 error={error.email}
                 helperText={
                   error.email
-                    ? "La cuenta de email ingresada no es válida ó ya esta en uso."
+                    ? "La cuenta de email ingresada es inválida o ya esta en uso."
                     : ""
                 }
                 name="email"
@@ -209,19 +196,8 @@ export default function Login() {
                 autoComplete="current-email"
                 variant="standard"
                 fullWidth
-                onChange={(e) => handleInput(e)}
+                onChange={handleInput}
               />
-              {/* <TextField
-                error={error.instagram}
-                helperText={"Opcional"}
-                name="instagram"
-                label="Instagram (Sin @)"
-                type="text"
-                autoComplete="current-instagram"
-                variant="standard"
-                fullWidth
-                onChange={(e) => handleInput(e)}
-              /> */}
 
               <FormControl sx={{}} variant="standard">
                 <InputLabel
@@ -231,7 +207,7 @@ export default function Login() {
                   Contraseña
                 </InputLabel>
                 <Input
-                  onChange={(e) => handleInput(e)}
+                  onChange={handleInput}
                   name="password"
                   error={error.password}
                   type={showPassword ? "text" : "password"}
@@ -240,7 +216,9 @@ export default function Login() {
                       <IconButton
                         aria-label="toggle password visibility"
                         onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
+                        onMouseDown={event => {
+                          event.preventDefault();
+                        }}
                         color={error.password ? "error" : "standard"}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -266,7 +244,7 @@ export default function Login() {
                 </InputLabel>
                 <Input
                   error={error.verifyPassword}
-                  onChange={(e) => handleInput(e)}
+                  onChange={handleInput}
                   name="verifyPassword"
                   type={showPassword ? "text" : "password"}
                   endAdornment={
@@ -274,7 +252,9 @@ export default function Login() {
                       <IconButton
                         aria-label="toggle password visibility"
                         onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
+                        onMouseDown={event => {
+                          event.preventDefault();
+                        }}
                         color={error.verifyPassword ? "error" : "standard"}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -293,7 +273,6 @@ export default function Login() {
             </section>
           </div>
 
-          {/* BOTONES LOGIN */}
           <div className="flex flex-col items-center gap-2 ">
             <div className="flex flex-col justify-between items-center">
               <section
@@ -307,16 +286,18 @@ export default function Login() {
                   <Checkbox
                     sx={{ fontWeight: "normal", margin: 0 }}
                     color="primary"
-                    // defaultChecked
                     name="conditionsChecked"
                     checked={input.conditionsChecked}
-                    onChange={(e) => handleInput(e)}
+                    onChange={handleInput}
                     id="TyC"
                   />
                   <span className="font-light">
                     Acepto los{" "}
                     <Link to="/terminosycondiciones">
-                      <label for="TyC" className="text-green-700 font-medium hover:underline">
+                      <label
+                        htmlFor="TyC"
+                        className="text-green-700 font-medium hover:underline"
+                      >
                         Términos y condiciones.
                       </label>
                     </Link>
@@ -330,7 +311,7 @@ export default function Login() {
               </section>
             </div>
             <Button
-              onClick={(e) => handleRegister(e)}
+              onClick={e => handleRegister(e)}
               variant="contained"
               disableElevation
               className="w-full"
@@ -344,7 +325,7 @@ export default function Login() {
               disableElevation
               onClick={handleGoogleLogin}
             >
-              <img src={logoGoogle} alt="google-icon" className="h-5" />
+              <img src={logoGoogle} alt="Google icon" className="h-5" />
               <span>Registrarse con Google</span>
             </Button>
           </div>

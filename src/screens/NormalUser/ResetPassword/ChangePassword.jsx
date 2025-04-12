@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, IconButton, Input, InputAdornment } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { validatePassword } from "../../../utils/inputValidator";
@@ -25,34 +25,26 @@ export default function ResetPassword() {
   });
   const [error, setError] = useState(false);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowPassword = () => setShowPassword(show => !show);
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
-  const handleInput = (e) => {
+  const handleInput = e => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
-  async function handleSubmit(e) {
-    let continueReset = true;
-
+  async function handleSubmit() {
     if (validatePassword(input.newPassword)) {
-      continueReset = true;
       setError(false);
 
       if (input.oobCode) {
         confirmPasswordReset(auth, input.oobCode, input.newPassword)
-          .then((res) => {
-          
+          .then(() => {
             dispatch(
               setToast("La contraseña se restableció con éxito.", "success")
             );
             dispatch(sendMail(params.get("email"), input.subject, input.text));
           })
           .then(navigate("/login"))
-          .catch((err) => {
+          .catch(err => {
             console.log(err);
             return alert(
               "Código de reestablecimiento expirado, debes solicitar un nuevo email de reestablecimiento de contraseña para tu usuario XIRO. "
@@ -66,7 +58,6 @@ export default function ResetPassword() {
         );
       }
     } else {
-      continueReset = false;
       setError(true);
     }
   }
@@ -78,7 +69,7 @@ export default function ResetPassword() {
         <p className=" text-center">Debes indicar tu nueva contraseña</p>
         <div className="w-full">
           <Input
-            onChange={(e) => handleInput(e)}
+            onChange={e => handleInput(e)}
             name="newPassword"
             error={error}
             inputProps={{ maxLength: 50 }}
@@ -90,7 +81,9 @@ export default function ResetPassword() {
                 <IconButton
                   aria-label="toggle password visibility"
                   onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
+                  onMouseDown={event => {
+                    event.preventDefault();
+                  }}
                   color={error ? "error" : "standard"}
                 >
                   {showPassword ? <VisibilityOff /> : <Visibility />}

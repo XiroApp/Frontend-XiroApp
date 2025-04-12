@@ -12,8 +12,7 @@ export function validatePhone(phone) {
   return regex.test(phone);
 }
 export function validateEmail(email) {
-  const regex =
-    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  const regex = /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/;
   return regex.test(email);
 }
 export function validatePassword(password) {
@@ -23,11 +22,7 @@ export function validatePasswords(password, verifyPassword) {
   return password === verifyPassword && verifyPassword.length;
 }
 export function validatePDFFile(fileName) {
-  const regex = /[a-zA-Z0-9\-_\.]+\s*\.pdf/gi;
-
-  const result = regex.test(fileName);
   const isPDF = fileName.split(".").reverse()[0] === "pdf";
-
   return isPDF;
 }
 export function validateBirthdate(birthdate) {

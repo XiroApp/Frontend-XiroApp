@@ -4,13 +4,9 @@ import axios from "axios";
 import { endSession, getSession, startSession } from "../../utils/controllers";
 import { ApiConstants } from "../../Common/constants";
 
-// import { setAuthToken } from "../../components/BrowserHistory/setAuthToken";
-
 const baseUrl = Settings.SERVER_URL;
 
-// console.log("BASEURL ", baseUrl);
-/*   -----------------LOGIN------- */
-export function limoLogin(user, rememberMe) {
+export function xiroLogin(user, rememberMe) {
   return async function (dispatch) {
     try {
       let response = await axios
@@ -38,7 +34,7 @@ export function limoLogin(user, rememberMe) {
     }
   };
 }
-//------------GET LOGGED USER (INITIALIZATION APP)------------
+
 export function getLoggedUser(user) {
   return async function (dispatch) {
     try {
@@ -64,7 +60,7 @@ export function getLoggedUser(user) {
     }
   };
 }
-/* LOGOUT */
+
 export function logout() {
   return async function (dispatch) {
     endSession();
@@ -79,7 +75,7 @@ export function logout() {
     }
   };
 }
-//-----------Create User from google LOGIN - HOT LOGIN---------
+
 export function createUserGoogle(user) {
   return async function (dispatch) {
     try {
@@ -125,11 +121,11 @@ export function createUserGoogle(user) {
     }
   };
 }
-//-------------Create User from Form -------------------------------------
+
 export function createUser(user) {
   return async function (dispatch) {
     try {
-      let data = await axios.post(`${baseUrl}/users`, {
+      await axios.post(`${baseUrl}/users`, {
         ...user,
         photoURL: user.photoURL || null,
         areaCode: 549,
@@ -172,7 +168,7 @@ export function createUser(user) {
     }
   };
 }
-//---------------UpdateUser--------------------
+
 export function updateUser(user, showNoti) {
   return async function (dispatch) {
     try {
@@ -210,7 +206,7 @@ export function updateUser(user, showNoti) {
     }
   };
 }
-//---------------Add Address--------------------
+
 export function addAddress(user, address) {
   return async function (dispatch) {
     try {
@@ -251,7 +247,7 @@ export function addAddress(user, address) {
     }
   };
 }
-//---------------Edit Address--------------------
+
 export function editAddress(user, address) {
   return async function (dispatch) {
     try {
@@ -289,7 +285,7 @@ export function editAddress(user, address) {
     }
   };
 }
-//--------------- Delete Address --------------------
+
 export function deleteAddress(address, user_uid) {
   return async function (dispatch) {
     try {
@@ -331,7 +327,7 @@ export function deleteAddress(address, user_uid) {
     }
   };
 }
-//--------------- UPLOAD FILE MULTER --------------------
+
 export function uploadMulter(file) {
   return async function (dispatch) {
     try {
@@ -359,7 +355,7 @@ export function uploadMulter(file) {
     }
   };
 }
-//--------------- ADD TO CART --------------------
+
 export function addToCart(user, order) {
   return async function (dispatch) {
     try {
@@ -399,39 +395,7 @@ export function addToCart(user, order) {
     }
   };
 }
-//--------------- GET CART ORDER TO EDIT --------------------
-// export function getCartOrder(user, order) {
-//   return async function (dispatch) {
-//     try {
-//       // let response = await axios.get(
-//       //   `${baseUrl}/users/${user.uid}/cart/${idOrder}`
-//       // );
 
-//       // console.log("LA RESPONSE", response.data);
-
-//       return dispatch({
-//         type: action.EDIT_ORDER,
-//         payload: {
-//           orderToEdit: order,
-//         },
-//       });
-//     } catch (error) {
-//       console.log(error);
-//       return dispatch({
-//         type: action.TOAST_ALERT,
-//         payload: {
-//           message: "Error al buscar orden para editar.",
-//           variant: "error",
-//           vertical: "top",
-//           horizontal: "right",
-//           open: true,
-//         },
-//       });
-//     }
-//   };
-// }
-
-//--------------- EDIT ORDER FROM CART --------------------
 export function editOrderFromCart(user, idOrder, order) {
   return async function (dispatch) {
     try {
@@ -470,7 +434,7 @@ export function editOrderFromCart(user, idOrder, order) {
     }
   };
 }
-//--------------- DELETE ALL CART --------------------
+
 export function deleteAllCart(user) {
   return async function (dispatch) {
     try {
@@ -509,7 +473,7 @@ export function deleteAllCart(user) {
     }
   };
 }
-//--------------- DELETE ORDER FROM CART --------------------
+
 export function deleteOrderFromCart(user, idOrder) {
   return async function (dispatch) {
     try {
@@ -550,49 +514,7 @@ export function deleteOrderFromCart(user, idOrder) {
     }
   };
 }
-//--------------- SET TOAST --------------------
-// export function addNewPaidOrder(user, idPay) {
-//   return async function (dispatch) {
-//     try {
-//       let response = await axios.post(
-//         `${baseUrl}/payment/${user.uid}/paidOrder/${idPay}`
-//       );
 
-//       console.log(response.data);
-//       dispatch({
-//         type: action.CREATE_PAID_ORDER,
-//         payload: {
-//           dataBaseCart: null,
-//           dataBaseUser: response.data.userRef,
-//         },
-//       });
-
-//       return dispatch({
-//         type: action.TOAST_ALERT,
-//         payload: {
-//           message: "Pedido cargado exitosamente.",
-//           variant: "success",
-//           vertical: "top",
-//           horizontal: "right",
-//           open: true,
-//         },
-//       });
-//     } catch (error) {
-//       console.log(error);
-//       return dispatch({
-//         type: action.TOAST_ALERT,
-//         payload: {
-//           message: "Error al crear el pedido.",
-//           variant: "error",
-//           vertical: "top",
-//           horizontal: "right",
-//           open: true,
-//         },
-//       });
-//     }
-//   };
-// }
-//--------------- ACTIVATE TOAST --------------------
 export function setToast(message, variant) {
   return async function (dispatch) {
     try {
@@ -621,53 +543,11 @@ export function setToast(message, variant) {
     }
   };
 }
-//--------------- SEND MAIL --------------------
-// export function addNewPaidOrder(user, idPay) {
-//   return async function (dispatch) {
-//     try {
-//       let response = await axios.post(
-//         `${baseUrl}/payment/${user.uid}/paidOrder/${idPay}`
-//       );
 
-//       console.log(response.data);
-//       dispatch({
-//         type: action.CREATE_PAID_ORDER,
-//         payload: {
-//           dataBaseCart: null,
-//           dataBaseUser: response.data.userRef,
-//         },
-//       });
-
-//       return dispatch({
-//         type: action.TOAST_ALERT,
-//         payload: {
-//           message: "Pedido cargado exitosamente.",
-//           variant: "success",
-//           vertical: "top",
-//           horizontal: "right",
-//           open: true,
-//         },
-//       });
-//     } catch (error) {
-//       console.log(error);
-//       return dispatch({
-//         type: action.TOAST_ALERT,
-//         payload: {
-//           message: "Error al crear el pedido.",
-//           variant: "error",
-//           vertical: "top",
-//           horizontal: "right",
-//           open: true,
-//         },
-//       });
-//     }
-//   };
-// }
-//--------------- ACTIVATE TOAST --------------------
 export function sendMail(mail, subject, text) {
   return async function (dispatch) {
     try {
-      let response = await axios.post(`${baseUrl}/mail`, {
+      await axios.post(`${baseUrl}/mail`, {
         mail,
         subject,
         text,
@@ -697,7 +577,7 @@ export function sendMail(mail, subject, text) {
     }
   };
 }
-//--------------- GET COUPONS --------------------
+
 export function verifyCoupon(idCoupon) {
   return async function (dispatch) {
     try {
@@ -742,7 +622,7 @@ export function verifyCoupon(idCoupon) {
     }
   };
 }
-//--------------- SET PLACE --------------------
+
 export function setOrderPlace(place) {
   return async function (dispatch) {
     try {
@@ -796,7 +676,7 @@ export function setOrderPlace(place) {
     }
   };
 }
-//--------------- GET PRICING --------------------
+
 export function getPricing() {
   return async function (dispatch) {
     try {
@@ -822,7 +702,7 @@ export function getPricing() {
     }
   };
 }
-//--------------- GET ORDERS --------------------
+
 export function getOrdersByClientUid(clientUid) {
   return async function (dispatch) {
     try {
@@ -848,7 +728,7 @@ export function getOrdersByClientUid(clientUid) {
     }
   };
 }
-//--------------- GET LABELS --------------------
+
 export function getInAppLabels() {
   return async function (dispatch) {
     try {
@@ -874,8 +754,6 @@ export function getInAppLabels() {
     }
   };
 }
-
-// ------------ Library Cart ------------
 
 export function setLibraryCart(libraryCart) {
   return {

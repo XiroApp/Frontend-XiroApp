@@ -1,5 +1,5 @@
 import "./Login.css";
-import { React, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../../context/authContext";
 import logoGoogle from "../../../utils/assets/images/icon-google.png";
 import loginImage from "../../../utils/assets/images/xiro-head.png";
@@ -22,8 +22,9 @@ import {
 } from "@mui/material";
 import { validateEmail } from "../../../utils/inputValidator";
 import { useDispatch } from "react-redux";
-import { createUserGoogle, limoLogin, setToast } from "../../../redux/actions";
-import { Navigate, useNavigate } from "react-router-dom";
+import { createUserGoogle, xiroLogin, setToast } from "../../../redux/actions";
+import { useNavigate } from "react-router-dom";
+import propTypes from "prop-types";
 
 export default function Login({ loggedUser, dataBaseUser }) {
   const dispatch = useDispatch();
@@ -45,15 +46,14 @@ export default function Login({ loggedUser, dataBaseUser }) {
     if (loggedUser && dataBaseUser) {
       setLoader(true);
       navigate("/");
-      // return <Navigate to={"/"} />;
     }
   });
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event) => {
+  const handleClickShowPassword = () => setShowPassword(show => !show);
+  const handleMouseDownPassword = event => {
     event.preventDefault();
   };
-  async function handleGoogleLogin(e) {
+  async function handleGoogleLogin() {
     if (input.conditionsChecked) {
       try {
         setLoader(true);
@@ -67,7 +67,6 @@ export default function Login({ loggedUser, dataBaseUser }) {
           photoURL = null,
           uid,
           phoneNumber = null,
-          // reloadUserInfo,
         } = loginResponse.user;
 
         let user = loginResponse.user;
@@ -86,7 +85,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
               createdAt: new Date(),
             })
           );
-        } else dispatch(limoLogin(user, input.rememberMe));
+        } else dispatch(xiroLogin(user, input.rememberMe));
       } catch (error) {
         console.error(error);
         dispatch(setToast("Error al iniciar sesión", "error"));
@@ -97,7 +96,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
       setError({ ...error, conditionsChecked: true });
     }
   }
-  async function handleLogin(e) {
+  async function handleLogin() {
     setError({ email: false, password: false, conditionsChecked: false });
     if (input.conditionsChecked) {
       validateEmail(input.email)
@@ -113,7 +112,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
         } else {
           let user = loginResponse.user;
 
-          dispatch(limoLogin(user, input.rememberMe));
+          dispatch(xiroLogin(user, input.rememberMe));
         }
         setLoader(false);
       } catch (error) {
@@ -138,34 +137,31 @@ export default function Login({ loggedUser, dataBaseUser }) {
       <span className=" text-sm absolute bottom-0 left-0">V 3.1.0(beta)</span>
       {/* LOADER */}
       <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ color: "#fff", zIndex: theme => theme.zIndex.drawer + 1 }}
         open={loader}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      {/* --------- */}
-
       <section
         id="svg-container"
-        className="hidden md:hidden lg:flex h-screen w-1/2 pl-16"
-      >
-        {/* BACKGROUND CONTAINER */}
-      </section>
+        className="hidden md:hidden lg:flex h-[98vh] w-1/2 pl-16 "
+      />
 
-      {/* ------------------------------------------------------------------------------------------------------------------------------------------ */}
       <section className="w-screen lg:w-1/2 flex flex-col justify-center items-center lg:gap-4 lg:pr-32">
         <div className="flex flex-col lg:gap-4 gap-2">
           <div>
             <section className="flex flex-col items-center justify-center gap-2">
-              <img src={loginImage} alt="" className="h-56 object-contain " />
+              <img
+                src={loginImage}
+                alt="logo"
+                className="h-56 object-contain "
+              />
 
-              {/* <h1 className="text-3xl ">¡Bienvenido!</h1> */}
               <h2 className="text-lg font-md opacity-60">
                 Ingresa tus datos para continuar
               </h2>
             </section>
-            {/* INPUT SECTION */}
             <section className="flex flex-col gap-4 mt-6">
               <TextField
                 className="popi"
@@ -179,7 +175,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
                 autoComplete="current-email"
                 variant="standard"
                 fullWidth
-                onChange={(e) => handleInput(e)}
+                onChange={e => handleInput(e)}
               />
 
               <FormControl sx={{}} variant="standard">
@@ -191,7 +187,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
                 </InputLabel>
                 <Input
                   name="password"
-                  onChange={(e) => handleInput(e)}
+                  onChange={e => handleInput(e)}
                   error={error.password}
                   type={showPassword ? "text" : "password"}
                   endAdornment={
@@ -231,7 +227,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
                       }}
                       color="primary"
                       name="rememberMe"
-                      onChange={(e) => handleInput(e)}
+                      onChange={e => handleInput(e)}
                       // defaultChecked
                       checked={input.rememberMe}
                       id="rememberMe"
@@ -265,7 +261,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
                       // defaultChecked
                       name="conditionsChecked"
                       checked={input.conditionsChecked}
-                      onChange={(e) => handleInput(e)}
+                      onChange={e => handleInput(e)}
                       id="TyC"
                     />
                     <label htmlFor="TyC" className="font-light w-fit mr-1">
@@ -288,7 +284,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
             </div>
 
             <Button
-              onClick={(e) => handleLogin(e)}
+              onClick={e => handleLogin(e)}
               variant="contained"
               disableElevation
               className="w-full"
@@ -299,7 +295,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
               variant="outlined"
               className="w-full flex gap-2"
               disableElevation
-              onClick={(e) => handleGoogleLogin(e)}
+              onClick={e => handleGoogleLogin(e)}
             >
               <img src={logoGoogle} alt="google-icon" className="h-5" />
               <span>Continuar con Google</span>
@@ -320,3 +316,8 @@ export default function Login({ loggedUser, dataBaseUser }) {
     </div>
   );
 }
+
+Login.propTypes = {
+  loggedUser: propTypes.bool,
+  dataBaseUser: propTypes.bool,
+};

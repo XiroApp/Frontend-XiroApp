@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import Paper from "@mui/material/Paper";
-import TableContainer from "@mui/material/TableContainer";
 import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
 import {
   Backdrop,
@@ -13,7 +11,7 @@ import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper.js";
 import { UsersAdapter } from "../../../Infra/Adapters/users.adapter.js";
 import { twMerge } from "tailwind-merge";
 import propTypes from "prop-types";
-import { tLC } from "../../../Common/helpers.js";
+import { len, tLC } from "../../../Common/helpers.js";
 
 export default function Orders({ editor }) {
   const [printingUsers, setPrintingUsers] = useState([]);
@@ -57,7 +55,7 @@ export default function Orders({ editor }) {
       setOrders(fetchedOrders);
       setAllOrders(fetchedOrders);
       setLastDocument(newLastVisible);
-      setHasMore(fetchedOrders.length === pageSize);
+      setHasMore(len(fetchedOrders) === pageSize);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -98,8 +96,8 @@ export default function Orders({ editor }) {
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-2xl p-4 ">
-      <span className="text-2xl lg:text-2xl">Asignar órdenes</span>
+    <section className="flex flex-col gap-4 rounded-2xl p-4 w-full min-h-full">
+      <span className="text-2xl">Asignar órdenes</span>
       <div className="flex flex-col lg:flex-row  rounded-lg lg:w-full p-2 gap-2">
         <div>
           <label htmlFor="search-orders">Buscar órdenes</label>
@@ -204,126 +202,113 @@ export default function Orders({ editor }) {
           </div>
         </div>
       </div>
-      <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 650, backgroundColor: "#f2f2f4" }}>
-          <table className="w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
-                {columns.map((column, index) => (
-                  <th
-                    key={index}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                    className=" cursor-pointer border-y border-blue-gray-400 p-4 transition-colors"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
-                      id={column.label}
-                      // onClick={(e) => handleSortUsers(e)}
-                    >
-                      {column.label}
-                      {/* {index !== column.length - 1 && (
-                        <ChevronLeftSharp
-                          strokeWidth={2}
-                          className="h-4 w-4"
-                          id={column.filterName}
-                          onClick={(e) => handleSortUsers(e)}
-                        />
-                      )} */}
-                    </Typography>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {orders?.length ? (
-                orders.map((order, index) => {
-                  const isLast = index === orders.length - 1;
-                  const classes = isLast
-                    ? "w-fit px-4"
-                    : "w-fit px-4 border-y border-green-500/50";
+      <table className="w-full min-w-max table-auto text-left h-full">
+        <thead>
+          <tr>
+            {columns.map((column, index) => (
+              <th
+                key={index}
+                align={column.align}
+                style={{ minWidth: column.minWidth }}
+                className=" cursor-pointer border-y border-blue-gray-400 p-4 transition-colors"
+              >
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
+                  id={column.label}
+                >
+                  {column.label}
+                </Typography>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {len(orders) ? (
+            orders.map((order, index) => {
+              const isLast = index === len(orders) - 1;
+              const classes = isLast
+                ? "w-fit px-4"
+                : "w-fit px-4 border-y border-green-500/50";
 
-                  return (
-                    <tr
-                      role="button"
-                      tabIndex={-1}
-                      key={index}
-                      className={twMerge(
-                        index == selectedRow
-                          ? "bg-green-900/80 text-white "
-                          : "hover:bg-green-900/30",
-                        "p-0 m-0"
-                      )}
-                      onClick={() => {
-                        if (selectedRow == index) return;
-                        else return setSelectedRow(index);
-                      }}
-                    >
-                      {columns.map((column, index) => {
-                        const value = order[column.id];
-                        return (
-                          <OrdersRow
-                            key={index}
-                            value={value}
-                            column={column}
-                            printingUsers={printingUsers}
-                            deliveryUsers={deliveryUsers}
-                            distributionUsers={distributionUsers}
-                            pickupUsers={pickupUsers}
-                            orderId={order.paymentId}
-                            order={order}
-                            editor={editor}
-                            fetchOrders={fetchOrders}
-                            classes={classes}
-                          />
-                        );
-                      })}
-                    </tr>
-                  );
-                })
-              ) : (
-                <Backdrop
-                  sx={{
-                    color: "#fff",
-                    zIndex: theme => theme.zIndex.drawer + 1,
-                  }}
-                  open={loading}
-                >
-                  <CircularProgress color="inherit" />
-                </Backdrop>
-              )}
-            </tbody>
-            <TableFooter>
-              <div className="flex w-full gap-2 mt-2 mb-4 ml-2">
-                <button
-                  className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-md"
+              return (
+                <tr
+                  role="button"
+                  tabIndex={-1}
+                  key={index}
+                  className={twMerge(
+                    index == selectedRow
+                      ? "bg-green-900/80 text-white "
+                      : "hover:bg-green-900/30",
+                    "p-0 m-0"
+                  )}
                   onClick={() => {
-                    setSelectedRow(null);
-                    fetchOrders("prev");
+                    if (selectedRow == index) return;
+                    else return setSelectedRow(index);
                   }}
-                  disabled={!lastDocument || loading}
                 >
-                  Anterior
-                </button>
+                  {columns.map((column, index) => {
+                    const value = order[column.id];
+                    return (
+                      <OrdersRow
+                        key={index}
+                        value={value}
+                        column={column}
+                        printingUsers={printingUsers}
+                        deliveryUsers={deliveryUsers}
+                        distributionUsers={distributionUsers}
+                        pickupUsers={pickupUsers}
+                        orderId={order.paymentId}
+                        order={order}
+                        editor={editor}
+                        fetchOrders={fetchOrders}
+                        classes={classes}
+                      />
+                    );
+                  })}
+                </tr>
+              );
+            })
+          ) : (
+            <Backdrop
+              sx={{
+                color: "#fff",
+                zIndex: theme => theme.zIndex.drawer + 1,
+              }}
+              open={loading}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
+          )}
+        </tbody>
+        <TableFooter>
+          <div className="flex w-full gap-2 mt-2 mb-4 ml-2">
+            <button
+              className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-md"
+              onClick={() => {
+                setSelectedRow(null);
+                fetchOrders("prev");
+              }}
+              disabled={!lastDocument || loading}
+            >
+              Anterior
+            </button>
 
-                <button
-                  className="bg-green-200 hover:bg-green-300 px-4 py-2 rounded-md"
-                  onClick={() => {
-                    setSelectedRow(null);
-                    fetchOrders("next");
-                  }}
-                  disabled={!hasMore || loading}
-                >
-                  Siguiente
-                </button>
-              </div>
-            </TableFooter>
-          </table>
-        </TableContainer>
-      </Paper>
-    </div>
+            <button
+              className="bg-green-200 hover:bg-green-300 px-4 py-2 rounded-md"
+              onClick={() => {
+                setSelectedRow(null);
+                fetchOrders("next");
+              }}
+              disabled={!hasMore || loading}
+            >
+              Siguiente
+            </button>
+          </div>
+        </TableFooter>
+      </table>
+    </section>
   );
 }
 
