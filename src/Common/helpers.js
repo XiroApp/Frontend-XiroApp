@@ -6,9 +6,9 @@ const sortByDateDesc = (a, b) => {
   return dateB - dateA;
 };
 
-const len = str => str.length;
+const len = (item) => (item?.length ? item.length : 0);
 
-const tLC = str => str.toString().toLowerCase().trim();
+const tLC = (str) => str.toString().toLowerCase().trim();
 
 function formatPrice(price) {
   return new Intl.NumberFormat("es-AR", {
