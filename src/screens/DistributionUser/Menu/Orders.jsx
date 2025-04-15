@@ -12,7 +12,6 @@ const baseUrl = Settings.SERVER_URL;
 import { Settings } from "../../../config/index.js";
 import axios from "axios";
 
-// import OrdersRow from "./OrdersRow";
 import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
 import { Input } from "@mui/material";
 
@@ -38,10 +37,10 @@ const columns = [
 ];
 
 export default function Orders({ editor }) {
-  const printingUsers = useSelector((state) => state.printingUsers);
-  const deliveryUsers = useSelector((state) => state.deliveryUsers);
+  const printingUsers = useSelector(state => state.printingUsers);
+  const deliveryUsers = useSelector(state => state.deliveryUsers);
 
-  const user = useSelector((state) => state.loggedUser);
+  const user = useSelector(state => state.loggedUser);
   const [orders, setOrders] = useState([]);
 
   const [page, setPage] = useState(0);
@@ -56,7 +55,7 @@ export default function Orders({ editor }) {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = event => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
@@ -64,21 +63,21 @@ export default function Orders({ editor }) {
   /* CHANGE ORDER STATUS */
   const [filter, setFilter] = useState("no_filter");
   /* SEARCH  */
-  const handleSearch = (e) => {
+  const handleSearch = e => {
     setFilter("no_filter");
     e.target.value.length > 2
       ? setOrders(
-          orders.filter((order) =>
+          orders.filter(order =>
             order.paymentId.toString().includes(e.target.value)
           )
         )
       : setOrders(orders);
   };
 
-  const handleFilter = (e) => {
+  const handleFilter = e => {
     setFilter(e.target.name);
     e.target.name !== "no_filter"
-      ? setOrders(orders.filter((order) => order.orderStatus === e.target.name))
+      ? setOrders(orders.filter(order => order.orderStatus === e.target.name))
       : setOrders(orders);
   };
   /* ---------------------------- */
@@ -91,7 +90,7 @@ export default function Orders({ editor }) {
       );
 
       let formatedOrders = response.data
-        .map((order) => {
+        .map(order => {
           const fechaStr = order.paymentData.date_created;
           const fecha = new Date(fechaStr);
 
@@ -123,10 +122,9 @@ export default function Orders({ editor }) {
         })
         .reverse();
       setOrders(formatedOrders);
-    } catch (error) {
-      console.log(error);
-
-      return error;
+    } catch (err) {
+      console.error(`catch 'fetchOrders' ${err.message}`);
+      return err;
     }
   }
 
@@ -140,7 +138,7 @@ export default function Orders({ editor }) {
             name="email"
             type="number"
             placeholder={"Ingresa número de orden ..."}
-            onChange={(e) => handleSearch(e)}
+            onChange={e => handleSearch(e)}
             className="w-full"
           />
         </div>
@@ -154,7 +152,7 @@ export default function Orders({ editor }) {
                   ? "border p-1 rounded-md text-[12px] bg-gray-500"
                   : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={e => handleFilter(e)}
             >
               En delivery
             </button>
@@ -165,7 +163,7 @@ export default function Orders({ editor }) {
                   ? "border p-1 rounded-md text-[12px] bg-gray-500"
                   : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={e => handleFilter(e)}
             >
               Pendientes
             </button>
@@ -176,7 +174,7 @@ export default function Orders({ editor }) {
                   ? "border p-1 rounded-md text-[12px] bg-gray-500"
                   : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={e => handleFilter(e)}
             >
               Sin Asignar
             </button>
@@ -187,7 +185,7 @@ export default function Orders({ editor }) {
                   ? "border p-1 rounded-md text-[12px] bg-gray-500"
                   : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={e => handleFilter(e)}
             >
               En proceso
             </button>
@@ -198,7 +196,7 @@ export default function Orders({ editor }) {
                   ? "border p-1 rounded-md text-[12px] bg-gray-500"
                   : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={e => handleFilter(e)}
             >
               Impresas
             </button>
@@ -209,7 +207,7 @@ export default function Orders({ editor }) {
                   ? "border p-1 rounded-md text-[12px] bg-gray-500"
                   : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={e => handleFilter(e)}
             >
               Recibidas
             </button>
@@ -220,7 +218,7 @@ export default function Orders({ editor }) {
                   ? "border p-1 rounded-md text-[12px] bg-gray-500"
                   : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={e => handleFilter(e)}
             >
               Con problemas
             </button>
@@ -230,7 +228,7 @@ export default function Orders({ editor }) {
               className={
                 "underline p-1 rounded-md text-[12px] hover:bg-gray-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={e => handleFilter(e)}
             >
               Quitar filtros
             </button>
@@ -242,7 +240,7 @@ export default function Orders({ editor }) {
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
-                {columns.map((column) => (
+                {columns.map(column => (
                   <TableCell
                     key={column.id}
                     align={column.align}

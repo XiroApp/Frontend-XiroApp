@@ -19,7 +19,6 @@ export default function Orders({ editor }) {
   const [distributionUsers, setDistributionUsers] = useState([]);
   const [pickupUsers, setPickupUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [, setError] = useState(null);
   const [pageSize] = useState(15);
   const [lastDocument, setLastDocument] = useState(null);
   const [hasMore, setHasMore] = useState(true);
@@ -38,7 +37,7 @@ export default function Orders({ editor }) {
 
   async function fetchOrders(direction = "next") {
     setLoading(true);
-    setError(null);
+    console.error(null);
     setOrders([]);
 
     try {
@@ -57,7 +56,7 @@ export default function Orders({ editor }) {
       setLastDocument(newLastVisible);
       setHasMore(len(fetchedOrders) === pageSize);
     } catch (err) {
-      setError(err.message);
+      console.error(err.message);
     } finally {
       setLoading(false);
     }

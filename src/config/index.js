@@ -1,5 +1,5 @@
-let _env = "DEV"; //PARA STAGGING
-// let _env = "LOCAL"; // PARA EMULADOR F CLI
+// let _env = "DEV"; //PARA STAGGING
+let _env = "LOCAL"; // PARA EMULADOR F CLI
 import { ApiConstants } from "../Common/constants";
 
 const URL_MESSAGES = "messages";
@@ -53,6 +53,7 @@ export class Settings {
         };
     }
   }
+
   static getDefaultAdobeConfig() {
     switch (_env) {
       case "LOCAL":
@@ -71,6 +72,7 @@ export class Settings {
         };
     }
   }
+
   static getDefaultConverterConfig() {
     switch (_env) {
       case "LOCAL":

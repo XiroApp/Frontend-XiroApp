@@ -1,29 +1,46 @@
+import propTypes from "prop-types";
 import { useState } from "react";
 
 export default function DefaultSnack({ content = "" }) {
   const [open, setOpen] = useState(true);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
-    <div className={open ? "flex justify-center w-full px-4" : "hidden"}>
-      <div className="flex gap-2 items-center w-full justify-between bg-green-200/50  border-2 border-green-200 px-4 py-4 rounded-lg">
-        <div>
+    <div
+      className={
+        open ? "flex justify-center items-center w-full px-4" : "hidden"
+      }
+    >
+      <div className="flex gap-2 items-start w-full max-w-2xl justify-between bg-green-200  border-[1.5px] border-green-700 pl-4 pb-4 rounded-lg">
+        <div className="w-full flex flex-col justify-start items-start gap-y-3 pt-4">
           {content?.split("//").map((text, index) => (
-            <p key={index} className="text-[13px]">
+            <p key={index} className="text-[13.5px] w-full text-pretty">
               {text}
             </p>
           ))}
         </div>
         <button
-          onClick={handleClose}
-          className="px-2 text-black bg-green-200 hover:bg-green-200/50 rounded-lg"
+          onClick={() => setOpen(false)}
+          className="p-1 mt-1 mr-1 text-black bg-green-100 hover:scale-105 transition-transform border-[1.5px] border-green-700  rounded-lg"
         >
-          X
+          <svg
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
         </button>
       </div>
     </div>
   );
 }
+
+DefaultSnack.propTypes = {
+  content: propTypes.string,
+};

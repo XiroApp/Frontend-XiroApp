@@ -45,9 +45,9 @@ const columns = [
 ];
 
 export default function Orders({ editor }) {
-  const printingUsers = useSelector((state) => state.printingUsers);
-  const deliveryUsers = useSelector((state) => state.deliveryUsers);
-  const user = useSelector((state) => state.loggedUser);
+  const printingUsers = useSelector(state => state.printingUsers);
+  const deliveryUsers = useSelector(state => state.deliveryUsers);
+  const user = useSelector(state => state.loggedUser);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -60,7 +60,7 @@ export default function Orders({ editor }) {
       let response = await axios.get(`${baseUrl}/delivery/orders/${user.uid}`);
 
       let formatedOrders = response.data
-        .map((order) => {
+        .map(order => {
           const fechaStr = order.paymentData.date_created;
           const fecha = new Date(fechaStr);
 
@@ -100,7 +100,7 @@ export default function Orders({ editor }) {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = event => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
@@ -110,22 +110,22 @@ export default function Orders({ editor }) {
   const [filter, setFilter] = useState("no_filter");
 
   /* SEARCH USER */
-  const handleSearch = (e) => {
+  const handleSearch = e => {
     setFilter("no_filter");
     e.target.value.length > 2
       ? setOrders(
-          orders.filter((order) =>
+          orders.filter(order =>
             order.paymentId.toString().includes(e.target.value)
           )
         )
       : setOrders(orders);
   };
 
-  const handleFilter = (e) => {
+  const handleFilter = e => {
     setFilter(e.target.name);
     e.target.name !== "no_filter"
       ? setOrders(
-          orders.filter((order) => order.place.address.city === e.target.name)
+          orders.filter(order => order.place.address.city === e.target.name)
         )
       : setOrders(orders);
   };
@@ -140,7 +140,7 @@ export default function Orders({ editor }) {
             name="email"
             type="number"
             placeholder={"Ingresa número de orden ..."}
-            onChange={(e) => handleSearch(e)}
+            onChange={e => handleSearch(e)}
             className="w-full"
           />
         </div>
@@ -154,7 +154,7 @@ export default function Orders({ editor }) {
                   ? "border p-1 rounded-md text-[12px] bg-gray-500"
                   : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={e => handleFilter(e)}
             >
               Mendoza
             </button>
@@ -165,7 +165,7 @@ export default function Orders({ editor }) {
                   ? "border p-1 rounded-md text-[12px] bg-gray-500"
                   : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={e => handleFilter(e)}
             >
               Las Heras
             </button>
@@ -176,7 +176,7 @@ export default function Orders({ editor }) {
                   ? "border p-1 rounded-md text-[12px] bg-gray-500"
                   : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={e => handleFilter(e)}
             >
               Godoy Cruz
             </button>
@@ -187,7 +187,7 @@ export default function Orders({ editor }) {
                   ? "border p-1 rounded-md text-[12px] bg-gray-500"
                   : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={e => handleFilter(e)}
             >
               Lujan de Cuyo
             </button>
@@ -198,7 +198,7 @@ export default function Orders({ editor }) {
                   ? "border p-1 rounded-md text-[12px] bg-gray-500"
                   : "border p-1 rounded-md text-[12px] hover:bg-gray-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={e => handleFilter(e)}
             >
               Guaymallén
             </button>
@@ -208,7 +208,7 @@ export default function Orders({ editor }) {
               className={
                 "underline p-1 rounded-md text-[12px] hover:bg-gray-500"
               }
-              onClick={(e) => handleFilter(e)}
+              onClick={e => handleFilter(e)}
             >
               Quitar filtros
             </button>

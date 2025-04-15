@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import Navbar from "../../../components/Navbar/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import PDFViewer from "../../../components/PDFViewer";
@@ -42,6 +42,7 @@ import {
   pricingSetter,
   validateFileSize,
 } from "../../../utils/controllers/pricing.controller.js";
+import { formatPrice, len } from "../../../Common/helpers.js";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -87,7 +88,6 @@ export default function NewOrder() {
   const pricingState = useSelector(state => state.pricing);
   const place = useSelector(state => state.place);
 
-  // Estados consolidados
   const [state, setState] = useState({
     loading: false,
     resetModal: false,
@@ -99,8 +99,8 @@ export default function NewOrder() {
   });
 
   const [files, setFiles] = useState({
-    details: [], // { name, pages, etc }
-    previews: [], // solo nombres para preview
+    details: [],
+    previews: [],
   });
 
   const [resume, setResume] = useState(initialResumeState);
@@ -109,7 +109,6 @@ export default function NewOrder() {
     const uniqueDetails = [];
     const seenNames = new Set();
 
-    // Filtrar details para mantener solo los únicos
     currentFiles.details.forEach(file => {
       if (!seenNames.has(file.name)) {
         seenNames.add(file.name);
@@ -123,7 +122,6 @@ export default function NewOrder() {
     };
   };
 
-  // Pricing calculado
   const pricing = useMemo(() => {
     const basePricing = {
       BIG_ringed: Number(pricingState?.BIG_ringed) || 0,
@@ -148,7 +146,6 @@ export default function NewOrder() {
     return { ...basePricing, total: isNaN(total) ? 0 : Number(total) };
   }, [pricingState, resume, files.details]);
 
-  // Efectos optimizados
   useEffect(() => {
     dispatch(getPricing());
   }, [dispatch]);
@@ -159,7 +156,7 @@ export default function NewOrder() {
       setFiles(cleanedFiles);
       return; // Salir temprano porque setFiles disparará otro efecto
     }
-    // Resto de tu lógica actual
+
     if (cleanedFiles.details.length === 0) {
       setResume(initialResumeState);
       setState(prev => ({ ...prev, loading: false }));
@@ -183,7 +180,6 @@ export default function NewOrder() {
     }
   }, [files.details]);
 
-  // Handlers optimizados con useCallback
   const handleSetResume = useCallback((newResume, colorAlert = false) => {
     setResume(newResume);
     if (colorAlert) {
@@ -195,7 +191,6 @@ export default function NewOrder() {
     setState(prev => ({ ...prev, loading: true }));
     setFiles(prevFiles => {
       const newDetails = prevFiles.details.filter(f => {
-        console.log(f.name);
         return f.name !== fileToDelete;
       });
       const newPreviews = prevFiles.previews.filter(f => f !== fileToDelete);
@@ -237,7 +232,6 @@ export default function NewOrder() {
               const formData = new FormData();
               formData.append("files", file);
               const newDocuments = await dispatch(uploadMulter(formData));
-              console.log("new dowcuments", newDocuments);
 
               return newDocuments.map(doc => ({ preview: doc }));
             }
@@ -248,11 +242,11 @@ export default function NewOrder() {
 
         setFiles(prev => ({
           ...prev,
-          previews: [...prev?.previews, ...newFiles.map(f => f.preview)],
+          previews: [...prev.previews, ...newFiles.map(f => f.preview)],
         }));
-      } catch (error) {
+      } catch (err) {
         dispatch(setToast("Error al subir archivos", "error"));
-        console.error("Error:", error);
+        console.error(`catch 'handleSubmitLoadFile' ${err.message}`);
         setState(prev => ({ ...prev, loading: false }));
       }
     },
@@ -295,7 +289,6 @@ export default function NewOrder() {
 
   return (
     <div className="h-screen w-screen flex flex-col justify-between">
-      {/* Modales y diálogos */}
       {state.openColorAlertModal && (
         <Dialog open={state.openColorAlertModal} onClose={handleColorAlert}>
           <DialogTitle className="text-center relative">
@@ -335,72 +328,77 @@ export default function NewOrder() {
       <Navbar title="Nuevo pedido" loggedUser={user} cart={cart} />
 
       <section className="relative w-full h-full lg:flex">
-        {/* Overlay de carga */}
         {state.loading && (
-          <div className="absolute w-screen h-screen z-[9999] bg-gray-600/50 flex flex-col items-center justify-center">
-            <CircularProgress color="primary" size={50} />
-            <span className="text-white">...Cargando...</span>
+          <div className="absolute w-screen h-screen z-[9999] bg-gray-600/50 flex items-center justify-center">
+            <div className="border-2 border-green-300/60 flex flex-col items-center justify-center gap-y-5 bg-gray-800/40 p-6 rounded-3xl backdrop-blur-sm mb-20">
+              <CircularProgress color="secondary" size={50} />
+              <span className="text-white text-3xl">Cargando</span>
+            </div>
           </div>
         )}
 
         <div className="flex flex-col items-center justify-center gap-2 px-4 lg:px-0 h-full lg:w-9/12">
           <div className="lg:flex w-full md:p-4">
             <section className="bg-[#fff] flex flex-col md:flex-row-reverse md:justify-around md:items-center items-around justify-center w-full p-4 gap-4 rounded-lg">
-              <div className="flex items-center justify-around h-1/2 md:h-full">
-                {place?.type === "Envío a domicilio" || !place ? (
+              <div className="flex items-center justify-center gap-x-2">
+                {place?.type == "Envío a domicilio" || !place ? (
                   <button
                     onClick={() => updateState("choosePlace", true)}
-                    className="flex flex-col gap-1 items-center justify-center px-2 text-black rounded-md border-2 border-[#789360] hover:bg-[#61774d]"
+                    className="flex flex-col gap-1.5 items-center justify-center text-black border-[1.4px] border-[#789360] rounded-md w-20 h-20 hover:bg-green-400/30 hover:border-green-400/30 transition-colors"
                   >
-                    <MopedIcon style={{ height: "1.5em", width: "1.5em" }} />
+                    <MopedIcon style={{ height: "1.8em", width: "1.8em" }} />
                     <span className="text-[14px]">Envío</span>
                   </button>
                 ) : (
                   <button
                     onClick={() => updateState("choosePlace", true)}
-                    className="flex flex-col gap-1 items-center justify-center px-2 rounded-md text-black hover:bg-[#61774d] border-2 border-[#789360]"
+                    className="flex flex-col gap-y-1.5 items-center justify-center text-black border-[1.4px] border-[#789360] rounded-md w-20 h-20 hover:bg-green-400/30 hover:border-green-400/30 transition-colors"
                   >
                     <StoreIcon style={{ height: "1.5em", width: "1.5em" }} />
                     <span className="text-[14px]">Retiro</span>
                   </button>
                 )}
 
-                <section className="flex flex-col gap-1 items-center justify-center px-2">
-                  <div className="flex justify-center items-center gap-1">
+                <section className="border-[1.4px] border-b-[#789360] rounded-md flex flex-col items-center justify-center px-2 gap-y-1.5 w-20 h-20">
+                  <div className="flex justify-center gap-x-2 items-center w-full">
                     <DescriptionIcon
                       style={{ height: "1.5em", width: "1.5em" }}
                     />
                     <span>{files.previews.length}</span>
                   </div>
-                  <span className="text-[14px]">Archivos</span>
+                  <span className="text-[14px] w-full text-center">
+                    Archivos
+                  </span>
                 </section>
 
-                <section className="flex flex-col gap-1 items-center justify-center px-2">
-                  <div className="flex justify-center items-center gap-1">
+                <section className="border-[1.4px] border-b-[#789360] rounded-md flex flex-col gap-1 items-center justify-center px-2 gap-y-1.5 w-20 h-20">
+                  <div className="flex justify-center gap-x-2 items-center w-full">
                     <CopiesIcon style={{ height: "1.5em", width: "1.5em" }} />
                     <span>{resume.numberOfCopies}</span>
                   </div>
-                  <span className="text-[14px]">Copias</span>
+                  <span className="text-[14px] w-full text-center">Copias</span>
                 </section>
 
-                <section className="flex flex-col gap-1 items-center justify-center px-2">
-                  <div className="flex justify-center items-center gap-1">
+                <section className="border-[1.4px] border-b-[#789360] rounded-md flex flex-col gap-1 items-center justify-center px-2 gap-y-1.5 w-20 h-20">
+                  <div className="flex justify-center gap-x-2 items-center w-full">
                     <FileCopySharpIcon
                       style={{ height: "1.5em", width: "1.5em" }}
                     />
                     <span>{resume.totalPages}</span>
                   </div>
-                  <span className="text-[14px]">Páginas</span>
+                  <span className="text-[14px] w-full text-center">
+                    Páginas
+                  </span>
                 </section>
 
-                <section className="flex flex-col gap-1 items-center justify-center px-2 font-bold border-2 rounded-lg p-2 bg-[#799361] text-white shadow-xl">
-                  <div className="flex justify-center items-center gap-1">
+                <section className="flex flex-col items-center justify-center px-2 font-bold rounded-md p-2 bg-[#56713d] text-white shadow-xl gap-y-1.5 w-28 h-20">
+                  <div className="flex justify-center items-center w-full">
                     <PrintSharpIcon
                       style={{ height: "1.5em", width: "1.5em" }}
                     />
-                    <span>${pricing.total}</span>
+                    <span className="pr-1">${formatPrice(pricing.total)}</span>
                   </div>
-                  <span className="text-[14px]">Precio</span>
+                  <span className="text-[14px] w-full text-center">Precio</span>
                 </section>
               </div>
 
@@ -408,15 +406,25 @@ export default function NewOrder() {
                 <form encType="multipart/form-data">
                   <div className="flex items-center justify-center">
                     <LoadingButton
+                      style={{
+                        padding: "1em 2em",
+                      }}
                       loading={state.loading}
                       component="label"
                       variant="contained"
                       color="primary"
                       startIcon={
-                        <UploadIcon sx={{ height: "1em", width: "1em" }} />
+                        <UploadIcon
+                          sx={{
+                            height: "1.2em",
+                            width: "1.2em",
+                          }}
+                        />
                       }
                     >
-                      <span className="text-lg font-bold">Cargar archivos</span>
+                      <span className="text-xl font-bold tracking-wide">
+                        Cargar Archivos
+                      </span>
                       <VisuallyHiddenInput
                         type="file"
                         name="file"
@@ -429,21 +437,18 @@ export default function NewOrder() {
                   </div>
                 </form>
 
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center pt-0.5">
                   <button
-                    className="hover:opacity-80 hover:underline"
+                    className="hover:underline text-lg text-slate-900 hover:text-black"
                     onClick={() => updateState("resetModal", true)}
-                    disabled={files.previews.length === 0}
+                    disabled={len(files.previews) == 0}
                   >
-                    <span className="text-[15px] underline text-black">
-                      Eliminar mis archivos
-                    </span>
+                    Quitar mis archivos
                   </button>
                 </div>
               </div>
             </section>
 
-            {/* Configuración móvil */}
             <section className="lg:hidden flex flex-col lg:w-1/2">
               <section className="w-full">
                 <SettingButtons
@@ -464,7 +469,6 @@ export default function NewOrder() {
             </section>
           </div>
 
-          {/* Visor de PDF */}
           <section className="w-full h-full">
             <DefaultSnack content={labels?.snackbar_new_order_info} />
 
@@ -483,7 +487,6 @@ export default function NewOrder() {
                           setLoading={value => updateState("loading", value)}
                           setFilesDetail={detail =>
                             setFiles(prev => {
-                              console.log(detail);
                               return {
                                 ...prev,
                                 details: [...detail],
@@ -498,7 +501,6 @@ export default function NewOrder() {
                   </div>
                 </section>
 
-                {/* Modal de revisión */}
                 <Modal
                   open={state.review}
                   onClose={() => updateState("review", false)}
@@ -520,7 +522,7 @@ export default function NewOrder() {
                       <div className="flex justify-between">
                         <span className="font-[500]">Precio de impresión:</span>
                         <span className="opacity-70 font-[500]">
-                          ${pricing?.total.toFixed(2)}
+                          ${formatPrice(pricing.total ?? 0)}
                         </span>
                       </div>
                       <div className="flex justify-between">
@@ -593,13 +595,14 @@ export default function NewOrder() {
                 </Modal>
               </div>
             ) : (
-              <div className="text-white mt-2 flex flex-col justify-center px-6 items-center gap-2 overflow-x-auto overscroll-contain w-full">
-                Selecciona los archivos que quieras imprimir.
+              <div className="w-full flex justify-center items-center">
+                <p className="max-w-xl rounded-lg text-lg md:text-2xl w-full text-center text-white mt-6 bg-green-700 py-2">
+                  Selecciona los archivos que quieras imprimir
+                </p>
               </div>
             )}
           </section>
 
-          {/* Botones de acción */}
           <section className="flex w-full justify-around pb-4">
             <LoadingButton
               loading={state.loading}
@@ -628,7 +631,6 @@ export default function NewOrder() {
           </section>
         </div>
 
-        {/* Configuración desktop */}
         <section className="hidden lg:flex lg:flex-col p-4">
           <NewOrderSettingsDesktop
             resume={resume}
@@ -637,7 +639,6 @@ export default function NewOrder() {
         </section>
       </section>
 
-      {/* Modal de confirmación para eliminar archivos */}
       <Dialog
         open={state.resetModal}
         onClose={() => updateState("resetModal", false)}
