@@ -271,7 +271,7 @@ export default function Orders({ editor }) {
 
                     return (
                       <TableRow
-                        hover
+                        // hover
                         role="button"
                         tabIndex={-1}
                         key={index}
