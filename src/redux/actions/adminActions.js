@@ -219,6 +219,7 @@ export function changeOrderStatus({
   uidClient,
   report,
   editor,
+  order_number
 }) {
   return async function (dispatch) {
     try {
@@ -234,6 +235,7 @@ export function changeOrderStatus({
           uidClient,
           report,
           editor,
+          order_number
         }
       );
 

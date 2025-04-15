@@ -192,6 +192,7 @@ export default function OrdersRow({
         uidClient: input.clientUid,
         report: problemsSelectStatus || input.report,
         editor: editor,
+        order_number: order.order_number,
       })
     ).then(() => fetchOrders("refresh"));
     setEditStatus(false);
@@ -377,6 +378,9 @@ export default function OrdersRow({
                                 <option value="in_delivery">
                                   En delivery 🛸
                                 </option>
+                                <option value="pickup">
+                                  Enviado a Punto Pickup 🏃‍♂️
+                                </option>
                                 <option value="received">Recibido ✅</option>
                               </>
                             )}
@@ -464,19 +468,20 @@ export default function OrdersRow({
                         />
                       </div>
                     </>
+                  ) : // false
+                  problemsSelectStatus ? (
+                    <>
+                      <p>Describa el problema:</p>
+                      <Input
+                        name="report"
+                        id="report"
+                        placeholder={"Ingrese su problema aquí..."}
+                        onChange={e => handleInput(e)}
+                        className="w-full"
+                      />
+                    </>
                   ) : (
-                    problemsSelectStatus && (
-                      <>
-                        <p>Describa el problema:</p>
-                        <Input
-                          name="report"
-                          id="report"
-                          placeholder={"Ingrese su problema aquí..."}
-                          onChange={e => handleInput(e)}
-                          className="w-full"
-                        />
-                      </>
-                    )
+                    false
                   )}
                 </section>
               </DialogContent>
@@ -503,6 +508,7 @@ export default function OrdersRow({
               color="inherit"
               variant="text"
               onClick={e => handleOpenFilesModal(e)}
+              // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
               <Inventory2Outlined />
             </Button>
