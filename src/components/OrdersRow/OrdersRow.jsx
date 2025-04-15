@@ -194,6 +194,7 @@ export default function OrdersRow({
         uidClient: input.clientUid,
         report: problemsSelectStatus || input.report,
         editor: editor,
+        order_number: order.order_number,
       })
     ).then(() => fetchOrders("refresh"));
     setEditStatus(false);

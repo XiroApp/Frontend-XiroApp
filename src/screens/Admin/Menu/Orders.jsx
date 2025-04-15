@@ -6,7 +6,11 @@ import {
   Backdrop,
   CircularProgress,
   Input,
+  TableBody,
   TableFooter,
+  TableHead,
+  TablePagination,
+  TableRow,
   Typography,
 } from "@mui/material";
 import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper.js";
@@ -26,11 +30,15 @@ export default function Orders({ editor }) {
   const [lastDocument, setLastDocument] = useState(null);
   const [hasMore, setHasMore] = useState(true);
   const [orders, setOrders] = useState([]);
-  const [page] = useState(0);
+  // const [page] = useState(0);
   const [selectedRow, setSelectedRow] = useState(null);
   const [filter, setFilter] = useState("no_filter");
-  const [allOrders, setAllOrders] = useState([]);
+  // const [allOrders, setAllOrders] = useState([]);
 
+  const [allOrders, setAllOrders] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [roleFIlter, setRoleFIlter] = useState("");
   //! Falta obtener todos las ordenes (no por paginación).
 
   useEffect(() => {
@@ -51,11 +59,14 @@ export default function Orders({ editor }) {
         "admin",
         direction
       );
+      console.log(data.length);
 
       const { orders: fetchedOrders, lastVisible: newLastVisible } = data;
-
-      setOrders(fetchedOrders);
-      setAllOrders(fetchedOrders);
+      const sortedOrders = fetchedOrders.sort(
+        (a, b) => a.order_number < b.order_number
+      );
+      setOrders(sortedOrders);
+      setAllOrders(sortedOrders);
       setLastDocument(newLastVisible);
       setHasMore(fetchedOrders.length === pageSize);
     } catch (err) {
@@ -66,7 +77,7 @@ export default function Orders({ editor }) {
   }
 
   function fetchUsersByRole() {
-    UsersAdapter.getSpecialUsers().then(res => {
+    UsersAdapter.getSpecialUsers().then((res) => {
       setDeliveryUsers(res.deliveryUsers);
       setPrintingUsers(res.printingUsers);
       setDistributionUsers(res.distributionUsers);
@@ -80,7 +91,7 @@ export default function Orders({ editor }) {
     if (searchTerm == "") return setOrders(allOrders);
 
     const filteredOrders = allOrders.filter(
-      o =>
+      (o) =>
         tLC(o?.order_number ?? "").includes(searchTerm) ||
         tLC(o?.clientUser?.email ?? "").includes(searchTerm) ||
         tLC(o?.clientUser?.displayName ?? "").includes(searchTerm) ||
@@ -93,9 +104,20 @@ export default function Orders({ editor }) {
   function handleFilter(status) {
     setFilter(status);
     return status != "no_filter"
-      ? setOrders(allOrders.filter(o => o?.orderStatus == tLC(status)))
+      ? setOrders(allOrders.filter((o) => o?.orderStatus == tLC(status)))
       : setOrders(allOrders);
   }
+  /* PAGINATION */
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  console.log(allOrders);
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl p-4 ">
@@ -108,7 +130,7 @@ export default function Orders({ editor }) {
             name="email"
             type="text"
             placeholder="Ingresa número de orden..."
-            onChange={e => handleSearch(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
             className="w-full"
           />
         </div>
@@ -207,8 +229,8 @@ export default function Orders({ editor }) {
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: 650, backgroundColor: "#f2f2f4" }}>
           <table className="w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
+            <TableHead>
+              <TableRow>
                 {columns.map((column, index) => (
                   <th
                     key={index}
@@ -235,67 +257,71 @@ export default function Orders({ editor }) {
                     </Typography>
                   </th>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {orders?.length ? (
-                orders.map((order, index) => {
-                  const isLast = index === orders.length - 1;
-                  const classes = isLast
-                    ? "w-fit px-4"
-                    : "w-fit px-4 border-y border-green-500/50";
+                orders
+                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((order, index) => {
+                    const isLast = index === orders.length - 1;
+                    const classes = isLast
+                      ? "w-fit px-4"
+                      : "w-fit px-4 border-y border-green-500/50";
 
-                  return (
-                    <tr
-                      role="button"
-                      tabIndex={-1}
-                      key={index}
-                      className={twMerge(
-                        index == selectedRow
-                          ? "bg-green-900/80 text-white "
-                          : "hover:bg-green-900/30",
-                        "p-0 m-0"
-                      )}
-                      onClick={() => {
-                        if (selectedRow == index) return;
-                        else return setSelectedRow(index);
-                      }}
-                    >
-                      {columns.map((column, index) => {
-                        const value = order[column.id];
-                        return (
-                          <OrdersRow
-                            key={index}
-                            value={value}
-                            column={column}
-                            printingUsers={printingUsers}
-                            deliveryUsers={deliveryUsers}
-                            distributionUsers={distributionUsers}
-                            pickupUsers={pickupUsers}
-                            orderId={order.paymentId}
-                            order={order}
-                            editor={editor}
-                            fetchOrders={fetchOrders}
-                            classes={classes}
-                          />
-                        );
-                      })}
-                    </tr>
-                  );
-                })
+                    return (
+                      <TableRow
+                        hover
+                        role="button"
+                        tabIndex={-1}
+                        key={index}
+                        className={twMerge(
+                          index == selectedRow
+                            ? "bg-green-900/80 text-white "
+                            : "hover:bg-green-900/30",
+                          "p-0 m-0"
+                        )}
+                        onClick={() => {
+                          if (selectedRow == index) return;
+                          else return setSelectedRow(index);
+                        }}
+                      >
+                        {columns.map((column, index) => {
+                          const value = order[column.id];
+                          return (
+                            <OrdersRow
+                              key={index}
+                              value={value}
+                              column={column}
+                              printingUsers={printingUsers}
+                              deliveryUsers={deliveryUsers}
+                              distributionUsers={distributionUsers}
+                              pickupUsers={pickupUsers}
+                              orderId={order.paymentId}
+                              order={order}
+                              editor={editor}
+                              fetchOrders={fetchOrders}
+                              classes={classes}
+                            />
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })
               ) : (
                 <Backdrop
                   sx={{
                     color: "#fff",
-                    zIndex: theme => theme.zIndex.drawer + 1,
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
                   }}
                   open={loading}
                 >
                   <CircularProgress color="inherit" />
                 </Backdrop>
               )}
-            </tbody>
-            <TableFooter>
+            </TableBody>
+
+            {/* <TableFooter>
               <div className="flex w-full gap-2 mt-2 mb-4 ml-2">
                 <button
                   className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-md"
@@ -319,9 +345,18 @@ export default function Orders({ editor }) {
                   Siguiente
                 </button>
               </div>
-            </TableFooter>
+            </TableFooter> */}
           </table>
         </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={allOrders.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </Paper>
     </div>
   );
