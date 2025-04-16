@@ -85,6 +85,15 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               ingresan en el día previsto. Los que ingresan posterior a horario
               se envian el próximo dia de entrega.
             </p>
+            <div className="text-center">
+              <p className="font-bold">Excepción Semana Santa</p>
+              <p className="font-bold">
+                Envíos: martes 15/04 y miércoles 16/04.
+              </p>
+              <p className="font-bold underline">
+                <span>Próxima entrega: Martes 22/04.</span>
+              </p>
+            </div>
           </section>
           <section className="flex flex-col w-full px-5 py-5 gap-6 md:gap-10 overflow-y-auto max-h-[calc(90vh-200px)]">
             <button

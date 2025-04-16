@@ -29,12 +29,13 @@ import { getOrdersByClientUid, setToast } from "../../../redux/actions";
 import LibraryStore from "./LibraryStore";
 import { twMerge } from "tailwind-merge";
 import propTypes from "prop-types";
+import AlertModal from "../../../components/Alerts/AlertModal";
 
 export default function MyAccount({ cart, dataBaseUser }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector(state => state.dataBaseUser);
-  const clientOrders = useSelector(state => state.clientOrders);
+  const user = useSelector((state) => state.dataBaseUser);
+  const clientOrders = useSelector((state) => state.clientOrders);
   let { photoURL, email, displayName } = user;
   const [openCollapse, setOpenCollapse] = useState(false);
   const cartReferral = useLocation().search == "?libreria";
@@ -50,7 +51,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
     dispatch(getOrdersByClientUid(dataBaseUser.uid));
   }, []); // eslint-disable-line
 
-  const toggleDrawer = (anchor, open) => event => {
+  const toggleDrawer = (anchor, open) => (event) => {
     if (
       event.type === "keydown" &&
       (event.key === "Tab" || event.key === "Shift")
@@ -61,7 +62,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
     setState({ ...state, [anchor]: open });
   };
 
-  const list = anchor => (
+  const list = (anchor) => (
     <Box
       sx={{
         borderRadius: "10px",
@@ -390,12 +391,13 @@ export default function MyAccount({ cart, dataBaseUser }) {
                     ":hover": { backgroundColor: "#c9d9bb" },
                   }}
                   color="primary"
-                  onClick={e => handleNewOrderButton(e)}
+                  onClick={(e) => handleNewOrderButton(e)}
                 >
                   <span className="text-white lg:text-lg font-bold">
                     Nuevo pedido
                   </span>
                 </Button>
+                {/* <AlertModal /> */}
               </div>
               {/* MIS PEDIDOS VISTA PC */}
               {dataRender === "accountData" && (
@@ -411,7 +413,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                       <span className="text-3xl ">
                         {
                           clientOrders?.filter(
-                            order => order.orderStatus !== "received"
+                            (order) => order.orderStatus !== "received"
                           ).length
                         }
                       </span>
@@ -449,7 +451,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                         <span className="text-xl ">
                           {
                             clientOrders?.filter(
-                              order => order.orderStatus !== "received"
+                              (order) => order.orderStatus !== "received"
                             ).length
                           }
                         </span>
