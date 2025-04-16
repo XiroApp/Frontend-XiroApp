@@ -257,32 +257,33 @@ export default function OrdersRow({
         )}
         {column.id === "orderStatus" && (
           <>
-            <Button
-              color="inherit"
-              variant="text"
-              onClick={() => setEditStatus(true)}
-            >
-              <Typography className="">
-                {value === "pending"
-                  ? "Pendiente ⏳"
-                  : value === "process"
-                  ? "En proceso 🔨"
-                  : value === "problems"
-                  ? "Con problemas 📛"
-                  : value === "printed"
-                  ? "Impreso 📄"
-                  : value === "in_delivery"
-                  ? "En delivery 🛸"
-                  : value === "received"
-                  ? "Recibido ✅"
-                  : value === "distribution"
-                  ? "En punto de distribución 🏤"
-                  : value === "pickup"
-                  ? "En punto de retiro 🏃‍♂️"
-                  : "🚨 REVISAR ESTADO 🚨"}
-              </Typography>
-            </Button>
-
+            <div className="w-full">
+              <button
+                type="button"
+                className="w-[150px] flex justify-start items-center"
+                onClick={() => setEditStatus(true)}
+              >
+                <p className="text-[13px] text-start">
+                  {value === "pending"
+                    ? "Pendiente ⏳"
+                    : value === "process"
+                    ? "En proceso 🔨"
+                    : value === "problems"
+                    ? "Con problemas 📛"
+                    : value === "printed"
+                    ? "Impreso 📄"
+                    : value === "in_delivery"
+                    ? "En delivery 🛸"
+                    : value === "received"
+                    ? "Recibido ✅"
+                    : value === "distribution"
+                    ? "En punto de distribución 🏤"
+                    : value === "pickup"
+                    ? "En punto de retiro 🏃‍♂️"
+                    : "🚨 REVISAR ESTADO 🚨"}
+                </p>
+              </button>
+            </div>
             <Dialog open={editStatus} onClose={() => setEditStatus(false)}>
               <DialogTitle className="text-center">Editar estado</DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8">
@@ -334,7 +335,7 @@ export default function OrdersRow({
                             onChange={e => handleInput(e)}
                             name="orderStatus"
                             id="orderStatus"
-                            className="border rounded-l p-2 bg-white"
+                            className="border rounded-l p-2"
                           >
                             {editor === "pickupUser" && (
                               <>
@@ -684,7 +685,6 @@ export default function OrdersRow({
               onClick={() => {
                 handleOpenAssignedModal();
               }}
-              // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
               <Diversity3 />
             </Button>
@@ -749,12 +749,9 @@ export default function OrdersRow({
               onClick={() => {
                 handleOpenClientModal(value);
               }}
-              // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
               <PermIdentity />
             </Button>
-
-            {/* MODAL FORMULARIO */}
             <Dialog
               open={openClientModal}
               onClose={() => setOpenClientModal(false)}
@@ -870,19 +867,17 @@ export default function OrdersRow({
         )}
 
         {column.id === "paymentStatus" && (
-          <div className=" flex flex-col justify-center items-center ">
+          <div className="w-28 flex flex-col justify-center items-start capitalize text-[13px]">
             {order.paymentStatus === "approved" ? (
-              <span className="text-green-500 text-sm">aprobado</span>
+              <span className="text-green-600">aprobado</span>
             ) : (
-              <span className="text-red-500 text-sm">
-                {order.paymentStatus}
-              </span>
+              <span className="text-red-500">{order.paymentStatus}</span>
             )}
 
             {order.statusDetail === "accredited" ? (
-              <span className="text-green-500 text-sm ">acreditado</span>
+              <span className="text-green-600">acreditado</span>
             ) : (
-              <span className="text-red-500 text-sm">{order.statusDetail}</span>
+              <span className="text-red-500">{order.statusDetail}</span>
             )}
           </div>
         )}

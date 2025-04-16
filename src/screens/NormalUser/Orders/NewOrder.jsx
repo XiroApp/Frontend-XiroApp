@@ -437,15 +437,16 @@ export default function NewOrder() {
                   </div>
                 </form>
 
-                <div className="flex items-center justify-center pt-0.5">
-                  <button
-                    className="hover:underline text-lg text-slate-900 hover:text-black"
-                    onClick={() => updateState("resetModal", true)}
-                    disabled={len(files.previews) == 0}
-                  >
-                    Quitar mis archivos
-                  </button>
-                </div>
+                {len(files.previews) > 0 && (
+                  <div className="flex items-center justify-center pt-0.5">
+                    <button
+                      className="hover:underline text-lg text-slate-900 hover:text-black"
+                      onClick={() => updateState("resetModal", true)}
+                    >
+                      Quitar mis archivos
+                    </button>
+                  </div>
+                )}
               </div>
             </section>
 
