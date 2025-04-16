@@ -251,22 +251,19 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                               </span>
                               <span className="text-sm opacity-80">
                                 {pickup.address?.name?.length < 80
-                                  ? pickup.address.name
-                                  : `${pickup.address.name.slice(
+                                  ? pickup?.address?.name
+                                  : `${pickup?.address?.name?.slice(
                                       0,
                                       80
                                     )}...`}{" "}
-                                {pickup.address.number}
+                                {pickup?.address?.number}
                               </span>
                               <span className="text-sm opacity-80">
-                                {pickup.address.locality}
+                                {pickup?.address?.locality}
                               </span>
                               <span className="text-sm opacity-80">
-                                {pickup.address.city}
+                                {pickup?.address?.city}
                               </span>
-                              {/* <span className="text-sm opacity-80">
-                              {pickup.address.tag}
-                            </span> */}
                             </div>
                           </div>
                         </button>
