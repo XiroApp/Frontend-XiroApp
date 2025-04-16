@@ -71,7 +71,7 @@ export default function Orders({ editor }) {
   }
 
   function fetchUsersByRole() {
-    UsersAdapter.getSpecialUsers().then(res => {
+    UsersAdapter.getSpecialUsers().then((res) => {
       setDeliveryUsers(res.deliveryUsers);
       setPrintingUsers(res.printingUsers);
       setDistributionUsers(res.distributionUsers);
@@ -85,11 +85,10 @@ export default function Orders({ editor }) {
     if (searchTerm == "") return setOrders(allOrders);
 
     const filteredOrders = allOrders.filter(
-      o =>
+      (o) =>
         tLC(o?.order_number ?? "").includes(searchTerm) ||
-        tLC(o?.clientUser?.email ?? "").includes(searchTerm) ||
-        tLC(o?.clientUser?.displayName ?? "").includes(searchTerm) ||
-        tLC(o?.clientUser?.phone ?? "").includes(searchTerm)
+        tLC(o?.clientUser?.displayName ?? "").includes(searchTerm)
+      // || tLC(o?.clientUser?.phone ?? "").includes(searchTerm)
     );
 
     setOrders(filteredOrders);
@@ -98,7 +97,7 @@ export default function Orders({ editor }) {
   function handleFilter(status) {
     setFilter(status);
     return status != "no_filter"
-      ? setOrders(allOrders.filter(o => o?.orderStatus == tLC(status)))
+      ? setOrders(allOrders.filter((o) => o?.orderStatus == tLC(status)))
       : setOrders(allOrders);
   }
 
@@ -106,7 +105,7 @@ export default function Orders({ editor }) {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = event => {
+  const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(event.target.value);
     setPage(0);
   };
@@ -134,7 +133,7 @@ export default function Orders({ editor }) {
             name="email"
             type="text"
             placeholder="Ingresa una órden..."
-            onChange={e => handleSearch(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
             className="w-full text-gray-800"
           />
         </div>
@@ -313,7 +312,7 @@ export default function Orders({ editor }) {
                 <Backdrop
                   sx={{
                     color: "#fff",
-                    zIndex: theme => theme.zIndex.drawer + 1,
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
                   }}
                   open={loading}
                 >
