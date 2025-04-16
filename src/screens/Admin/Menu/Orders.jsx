@@ -156,16 +156,6 @@ export default function Orders({ editor }) {
           <div className="w-full flex flex-wrap gap-1.5 justify-start items-center [&>button]:border [&>button]:px-3 [&>button]:py-1 [&>button]:rounded-md [&>button]:text-sm [&>button]:transition-colors">
             <button
               type="button"
-              name="in_delivery"
-              onClick={() => handleFilter("in_delivery")}
-              className={twMerge(
-                filter == "in_delivery" ? "bg-green-300" : "hover:bg-green-300"
-              )}
-            >
-              En delivery
-            </button>
-            <button
-              type="button"
               name="pending"
               onClick={() => handleFilter("pending")}
               className={twMerge(
@@ -203,6 +193,36 @@ export default function Orders({ editor }) {
               )}
             >
               Impresas
+            </button>
+            <button
+              type="button"
+              name="in_delivery"
+              onClick={() => handleFilter("in_delivery")}
+              className={twMerge(
+                filter == "in_delivery" ? "bg-green-300" : "hover:bg-green-300"
+              )}
+            >
+              En delivery
+            </button>
+            <button
+              type="button"
+              name="distribution"
+              onClick={() => handleFilter("distribution")}
+              className={twMerge(
+                filter == "distribution" ? "bg-green-300" : "hover:bg-green-300"
+              )}
+            >
+              En punto de dist.
+            </button>
+            <button
+              type="button"
+              name="pickup"
+              onClick={() => handleFilter("pickup")}
+              className={twMerge(
+                filter == "pickup" ? "bg-green-300" : "hover:bg-green-300"
+              )}
+            >
+              En punto de retiro
             </button>
             <button
               type="button"
