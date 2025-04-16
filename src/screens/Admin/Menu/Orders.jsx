@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
+import Paper from "@mui/material/Paper";
+import TableContainer from "@mui/material/TableContainer";
 import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
 import {
   Backdrop,
   CircularProgress,
   Input,
-  Paper,
   TableBody,
-  TableContainer,
   TableHead,
   TablePagination,
   TableRow,
@@ -16,7 +16,7 @@ import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper.js";
 import { UsersAdapter } from "../../../Infra/Adapters/users.adapter.js";
 import { twMerge } from "tailwind-merge";
 import propTypes from "prop-types";
-import { len, tLC } from "../../../Common/helpers.js";
+import { tLC } from "../../../Common/helpers.js";
 
 export default function Orders({ editor }) {
   const [printingUsers, setPrintingUsers] = useState([]);
@@ -24,12 +24,14 @@ export default function Orders({ editor }) {
   const [distributionUsers, setDistributionUsers] = useState([]);
   const [pickupUsers, setPickupUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [, setError] = useState(null);
   const [pageSize] = useState(15);
   const [lastDocument, setLastDocument] = useState(null);
   const [, setHasMore] = useState(true);
   const [orders, setOrders] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [filter, setFilter] = useState("no_filter");
+
   const [allOrders, setAllOrders] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
@@ -41,7 +43,7 @@ export default function Orders({ editor }) {
 
   async function fetchOrders(direction = "next") {
     setLoading(true);
-    console.error(null);
+    setError(null);
     setOrders([]);
 
     try {
@@ -60,9 +62,9 @@ export default function Orders({ editor }) {
       setOrders(sortedOrders);
       setAllOrders(sortedOrders);
       setLastDocument(newLastVisible);
-      setHasMore(len(fetchedOrders) === pageSize);
+      setHasMore(fetchedOrders.length === pageSize);
     } catch (err) {
-      console.error(err.message);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -95,21 +97,22 @@ export default function Orders({ editor }) {
 
   function handleFilter(status) {
     setFilter(status);
-    if (status == "no_filter") return setOrders(allOrders);
-    return setOrders(allOrders.filter(o => o?.orderStatus == tLC(status)));
+    return status != "no_filter"
+      ? setOrders(allOrders.filter(o => o?.orderStatus == tLC(status)))
+      : setOrders(allOrders);
   }
 
-  const handleChangePage = (event, newPage) => setPage(newPage);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(event.target.value);
     setPage(0);
   };
 
-  // useEffect(() => console.log("🔴", allOrders), [allOrders]);
-
   return (
-    <section className="flex flex-col gap-4 rounded-2xl p-4 w-full min-h-full">
+    <div className="flex flex-col gap-4 rounded-2xl p-4 ">
       <div className="flex flex-col lg:flex-row rounded-lg lg:w-full p-2 gap-y-4 gap-x-10">
         <div className="flex flex-col gap-y-1 w-full max-w-[200px]">
           <label
@@ -151,7 +154,7 @@ export default function Orders({ editor }) {
             </svg>
             Filtrar órdenes
           </label>
-          <div className="w-full flex flex-wrap gap-x-1.5 justify-start items-center [&>button]:border [&>button]:px-3 [&>button]:py-1 [&>button]:rounded-md [&>button]:text-sm [&>button]:transition-colors">
+          <div className="w-full flex flex-wrap gap-1.5 justify-start items-center [&>button]:border [&>button]:px-3 [&>button]:py-1 [&>button]:rounded-md [&>button]:text-sm [&>button]:transition-colors">
             <button
               type="button"
               name="in_delivery"
@@ -250,24 +253,15 @@ export default function Orders({ editor }) {
                       color="blue-gray"
                       className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
                       id={column.label}
-                      // onClick={(e) => handleSortUsers(e)}
                     >
                       {column.label}
-                      {/* {index !== column.length - 1 && (
-                        <ChevronLeftSharp
-                          strokeWidth={2}
-                          className="h-4 w-4"
-                          id={column.filterName}
-                          onClick={(e) => handleSortUsers(e)}
-                        />
-                      )} */}
                     </Typography>
                   </th>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {len(orders) > 0 ? (
+              {orders?.length ? (
                 orders
                   ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((order, index) => {
@@ -278,6 +272,7 @@ export default function Orders({ editor }) {
 
                     return (
                       <TableRow
+                        // hover
                         role="button"
                         tabIndex={-1}
                         key={index}
@@ -326,6 +321,32 @@ export default function Orders({ editor }) {
                 </Backdrop>
               )}
             </TableBody>
+
+            {/* <TableFooter>
+              <div className="flex w-full gap-2 mt-2 mb-4 ml-2">
+                <button
+                  className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-md"
+                  onClick={() => {
+                    setSelectedRow(null);
+                    fetchOrders("prev");
+                  }}
+                  disabled={!lastDocument || loading}
+                >
+                  Anterior
+                </button>
+
+                <button
+                  className="bg-green-200 hover:bg-green-300 px-4 py-2 rounded-md"
+                  onClick={() => {
+                    setSelectedRow(null);
+                    fetchOrders("next");
+                  }}
+                  disabled={!hasMore || loading}
+                >
+                  Siguiente
+                </button>
+              </div>
+            </TableFooter> */}
           </table>
         </TableContainer>
         <TablePagination
@@ -338,7 +359,7 @@ export default function Orders({ editor }) {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-    </section>
+    </div>
   );
 }
 

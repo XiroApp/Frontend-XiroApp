@@ -126,6 +126,7 @@ export default function OrdersRow({
     report: order.report || null,
   });
 
+  /* AUTOCOMPLETE STATE */
   const printingProps = {
     options: printingUsers,
     getOptionLabel: option => option?.displayName ?? "N/A",
@@ -136,6 +137,7 @@ export default function OrdersRow({
   };
 
   function handleInput(e) {
+    // console.log(e.target.value);
     if (e.target.value === "pending") {
       setProblemsSelectStatus(false);
       setDeliverySelectStatus(false);
@@ -228,6 +230,7 @@ export default function OrdersRow({
               </span>
             </Button>
 
+            {/* MODAL FORMULARIO */}
             <Dialog open={priceModal} onClose={() => setPriceModal(false)}>
               <DialogTitle className="text-center">Monto</DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8 w-[300px]">
@@ -257,33 +260,28 @@ export default function OrdersRow({
         )}
         {column.id === "orderStatus" && (
           <>
-            <div className="w-full">
-              <button
-                type="button"
-                className="w-[150px] flex justify-start items-center"
-                onClick={() => setEditStatus(true)}
-              >
-                <p className="text-[13px] text-start">
-                  {value === "pending"
-                    ? "Pendiente ⏳"
-                    : value === "process"
-                    ? "En proceso 🔨"
-                    : value === "problems"
-                    ? "Con problemas 📛"
-                    : value === "printed"
-                    ? "Impreso 📄"
-                    : value === "in_delivery"
-                    ? "En delivery 🛸"
-                    : value === "received"
-                    ? "Recibido ✅"
-                    : value === "distribution"
-                    ? "En punto de distribución 🏤"
-                    : value === "pickup"
-                    ? "En punto de retiro 🏃‍♂️"
-                    : "🚨 REVISAR ESTADO 🚨"}
-                </p>
-              </button>
-            </div>
+            <button type="button" onClick={() => setEditStatus(true)}>
+              <p className="text-[13px] w-[145px] text-start">
+                {value === "pending"
+                  ? "Pendiente ⏳"
+                  : value === "process"
+                  ? "En proceso 🔨"
+                  : value === "problems"
+                  ? "Con problemas 📛"
+                  : value === "printed"
+                  ? "Impreso 📄"
+                  : value === "in_delivery"
+                  ? "En delivery 🛸"
+                  : value === "received"
+                  ? "Recibido ✅"
+                  : value === "distribution"
+                  ? "En punto de distribución 🏤"
+                  : value === "pickup"
+                  ? "En punto de retiro 🏃‍♂️"
+                  : "🚨 REVISAR ESTADO 🚨"}
+              </p>
+            </button>
+            {/* MODAL FORMULARIO EDITAR ESTADO DE ORDEN */}
             <Dialog open={editStatus} onClose={() => setEditStatus(false)}>
               <DialogTitle className="text-center">Editar estado</DialogTitle>
               <DialogContent dividers className="flex flex-col gap-8">
@@ -314,6 +312,7 @@ export default function OrdersRow({
                       : null}
                   </Typography>
                   <div className="w-full">
+                    {/* AUTOCOMPLETE DE ESTADOS */}
                     <div className="flex flex-col w-full">
                       {editor === "deliveryUser" && value == "distribution" ? (
                         <div className="flex flex-col gap-1">
@@ -335,9 +334,9 @@ export default function OrdersRow({
                             onChange={e => handleInput(e)}
                             name="orderStatus"
                             id="orderStatus"
-                            className="border rounded-l p-2"
+                            className="border rounded-l p-2 bg-white"
                           >
-                            {editor === "pickupUser" && (
+                            {editor === "pickupUser" ? (
                               <>
                                 <option value="pickup">Seleccionar</option>
                                 <option value="received">
@@ -347,24 +346,28 @@ export default function OrdersRow({
                                   Reportar problemas 📛
                                 </option>
                               </>
+                            ) : (
+                              false
                             )}
 
                             {editor === "deliveryUser" &&
-                              value !== "distribution" && (
-                                <>
-                                  <option value="in_delivery">
-                                    Seleccionar
-                                  </option>
-
-                                  <option value="received">
-                                    Entregado a cliente ✅
-                                  </option>
-                                  <option value="problems">
-                                    Reportar problemas 📛
-                                  </option>
-                                </>
-                              )}
-                            {editor === "adminUser" && (
+                            value !== "distribution" ? (
+                              <>
+                                <option value="in_delivery">Seleccionar</option>
+                                {/* <option value="distribution">
+                                  Regresar a punto de distribución 🏤
+                                </option> */}
+                                <option value="received">
+                                  Entregado a cliente ✅
+                                </option>
+                                <option value="problems">
+                                  Reportar problemas 📛
+                                </option>
+                              </>
+                            ) : (
+                              false
+                            )}
+                            {editor === "adminUser" ? (
                               <>
                                 <option value="pending">Seleccionar</option>
                                 <option value="unassigned">
@@ -384,8 +387,10 @@ export default function OrdersRow({
                                 </option>
                                 <option value="received">Recibido ✅</option>
                               </>
+                            ) : (
+                              false
                             )}
-                            {editor === "printingUser" && (
+                            {editor === "printingUser" ? (
                               <>
                                 <option value="printed">Seleccionar</option>
                                 <option value="pending">Pendiente ⏳</option>
@@ -404,8 +409,10 @@ export default function OrdersRow({
                                   </option>
                                 )}
                               </>
+                            ) : (
+                              false
                             )}
-                            {editor === "distributionUser" && (
+                            {editor === "distributionUser" ? (
                               <>
                                 <option value="distribution">
                                   Seleccionar
@@ -417,6 +424,8 @@ export default function OrdersRow({
                                   Reportar problemas 📛
                                 </option>
                               </>
+                            ) : (
+                              false
                             )}
                           </select>
                         </>
@@ -436,6 +445,7 @@ export default function OrdersRow({
                           onSelect={e => handleInput(e)}
                           renderInput={params => (
                             <TextField
+                              // error={error.city}
                               name="uidPrinting"
                               placeholder="Elige imprenta..."
                               {...params}
@@ -446,7 +456,8 @@ export default function OrdersRow({
                         />
                       </div>
                     </>
-                  ) : deliverySelectStatus && editor === "adminUser" ? (
+                  ) : // false
+                  deliverySelectStatus && editor === "adminUser" ? (
                     <>
                       <p>Seleccione delivery:</p>
 
@@ -514,8 +525,9 @@ export default function OrdersRow({
               <Inventory2Outlined />
             </Button>
 
+            {/* MODAL FORMULARIO */}
             <Dialog open={open} onClose={() => setOpen(false)}>
-              <DialogTitle className="text-center w-full">
+              <DialogTitle className="text-center">
                 Detalles del pedido
               </DialogTitle>
               <DialogContent
@@ -523,149 +535,152 @@ export default function OrdersRow({
                 className="flex flex-col gap-8 w-full max-w-[400px]"
               >
                 <section className="flex flex-col gap-4">
-                  {order?.cart?.map((order, index) => (
-                    <div key={index} className="flex flex-col gap-1">
-                      <p>Pedido {index + 1}</p>
-                      <div className=" bg-[#fff] p-4 rounded-lg">
-                        <Accordion
-                          expanded={expanded === order.orderUid}
-                          onChange={handleChange(order.orderUid)}
-                        >
-                          <AccordionSummary
-                            aria-controls="panel1d-content"
-                            id="panel1d-header"
+                  {order?.cart?.map((order, index) => {
+                    return (
+                      <div key={index} className="flex flex-col gap-1">
+                        <p>Pedido {index + 1}</p>
+                        <div className=" bg-[#fff] p-4 rounded-lg">
+                          <Accordion
+                            expanded={expanded === order.orderUid}
+                            onChange={handleChange(order.orderUid)}
                           >
-                            <Typography>Detalles de personalización</Typography>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                            <ul>
-                              <li>
-                                <span className="font-light">
-                                  Copias por archivo:&nbsp;&nbsp;
-                                </span>
-                                <span className="font-bold">
-                                  {order.numberOfCopies}
-                                </span>
-                              </li>
-                              <li>
-                                <span className="font-light">
-                                  Orientación:&nbsp;&nbsp;
-                                </span>
-                                <span className="font-bold">
-                                  {order.orientacion}
-                                </span>
-                              </li>
-                              <li>
-                                <span className="font-light">
-                                  Forma de impresión:&nbsp;&nbsp;
-                                </span>
-                                <span className="font-bold">
-                                  {order.printWay}
-                                </span>
-                              </li>
-                              <li>
-                                <span className="font-light">
-                                  Total de páginas:&nbsp;&nbsp;
-                                </span>
-                                <span className="font-bold">
-                                  {order.totalPages}
-                                </span>
-                              </li>
-                              <li>
-                                <span className="font-light">
-                                  Tamaño de papel:&nbsp;&nbsp;
-                                </span>
-                                <span className="font-bold">{order.size}</span>
-                              </li>
-                              <li>
-                                <span className="font-light">
-                                  Copias por carilla:&nbsp;&nbsp;
-                                </span>
-                                <span className="font-bold">
-                                  {order.copiesPerPage}
-                                </span>
-                              </li>
-                              <li>
-                                <span className="font-light">
-                                  Color:&nbsp;&nbsp;
-                                </span>
-                                <span className="font-bold">{order.color}</span>
-                              </li>
-                              <li>
-                                <span className="font-light">
-                                  Anillado:&nbsp;&nbsp;
-                                </span>
-                                <span className="font-bold">
-                                  {order.finishing}
-                                </span>
-                              </li>
-                              <li>
-                                <span className="font-light">
-                                  Agrupación:&nbsp;&nbsp;
-                                </span>
-                                <span className="font-bold">
-                                  {order?.group || "Sin información"}
-                                </span>
-                              </li>
-                            </ul>
-                          </AccordionDetails>
-                        </Accordion>
-                        <Accordion
-                          expanded={expanded === index}
-                          onChange={handleChange(index)}
-                        >
-                          <AccordionSummary
-                            aria-controls="panel2d-content"
-                            id="panel2d-header"
+                            <AccordionSummary
+                              aria-controls="panel1d-content"
+                              id="panel1d-header"
+                            >
+                              <Typography>
+                                Detalles de personalización
+                              </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <ul>
+                                <li>
+                                  <span className="font-light">
+                                    Copias por archivo:
+                                  </span>
+                                  <span className="font-bold">
+                                    {order.numberOfCopies}
+                                  </span>
+                                </li>
+                                <li>
+                                  <span className="font-light">
+                                    Orientación:
+                                  </span>
+                                  <span className="font-bold">
+                                    {order.orientacion}
+                                  </span>
+                                </li>
+                                <li>
+                                  <span className="font-light">
+                                    Forma de impresión:
+                                  </span>
+                                  <span className="font-bold">
+                                    {order.printWay}
+                                  </span>
+                                </li>
+                                <li>
+                                  <span className="font-light">
+                                    Total de páginas:
+                                  </span>
+                                  <span className="font-bold">
+                                    {order.totalPages}
+                                  </span>
+                                </li>
+                                <li>
+                                  <span className="font-light">
+                                    Tamaño de papel:
+                                  </span>
+                                  <span className="font-bold">
+                                    {order.size}
+                                  </span>
+                                </li>
+                                <li>
+                                  <span className="font-light">
+                                    Copias por carilla:
+                                  </span>
+                                  <span className="font-bold">
+                                    {order.copiesPerPage}
+                                  </span>
+                                </li>
+                                <li>
+                                  <span className="font-light">Color:</span>
+                                  <span className="font-bold">
+                                    {order.color}
+                                  </span>
+                                </li>
+                                <li>
+                                  <span className="font-light">Anillado:</span>
+                                  <span className="font-bold">
+                                    {order.finishing}
+                                  </span>
+                                </li>
+                                <li>
+                                  <span className="font-light">
+                                    Agrupación:
+                                  </span>
+                                  <span className="font-bold">
+                                    {order?.group || "Sin información"}
+                                  </span>
+                                </li>
+                              </ul>
+                            </AccordionDetails>
+                          </Accordion>
+                          <Accordion
+                            expanded={expanded === index}
+                            onChange={handleChange(index)}
                           >
-                            <Typography>Archivos</Typography>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                            <div>
-                              <section className="flex flex-col gap-3">
-                                {order.files.map((file, index) => (
-                                  <div key={index} className="flex gap-2">
-                                    <p>{`${file?.slice(20, 50)}`}</p>
-                                    <Tooltip
-                                      placement="top"
-                                      title="Ver Archivo"
-                                    >
-                                      <a
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        download
-                                        href={`https://firebasestorage.googleapis.com/v0/b/xiro-app-2ec87.firebasestorage.app/o/${file}?alt=media&token=e7b0f280-413a-4546-aa2b-da0cd3523289`}
+                            <AccordionSummary
+                              aria-controls="panel2d-content"
+                              id="panel2d-header"
+                            >
+                              <Typography>Archivos</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <div>
+                                <section className="flex flex-col gap-3">
+                                  {order.files.map((file, index) => (
+                                    <div key={index} className="flex gap-2">
+                                      <p>{`${file?.slice(20, 50)}`}</p>
+                                      <Tooltip
+                                        placement="top"
+                                        title="Ver Archivo"
                                       >
-                                        <VisibilityIcon
-                                          className="hover:bg-gray-500 rounded-lg"
-                                          sx={{
-                                            height: "0.7em",
-                                            width: "0.7em",
-                                          }}
-                                        />
-                                      </a>
-                                    </Tooltip>
-                                  </div>
-                                ))}
-                              </section>
-                            </div>
-                          </AccordionDetails>
-                        </Accordion>
-
-                        {index == 0 &&
-                          len(order?.description.trim() ?? "") > 0 && (
-                            <Accordion>
-                              <AccordionSummary>
-                                <Typography>Comentarios</Typography>
-                              </AccordionSummary>
-                              <AccordionDetails>
-                                <p>{order.description}</p>
-                              </AccordionDetails>
-                            </Accordion>
-                          )}
+                                        <a
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          download
+                                          href={`https://firebasestorage.googleapis.com/v0/b/xiro-app-2ec87.firebasestorage.app/o/${file}?alt=media&token=e7b0f280-413a-4546-aa2b-da0cd3523289`}
+                                        >
+                                          <VisibilityIcon
+                                            className="hover:bg-gray-500 rounded-lg"
+                                            sx={{
+                                              height: "0.7em",
+                                              width: "0.7em",
+                                            }}
+                                          />
+                                        </a>
+                                      </Tooltip>
+                                    </div>
+                                  ))}
+                                </section>
+                              </div>
+                            </AccordionDetails>
+                          </Accordion>
+                          {index == 0 &&
+                            len(order?.description?.trim()) > 0 && (
+                              <Accordion>
+                                <AccordionSummary>
+                                  <Typography>Comentarios</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                  <p>{order.description}</p>
+                                </AccordionDetails>
+                              </Accordion>
+                            )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </section>
               </DialogContent>
               <DialogActions>
@@ -685,6 +700,7 @@ export default function OrdersRow({
               onClick={() => {
                 handleOpenAssignedModal();
               }}
+              // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
               <Diversity3 />
             </Button>
@@ -749,9 +765,12 @@ export default function OrdersRow({
               onClick={() => {
                 handleOpenClientModal(value);
               }}
+              // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
               <PermIdentity />
             </Button>
+
+            {/* MODAL FORMULARIO */}
             <Dialog
               open={openClientModal}
               onClose={() => setOpenClientModal(false)}

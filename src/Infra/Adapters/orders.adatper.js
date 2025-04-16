@@ -13,7 +13,6 @@ export class OrdersAdapter {
     uid
   ) {
     let url = "";
-    console.log("pasdfiadhiop");
 
     if (uid) {
       url = `${baseUrl}/${role}/orders/${uid}?pageSize=${pageSize}&direction=${direction}&lastVisible=${
@@ -27,9 +26,8 @@ export class OrdersAdapter {
 
     const response = await axios.get(url);
     const data = response.data;
-    console.log("pagao", data);
 
-    const sortedOrders = data.orders.map((order) => {
+    const sortedOrders = data.orders.map(order => {
       const fechaFormateada = order.created_at
         .split("T")[0]
         .split("-")
