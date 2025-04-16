@@ -236,41 +236,61 @@ export default function NewOrderSettings({
               <span className="text-[12px] ">Normal</span>
               <span className="text-[10px] opacity-70 ">Una por carilla</span>
             </button>
+            {resume?.totalPages > 1 ? (
+              <button
+                className={
+                  resume.copiesPerPage === "2 copias"
+                    ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                    : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+                }
+                onClick={(e) =>
+                  setResume({
+                    ...resume,
+                    ["copiesPerPage"]: "2 copias",
+                    ["orientacion"]: "Horizontal",
+                  })
+                }
+              >
+                <span className="text-[12px] ">2 copias</span>
+                <span className="text-[10px] opacity-70 ">Por carilla</span>
+              </button>
+            ) : (
+              <button
+                disabled
+                className="flex flex-col cursor-not-allowed items-center w-24 justify-center px-2  bg-[#61774d]/70 rounded-lg"
+              >
+                <span className="text-[12px] ">2 copias</span>
+                <span className="text-[10px] opacity-70 ">Por carilla</span>
+              </button>
+            )}
 
-            <button
-              className={
-                resume.copiesPerPage === "2 copias"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
-              }
-              onClick={(e) =>
-                setResume({
-                  ...resume,
-                  ["copiesPerPage"]: "2 copias",
-                  ["orientacion"]: "Horizontal",
-                })
-              }
-            >
-              <span className="text-[12px] ">2 copias</span>
-              <span className="text-[10px] opacity-70 ">Por carilla</span>
-            </button>
-            <button
-              className={
-                resume.copiesPerPage === "4 copias"
-                  ? "flex flex-col items-center w-24 justify-center px-2  border-2 border-white bg-[#61774d] text-white rounded-lg"
-                  : "flex flex-col items-center w-24 justify-center px-2  bg-white hover:bg-[#61774d] hover:text-white rounded-lg"
-              }
-              onClick={(e) =>
-                setResume({
-                  ...resume,
-                  ["copiesPerPage"]: "4 copias",
-                  ["orientacion"]: "Horizontal",
-                })
-              }
-            >
-              <span className="text-[12px] ">4 copias</span>
-              <span className="text-[10px] opacity-70 ">Por carilla</span>
-            </button>
+            {resume?.totalPages > 3 ? (
+              <button
+                className={
+                  resume.copiesPerPage === "4 copias"
+                    ? "flex flex-col items-center w-24 justify-center px-2  border-[#000] border-2 bg-[#61774d] hover:bg-[#61774d]/80 rounded-lg"
+                    : "flex flex-col items-center w-24 justify-center px-2  border border-[#000] text-black bg-[#fff] hover:bg-[#61774d]/80 rounded-lg"
+                }
+                onClick={(e) =>
+                  setResume({
+                    ...resume,
+                    ["copiesPerPage"]: "4 copias",
+                    ["orientacion"]: "Horizontal",
+                  })
+                }
+              >
+                <span className="text-[12px] ">4 copias</span>
+                <span className="text-[10px] opacity-70 ">Por carilla</span>
+              </button>
+            ) : (
+              <button
+                disabled
+                className="flex flex-col cursor-not-allowed items-center w-24 justify-center px-2  bg-[#61774d]/70 rounded-lg"
+              >
+                <span className="text-[12px] ">4 copias</span>
+                <span className="text-[10px] opacity-70 ">Por carilla</span>
+              </button>
+            )}
           </div>
         </section>
       ) : currentSetting === "orientacion" ? (
