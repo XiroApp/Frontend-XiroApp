@@ -256,7 +256,7 @@ export default function Orders({ editor }) {
         </div>
       </div>
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 650, backgroundColor: "#f2f2f4" }}>
+        <TableContainer sx={{ maxHeight: 550, backgroundColor: "#f2f2f4" }}>
           <table className="w-full min-w-max table-auto text-left">
             <TableHead>
               <TableRow>
@@ -282,7 +282,7 @@ export default function Orders({ editor }) {
             <TableBody>
               {orders?.length ? (
                 orders
-                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  // ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((order, index) => {
                     const isLast = index === orders.length - 1;
                     const classes = isLast
@@ -368,7 +368,7 @@ export default function Orders({ editor }) {
             </TableFooter> */}
           </table>
         </TableContainer>
-        <TablePagination
+        {/* <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
           count={allOrders.length}
@@ -376,7 +376,7 @@ export default function Orders({ editor }) {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        /> */}
       </Paper>
     </div>
   );
