@@ -137,7 +137,6 @@ export default function OrdersRow({
   };
 
   function handleInput(e) {
-    // console.log(e.target.value);
     if (e.target.value === "pending") {
       setProblemsSelectStatus(false);
       setDeliverySelectStatus(false);
@@ -186,15 +185,15 @@ export default function OrdersRow({
     dispatch(
       changeOrderStatus({
         idOrder: orderId,
-        orderStatus: input.orderStatus,
-        uidPrinting: selectedPrinting?.uid || order.uidPrinting,
-        uidDelivery: selectedDelivery?.uid || order.uidDelivery,
-        uidDistribution: selectedDistribution?.uid || order.uidDistribution,
-        uidPickup: selectedPickup?.uid || order.uidPickup,
-        uidClient: input.clientUid,
-        report: problemsSelectStatus || input.report,
+        orderStatus: input?.orderStatus || order?.orderStatus,
+        uidPrinting: selectedPrinting?.uid || order?.uidPrinting,
+        uidDelivery: selectedDelivery?.uid || order?.uidDelivery,
+        uidDistribution: selectedDistribution?.uid || order?.uidDistribution,
+        uidPickup: selectedPickup?.uid || order?.uidPickup,
+        uidClient: order?.clientUid,
+        report: problemsSelectStatus || input?.report || "",
         editor: editor,
-        order_number: order.order_number,
+        order_number: order?.order_number,
       })
     ).then(() => fetchOrders("refresh"));
     setEditStatus(false);

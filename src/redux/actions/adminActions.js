@@ -239,36 +239,36 @@ export function changeOrderStatus({
         }
       );
 
-      let formatedOrders = response.data.map((order) => {
-        const fechaStr = order.paymentData.date_created;
-        const fecha = new Date(fechaStr);
+      // let formatedOrders = response.data.map((order) => {
+      //   const fechaStr = order.paymentData.date_created;
+      //   const fecha = new Date(fechaStr);
 
-        const dia = fecha.getDate().toString().padStart(2, "0");
-        const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
-        const año = fecha.getFullYear();
+      //   const dia = fecha.getDate().toString().padStart(2, "0");
+      //   const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
+      //   const año = fecha.getFullYear();
 
-        const fechaFormateada = `${dia}/${mes}/${año}`;
+      //   const fechaFormateada = `${dia}/${mes}/${año}`;
 
-        return {
-          clientUid: order.clientUid,
-          orderStatus: order.orderStatus,
-          cart: order.cart,
-          paymentId: order.paymentData.id,
-          paymentStatus: order.paymentData.status,
-          transactionAmount:
-            order.paymentData.transaction_details.total_paid_amount,
-          statusDetail: order.paymentData.status_detail,
-          uidPrinting: order.uidPrinting,
-          uidDelivery: order.uidDelivery,
-          report: order.report,
-          createdAt: fechaFormateada,
-          place: order.place,
-        };
-      });
+      //   return {
+      //     clientUid: order.clientUid,
+      //     orderStatus: order.orderStatus,
+      //     cart: order.cart,
+      //     paymentId: order.paymentData.id,
+      //     paymentStatus: order.paymentData.status,
+      //     transactionAmount:
+      //       order.paymentData.transaction_details.total_paid_amount,
+      //     statusDetail: order.paymentData.status_detail,
+      //     uidPrinting: order.uidPrinting,
+      //     uidDelivery: order.uidDelivery,
+      //     report: order.report,
+      //     createdAt: fechaFormateada,
+      //     place: order.place,
+      //   };
+      // });
 
       dispatch({
         type: action.EDIT_STATUS_ORDERS,
-        payload: { orders: formatedOrders },
+        payload: { orders: [] },
       });
 
       return dispatch({
