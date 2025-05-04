@@ -10,7 +10,7 @@ import Avatar from "@mui/material/Avatar";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import logo from "../../utils/assets/images/xiro-head.png";
+import logo from "/xiro-head.webp";
 import { logout } from "../../redux/actions";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,7 +37,7 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
   const dispatch = useDispatch();
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [contactModal, setContactModal] = useState(false);
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector(state => state.cart);
   const closeContactModal = () => setContactModal(!contactModal);
 
   function handleLogout(e) {
@@ -92,7 +92,7 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
 
           <Tooltip title="Menú" sx={{ display: "flex" }}>
             <Box
-              onClick={(e) => setAnchorElUser(e.currentTarget)}
+              onClick={e => setAnchorElUser(e.currentTarget)}
               sx={{
                 flexGrow: 0,
                 padding: "0.3em",
@@ -219,7 +219,7 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
               <MenuItem
                 sx={{ ":hover": { backgroundColor: "#c9d9bb" } }}
                 key="logout"
-                onClick={(e) => handleLogout(e)}
+                onClick={e => handleLogout(e)}
                 className="flex gap-x-2 items-center"
               >
                 <LogoutIcon sx={{ height: "0.8em", width: "0.8em" }} />

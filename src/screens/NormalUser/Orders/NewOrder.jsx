@@ -37,114 +37,77 @@ import SettingButtons from "../../../components/NewOrderSettings/SettingButtons"
 import ChoosePlaceModal from "../../../components/ChoosePlaceModal/ChoosePlaceModal";
 import NewOrderSettingsDesktop from "../../../components/NewOrderSettings/NewOrderSettingsDesktop";
 import DefaultSnack from "../../../components/Snackbars/DefaultSnack";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   pricingSetter,
   validateFileSize,
 } from "../../../utils/controllers/pricing.controller.js";
 import { formatPrice, len } from "../../../Common/helpers.js";
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
-
-const modalStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "#fff",
-  borderRadius: "8px",
-  boxShadow: 24,
-};
-
-const initialResumeState = {
-  totalPages: 0,
-  numberOfCopies: 1,
-  color: "BN",
-  size: "A4",
-  printWay: "Simple faz",
-  copiesPerPage: "Normal",
-  orientacion: "Vertical",
-  finishing: "Sin anillado",
-  group: "Sin agrupar",
-};
+import { ShoppingBag } from "@mui/icons-material";
 
 export default function NewOrder() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const user = useSelector(state => state.dataBaseUser);
-  const cart = useSelector(state => state.cart);
-  const labels = useSelector(state => state.labels);
-  const pricingState = useSelector(state => state.pricing);
-  const place = useSelector(state => state.place);
+  const dispatch = useDispatch(),
+    navigate = useNavigate(),
+    user = useSelector(state => state.dataBaseUser),
+    cart = useSelector(state => state.cart),
+    libraryCart = useSelector(state => state.libraryCart),
+    labels = useSelector(state => state.labels),
+    pricingState = useSelector(state => state.pricing),
+    place = useSelector(state => state.place),
+    [libraryModal, setLibraryModal] = useState(false),
+    [state, setState] = useState({
+      loading: false,
+      resetModal: false,
+      helpModal: false,
+      choosePlace: !place,
+      review: false,
+      openColorAlertModal: false,
+      currentSetting: "numberOfCopies",
+    }),
+    [files, setFiles] = useState({
+      details: [],
+      previews: [],
+    }),
+    [resume, setResume] = useState(initialResumeState),
+    removeDuplicateDetails = currentFiles => {
+      const uniqueDetails = [];
+      const seenNames = new Set();
 
-  const [state, setState] = useState({
-    loading: false,
-    resetModal: false,
-    helpModal: false,
-    choosePlace: !place,
-    review: false,
-    openColorAlertModal: false,
-    currentSetting: "numberOfCopies",
-  });
+      currentFiles.details.forEach(file => {
+        if (!seenNames.has(file.name)) {
+          seenNames.add(file.name);
+          uniqueDetails.push(file);
+        }
+      });
 
-  const [files, setFiles] = useState({
-    details: [],
-    previews: [],
-  });
+      return {
+        ...currentFiles,
+        details: uniqueDetails,
+      };
+    },
+    pricing = useMemo(() => {
+      const basePricing = {
+        BIG_ringed: Number(pricingState?.BIG_ringed) || 0,
+        SMALL_ringed: Number(pricingState?.SMALL_ringed) || 0,
+        A3_simple_do: Number(pricingState?.A3_simple_do) || 0,
+        A3_simple_do_color: Number(pricingState?.A3_simple_do_color) || 0,
+        A3_double_does: Number(pricingState?.A3_double_does) || 0,
+        A3_double_does_color: Number(pricingState?.A3_double_does_color) || 0,
+        OF_simple_do: Number(pricingState?.OF_simple_do) || 0,
+        OF_simple_do_color: Number(pricingState?.OF_simple_do_color) || 0,
+        OF_double_does: Number(pricingState?.OF_double_does) || 0,
+        OF_double_does_color: Number(pricingState?.OF_double_does_color) || 0,
+        simple_do: Number(pricingState?.simple_do) || 0,
+        simple_do_color: Number(pricingState?.simple_do_color) || 0,
+        double_does: Number(pricingState?.double_does) || 0,
+        double_does_color: Number(pricingState?.double_does_color) || 0,
+        ringed: Number(1500),
+        total: 0,
+      };
 
-  const [resume, setResume] = useState(initialResumeState);
-
-  const removeDuplicateDetails = currentFiles => {
-    const uniqueDetails = [];
-    const seenNames = new Set();
-
-    currentFiles.details.forEach(file => {
-      if (!seenNames.has(file.name)) {
-        seenNames.add(file.name);
-        uniqueDetails.push(file);
-      }
-    });
-
-    return {
-      ...currentFiles,
-      details: uniqueDetails,
-    };
-  };
-
-  const pricing = useMemo(() => {
-    const basePricing = {
-      BIG_ringed: Number(pricingState?.BIG_ringed) || 0,
-      SMALL_ringed: Number(pricingState?.SMALL_ringed) || 0,
-      A3_simple_do: Number(pricingState?.A3_simple_do) || 0,
-      A3_simple_do_color: Number(pricingState?.A3_simple_do_color) || 0,
-      A3_double_does: Number(pricingState?.A3_double_does) || 0,
-      A3_double_does_color: Number(pricingState?.A3_double_does_color) || 0,
-      OF_simple_do: Number(pricingState?.OF_simple_do) || 0,
-      OF_simple_do_color: Number(pricingState?.OF_simple_do_color) || 0,
-      OF_double_does: Number(pricingState?.OF_double_does) || 0,
-      OF_double_does_color: Number(pricingState?.OF_double_does_color) || 0,
-      simple_do: Number(pricingState?.simple_do) || 0,
-      simple_do_color: Number(pricingState?.simple_do_color) || 0,
-      double_does: Number(pricingState?.double_does) || 0,
-      double_does_color: Number(pricingState?.double_does_color) || 0,
-      ringed: Number(1500),
-      total: 0,
-    };
-
-    const total = pricingSetter(basePricing, resume, files.details);
-    return { ...basePricing, total: isNaN(total) ? 0 : Number(total) };
-  }, [pricingState, resume, files.details]);
+      const total = pricingSetter(basePricing, resume, files.details);
+      return { ...basePricing, total: isNaN(total) ? 0 : Number(total) };
+    }, [pricingState, resume, files.details]);
 
   useEffect(() => {
     dispatch(getPricing());
@@ -154,7 +117,7 @@ export default function NewOrder() {
     const cleanedFiles = removeDuplicateDetails(files);
     if (cleanedFiles.details.length !== files.details.length) {
       setFiles(cleanedFiles);
-      return; // Salir temprano porque setFiles disparará otro efecto
+      return;
     }
 
     if (cleanedFiles.details.length === 0) {
@@ -338,9 +301,9 @@ export default function NewOrder() {
         )}
 
         <div className="flex flex-col items-center justify-center gap-2 px-4 lg:px-0 h-full lg:w-9/12">
-          <div className="lg:flex w-full md:p-4">
+          <div className="lg:flex w-full pt-12 md:p-4">
             <section className="bg-[#fff] flex flex-col md:flex-row-reverse md:justify-around md:items-center items-around justify-center w-full p-4 gap-4 rounded-lg">
-              <div className="flex items-center justify-center gap-x-2">
+              <div className="flex items-center justify-center gap-3 sm:gap-1.5 flex-wrap">
                 {place?.type == "Envío a domicilio" || !place ? (
                   <button
                     onClick={() => updateState("choosePlace", true)}
@@ -402,39 +365,40 @@ export default function NewOrder() {
                 </section>
               </div>
 
-              <div className="flex h-1/2 md:h-full md:justify-center md:gap-1 justify-between md:flex-col">
-                <form encType="multipart/form-data">
-                  <div className="flex items-center justify-center">
-                    <LoadingButton
-                      style={{
-                        padding: "1em 2em",
-                      }}
-                      loading={state.loading}
-                      component="label"
-                      variant="contained"
-                      color="primary"
-                      startIcon={
-                        <UploadIcon
-                          sx={{
-                            height: "1.2em",
-                            width: "1.2em",
-                          }}
-                        />
-                      }
-                    >
-                      <span className="text-xl font-bold tracking-wide">
-                        Cargar Archivos
-                      </span>
-                      <VisuallyHiddenInput
-                        type="file"
-                        name="file"
-                        id="uploadInput"
-                        accept=".pdf, .doc, .docx, .xls, .xlsx, image/*, .txt"
-                        onChange={handleSubmitLoadFile}
-                        disabled={state.loading}
+              <div className="flex h-1/2 md:h-full md:justify-center md:gap-1 justify-between flex-col">
+                <form
+                  encType="multipart/form-data"
+                  className="flex items-center justify-center w-full"
+                >
+                  <LoadingButton
+                    style={{
+                      padding: "1em 2em",
+                    }}
+                    loading={state.loading}
+                    component="label"
+                    variant="contained"
+                    color="primary"
+                    startIcon={
+                      <UploadIcon
+                        sx={{
+                          height: "1.2em",
+                          width: "1.2em",
+                        }}
                       />
-                    </LoadingButton>
-                  </div>
+                    }
+                  >
+                    <span className="w-full text-lg sm:text-xl font-bold tracking-wide text-center">
+                      Cargar Archivos
+                    </span>
+                    <VisuallyHiddenInput
+                      type="file"
+                      name="file"
+                      id="uploadInput"
+                      accept=".pdf, .doc, .docx, .xls, .xlsx, image/*, .txt"
+                      onChange={handleSubmitLoadFile}
+                      disabled={state.loading}
+                    />
+                  </LoadingButton>
                 </form>
 
                 {len(files.previews) > 0 && (
@@ -447,6 +411,17 @@ export default function NewOrder() {
                     </button>
                   </div>
                 )}
+              </div>
+              <div className="flex items-center justify-center">
+                <Link
+                  to="/?libreria"
+                  className="bg-yellow-400 hover:bg-yellow-500 transition-colors py-[0.9rem] sm:px-[1.rem] px-[2rem] font-semibold rounded-md flex gap-x-2 justify-center items-center"
+                >
+                  <ShoppingBag />
+                  <span className="text-center text-sm lg:text-lg">
+                    Artículos de Librería
+                  </span>
+                </Link>
               </div>
             </section>
 
@@ -469,7 +444,6 @@ export default function NewOrder() {
               </section>
             </section>
           </div>
-
           <section className="w-full h-full">
             <DefaultSnack content={labels?.snackbar_new_order_info} />
 
@@ -598,7 +572,7 @@ export default function NewOrder() {
             ) : (
               <div className="w-full flex justify-center items-center">
                 <p className="max-w-xl rounded-lg text-lg md:text-2xl w-full text-center text-white mt-6 bg-green-700 py-2">
-                  Selecciona los archivos que quieras imprimir
+                  Carga los archivos que quieras imprimir
                 </p>
               </div>
             )}
@@ -610,26 +584,85 @@ export default function NewOrder() {
               variant="contained"
               color="primary"
               sx={{ border: "2px solid white" }}
-              className={cart?.length ? "w-1/3" : "w-1/2"}
-              disabled={files.details.length === 0}
+              className={len(cart) ? "w-1/3" : "w-1/2"}
+              disabled={len(files.details) == 0}
               onClick={() => updateState("review", true)}
             >
               <span className="font-bold text-lg">Añadir al carrito</span>
             </LoadingButton>
 
-            {cart?.length > 0 && (
+            {len(cart) > 0 && (
               <LoadingButton
                 loading={state.loading}
                 variant="contained"
                 color="primary"
                 sx={{ border: "2px solid white" }}
                 className="w-1/3"
-                onClick={() => navigate("/carrito")}
+                onClick={() =>
+                  len(libraryCart) == 0
+                    ? setLibraryModal(true)
+                    : navigate("/carrito")
+                }
               >
                 <span className="font-bold text-lg">Avanzar</span>
               </LoadingButton>
             )}
           </section>
+          {libraryModal && (
+            <div
+              onClick={() => setLibraryModal(false)}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 pb-14"
+            >
+              <div
+                role="alert"
+                onClick={e => e.stopPropagation()}
+                className="bg-white rounded-lg p-6 max-w-xl w-full h-56 shadow-xl relative flex flex-col justify-between items-start"
+              >
+                <p className="text-2xl font-semibold text-slate-800 w-full">
+                  Aviso
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setLibraryModal(false)}
+                  className="absolute top-2 right-2 p-1 bg-slate-100 rounded-lg"
+                >
+                  <svg
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+                <p className="text-slate-800 text-lg md:text-xl mt-4">
+                  Recordá que también podés agregar artículos de librería
+                </p>
+                <div className="flex justify-between w-full items-center mt-6 md:mt-10">
+                  <button
+                    type="button"
+                    onClick={() => navigate("/carrito")}
+                    className="bg-green-400 border border-green-500 hover:bg-green-500 text-black font-medium py-2 px-4 md:px-6 rounded-lg transition-colors text-lg md:text-xl"
+                  >
+                    Avanzar al carrito
+                  </button>
+                  <button
+                    type="button"
+                    autoFocus
+                    onClick={() => navigate("/?libreria")}
+                    className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-2 px-4 md:px-6 rounded-lg transition-colors text-lg md:text-xl border border-black"
+                  >
+                    Ver artículos de librería
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <section className="hidden lg:flex lg:flex-col p-4">
@@ -688,3 +721,38 @@ export default function NewOrder() {
     </div>
   );
 }
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
+
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "#fff",
+  borderRadius: "8px",
+  boxShadow: 24,
+};
+
+const initialResumeState = {
+  totalPages: 0,
+  numberOfCopies: 1,
+  color: "BN",
+  size: "A4",
+  printWay: "Simple faz",
+  copiesPerPage: "Normal",
+  orientacion: "Vertical",
+  finishing: "Sin anillado",
+  group: "Sin agrupar",
+};

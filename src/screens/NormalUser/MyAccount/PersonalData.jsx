@@ -160,7 +160,7 @@ export default function PersonalData({ user }) {
                       )[0]
                     : "Selecciona un código de area..."
                 }
-                slotProps={{
+                slotprops={{
                   htmlInput: { ...params.inputProps, autoComplete: "areaCode" },
                 }}
               />

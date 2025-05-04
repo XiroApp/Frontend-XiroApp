@@ -1,9 +1,8 @@
-import { ApiConstants } from "../../Common/constants";
 import { Settings } from "../../config";
 
 class ViewSDKClient {
   constructor() {
-    this.readyPromise = new Promise((resolve) => {
+    this.readyPromise = new Promise(resolve => {
       if (window.AdobeDC) {
         resolve();
       } else {
@@ -101,7 +100,7 @@ class ViewSDKClient {
   registerSaveApiHandler() {
     /* Define Save API Handler */
     const saveApiHandler = (metaData, content, options) => {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         /* Dummy implementation of Save API, replace with your business logic */
         setTimeout(() => {
           const response = {
@@ -130,7 +129,7 @@ class ViewSDKClient {
       /* Type of call back */
       window.AdobeDC.View.Enum.CallbackType.EVENT_LISTENER,
       /* call back function */
-      (event) => {
+      event => {
         console.log(event);
       },
       /* options to control the callback execution */

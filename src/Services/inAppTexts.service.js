@@ -8,8 +8,19 @@ export class InAppTextsService {
     const response = (await axios.get(`${url}/labels/all`)).data;
     return response;
   }
+
   static async editLabels(body) {
     const response = (await axios.put(`${url}/labels`, body)).data;
+    return response;
+  }
+
+  static async getTyCLabel() {
+    const response = (await axios.get(`${url}/labels/tyc`)).data;
+    return response;
+  }
+
+  static async updateTyCLabel(html) {
+    const response = (await axios.put(`${url}/labels/tyc`, html)).data;
     return response;
   }
 }

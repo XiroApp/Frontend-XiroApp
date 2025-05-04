@@ -33,10 +33,6 @@ export default function ModalAdd(props) {
       newErrors.name = "El nombre no debe exceder 129 caracteres.";
     }
 
-    if (newProduct.description && len(newProduct.description) > 299) {
-      newErrors.description = "La descripción no debe exceder 299 caracteres.";
-    }
-
     if (!newProduct.price || newProduct.price <= 0) {
       newErrors.price = "El precio no puede ser 0.";
     }
@@ -65,14 +61,19 @@ export default function ModalAdd(props) {
     setNewProduct({ ...newProduct, name });
   }
 
-  function handleDescription(e) {
-    const description = String(e.target.value).trim();
-    setNewProduct({ ...newProduct, description });
-  }
-
   function handlePrice(e) {
-    const price = Number(e.target.value);
-    setNewProduct({ ...newProduct, price });
+    // Verificar si el valor es numérico antes de procesarlo
+    if (e.target.value === "") {
+      // Si el campo está vacío, establecer a 0
+      e.target.value = "0";
+      setNewProduct({ ...newProduct, price: 0 });
+    } else if (e.target.validity.valid) {
+      const price = Number(e.target.value);
+      setNewProduct({ ...newProduct, price });
+    } else {
+      // Si no es válido, mantener el valor anterior o establecer a 0
+      e.target.value = newProduct.price || 0;
+    }
   }
 
   function handleImg(e) {
@@ -144,8 +145,20 @@ export default function ModalAdd(props) {
             </label>
             <input
               onChange={handlePrice}
+              onInput={e => {
+                // Si está vacío, establecer a 0
+                if (e.target.value === "") {
+                  e.target.value = "0";
+                  setNewProduct({ ...newProduct, price: 0 });
+                }
+                // Asegurar que solo se permitan números y un punto decimal
+                else if (!/^\d*\.?\d*$/.test(e.target.value)) {
+                  e.target.value = e.target.value.replace(/[^\d.]/g, "");
+                }
+              }}
               id="price"
               type="number"
+              pattern="[0-9]"
               defaultValue={0}
               placeholder="Ingresa el precio"
               className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -155,21 +168,7 @@ export default function ModalAdd(props) {
               <p className="text-red-500 text-sm">{errors.price}</p>
             )}
           </div>
-          <div className="flex flex-col gap-y-2">
-            <label htmlFor="description" className="font-medium text-lg">
-              Descripción
-            </label>
-            <input
-              onChange={handleDescription}
-              id="description"
-              type="text"
-              placeholder="Ingresa la descripción"
-              className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none resize-none focus:ring-2 focus:ring-primary-500"
-            />
-            {errors.description && (
-              <p className="text-red-500 text-sm">{errors.description}</p>
-            )}
-          </div>
+
           <div className="flex flex-col gap-y-2">
             <a
               href="https://imagen-a-link.netlify.app"

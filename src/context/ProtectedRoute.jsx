@@ -1,12 +1,13 @@
-import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import propTypes from "prop-types";
 
-export default function ProtectedRoute({
-  children,
-  user,
-  isAllowed,
-  redirectTo,
-}) {
+ProtectedRoute.propTypes = {
+  children: propTypes.node,
+  isAllowed: propTypes.bool,
+  redirectTo: propTypes.string,
+};
+
+export default function ProtectedRoute({ children, isAllowed, redirectTo }) {
   if (!isAllowed) {
     return <Navigate to={redirectTo} />;
   }

@@ -17,21 +17,18 @@ import { UsersAdapter } from "../../Infra/Adapters/users.adapter";
 
 export default function AlertModal() {
   const dispatch = useDispatch();
-  const labels = useSelector((state) => state.labels);
-  console.log("label", labels.alert_info_new_order_modal);
-
+  const labels = useSelector(state => state.labels);
   const [open, setOpen] = useState(labels?.alert_info_new_order_modal.enabled);
   const [resume, setResume] = useState({ place: null });
   const [pickupUsers, setPickupUsers] = useState([]);
-  const addresses = useSelector((state) => state.addresses);
-  const place = useSelector((state) => state.place);
+  const addresses = useSelector(state => state.addresses);
+  const place = useSelector(state => state.place);
   const [loading, setLoading] = useState(false);
 
-  // const user = useSelector((state) => state.dataBaseUser);
-
-  function handleChoice(e) {
+  function handleChoice() {
     setLoading(true);
     try {
+      ("");
     } catch (error) {
       console.log(error);
     } finally {
@@ -44,19 +41,19 @@ export default function AlertModal() {
     <>
       <Modal
         open={open}
-        onClose={(e) => handleChoice(e)}
+        onClose={e => handleChoice(e)}
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
         className=" flex items-center justify-center"
       >
         <Box className="bg-[#fff] rounded-lg w-[95%] max-w-[500px] max-h-[90vh] overflow-hidden flex flex-col justify-between shadow-lg">
-          <section className=" p-4 ">
-            <h2
+          <section className="p-4">
+            <p
               id="parent-modal-title"
               className="text-center text-[20px] font-bold "
             >
-              ¿Donde queres recibir tu pedido?
-            </h2>
+              ¿Dónde querés recibir tu pedido?
+            </p>
             <p>
               Envíos domicilio y puntos: Martes y Viernes entre las 9-14hs o las
               15-20hs. Los pedidos que ingresan hasta las 12pm del día previo,
@@ -67,7 +64,7 @@ export default function AlertModal() {
 
           <section className="flex justify-end items-center px-5 pb-5">
             <Button
-              onClick={(e) => handleChoice(e)}
+              onClick={e => handleChoice(e)}
               variant="text"
               color="primary"
               disabled={!resume?.place?.type || !resume?.place?.address}

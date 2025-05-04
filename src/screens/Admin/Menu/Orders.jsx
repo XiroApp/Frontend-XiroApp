@@ -16,7 +16,7 @@ import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper.js";
 import { UsersAdapter } from "../../../Infra/Adapters/users.adapter.js";
 import { twMerge } from "tailwind-merge";
 import propTypes from "prop-types";
-import { tLC } from "../../../Common/helpers.js";
+import { normalize, tLC } from "../../../Common/helpers.js";
 
 export default function Orders({ editor }) {
   const [printingUsers, setPrintingUsers] = useState([]);
@@ -87,8 +87,8 @@ export default function Orders({ editor }) {
     const filteredOrders = allOrders.filter(
       (o) =>
         tLC(o?.order_number ?? "").includes(searchTerm) ||
-        tLC(o?.clientUser?.displayName ?? "").includes(searchTerm)
-      // || tLC(o?.clientUser?.phone ?? "").includes(searchTerm)
+        normalize(tLC(o?.clientUser?.displayName ?? "")).includes(searchTerm)
+
     );
 
     setOrders(filteredOrders);
@@ -291,7 +291,6 @@ export default function Orders({ editor }) {
 
                     return (
                       <TableRow
-                        // hover
                         role="button"
                         tabIndex={-1}
                         key={index}
@@ -340,32 +339,6 @@ export default function Orders({ editor }) {
                 </Backdrop>
               )}
             </TableBody>
-
-            {/* <TableFooter>
-              <div className="flex w-full gap-2 mt-2 mb-4 ml-2">
-                <button
-                  className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded-md"
-                  onClick={() => {
-                    setSelectedRow(null);
-                    fetchOrders("prev");
-                  }}
-                  disabled={!lastDocument || loading}
-                >
-                  Anterior
-                </button>
-
-                <button
-                  className="bg-green-200 hover:bg-green-300 px-4 py-2 rounded-md"
-                  onClick={() => {
-                    setSelectedRow(null);
-                    fetchOrders("next");
-                  }}
-                  disabled={!hasMore || loading}
-                >
-                  Siguiente
-                </button>
-              </div>
-            </TableFooter> */}
           </table>
         </TableContainer>
         {/* <TablePagination

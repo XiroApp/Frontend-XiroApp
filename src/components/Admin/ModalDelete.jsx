@@ -1,5 +1,5 @@
 import propTypes from "prop-types";
-import { initProd } from "../../Common/constants.js";
+import { initLibraryProd } from "../../Common/constants.js";
 import { deleteDoc, doc } from "firebase/firestore/lite";
 import { useDispatch } from "react-redux";
 import { setToast } from "../../redux/actions/index.js";
@@ -17,7 +17,7 @@ function ModalDeleteAdmin(props) {
     dispatch = useDispatch();
 
   function resetData() {
-    setProductSelected(initProd);
+    setProductSelected(initLibraryProd);
     setShowDeleteModal(false);
   }
 

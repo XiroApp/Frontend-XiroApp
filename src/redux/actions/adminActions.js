@@ -94,7 +94,7 @@ export function getAllCoupons() {
 export function getAllOrders(pageToken) {
   return async function (dispatch) {
     try {
-      const url = `${baseUrl}/orders`;
+      let url = `${baseUrl}/orders`;
 
       if (pageToken) {
         url += `?pageToken=${pageToken}`;
@@ -103,7 +103,7 @@ export function getAllOrders(pageToken) {
       let response = await axios.get(url);
 
       let sortedOrders = response.data
-        .map((order) => {
+        .map(order => {
           console.log(order);
 
           const fechaStr = order.paymentData.date_created;
@@ -239,10 +239,10 @@ export function changeOrderStatus({
         }
       );
 
+      
       // let formatedOrders = response.data.map((order) => {
       //   const fechaStr = order.paymentData.date_created;
       //   const fecha = new Date(fechaStr);
-
       //   const dia = fecha.getDate().toString().padStart(2, "0");
       //   const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
       //   const año = fecha.getFullYear();

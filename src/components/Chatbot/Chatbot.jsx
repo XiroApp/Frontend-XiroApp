@@ -1,23 +1,21 @@
-import { Button } from "@mui/material";
-import React from "react";
-import HeadsetMicIcon from "@mui/icons-material/HeadsetMic";
 import { WhatsApp } from "@mui/icons-material";
 
 export default function Chatbot() {
   return (
     <a
+      rel="noreferrer"
       target="_blank"
-      href="https://wa.me/5492616362351?text=Hola, deseo comunicarme con el soporte de XIRO."
-      className="fixed z-30 bottom-5 right-5"
+      href="https://wa.me/5492616362351?text=Hola, deseo comunicarme con el soporte de XIRO..."
+      className="fixed z-30 bottom-6 right-8 transition-colors hover:bg-green-500 bg-green-400 rounded-full p-2 border-2 border-green-500 outline-none"
     >
-      <Button
-        variant="contained"
-        sx={{ borderRadius: "100%", height: "5em", width: "5em" }}
-      >
-        <WhatsApp
-          sx={{ borderRadius: "100%", height: "1.6em", width: "1.6em" }}
-        />
-      </Button>
+      <WhatsApp
+        sx={{
+          color: "#fff",
+          borderRadius: "100%",
+          height: "2.3em",
+          width: "2.3em",
+        }}
+      />
     </a>
   );
 }

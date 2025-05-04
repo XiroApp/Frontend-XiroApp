@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../../../components/Navbar/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import xiro_outline_green from "../../../utils/assets/images/xiro-head-outline-green.png";
@@ -20,6 +20,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Link, useNavigate } from "react-router-dom";
 import OrderCard from "../../../components/Cart/OrderCard";
+import LibraryItemCart from "../../../components/Cart/LibraryItemCart";
 import {
   deleteAllCart,
   setOrderPlace,
@@ -32,7 +33,7 @@ import axios from "axios";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import { ApiConstants } from "../../../Common/constants";
 import { getDeliveryPricingByDistance } from "../../../utils/controllers/pricing.controller";
-import { formatPrice } from "../../../Common/helpers";
+import { formatPrice, len } from "../../../Common/helpers";
 import { ArrowRight } from "@mui/icons-material";
 
 const baseUrl = Settings.SERVER_URL;
@@ -40,63 +41,64 @@ const steps = ["Detalles", "Resumen", "Pago"];
 const PUBLIC_KEY = ApiConstants.MERCADOPAGO_PUBLIC_KEY;
 
 export default function Cart() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const user = useSelector((state) => state.dataBaseUser);
-  const place = useSelector((state) => state.place);
-  const cart = useSelector((state) => state.cart);
-  const coupon = useSelector((state) => state.coupon);
-  const pricing = useSelector((state) => state.pricing);
-  const distance = useSelector((state) => state.distance);
-  const [shipment, setShipment] = useState(null);
-  const [delivery_distance, setDelivery_distance] = useState({
-    text: null,
-    value: null,
-    uidDistribution: null,
-    uidPickup: null,
-  });
+  const dispatch = useDispatch(),
+    navigate = useNavigate(),
+    user = useSelector(state => state.dataBaseUser),
+    place = useSelector(state => state.place),
+    cart = useSelector(state => state.cart),
+    coupon = useSelector(state => state.coupon),
+    pricing = useSelector(state => state.pricing),
+    distance = useSelector(state => state.distance),
+    libraryCart = useSelector(state => state.libraryCart),
+    [shipment, setShipment] = useState(null),
+    [delivery_distance, setDelivery_distance] = useState({
+      text: null,
+      value: null,
+      uidDistribution: null,
+      uidPickup: null,
+    }),
+    [mercadoPagoModal, setmercadoPagoModal] = useState(false),
+    handleClosemercadoPagoModal = () => {
+      setmercadoPagoModal(false);
+    },
+    totalReduce = cart?.reduce(
+      (acumm, order) => acumm + Number(order.total),
+      0
+    ),
+    librarySubtotal =
+      libraryCart?.reduce(
+        (acc, i) => acc + Number(i.price) * Number(i.quantity),
+        0
+      ) || 0,
+    [total, setTotal] = useState(0),
+    subtotal = totalReduce + librarySubtotal,
+    [showEditModal, setShowEditModal] = useState({
+      show: false,
+      orderToEdit: null,
+    }),
+    [choosePlace, setChoosePlace] = useState(false),
+    [editComment, setEditComment] = useState(false),
+    [cuponInput, setCuponInput] = useState(false),
+    [preferenceId, setPreferenceId] = useState(null),
+    [activeStep, setActiveStep] = useState(0),
+    [skipped, setSkipped] = useState(new Set()),
+    [orderToSend, setOrderTosend] = useState({
+      orders: cart,
+      place: place,
+      availability: "Mañana",
+      description: "",
+      coupon: coupon || "Sin cupones agregados.",
+    }),
+    subtotalLibrary = libraryCart.reduce(
+      (acc, i) => acc + Number(i.price) * Number(i.quantity),
+      0
+    );
 
-  /* DELETE BUTTON */
-  const [mercadoPagoModal, setmercadoPagoModal] = useState(false);
-  const handleClosemercadoPagoModal = () => {
-    setmercadoPagoModal(false);
-  };
-
-  /* PRICING */
-  const initialValue = 0;
-  const totalReduce = cart?.reduce(
-    (acumm, order) => acumm + Number(order.total),
-    initialValue
-  );
-
-  // console.log(totalReduce);
-
-  const [total, setTotal] = useState(0);
-  const subtotal = totalReduce;
-
-  // const total = subtotal + shipment - coupon.ammount;
-
-  const [showEditModal, setShowEditModal] = useState({
-    show: false,
-    orderToEdit: null,
-  });
-  const [choosePlace, setChoosePlace] = useState(false);
-  const [editComment, setEditComment] = useState(false);
-  const [cuponInput, setCuponInput] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
-  const [skipped, setSkipped] = useState(new Set());
-  const [orderToSend, setOrderTosend] = useState({
-    orders: cart,
-    place: place,
-    availability: "Mañana",
-    description: "",
-    coupon: coupon || "Sin cupones agregados.",
-  });
 
   useEffect(() => {
     setOrderTosend({ ...orderToSend, place: place });
     if (place?.type === "Retiro") {
-      setShipment(600); // PELIGRO! CAMBIAR POR PRECIO DE DB NUEVO DE RETIROS EN PUNTO DE ENTREGA
+      setShipment(600); //! PELIGRO CAMBIAR POR PRECIO DE DB NUEVO DE RETIROS EN PUNTO DE ENTREGA
       setDelivery_distance(distance);
     } else {
       let km_value = distance?.value / 1000;
@@ -116,7 +118,7 @@ export default function Cart() {
 
   const isStepOptional = (step) => {
     return step === 4;
-  }; //AQUI LOS INDICES DE PASOS OPCIONALES
+  };
 
   const isStepSkipped = (step) => {
     return skipped.has(step);
@@ -184,14 +186,11 @@ export default function Cart() {
     navigate("/");
   };
 
-  const [preferenceId, setPreferenceId] = useState(null);
   useEffect(() => {
-    initMercadoPago(PUBLIC_KEY, {
-      locale: "es-AR",
-    });
+    initMercadoPago(PUBLIC_KEY, { locale: "es-AR" });
   }, []);
 
-  const createPreference = async () => {
+  async function createPreference() {
     try {
       const response = await axios.post(`${baseUrl}/payment/newpayment`, {
         client_uid: user.uid,
@@ -209,31 +208,20 @@ export default function Cart() {
       });
       const id = response.data;
       return id;
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error(`catch 'createPreference' ${err.message}`);
     }
-  };
+  }
 
   const customization = {
-    /*  checkout: {
-      theme: {
-        elementsColor: "#031020",
-        headerColor: "#031020",
-      },
-    }, */
-    /*   texts: {
-    action: 'buy',
-    valueProp: 'practicaly',
-  }, */
     visual: {
       buttonBackground: "",
       borderRadius: "6px",
     },
   };
-  /* --------- */
 
   return (
-    <div className={"h-screen w-screen flex flex-col items-center"}>
+    <div className="h-screen w-screen flex flex-col items-center">
       {showEditModal.show ? (
         <EditOrderModal
           orderToEdit={showEditModal.orderToEdit}
@@ -243,18 +231,13 @@ export default function Cart() {
       ) : (
         <>
           <Navbar title="Carrito" loggedUser={user} cart={cart} />
-          <section className="w-11/12 flex justify-center items-center pb-28 mt-3">
-            {choosePlace ? (
+          <section className="pt-6 w-11/12 flex justify-center items-center pb-28 mt-3">
+            {choosePlace && (
               <ChoosePlaceModal
                 choosePlace={choosePlace}
                 setChoosePlace={setChoosePlace}
-                // resume={resume}
-                // setResume={setResume}
               />
-            ) : (
-              false
             )}
-            {/* <Chatbot /> */}
             <Box sx={{ width: "100%" }}>
               <Stepper activeStep={activeStep}>
                 {steps.map((label, index) => {
@@ -273,13 +256,13 @@ export default function Cart() {
                       <StepLabel
                         sx={{
                           "& .MuiStepIcon-root.Mui-completed": {
-                            color: "green", // Cambia el color del check aquí
+                            color: "green",
                           },
                           "& .MuiStepIcon-root.Mui-active": {
-                            color: "green", // Cambia el color del icono activo
+                            color: "green",
                           },
                           "& .MuiStepIcon-root": {
-                            color: "gray", // Cambia el color del icono inactivo
+                            color: "gray",
                           },
                         }}
                         {...labelProps}
@@ -291,7 +274,7 @@ export default function Cart() {
                 })}
               </Stepper>
               {activeStep === steps.length ? (
-                <React.Fragment>
+                <>
                   <Typography sx={{ mt: 2, mb: 1 }}>
                     Todos los pasos completados
                   </Typography>
@@ -299,18 +282,17 @@ export default function Cart() {
                     <Box sx={{ flex: "1 1 auto" }} />
                     <Button onClick={handleReset}>Resetear</Button>
                   </Box>
-                </React.Fragment>
+                </>
               ) : (
-                <React.Fragment>
+                <>
                   <section className="flex flex-col bg-[#fff] p-5 mt-4 rounded-t-md">
                     {activeStep === 0 ? (
                       <div className="flex  flex-col gap-4">
-                        {/* 1 */}
                         <div className="flex flex-col gap-3">
                           <section className="flex items-center border-b border-[#789360] pb-2 gap-2">
                             <img
                               src={xiro_outline_green}
-                              alt=""
+                              alt="logo"
                               className="w-8 h-8 object-contain"
                             />
                             <Typography variant="h6">1</Typography>
@@ -319,31 +301,72 @@ export default function Cart() {
                             </Typography>
                           </section>
                           <section className="flex h-full gap-4 overflow-auto">
-                            {cart?.map((order, index) => (
-                              <OrderCard
-                                key={index}
-                                order={order}
-                                user={user}
-                                showEditModal={showEditModal}
-                                setShowEditModal={setShowEditModal}
-                              />
-                            ))}
+                            {len(cart) > 0 ? (
+                              cart?.map((order, index) => (
+                                <OrderCard
+                                  key={index}
+                                  order={order}
+                                  user={user}
+                                  showEditModal={showEditModal}
+                                  setShowEditModal={setShowEditModal}
+                                />
+                              ))
+                            ) : (
+                              <p className="border-2 px-6 py-2 rounded-md border-slate-300">
+                                No tienes impresiones agregadas
+                              </p>
+                            )}
                           </section>
                           <Link
                             to="/imprimir"
                             className="w-fit text-[14px] text-green-900 hover:underline hover:text-green-700"
                           >
-                            +&nbsp;Agregar más productos
+                            +&nbsp;Agregar {len(cart) > 0 && "más "}impresiones
                           </Link>
                         </div>
+
                         <div className="flex flex-col gap-3">
                           <section className="flex items-center border-b border-[#789360] pb-2 gap-2">
                             <img
                               src={xiro_outline_green}
-                              alt=""
+                              alt="logo"
                               className="w-8 h-8 object-contain"
                             />
                             <Typography variant="h6">2</Typography>
+                            <Typography variant="h6">
+                              Artículos de librería
+                            </Typography>
+                          </section>
+                          <div className="flex flex-col justify-start items-start gap-y-2 pt-2">
+                            {len(libraryCart) > 0 ? (
+                              <ul className="w-full max-w-xl space-y-2">
+                                {libraryCart?.map(item => (
+                                  <LibraryItemCart key={item.id} item={item} />
+                                ))}
+                              </ul>
+                            ) : (
+                              <p className="border-2 px-6 py-2 rounded-md border-slate-300">
+                                No tienes artículos agregados
+                              </p>
+                            )}
+                          </div>
+                          <Link
+                            to="/?libreria"
+                            className="pb-2 w-fit text-[14px] text-green-900 hover:underline hover:text-green-700"
+                          >
+                            +&nbsp;Agregar {len(libraryCart) > 0 && "más "}
+                            artículos de librería
+                          </Link>
+                        </div>
+
+                        <div className="flex flex-col gap-3">
+                          <section className="flex items-center border-b border-[#789360] pb-2 gap-2">
+                            <img
+                              src={xiro_outline_green}
+                              alt="logo"
+                              className="w-8 h-8 object-contain"
+                            />
+                            <Typography variant="h6">3</Typography>
                             <Typography variant="h6">
                               Forma de entrega
                             </Typography>
@@ -402,10 +425,10 @@ export default function Cart() {
                           <section className="flex items-center border-b border-[#789360] pb-2 gap-2">
                             <img
                               src={xiro_outline_green}
-                              alt=""
+                              alt="logo"
                               className="w-8 h-8 object-contain"
                             />
-                            <Typography variant="h6">3</Typography>
+                            <Typography variant="h6">4</Typography>
                             <Typography variant="h6">Comentarios</Typography>
                           </section>
                           <section className="flex flex-col justify-start">
@@ -431,33 +454,69 @@ export default function Cart() {
                         <span className="text-[20px] font-[400]">
                           Resumen del pedido
                         </span>
-                        {/* resumen detallado */}
-                        <div className="flex flex-col gap-6  ">
+                        <div className="flex flex-col gap-6 pl-4">
                           <section className="flex flex-col">
-                            <span className="opacitytext-[16px] font-[400]">
+                            <span className="underline text-[16px] font-[400]">
                               Detalles de impresión
                             </span>
-                            <div className="flex flex-col">
-                              {orderToSend.orders.map((order, index) => (
-                                <span
-                                  key={index}
-                                  className=" text-[14px] font-[400]"
-                                >
-                                  Impresión{" "}
-                                  {order.color === "BN"
-                                    ? "en blanco y negro"
-                                    : "a color"}{" "}
-                                  {order.size} x{" "}
-                                  {order.numberOfCopies > 1
-                                    ? `${order.numberOfCopies} copias.`
-                                    : `${order.numberOfCopies} copia.`}
-                                </span>
-                              ))}
-                            </div>
+                            {len(cart) > 0 ? (
+                              <ul className="flex flex-col">
+                                {orderToSend.orders.map((order, index) => (
+                                  <li
+                                    key={index}
+                                    className="text-[14px] font-[400]"
+                                  >
+                                    * Impresión{" "}
+                                    {order.color == "BN"
+                                      ? "en blanco y negro"
+                                      : "a color"}
+                                    {" " + order.size}
+                                    {order.numberOfCopies > 1
+                                      ? ` - x${order.numberOfCopies} copias`
+                                      : ` - x${order.numberOfCopies} copia`}
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <Link
+                                to="/imprimir"
+                                className="mt-1 w-fit text-[14px] text-green-900 hover:underline hover:text-green-700"
+                              >
+                                +&nbsp;Agregar impresiones
+                              </Link>
+                            )}
                           </section>
 
                           <section className="flex flex-col">
-                            <span className="opacity text-[16px] font-[400]">
+                            <span className="underline text-[16px] font-[400]">
+                              Artículos de librería
+                            </span>
+                            {len(libraryCart) > 0 ? (
+                              <ul className="flex flex-col">
+                                {libraryCart.map(order => (
+                                  <li
+                                    key={order.id}
+                                    className="text-[14px] font-[400]"
+                                  >
+                                    * {order.name} - x{order.quantity}{" "}
+                                    {order.quantity == 1
+                                      ? "unidad"
+                                      : "unidades"}
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <Link
+                                to="/?libreria"
+                                className="mt-1 w-fit text-[14px] text-green-900 hover:underline hover:text-green-700"
+                              >
+                                +&nbsp;Agregar artículos de librería
+                              </Link>
+                            )}
+                          </section>
+
+                          <section className="flex flex-col">
+                            <span className="underline text-[16px] font-[400]">
                               Forma de entrega
                             </span>
 
@@ -466,7 +525,7 @@ export default function Cart() {
                             </span>
                           </section>
                           <section className="flex flex-col">
-                            <span className="opacity text-[16px] font-[400]">
+                            <span className="underline text-[16px] font-[400]">
                               Dirección
                             </span>
 
@@ -474,20 +533,11 @@ export default function Cart() {
                               {`${orderToSend?.place?.address?.name} N°${orderToSend?.place?.address?.number}, ${orderToSend?.place?.address?.locality}, ${orderToSend?.place?.address?.city}`}
                             </span>
                           </section>
-                          {/* <section className="flex flex-col">
-                            <span className="opacitytext-[16px] font-[400]">
-                              Preferencia horaria (El horario concreto se
-                              coordinará por WhatsApp)
-                            </span>
-                            <section>
-                              <span className=" text-[14px] font-[400]">
-                                De {orderToSend.availability}
-                              </span>
-                            </section>
-                          </section> */}
+
                           <section className="flex flex-col">
                             <div className="flex justify-between">
-                              <span className="text-[16px] font-[400] mb-1">
+
+                              <span className="underline text-[16px] font-[400] mb-1">
                                 Instrucciones de entrega
                               </span>
                               <button
@@ -514,8 +564,8 @@ export default function Cart() {
                             )}
                           </section>
                         </div>
-                        <div className="flex flex-col">
-                          <span className="opacitytext-[16px] font-[400] mb-1">
+                        <div className="flex flex-col pl-4">
+                          <span className="underline text-[16px] font-[400] mb-1">
                             Cupones
                           </span>
                           <section className="flex justify-between gap-4">
@@ -543,17 +593,23 @@ export default function Cart() {
                         </div>
                         {coupon ? (
                           <>
-                            <div className="flex flex-col gap-2">
-                              <section className="flex justify-between">
+                            <div className="flex flex-col gap-2 pl-4">
+                              <div className="flex justify-between">
                                 <span className=" text-[16px] font-[400]">
-                                  Subtotal del pedido
+                                  Subtotal de librería
+                                </span>
+                                <span>${formatPrice(subtotalLibrary)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="underline text-[16px] font-[400]">
+                                  Subtotal de impresiones
                                 </span>
                                 <span>${formatPrice(subtotal)}</span>
-                              </section>
+                              </div>
 
                               <section className="flex justify-between">
-                                <span className=" text-[16px] font-[400]">
-                                  Cupón de descuento ( {coupon?.code} )
+                                <span className="text-[16px] font-[400]">
+                                  Cupón de descuento: {coupon?.code}
                                 </span>
                                 <span className="text-green-500">
                                   {coupon.type[0] === "%"
@@ -589,17 +645,24 @@ export default function Cart() {
                           </>
                         ) : (
                           <>
-                            <div className="flex flex-col gap-2">
-                              <section className="flex justify-between">
+                            <div className="flex flex-col gap-2 pl-4">
+                              <div className="flex justify-between">
                                 <span className=" text-[16px] font-[400]">
-                                  Subtotal del pedido
+                                  Subtotal de librería
+                                </span>
+                                <span>${formatPrice(subtotalLibrary)}</span>
+                              </div>
+
+                              <div className="flex justify-between">
+                                <span className=" text-[16px] font-[400]">
+                                  Subtotal de impresiones
                                 </span>
                                 <span>${formatPrice(subtotal)}</span>
-                              </section>
+                              </div>
 
                               <section className="flex justify-between">
                                 <span className="text-[16px] font-[400]">
-                                  Forma de Entrega:&nbsp;
+                                  Forma de entrega:&nbsp;
                                   {orderToSend.place.type}
                                 </span>
                                 <span>
@@ -610,7 +673,7 @@ export default function Cart() {
                                 </span>
                               </section>
                             </div>
-                            <div className="border-t border-gray-400 pt-4">
+                            <div className="border-t border-gray-400 pt-4 ml-4">
                               <section className="flex justify-between">
                                 <span className=" text-[24px] font-[500]">
                                   Total
@@ -672,7 +735,6 @@ export default function Cart() {
 
                         <div className="flex justify-center w-full">
                           <Dialog
-                            // fullScreen={fullScreen}
                             open={mercadoPagoModal}
                             onClose={handleClosemercadoPagoModal}
                             aria-labelledby="responsive-dialog-title"
@@ -708,9 +770,6 @@ export default function Cart() {
                                     <Wallet
                                       id="walletButton"
                                       onSubmit={() => {}}
-                                      onReady={() => {
-                                        // navigate("/mercadopago/25")
-                                      }}
                                       initialization={{
                                         preferenceId: preferenceId.id,
                                         redirectMode: "self",
@@ -727,26 +786,23 @@ export default function Cart() {
                         </div>
                       </section>
                     ) : (
-                      false
+                      <></>
                     )}
                   </section>
-                  <Box className="bg-[#fff] rounded-b-md p-4 flex justify-between items-center">
-                    <section onClick={(e) => handleDeleteCart(e)}>
+                  <Box className="bg-[#fff] rounded-b-md p-4 flex justify-between items-center pl-4">
+                    <section onClick={e => handleDeleteCart(e)}>
                       <Button variant="text" color="error">
                         Vaciar carrito
                       </Button>
                     </section>
                     <section>
-                      {activeStep === 0 ? false : false}
                       <Button
                         color="inherit"
-                        // disabled={activeStep === 0}
                         onClick={activeStep === 0 ? backToRoot : handleBack}
                         sx={{ mr: 1 }}
                       >
-                        <span>Volver</span>
+                        <span className="text-lg">Volver</span>
                       </Button>
-
                       {isStepOptional(activeStep) && (
                         <Button
                           color="inherit"
@@ -756,7 +812,6 @@ export default function Cart() {
                           Skip
                         </Button>
                       )}
-
                       {activeStep === steps.length - 1 ? (
                         false
                       ) : activeStep === 0 ? (
@@ -771,16 +826,16 @@ export default function Cart() {
                             )
                           }
                         >
-                          Continuar
+                          <span className="text-lg">Continuar</span>
                         </Button>
                       ) : (
                         <Button variant="contained" onClick={handleNext}>
-                          Continuar
+                          <span className="text-lg">Continuar</span>
                         </Button>
                       )}
                     </section>
                   </Box>
-                </React.Fragment>
+                </>
               )}
             </Box>
           </section>
