@@ -29,7 +29,8 @@ import { getOrdersByClientUid, setToast } from "../../../redux/actions";
 import LibraryStore from "./LibraryStore";
 import { twMerge } from "tailwind-merge";
 import propTypes from "prop-types";
-import AlertModal from "../../../components/Alerts/AlertModal";
+import { ShoppingCart } from "@mui/icons-material";
+// import AlertModal from "../../../components/Alerts/AlertModal";
 
 export default function MyAccount({ cart, dataBaseUser }) {
   const navigate = useNavigate();
@@ -129,7 +130,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
               className="h-16"
             >
               <ListItemIcon>
-                <CartIcon style={{ width: "2.5rem", height: "2.5rem" }} />
+                <ShoppingCart style={{ width: "2.5rem", height: "2.5rem" }} />
               </ListItemIcon>
               <ListItemText style={{}} primary="Librería" />
             </ListItemButton> */}
@@ -293,7 +294,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 className="h-16"
               >
                 <ListItemIcon>
-                  <CartIcon style={{ width: "2.5rem", height: "2.5rem" }} />
+                  <ShoppingCart style={{ width: "2.5rem", height: "2.5rem" }} />
                 </ListItemIcon>
                 <ListItemText style={{}} primary="Librería" />
               </ListItemButton> */}

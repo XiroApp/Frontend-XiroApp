@@ -86,12 +86,12 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               se envian el próximo dia de entrega.
             </p>
             <div className="text-center">
-              <p className="font-bold">Excepción Semana Santa</p>
               <p className="font-bold">
-                Envíos: martes 15/04 y miércoles 16/04.
+                Viernes 02-05: se entregaran solo domicilios y puntos de entrega
+                locales comerciales.
               </p>
               <p className="font-bold underline">
-                <span>Próxima entrega: Martes 22/04.</span>
+                <span>Universidad proxima entrega 06-05-25</span>
               </p>
             </div>
           </section>

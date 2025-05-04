@@ -14,13 +14,13 @@ export default function LibraryStore() {
     [searchTerm, setSearchTerm] = useState(""),
     [quantities, setQuantities] = useState({}),
     filteredProducts = searchProducts(),
-    productsCart = useSelector(state => state.libraryCart || []),
-    inCart = prodId => productsCart.some(p => p.id == prodId);
+    productsCart = useSelector((state) => state.libraryCart || []),
+    inCart = (prodId) => productsCart.some((p) => p.id == prodId);
 
   useEffect(() => {
     setLoading(true);
     getProducts()
-      .then(newProducts => setProducts(newProducts))
+      .then((newProducts) => setProducts(newProducts))
       .finally(() => setLoading(false));
   }, []);
 
@@ -36,20 +36,20 @@ export default function LibraryStore() {
   function searchProducts() {
     return searchTerm.trim() == ""
       ? products
-      : products.filter(p =>
+      : products.filter((p) =>
           normalizeStr(p.name).includes(normalizeStr(searchTerm))
         );
   }
 
   function handleQuantity(prodId, val) {
-    setQuantities(prev => ({
+    setQuantities((prev) => ({
       ...prev,
       [prodId]: Math.min(Math.max(1, val), 10),
     }));
   }
 
   return (
-    <section className="w-full bg-white flex justify-start items-start rounded-2xl h-screen flex-col relative">
+    <section className="w-full bg-white flex justify-start items-start rounded-2xl h-screen flex-col relative h-[82vh]">
       <div className="sticky rounded-2xl top-0 left-0 right-0 bg-white z-20 px-4 sm:px-8 py-4 border-b w-full">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-4 sm:gap-8">
           <p className="text-3xl sm:text-4xl font-semibold text-slate-850 pl-2">
@@ -69,7 +69,7 @@ export default function LibraryStore() {
                 type="search"
                 placeholder="Busca productos..."
                 value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full sm:w-[280px] px-4 py-2 rounded-lg border-[1.5px] pl-10 bg-slate-200/90 placeholder:text-slate-600 border-green-400 focus:outline-none h-12"
               />
             </div>
@@ -81,12 +81,12 @@ export default function LibraryStore() {
         {loading ? (
           <p className="w-full text-center p-2 text-lg">Cargando...</p>
         ) : (
-          <ul className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <ul className="w-full flex flex-wrap justify-start items-start gap-6">
             {len(filteredProducts) > 0 &&
-              filteredProducts.map(p => (
+              filteredProducts.map((p) => (
                 <li
                   key={p.id}
-                  className="flex justify-between flex-col items-center bg-[#fef9e9] p-2 rounded-xl border border-black w-[280px] mx-auto sm:w-full h-[340px] transition-all"
+                  className="flex justify-between flex-col items-center bg-[#fef9e9] p-2 rounded-xl border border-black w-[280px]  h-[340px] transition-all"
                 >
                   <header className="w-full h-40 mb-3">
                     <img
@@ -123,7 +123,7 @@ export default function LibraryStore() {
                             min={1}
                             max={10}
                             value={quantities[p.id] || 1}
-                            onChange={e =>
+                            onChange={(e) =>
                               handleQuantity(p.id, parseInt(e.target.value))
                             }
                             className="w-[50px] p-1 text-center rounded border border-green-400 focus:outline-none focus:border-green-600"
@@ -173,7 +173,7 @@ async function getProducts() {
 
   try {
     const query = await getDocs(PRODUCTS_TABLE);
-    const data = query.docs.map(doc => ({
+    const data = query.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));

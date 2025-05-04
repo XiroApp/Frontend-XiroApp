@@ -14,7 +14,7 @@ import Navbar from "../../components/Navbar/Navbar";
 import Coupons from "./Menu/Coupons";
 import Pricing from "./Menu/Pricing";
 import Orders from "./Menu/Orders";
-import { StickyNote2 } from "@mui/icons-material";
+import { ShoppingBag, StickyNote2 } from "@mui/icons-material";
 import Texts from "./Menu/Texts";
 import LibraryPanel from "../../components/Admin/LibraryPanel";
 
