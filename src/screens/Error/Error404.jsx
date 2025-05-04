@@ -1,13 +1,17 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 export default function Error404() {
   return (
     <div className="mt-56 flex  flex-col justify-center items-center">
-      <span>Página no disponible.</span>
+      <p className="text-4xl uppercase bg-green-200 px-6 py-3 rounded-lg">
+        Página no encontrada
+      </p>
 
-      <Link to={"/login"}>
-        <button className="bg-gray-500 p-5 m-5 rounded-xl">Ir al inicio</button>
+      <Link
+        className="mt-10 bg-green-400 hover:bg-green-300 transition-colors border-2 border-green-300 text-2xl px-6 py-4 rounded-lg "
+        to="/login"
+      >
+        Ir al inicio
       </Link>
     </div>
   );

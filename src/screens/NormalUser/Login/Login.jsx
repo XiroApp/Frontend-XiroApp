@@ -2,7 +2,7 @@ import "./Login.css";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../context/authContext";
 import logoGoogle from "../../../utils/assets/images/icon-google.png";
-import loginImage from "../../../utils/assets/images/xiro-head.png";
+import loginImage from "/xiro-head.webp";
 import Button from "@mui/material/Button";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -318,6 +318,6 @@ export default function Login({ loggedUser, dataBaseUser }) {
 }
 
 Login.propTypes = {
-  loggedUser: propTypes.bool,
-  dataBaseUser: propTypes.bool,
+  loggedUser: propTypes.object,
+  dataBaseUser: propTypes.object,
 };

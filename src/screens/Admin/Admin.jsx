@@ -8,24 +8,24 @@ import ListItemText from "@mui/material/ListItemText";
 import PersonIcon from "@mui/icons-material/Person";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import PriceChangeIcon from "@mui/icons-material/PriceChange";
+import InventoryIcon from "@mui/icons-material/Inventory";
 import { Avatar, Box, Drawer } from "@mui/material";
 import UsersApp from "./Menu/UsersApp";
 import Navbar from "../../components/Navbar/Navbar";
 import Coupons from "./Menu/Coupons";
 import Pricing from "./Menu/Pricing";
 import Orders from "./Menu/Orders";
-import { StickyNote2 } from "@mui/icons-material";
+import { ShoppingBag, StickyNote2 } from "@mui/icons-material";
 import Texts from "./Menu/Texts";
 import LibraryPanel from "../../components/Admin/LibraryPanel";
+import TyCEditContent from "./Menu/TyCEditContent";
 
-export default function Admin({ cart, dataBaseUser }) {
+export default function Admin() {
   const user = useSelector(state => state.dataBaseUser);
-
   const users = useSelector(state => state.usersApp);
 
   let { photoURL, email, displayName } = user;
 
-  /* Lógica de hamburguesa */
   const [dataRender, setDataRender] = useState("orders");
   const [state, setState] = useState({
     left: false,
@@ -58,117 +58,155 @@ export default function Admin({ cart, dataBaseUser }) {
           <span className="text-2xl">{displayName}</span>
           <span className="text-[1em] opacity-60">{email}</span>
         </div>
-        {/* MENU */}
-        <div className="">
-          <List
-            sx={{ opacity: 0.8 }}
-            component="nav"
-            aria-labelledby="nested-list-subheader"
+        <List
+          sx={{ opacity: 0.8 }}
+          component="nav"
+          aria-labelledby="nested-list-subheader"
+        >
+          DATOS
+          <ListItemButton
+            onClick={() => setDataRender("users")}
+            sx={
+              dataRender === "users"
+                ? {
+                    backgroundColor: "#458552",
+                    borderRadius: "10px",
+                    color: "#fff",
+                    ":hover": { backgroundColor: "#458552" },
+                  }
+                : { borderRadius: "10px" }
+            }
+            className="h-16"
           >
-            DATOS
-            <ListItemButton
-              onClick={e => setDataRender("users")}
-              sx={
-                dataRender === "users"
-                  ? { backgroundColor: "#458552", borderRadius: "10px" }
-                  : { borderRadius: "10px" }
-              }
-              className="h-16"
-            >
-              <ListItemIcon>
-                <PersonIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
-              </ListItemIcon>
-              <ListItemText primary="Usuarios" />
-            </ListItemButton>
-            {/* <ListItemButton
-              onClick={() => setDataRender("library")}
-              sx={
-                dataRender === "library"
-                  ? { backgroundColor: "#458552", borderRadius: "10px" }
-                  : { borderRadius: "10px" }
-              }
-              className="h-16"
-            >
-              <ListItemIcon>
-                <ShoppingBag sx={{ width: "2.5rem", height: "2.5rem" }} />
-              </ListItemIcon>
-              <ListItemText style={{}} primary="Librería" />
-            </ListItemButton> */}
-            <ListItemButton
-              onClick={e => setDataRender("orders")}
-              sx={
-                dataRender === "orders"
-                  ? { backgroundColor: "#458552", borderRadius: "10px" }
-                  : { borderRadius: "10px" }
-              }
-              className="h-16"
-            >
-              <ListItemIcon>
-                <PriceChangeIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
-              </ListItemIcon>
-              <ListItemText primary="Pedidos" />
-            </ListItemButton>
-            <ListItemButton
-              onClick={e => setDataRender("pricing")}
-              sx={
-                dataRender === "pricing"
-                  ? { backgroundColor: "#458552", borderRadius: "10px" }
-                  : { borderRadius: "10px" }
-              }
-              className="h-16"
-            >
-              <ListItemIcon>
-                <PriceChangeIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
-              </ListItemIcon>
-              <ListItemText primary="Precios" />
-            </ListItemButton>
-            <ListItemButton
-              onClick={e => setDataRender("coupons")}
-              sx={
-                dataRender === "coupons"
-                  ? { backgroundColor: "#458552", borderRadius: "10px" }
-                  : { borderRadius: "10px" }
-              }
-              className="h-16"
-            >
-              <ListItemIcon>
-                <ConfirmationNumberIcon
-                  sx={{ width: "2.5rem", height: "2.5rem" }}
-                />
-              </ListItemIcon>
-              <ListItemText style={{}} primary="Cupones" />
-            </ListItemButton>
-            TEXTOS IN APP
-            <ListItemButton
-              onClick={e => setDataRender("Texts")}
-              sx={
-                dataRender === "Texts"
-                  ? { backgroundColor: "#458552", borderRadius: "10px" }
-                  : { borderRadius: "10px" }
-              }
-              className="h-16"
-            >
-              <ListItemIcon>
-                <StickyNote2 sx={{ width: "2.5rem", height: "2.5rem" }} />
-              </ListItemIcon>
-              <ListItemText primary="Textos" />
-            </ListItemButton>
-          </List>
-        </div>
+            <ListItemIcon>
+              <PersonIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
+            </ListItemIcon>
+            <ListItemText primary="Usuarios" />
+          </ListItemButton>
+          <ListItemButton
+            onClick={() => setDataRender("library")}
+            sx={
+              dataRender === "library"
+                ? {
+                    backgroundColor: "#458552",
+                    borderRadius: "10px",
+                    color: "#fff",
+                  }
+                : { borderRadius: "10px" }
+            }
+            className="h-16"
+          >
+            <ListItemIcon>
+              <ShoppingBag sx={{ width: "2.5rem", height: "2.5rem" }} />
+            </ListItemIcon>
+            <ListItemText primary="Librería" />
+          </ListItemButton>
+          <ListItemButton
+            onClick={() => setDataRender("orders")}
+            sx={
+              dataRender === "orders"
+                ? {
+                    backgroundColor: "#458552",
+                    borderRadius: "10px",
+                    color: "#fff",
+                    ":hover": { backgroundColor: "#458552" },
+                  }
+                : { borderRadius: "10px" }
+            }
+            className="h-16"
+          >
+            <ListItemIcon>
+              <InventoryIcon sx={{ width: "2.3rem", height: "2.3rem" }} />
+            </ListItemIcon>
+            <ListItemText primary="Pedidos" />
+          </ListItemButton>
+          <ListItemButton
+            onClick={() => setDataRender("pricing")}
+            sx={
+              dataRender === "pricing"
+                ? {
+                    backgroundColor: "#458552",
+                    borderRadius: "10px",
+                    color: "#fff",
+                    ":hover": { backgroundColor: "#458552" },
+                  }
+                : { borderRadius: "10px" }
+            }
+            className="h-16"
+          >
+            <ListItemIcon>
+              <PriceChangeIcon sx={{ width: "2.5rem", height: "2.5rem" }} />
+            </ListItemIcon>
+            <ListItemText primary="Precios" />
+          </ListItemButton>
+          <ListItemButton
+            onClick={() => setDataRender("coupons")}
+            sx={
+              dataRender === "coupons"
+                ? {
+                    backgroundColor: "#458552",
+                    borderRadius: "10px",
+                    color: "#fff",
+                    ":hover": { backgroundColor: "#458552" },
+                  }
+                : { borderRadius: "10px" }
+            }
+            className="h-16"
+          >
+            <ListItemIcon>
+              <ConfirmationNumberIcon
+                sx={{ width: "2.5rem", height: "2.5rem" }}
+              />
+            </ListItemIcon>
+            <ListItemText primary="Cupones" />
+          </ListItemButton>
+          <ListItemButton
+            onClick={() => setDataRender("Texts")}
+            sx={
+              dataRender === "Texts"
+                ? {
+                    backgroundColor: "#458552",
+                    borderRadius: "10px",
+                    color: "#fff",
+                    ":hover": { backgroundColor: "#458552" },
+                  }
+                : { borderRadius: "10px" }
+            }
+            className="h-16"
+          >
+            <ListItemIcon>
+              <StickyNote2 sx={{ width: "2.5rem", height: "2.5rem" }} />
+            </ListItemIcon>
+            <ListItemText primary="Textos" />
+          </ListItemButton>
+          <ListItemButton
+            onClick={() => setDataRender("tycEditContent")}
+            sx={
+              dataRender === "tycEditContent"
+                ? {
+                    backgroundColor: "#458552",
+                    borderRadius: "10px",
+                    color: "#fff",
+                    ":hover": { backgroundColor: "#458552" },
+                  }
+                : { borderRadius: "10px" }
+            }
+            className="h-16"
+          >
+            <ListItemIcon>
+              <StickyNote2 sx={{ width: "2.5rem", height: "2.5rem" }} />
+            </ListItemIcon>
+            <ListItemText primary="Términos y Condiciones" />
+          </ListItemButton>
+        </List>
       </section>
     </Box>
   );
 
   return (
     <>
-      <Navbar
-        loggedUser={dataBaseUser}
-        title={"Modo Administrador"}
-        hideLogo={true}
-      />
+      <Navbar loggedUser={user} title={"Modo Administrador"} hideLogo={true} />
       <div className="flex justify-center gap-5 p-5 ">
-        {/* <Chatbot /> */}
-        {/* HAMBURGUESA - MENU MOBILE*/}
         <span className=" fixed top-5 left-5 z-50 ">
           <MenuIcon onClick={toggleDrawer("left", true)} className="" />
           <Drawer
@@ -180,7 +218,6 @@ export default function Admin({ cart, dataBaseUser }) {
           </Drawer>
         </span>
 
-        {/* ALL DATA */}
         <section className="bg-[#fff] rounded-2xl flex flex-col gap-5 justify-center  z-10 overflow-auto w-full">
           {dataRender === "users" ? (
             <UsersApp users={users} />
@@ -194,6 +231,8 @@ export default function Admin({ cart, dataBaseUser }) {
             <Texts user={user} />
           ) : dataRender === "library" ? (
             <LibraryPanel />
+          ) : dataRender === "tycEditContent" ? (
+            <TyCEditContent />
           ) : (
             <UsersApp user={user} />
           )}

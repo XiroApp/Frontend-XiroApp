@@ -5,7 +5,7 @@ import { collection, getDocs } from "firebase/firestore/lite";
 import { useEffect, useState } from "react";
 import ModalsAdmin from "./ModalsAdmin";
 import { db } from "../../config/firebase";
-import { initProd } from "../../Common/constants";
+import { initLibraryProd } from "../../Common/constants";
 
 const PRODUCTS_TABLE = collection(db, "products");
 
@@ -19,8 +19,8 @@ export default function LibraryPanel() {
     [showVisibleModal, setShowVisibleModal] = useState(false),
     [showHiddenModal, setShowHiddenModal] = useState(false),
     [showDeleteModal, setShowDeleteModal] = useState(false),
-    [productSelected, setProductSelected] = useState(initProd),
-    [newProduct, setNewProduct] = useState(initProd);
+    [productSelected, setProductSelected] = useState(initLibraryProd),
+    [newProduct, setNewProduct] = useState(initLibraryProd);
 
   useEffect(() => {
     setLoadingProducts(true);
@@ -34,15 +34,14 @@ export default function LibraryPanel() {
     return products.filter(
       p =>
         normalizeStr(p.name).includes(normalizeStr(searchTerm)) ||
-        normalizeStr(p.code).includes(normalizeStr(searchTerm)) ||
-        normalizeStr(String(p.price)).includes(normalizeStr(searchTerm))
+        normalizeStr(p.code).includes(normalizeStr(searchTerm))
     );
   }
 
   return (
     <section className="pt-10 w-full bg-white flex justify-start items-center rounded-2xl h-full flex-col relative">
       {loadingProducts ? (
-        <p>Cargando...</p>
+        <p className="text-2xl pb-20 pt-10">Cargando...</p>
       ) : (
         <div className="w-full flex-1 max-w-[900px] justify-start items-center">
           <div className="flex justify-between items-end mb-6">
@@ -55,9 +54,9 @@ export default function LibraryPanel() {
               <input
                 onChange={e => setSearchTerm(e.target.value)}
                 autoFocus
-                type="search"
+                type="text"
                 placeholder="Busca un producto..."
-                className="bg-slate-200 h-11 rounded-lg text-lg pl-10 pr-2 placeholder:text-slate-700 w-[300px] outline-0 placeholder:select-none text-black border-2 border-slate-500"
+                className="bg-slate-200 h-11 rounded-lg text-lg pl-10 pr-2 placeholder:text-slate-700 w-[300px] outline-0 text-black border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
             <button
@@ -73,11 +72,10 @@ export default function LibraryPanel() {
               <table className="w-full table-auto">
                 <thead>
                   <tr className="bg-gray-200 w-full">
-                    <th className="py-2 w-[80px]">Código</th>
-                    <th className="py-2 w-[80px]">Nombre</th>
-                    <th className="py-2 w-[80px]">Descripción</th>
-                    <th className="py-2 w-[80px]">Precio</th>
-                    <th className="py-2 w-[80px]">Acciones</th>
+                    <th className="py-2 w-1/4">Código</th>
+                    <th className="py-2 w-1/4">Nombre</th>
+                    <th className="py-2 w-1/4">Precio</th>
+                    <th className="py-2 w-1/4">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -95,7 +93,7 @@ export default function LibraryPanel() {
                 </tbody>
               </table>
             ) : (
-              <p className="text-lg lg:text-xl text-black tracking-tight w-full text-center">
+              <p className="text-lg lg:text-2xl py-20 text-black tracking-tight w-full text-center">
                 Sin coincidencias...
               </p>
             )}

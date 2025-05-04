@@ -8,14 +8,13 @@ const ApiConstants = {
     "https://us-central1-xiro-app-2ec87.cloudfunctions.net/api/xiro-app",
 };
 
-const initProd = {
+const initLibraryProd = {
   id: "",
   code: "",
   name: "",
-  description: "",
   price: 0,
   cover: "",
   visible: true,
 };
 
-export { ApiConstants, initProd };
+export { ApiConstants, initLibraryProd };

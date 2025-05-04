@@ -1,5 +1,5 @@
 import propTypes from "prop-types";
-import { initProd } from "../../Common/constants.js";
+import { initLibraryProd } from "../../Common/constants.js";
 import { setToast } from "../../redux/actions/index.js";
 import { useDispatch } from "react-redux";
 import { doc, setDoc } from "firebase/firestore/lite";
@@ -16,7 +16,7 @@ function ModalVisible({
   const dispatch = useDispatch();
 
   function resetData() {
-    setProductSelected(initProd);
+    setProductSelected(initLibraryProd);
     setShowHiddenModal(false);
   }
 

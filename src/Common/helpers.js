@@ -6,9 +6,9 @@ const sortByDateDesc = (a, b) => {
   return dateB - dateA;
 };
 
-const len = (item) => (item?.length ? item.length : 0);
+const len = item => (item?.length ? item.length : 0);
 
-const tLC = (str) => str.toString().toLowerCase().trim();
+const tLC = str => str.toString().toLowerCase().trim();
 
 function formatPrice(price) {
   return new Intl.NumberFormat("es-AR", {
@@ -31,4 +31,14 @@ function roleIs(permission) {
   return user?.roles?.includes(permission);
 }
 
-export { sortByDateDesc, len, formatPrice, normalizeStr, roleIs, tLC };
+const normalize = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+export {
+  sortByDateDesc,
+  len,
+  formatPrice,
+  normalizeStr,
+  roleIs,
+  tLC,
+  normalize,
+};

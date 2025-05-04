@@ -549,7 +549,7 @@ export default function EditoOrderModal({ orderToEdit, setShowEditModal }) {
               </div>
             ) : (
               <div className="text-white mt-2 flex flex-col justify-center px-6 items-center gap-2 overflow-x-auto overscroll-contain w-full">
-                Selecciona los archivos que quieras imprimir.
+                Carga los archivos que quieras imprimir.
               </div>
             )}
           </section>

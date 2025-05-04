@@ -1,5 +1,4 @@
 import { Button } from "@mui/material";
-import React from "react";
 import { Link } from "react-router-dom";
 
 export default function TyC() {
@@ -205,7 +204,7 @@ export default function TyC() {
           </p>
         </section>
         {/* 7*/}
-        <section className=" flex flex-col gap-2">
+        <section className="flex flex-col gap-2">
           <h2 className="underline font-bold">
             7. COPA XIRO: Programa de Premios y Beneficios
           </h2>
@@ -236,7 +235,7 @@ export default function TyC() {
           <p>
             <ul>
               <li>
-                - En la sección "Pedidos" del margen superior de la web, los
+                - En la sección &quot;Pedidos&quot; del margen superior de la web, los
                 usuarios podrán visualizar el total acumulado de pedidos
                 realizados.
               </li>
