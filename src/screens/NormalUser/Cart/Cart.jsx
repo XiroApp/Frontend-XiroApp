@@ -57,21 +57,15 @@ export default function Cart() {
       uidDistribution: null,
       uidPickup: null,
     }),
-    [mercadoPagoModal, setmercadoPagoModal] = useState(false),
-    handleClosemercadoPagoModal = () => {
-      setmercadoPagoModal(false);
-    },
-    totalReduce = cart?.reduce(
-      (acumm, order) => acumm + Number(order.total),
-      0
-    ),
-    librarySubtotal =
+    [mpModal, setMPModal] = useState(false),
+    closeMPModal = () => setMPModal(false),
+    totalCart = cart?.reduce((acc, order) => acc + Number(order.total), 0) || 0,
+    subtotalLibrary = () =>
       libraryCart?.reduce(
-        (acc, i) => acc + Number(i.price) * Number(i.quantity),
+        (acc, order) => acc + Number(order.price) * Number(order.quantity),
         0
       ) || 0,
     [total, setTotal] = useState(0),
-    subtotal = totalReduce + librarySubtotal,
     [showEditModal, setShowEditModal] = useState({
       show: false,
       orderToEdit: null,
@@ -88,11 +82,7 @@ export default function Cart() {
       availability: "Mañana",
       description: "",
       coupon: coupon || "Sin cupones agregados.",
-    }),
-    subtotalLibrary = libraryCart.reduce(
-      (acc, i) => acc + Number(i.price) * Number(i.quantity),
-      0
-    );
+    });
 
   useEffect(() => {
     setOrderTosend({ ...orderToSend, place: place });
@@ -108,12 +98,15 @@ export default function Cart() {
   }, [place]);
 
   useEffect(() => {
-    coupon?.type[0] === "%"
-      ? setTotal(
-          subtotal + shipment - (subtotal * (coupon?.ammount / 100) || 0)
-        )
-      : setTotal(subtotal - (coupon?.ammount || 0) + shipment);
-  }, [shipment, coupon]);
+    if (coupon?.type[0] === "%") {
+      const withPercentage =
+        totalCart + shipment - (totalCart * (coupon?.ammount / 100) || 0);
+      setTotal(Number(withPercentage) + Number(subtotalLibrary()));
+    } else {
+      const withAmmount = totalCart - (coupon?.ammount || 0) + shipment;
+      setTotal(Number(withAmmount) + Number(subtotalLibrary()));
+    }
+  }, [shipment, coupon, activeStep]);
 
   const isStepOptional = step => {
     return step === 4;
@@ -173,10 +166,11 @@ export default function Cart() {
   async function handleBuy() {
     const id = await createPreference();
     if (id) {
-      setmercadoPagoModal(true);
+      setMPModal(true);
       setPreferenceId(id);
     }
   }
+
   async function handleCupon() {
     dispatch(verifyCoupon(cuponInput));
   }
@@ -199,7 +193,7 @@ export default function Cart() {
         place: place,
         details: orderToSend,
         shipment_price: shipment,
-        subtotal_price: subtotal,
+        subtotal_price: total,
         coupon_used: coupon,
         description: orderToSend.description,
         distance: delivery_distance,
@@ -255,18 +249,26 @@ export default function Cart() {
                       <StepLabel
                         sx={{
                           "& .MuiStepIcon-root.Mui-completed": {
-                            color: "green",
+                            fill: "green",
+                            stroke: "white",
+                            strokeWidth: "1.2px",
+                            width: "28px",
+                            height: "20px",
                           },
                           "& .MuiStepIcon-root.Mui-active": {
                             color: "green",
+                            backgroundColor: "white",
                           },
                           "& .MuiStepIcon-root": {
                             color: "gray",
+                            backgroundColor: "white",
                           },
                         }}
                         {...labelProps}
                       >
-                        {label}
+                        <span className="text-black text-sm py-1 px-4 rounded-md bg-white">
+                          {label}
+                        </span>
                       </StepLabel>
                     </Step>
                   );
@@ -593,13 +595,13 @@ export default function Cart() {
                                 <span className=" text-[16px] font-[400]">
                                   Subtotal de librería
                                 </span>
-                                <span>${formatPrice(subtotalLibrary)}</span>
+                                <span>${formatPrice(subtotalLibrary()())}</span>
                               </div>
                               <div className="flex justify-between">
                                 <span className="underline text-[16px] font-[400]">
                                   Subtotal de impresiones
                                 </span>
-                                <span>${formatPrice(subtotal)}</span>
+                                <span>${formatPrice(totalCart)}</span>
                               </div>
 
                               <section className="flex justify-between">
@@ -609,7 +611,7 @@ export default function Cart() {
                                 <span className="text-green-500">
                                   {coupon.type[0] === "%"
                                     ? `     - $${formatPrice(
-                                        subtotal * (coupon?.ammount / 100)
+                                        totalCart * (coupon?.ammount / 100)
                                       )}`
                                     : `  - $${formatPrice(coupon?.ammount)}`}
                                 </span>
@@ -645,14 +647,14 @@ export default function Cart() {
                                 <span className=" text-[16px] font-[400]">
                                   Subtotal de librería
                                 </span>
-                                <span>${formatPrice(subtotalLibrary)}</span>
+                                <span>${formatPrice(subtotalLibrary())}</span>
                               </div>
 
                               <div className="flex justify-between">
                                 <span className=" text-[16px] font-[400]">
                                   Subtotal de impresiones
                                 </span>
-                                <span>${formatPrice(subtotal)}</span>
+                                <span>${formatPrice(totalCart)}</span>
                               </div>
 
                               <section className="flex justify-between">
@@ -724,61 +726,68 @@ export default function Cart() {
                           </svg>
                           <ArrowRight
                             sx={{ height: "1.8em", width: "1.8em" }}
-                            className="absolute right-20"
+                            className="opacity-0 sm:opacity-100 absolute right-20"
                           />
                         </button>
 
-                        <div className="flex justify-center w-full">
-                          <Dialog
-                            open={mercadoPagoModal}
-                            onClose={handleClosemercadoPagoModal}
-                            aria-labelledby="responsive-dialog-title"
-                          >
-                            <div className="flex flex-col justify-center items-center ">
-                              <Button
-                                color="primary"
-                                autoFocus
-                                onClick={handleClosemercadoPagoModal}
-                                className="flex flex-col self-end p-6"
+                        <Dialog
+                          open={mpModal}
+                          onClose={closeMPModal}
+                          aria-labelledby="responsive-dialog-title"
+                        >
+                          <div className="flex flex-col min-h-[300px] sm:min-h-[250px] w-full justify-center items-center relative pt-6">
+                            <button
+                              type="button"
+                              onClick={closeMPModal}
+                              className="p-1 mt-1 mr-1 text-black bg-slate-50 border-[1.5px] hover:bg-slate-200 rounded-lg absolute top-2 right-2"
+                            >
+                              <svg
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={2}
+                                stroke="currentColor"
+                                className="w-6 h-6"
                               >
-                                <span className=" text-lg text-black">X</span>
-                              </Button>
-                              <DialogTitle
-                                id="responsive-dialog-title"
-                                className="flex items-center gap-5 text-center "
-                              >
-                                <span className="text-xl lg:text-2xl">
-                                  Todo listo!
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M6 18L18 6M6 6l12 12"
+                                />
+                              </svg>
+                            </button>
+                            <DialogTitle
+                              id="responsive-dialog-title"
+                              className="flex items-center gap-5 text-center"
+                            >
+                              <span className="text-xl lg:text-2xl">
+                                ¡Todo Listo!
+                              </span>
+                            </DialogTitle>
+                            <DialogContent className="flex justify-center">
+                              <DialogContentText className="text-center">
+                                <span className="text-xl text-slate-700 lg:text-md">
+                                  Serás redirigido a la app de Mercado Pago para
+                                  finalizar tu compra
                                 </span>
-                              </DialogTitle>
-                              <DialogContent className="flex justify-center">
-                                <DialogContentText className="text-center">
-                                  <span className="text-xl lg:text-md">
-                                    Serás redirigido a la app de mercadopago
-                                    para finalizar tu compra.
-                                  </span>
-                                </DialogContentText>
-                              </DialogContent>
-                              {preferenceId ? (
-                                <div className="flex justify-center items-center w-11/12 ">
-                                  <DialogActions>
-                                    <Wallet
-                                      id="walletButton"
-                                      onSubmit={() => {}}
-                                      initialization={{
-                                        preferenceId: preferenceId.id,
-                                        redirectMode: "self",
-                                      }}
-                                      customization={customization}
-                                    />
-                                  </DialogActions>
-                                </div>
-                              ) : (
-                                "Cargando"
-                              )}
-                            </div>
-                          </Dialog>
-                        </div>
+                              </DialogContentText>
+                            </DialogContent>
+                            {preferenceId && (
+                              <div className="flex justify-center items-start w-11/12">
+                                <DialogActions>
+                                  <Wallet
+                                    id="walletButton"
+                                    onSubmit={() => {}}
+                                    initialization={{
+                                      preferenceId: preferenceId.id,
+                                      redirectMode: "self",
+                                    }}
+                                    customization={customization}
+                                  />
+                                </DialogActions>
+                              </div>
+                            )}
+                          </div>
+                        </Dialog>
                       </section>
                     ) : (
                       <></>

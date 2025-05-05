@@ -33,12 +33,13 @@ import { len, roleIs } from "../../Common/helpers";
 import { twMerge } from "tailwind-merge";
 
 export default function Navbar({ loggedUser, title, hideLogo = false }) {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [anchorElUser, setAnchorElUser] = useState(null);
-  const [contactModal, setContactModal] = useState(false);
-  const cart = useSelector(state => state.cart);
-  const closeContactModal = () => setContactModal(!contactModal);
+  const navigate = useNavigate(),
+    dispatch = useDispatch(),
+    [anchorElUser, setAnchorElUser] = useState(null),
+    [contactModal, setContactModal] = useState(false),
+    cart = useSelector(state => state.cart),
+    libraryCart = useSelector(state => state.libraryCart),
+    closeContactModal = () => setContactModal(!contactModal);
 
   function handleLogout(e) {
     e.preventDefault();
@@ -73,7 +74,7 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
             }}
           ></Box>
 
-          {len(cart) > 0 && (
+          {(len(cart) > 0 || len(libraryCart) > 0) && (
             <Link to="/carrito" className="mr-4">
               <button
                 type="button"
@@ -85,7 +86,7 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
                 )}
               >
                 <ShoppingCartIcon sx={{ height: "1em", width: "1em" }} />{" "}
-                <span className="mb-0.5">{len(cart)}</span>
+                <span className="mb-0.5">{len(cart) + len(libraryCart)}</span>
               </button>
             </Link>
           )}

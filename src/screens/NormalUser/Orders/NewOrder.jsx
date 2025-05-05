@@ -647,7 +647,7 @@ export default function NewOrder() {
                   <button
                     type="button"
                     onClick={() => navigate("/carrito")}
-                    className="bg-green-400 border border-green-500 hover:bg-green-500 text-black font-medium py-2 px-4 md:px-6 rounded-lg transition-colors text-lg md:text-xl"
+                    className="bg-green-400 border border-green-500 hover:bg-green-500 text-black font-medium py-2 px-4 md:px-6 rounded-lg transition-colors text-sm sm:text-xl"
                   >
                     Avanzar al carrito
                   </button>
@@ -655,7 +655,7 @@ export default function NewOrder() {
                     type="button"
                     autoFocus
                     onClick={() => navigate("/?libreria")}
-                    className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-2 px-4 md:px-6 rounded-lg transition-colors text-lg md:text-xl border border-black"
+                    className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-2 px-4 md:px-6 rounded-lg transition-colors text-sm sm:text-xl border border-black"
                   >
                     Ver artículos de librería
                   </button>

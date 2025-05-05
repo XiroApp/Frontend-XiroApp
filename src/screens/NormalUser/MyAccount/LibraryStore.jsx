@@ -69,7 +69,7 @@ export default function LibraryStore() {
           <div className="flex jusify-center items-center gap-x-4">
             <Link
               to="/imprimir"
-              className="text-lg font-semibold text-slate-800 bg-green-300 hover:bg-green-400 duration-75 h-12 border border-green-400 rounded-lg px-4 py-2"
+              className="text-sm sm:text-lg font-semibold text-slate-800 bg-green-300 hover:bg-green-400 duration-75 flex items-center justify-center h-12 border border-green-400 rounded-lg px-2 sm:px-4 py-2"
             >
               Ir a Imprimir
             </Link>
