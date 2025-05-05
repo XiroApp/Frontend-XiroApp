@@ -443,6 +443,9 @@ export default function Cart() {
                               name="description"
                               variant="standard"
                               value={orderToSend.description}
+                              inputProps={{
+                                maxLength: 250,
+                              }}
                             />
                           </section>
                         </div>
@@ -550,7 +553,7 @@ export default function Cart() {
                                 label="Editar comentario"
                                 name="description"
                                 variant="standard"
-                                value={orderToSend.description}
+                                value={orderToSend?.description}
                               />
                             ) : (
                               <span className=" text-[14px] font-[400]">

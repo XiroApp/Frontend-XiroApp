@@ -26,7 +26,7 @@ import {
 import propTypes from "prop-types";
 import { formatPrice, len } from "../../Common/helpers";
 
-const Accordion = styled(props => (
+const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
@@ -38,7 +38,7 @@ const Accordion = styled(props => (
   },
 }));
 
-const AccordionSummary = styled(props => (
+const AccordionSummary = styled((props) => (
   <MuiAccordionSummary
     expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
     {...props}
@@ -95,7 +95,7 @@ export default function OrdersRow({
   /* FILES ACCORDION */
   const [expanded, setExpanded] = useState(false);
 
-  const handleChange = panel => (event, newExpanded) => {
+  const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
 
@@ -129,15 +129,14 @@ export default function OrdersRow({
   /* AUTOCOMPLETE STATE */
   const printingProps = {
     options: printingUsers,
-    getOptionLabel: option => option?.displayName ?? "N/A",
+    getOptionLabel: (option) => option?.displayName ?? "N/A",
   };
   const deliveryProps = {
     options: deliveryUsers,
-    getOptionLabel: option => option?.displayName ?? "N/A",
+    getOptionLabel: (option) => option?.displayName ?? "N/A",
   };
 
   function handleInput(e) {
-    // console.log(e.target.value);
     if (e.target.value === "pending") {
       setProblemsSelectStatus(false);
       setDeliverySelectStatus(false);
@@ -166,35 +165,35 @@ export default function OrdersRow({
 
   function handleAssignStatus() {
     let selectedPrinting = printingUsers.find(
-      user =>
+      (user) =>
         user.displayName === input.uidPrinting || user.uid === input.uidPrinting
     );
 
     let selectedDelivery = deliveryUsers.find(
-      user =>
+      (user) =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
     let selectedDistribution = distributionUsers.find(
-      user =>
+      (user) =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
     let selectedPickup = pickupUsers.find(
-      user =>
+      (user) =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
 
     dispatch(
       changeOrderStatus({
         idOrder: orderId,
-        orderStatus: input.orderStatus,
-        uidPrinting: selectedPrinting?.uid || order.uidPrinting,
-        uidDelivery: selectedDelivery?.uid || order.uidDelivery,
-        uidDistribution: selectedDistribution?.uid || order.uidDistribution,
-        uidPickup: selectedPickup?.uid || order.uidPickup,
-        uidClient: input.clientUid,
-        report: problemsSelectStatus || input.report,
+        orderStatus: input?.orderStatus || order?.orderStatus,
+        uidPrinting: selectedPrinting?.uid || order?.uidPrinting,
+        uidDelivery: selectedDelivery?.uid || order?.uidDelivery,
+        uidDistribution: selectedDistribution?.uid || order?.uidDistribution,
+        uidPickup: selectedPickup?.uid || order?.uidPickup,
+        uidClient: order?.clientUid,
+        report: problemsSelectStatus || input?.report || "",
         editor: editor,
-        order_number: order.order_number,
+        order_number: order?.order_number,
       })
     ).then(() => fetchOrders("refresh"));
     setEditStatus(false);
@@ -331,7 +330,7 @@ export default function OrdersRow({
                             Cambiar estado de orden
                           </label>
                           <select
-                            onChange={e => handleInput(e)}
+                            onChange={(e) => handleInput(e)}
                             name="orderStatus"
                             id="orderStatus"
                             className="border rounded-l p-2 bg-white"
@@ -373,18 +372,27 @@ export default function OrdersRow({
                                 <option value="unassigned">
                                   No asignado 🚦
                                 </option>
-                                <option value="pending">Pendiente ⏳</option>
-                                <option value="process">En proceso 🔨</option>
-                                <option value="printed">Impreso 📄</option>
                                 <option value="problems">
                                   Con problemas 📛
                                 </option>
-                                <option value="in_delivery">
-                                  En delivery 🛸
-                                </option>
-                                <option value="pickup">
-                                  Enviado a Punto Pickup 🏃‍♂️
-                                </option>
+                                <option value="pending">Pendiente ⏳</option>
+                                <option value="process">En proceso 🔨</option>
+                                <option value="printed">Impreso 📄</option>
+
+                                {order?.place?.type === "Envío a domicilio" ? (
+                                  <>
+                                    <option value="distribution">
+                                      Enviado a punto de distribución 🏤
+                                    </option>
+                                    <option value="in_delivery">
+                                      En delivery 🛸
+                                    </option>
+                                  </>
+                                ) : (
+                                  <option value="pickup">
+                                    Enviado a punto pickup 🏃‍♂️
+                                  </option>
+                                )}
                                 <option value="received">Recibido ✅</option>
                               </>
                             ) : (
@@ -399,13 +407,13 @@ export default function OrdersRow({
                                 <option value="problems">
                                   Reportar problemas 📛
                                 </option>
-                                {order.place.type === "Envío a domicilio" ? (
+                                {order?.place?.type === "Envío a domicilio" ? (
                                   <option value="distribution">
                                     Enviado a punto de distribución 🏤
                                   </option>
                                 ) : (
                                   <option value="pickup">
-                                    Enviar a punto pickup 🏃‍♂️
+                                    Enviado a punto pickup 🏃‍♂️
                                   </option>
                                 )}
                               </>
@@ -442,8 +450,8 @@ export default function OrdersRow({
                           {...printingProps}
                           id="auto-complete"
                           name="uidPrinting"
-                          onSelect={e => handleInput(e)}
-                          renderInput={params => (
+                          onSelect={(e) => handleInput(e)}
+                          renderInput={(params) => (
                             <TextField
                               // error={error.city}
                               name="uidPrinting"
@@ -466,8 +474,8 @@ export default function OrdersRow({
                           {...deliveryProps}
                           id="auto-complete"
                           name="uidDelivery"
-                          onSelect={e => handleInput(e)}
-                          renderInput={params => (
+                          onSelect={(e) => handleInput(e)}
+                          renderInput={(params) => (
                             <TextField
                               // error={error.city}
                               name="uidDelivery"
@@ -488,7 +496,7 @@ export default function OrdersRow({
                         name="report"
                         id="report"
                         placeholder={"Ingrese su problema aquí..."}
-                        onChange={e => handleInput(e)}
+                        onChange={(e) => handleInput(e)}
                         className="w-full"
                       />
                     </>
@@ -506,7 +514,7 @@ export default function OrdersRow({
                 </Button>
                 <Button
                   variant="contained"
-                  onClick={e => handleAssignStatus(e)}
+                  onClick={(e) => handleAssignStatus(e)}
                 >
                   Aceptar
                 </Button>
@@ -519,7 +527,7 @@ export default function OrdersRow({
             <Button
               color="inherit"
               variant="text"
-              onClick={e => handleOpenFilesModal(e)}
+              onClick={(e) => handleOpenFilesModal(e)}
               // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
               <Inventory2Outlined />

@@ -155,16 +155,6 @@ export default function Orders({ editor }) {
           <div className="w-full flex flex-wrap gap-1.5 justify-start items-center [&>button]:border [&>button]:px-3 [&>button]:py-1 [&>button]:rounded-md [&>button]:text-sm [&>button]:transition-colors">
             <button
               type="button"
-              name="in_delivery"
-              onClick={() => handleFilter("in_delivery")}
-              className={twMerge(
-                filter == "in_delivery" ? "bg-green-300" : "hover:bg-green-300"
-              )}
-            >
-              En delivery
-            </button>
-            <button
-              type="button"
               name="pending"
               onClick={() => handleFilter("pending")}
               className={twMerge(
@@ -205,6 +195,36 @@ export default function Orders({ editor }) {
             </button>
             <button
               type="button"
+              name="in_delivery"
+              onClick={() => handleFilter("in_delivery")}
+              className={twMerge(
+                filter == "in_delivery" ? "bg-green-300" : "hover:bg-green-300"
+              )}
+            >
+              En delivery
+            </button>
+            <button
+              type="button"
+              name="distribution"
+              onClick={() => handleFilter("distribution")}
+              className={twMerge(
+                filter == "distribution" ? "bg-green-300" : "hover:bg-green-300"
+              )}
+            >
+              En punto de dist.
+            </button>
+            <button
+              type="button"
+              name="pickup"
+              onClick={() => handleFilter("pickup")}
+              className={twMerge(
+                filter == "pickup" ? "bg-green-300" : "hover:bg-green-300"
+              )}
+            >
+              En punto de retiro
+            </button>
+            <button
+              type="button"
               name="received"
               onClick={() => handleFilter("received")}
               className={twMerge(
@@ -235,7 +255,7 @@ export default function Orders({ editor }) {
         </div>
       </div>
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 650, backgroundColor: "#f2f2f4" }}>
+        <TableContainer sx={{ maxHeight: 550, backgroundColor: "#f2f2f4" }}>
           <table className="w-full min-w-max table-auto text-left">
             <TableHead>
               <TableRow>
@@ -261,7 +281,7 @@ export default function Orders({ editor }) {
             <TableBody>
               {orders?.length ? (
                 orders
-                  ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  // ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((order, index) => {
                     const isLast = index === orders.length - 1;
                     const classes = isLast
@@ -320,7 +340,7 @@ export default function Orders({ editor }) {
             </TableBody>
           </table>
         </TableContainer>
-        <TablePagination
+        {/* <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
           count={allOrders.length}
@@ -328,7 +348,7 @@ export default function Orders({ editor }) {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        /> */}
       </Paper>
     </div>
   );

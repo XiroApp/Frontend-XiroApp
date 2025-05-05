@@ -86,12 +86,12 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               se envian el próximo dia de entrega.
             </p>
             <div className="text-center">
-              <p className="font-bold">Excepción Semana Santa</p>
               <p className="font-bold">
-                Envíos: martes 15/04 y miércoles 16/04.
+                Viernes 02-05: se entregaran solo domicilios y puntos de entrega
+                locales comerciales.
               </p>
               <p className="font-bold underline">
-                <span>Próxima entrega: Martes 22/04.</span>
+                <span>Universidad proxima entrega 06-05-25</span>
               </p>
             </div>
           </section>
@@ -251,22 +251,19 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                               </span>
                               <span className="text-sm opacity-80">
                                 {pickup.address?.name?.length < 80
-                                  ? pickup.address.name
-                                  : `${pickup.address.name.slice(
+                                  ? pickup?.address?.name
+                                  : `${pickup?.address?.name?.slice(
                                       0,
                                       80
                                     )}...`}{" "}
-                                {pickup.address.number}
+                                {pickup?.address?.number}
                               </span>
                               <span className="text-sm opacity-80">
-                                {pickup.address.locality}
+                                {pickup?.address?.locality}
                               </span>
                               <span className="text-sm opacity-80">
-                                {pickup.address.city}
+                                {pickup?.address?.city}
                               </span>
-                              {/* <span className="text-sm opacity-80">
-                              {pickup.address.tag}
-                            </span> */}
                             </div>
                           </div>
                         </button>
