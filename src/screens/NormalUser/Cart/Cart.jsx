@@ -598,10 +598,10 @@ export default function Cart() {
                                 <span className=" text-[16px] font-[400]">
                                   Subtotal de librería
                                 </span>
-                                <span>${formatPrice(subtotalLibrary()())}</span>
+                                <span>${formatPrice(subtotalLibrary())}</span>
                               </div>
                               <div className="flex justify-between">
-                                <span className="underline text-[16px] font-[400]">
+                                <span className="text-[16px] font-[400]">
                                   Subtotal de impresiones
                                 </span>
                                 <span>${formatPrice(totalCart)}</span>

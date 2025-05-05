@@ -1,5 +1,5 @@
-let _env = "DEV"; // DESARROLLO
-// let _env = "LOCAL"; // "EMULADOR"
+let _env = "DEV"; // PRODUCCIÓN
+// let _env = "LOCAL"; // DESARROLLO
 import { ApiConstants } from "../Common/constants";
 
 const URL_MESSAGES = "messages";
