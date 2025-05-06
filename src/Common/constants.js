@@ -13,7 +13,7 @@ const ApiConstants = {
   /* --------------------- TESTING --------------------- */
   BASE_URL_TESTING:
     "https://us-central1-testing-xiro-app.cloudfunctions.net/api/xiro-app",
-  MERCADOPAGO_TESTING: "",
+  MERCADOPAGO_TESTING: "APP_USR-4d745d2d-ec71-4c99-b255-160303fa075e",
   STORAGE_URL_TESTING:
     "https://firebasestorage.googleapis.com/v0/b/testing-xiro-app.firebasestorage.app/o/",
   STORAGE_TOKEN_QUERY_TESTING:
