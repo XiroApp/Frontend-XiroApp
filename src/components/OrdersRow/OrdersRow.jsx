@@ -25,6 +25,10 @@ import {
 } from "@mui/icons-material";
 import propTypes from "prop-types";
 import { formatPrice, len } from "../../Common/helpers";
+import { Settings } from "../../config";
+const STORAGE_URL = Settings.STORAGE_URL;
+const STORAGE_QUERY = Settings.STORAGE_TOKEN_QUERY;
+
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -657,7 +661,7 @@ export default function OrdersRow({
                                           target="_blank"
                                           rel="noreferrer"
                                           download
-                                          href={`https://firebasestorage.googleapis.com/v0/b/xiro-app-2ec87.firebasestorage.app/o/${file}?alt=media&token=e7b0f280-413a-4546-aa2b-da0cd3523289`}
+                                          href={`${STORAGE_URL}${file}${STORAGE_QUERY}`}
                                         >
                                           <VisibilityIcon
                                             className="hover:bg-gray-500 rounded-lg"

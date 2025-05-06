@@ -10,8 +10,9 @@ import "@react-pdf-viewer/page-navigation/lib/styles/index.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { Spinner } from "@react-pdf-viewer/core";
-import { useDispatch } from "react-redux";
-import { setToast } from "../redux/actions";
+import { Settings } from "../config";
+const STORAGE_URL = Settings.STORAGE_URL;
+const STORAGE_QUERY = Settings.STORAGE_TOKEN_QUERY;
 
 const PDFViewer = ({
   newFile,
@@ -60,7 +61,7 @@ const PDFViewer = ({
             <Tooltip placement="top" title="Ver en pantalla completa">
               <a
                 target="_blank"
-                href={`https://firebasestorage.googleapis.com/v0/b/xiro-app-2ec87.firebasestorage.app/o/${newFile}?alt=media&token=e7b0f280-413a-4546-aa2b-da0cd3523289`}
+                href={`${STORAGE_URL}${newFile}${STORAGE_QUERY}`}
                 className="hover:bg-green-700 rounded-lg hover:text-white"
               >
                 <VisibilityIcon sx={{ height: "0.9em", width: "0.9em" }} />
@@ -68,7 +69,7 @@ const PDFViewer = ({
             </Tooltip>
             <Tooltip placement="top" title="Eliminar documento">
               <DeleteIcon
-                onClick={(e) => handleDeleteFile(newFile,index)}
+                onClick={(e) => handleDeleteFile(newFile, index)}
                 className="hover:bg-red-500 rounded-lg hover:text-white"
                 sx={{ height: "0.9em", width: "0.9em" }}
               />
@@ -79,7 +80,7 @@ const PDFViewer = ({
             {/* <div id={newFile} className="hidden"></div> */}
 
             <Document
-              file={`https://firebasestorage.googleapis.com/v0/b/xiro-app-2ec87.firebasestorage.app/o/${newFile}?alt=media&token=e7b0f280-413a-4546-aa2b-da0cd3523289`}
+              file={`${STORAGE_URL}${newFile}${STORAGE_QUERY}`}
               onLoadSuccess={onDocumentLoadSuccess}
               loading={<Spinner />}
               error={"Error"}

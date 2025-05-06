@@ -19,7 +19,9 @@ import { useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import { deleteOrderFromCart } from "../../redux/actions";
-import { ApiConstants } from "../../Common/constants";
+import { Settings } from "../../config";
+const STORAGE_URL = Settings.STORAGE_URL;
+const STORAGE_QUERY = Settings.STORAGE_TOKEN_QUERY;
 
 const style = {
   position: "absolute",
@@ -185,7 +187,7 @@ export default function OrderCard({
                 <Tooltip placement="top" title="Ver en pantalla completa">
                   <a
                     target="_blank"
-                    href={`https://firebasestorage.googleapis.com/v0/b/xiro-app-2ec87.firebasestorage.app/o/${file}?alt=media&token=e7b0f280-413a-4546-aa2b-da0cd3523289`}
+                    href={`${STORAGE_URL}${file}${STORAGE_QUERY}`}
                   >
                     <VisibilityIcon
                       className="hover:bg-green-700 rounded-lg"

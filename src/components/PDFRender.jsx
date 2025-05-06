@@ -3,6 +3,9 @@ import { Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/page-navigation/lib/styles/index.css";
 import { pageNavigationPlugin } from "@react-pdf-viewer/page-navigation";
+import { Settings } from "../config";
+const STORAGE_URL = Settings.STORAGE_URL;
+const STORAGE_QUERY = Settings.STORAGE_TOKEN_QUERY;
 
 export default function PDFRender({ newFile, setLoading }) {
   const pageNavigationPluginInstance = pageNavigationPlugin();
@@ -47,7 +50,7 @@ export default function PDFRender({ newFile, setLoading }) {
               // direction: TextDirection.RightToLeft,
             }}
             plugins={[pageNavigationPluginInstance]}
-            fileUrl={`https://firebasestorage.googleapis.com/v0/b/xiro-app-2ec87.firebasestorage.app/o/${newFile}?alt=media&token=e7b0f280-413a-4546-aa2b-da0cd3523289`}
+            fileUrl={`${STORAGE_URL}${newFile}${STORAGE_QUERY}`}
           />
         </div>
       </div>

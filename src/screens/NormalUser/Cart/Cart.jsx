@@ -31,25 +31,23 @@ import ChoosePlaceModal from "../../../components/ChoosePlaceModal/ChoosePlaceMo
 import { Settings } from "../../../config";
 import axios from "axios";
 import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
-import { ApiConstants } from "../../../Common/constants";
 import { getDeliveryPricingByDistance } from "../../../utils/controllers/pricing.controller";
 import { formatPrice, len } from "../../../Common/helpers";
 import { ArrowRight } from "@mui/icons-material";
-
-const baseUrl = Settings.SERVER_URL;
 const steps = ["Detalles", "Resumen", "Pago"];
-const PUBLIC_KEY = ApiConstants.MERCADOPAGO_PUBLIC_KEY;
+const baseUrl = Settings.SERVER_URL;
+const PUBLIC_KEY = Settings.MERCADOPAGO_KEY;
 
 export default function Cart() {
   const dispatch = useDispatch(),
     navigate = useNavigate(),
-    user = useSelector(state => state.dataBaseUser),
-    place = useSelector(state => state.place),
-    cart = useSelector(state => state.cart),
-    coupon = useSelector(state => state.coupon),
-    pricing = useSelector(state => state.pricing),
-    distance = useSelector(state => state.distance),
-    libraryCart = useSelector(state => state.libraryCart),
+    user = useSelector((state) => state.dataBaseUser),
+    place = useSelector((state) => state.place),
+    cart = useSelector((state) => state.cart),
+    coupon = useSelector((state) => state.coupon),
+    pricing = useSelector((state) => state.pricing),
+    distance = useSelector((state) => state.distance),
+    libraryCart = useSelector((state) => state.libraryCart),
     [shipment, setShipment] = useState(null),
     [delivery_distance, setDelivery_distance] = useState({
       text: null,
@@ -93,7 +91,6 @@ export default function Cart() {
       (acc, i) => acc + Number(i.price) * Number(i.quantity),
       0
     );
-
 
   useEffect(() => {
     setOrderTosend({ ...orderToSend, place: place });
@@ -340,7 +337,7 @@ export default function Cart() {
                           <div className="flex flex-col justify-start items-start gap-y-2 pt-2">
                             {len(libraryCart) > 0 ? (
                               <ul className="w-full max-w-xl space-y-2">
-                                {libraryCart?.map(item => (
+                                {libraryCart?.map((item) => (
                                   <LibraryItemCart key={item.id} item={item} />
                                 ))}
                               </ul>
@@ -493,7 +490,7 @@ export default function Cart() {
                             </span>
                             {len(libraryCart) > 0 ? (
                               <ul className="flex flex-col">
-                                {libraryCart.map(order => (
+                                {libraryCart.map((order) => (
                                   <li
                                     key={order.id}
                                     className="text-[14px] font-[400]"
@@ -536,7 +533,6 @@ export default function Cart() {
 
                           <section className="flex flex-col">
                             <div className="flex justify-between">
-
                               <span className="underline text-[16px] font-[400] mb-1">
                                 Instrucciones de entrega
                               </span>
@@ -790,7 +786,7 @@ export default function Cart() {
                     )}
                   </section>
                   <Box className="bg-[#fff] rounded-b-md p-4 flex justify-between items-center pl-4">
-                    <section onClick={e => handleDeleteCart(e)}>
+                    <section onClick={(e) => handleDeleteCart(e)}>
                       <Button variant="text" color="error">
                         Vaciar carrito
                       </Button>

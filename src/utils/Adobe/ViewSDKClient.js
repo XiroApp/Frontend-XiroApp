@@ -1,8 +1,10 @@
 import { Settings } from "../../config";
+const STORAGE_URL = Settings.STORAGE_URL;
+const STORAGE_QUERY = Settings.STORAGE_TOKEN_QUERY;
 
 class ViewSDKClient {
   constructor() {
-    this.readyPromise = new Promise(resolve => {
+    this.readyPromise = new Promise((resolve) => {
       if (window.AdobeDC) {
         resolve();
       } else {
@@ -42,8 +44,7 @@ class ViewSDKClient {
         content: {
           /* Location of file where it is hosted */
           location: {
-            url: `https://firebasestorage.googleapis.com/v0/b/xiro-app-2ec87.firebasestorage.app/o/${pdfName}?alt=media&token=e7b0f280-413a-4546-aa2b-da0cd3523289`,
-
+            url: `${STORAGE_URL}${pdfName}${STORAGE_QUERY}`,
             /*
                     If the file URL requires some additional headers, then it can be passed as follows:-
                     headers: [
@@ -100,7 +101,7 @@ class ViewSDKClient {
   registerSaveApiHandler() {
     /* Define Save API Handler */
     const saveApiHandler = (metaData, content, options) => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         /* Dummy implementation of Save API, replace with your business logic */
         setTimeout(() => {
           const response = {
@@ -129,7 +130,7 @@ class ViewSDKClient {
       /* Type of call back */
       window.AdobeDC.View.Enum.CallbackType.EVENT_LISTENER,
       /* call back function */
-      event => {
+      (event) => {
         console.log(event);
       },
       /* options to control the callback execution */
