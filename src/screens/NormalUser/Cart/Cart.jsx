@@ -82,7 +82,6 @@ export default function Cart() {
       coupon: coupon || "Sin cupones agregados.",
     });
 
-
   useEffect(() => {
     setOrderTosend({ ...orderToSend, place: place });
     if (place?.type === "Retiro") {
@@ -107,11 +106,11 @@ export default function Cart() {
     }
   }, [shipment, coupon, activeStep]);
 
-  const isStepOptional = step => {
+  const isStepOptional = (step) => {
     return step === 4;
   };
 
-  const isStepSkipped = step => {
+  const isStepSkipped = (step) => {
     return skipped.has(step);
   };
 
@@ -122,12 +121,12 @@ export default function Cart() {
       newSkipped.delete(activeStep);
     }
 
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
 
   const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   const handleSkip = () => {
@@ -135,8 +134,8 @@ export default function Cart() {
       throw new Error("You can't skip a step that isn't optional.");
     }
 
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
-    setSkipped(prevSkipped => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
       const newSkipped = new Set(prevSkipped.values());
       newSkipped.add(activeStep);
       return newSkipped;
@@ -197,6 +196,9 @@ export default function Cart() {
         description: orderToSend.description,
         distance: delivery_distance,
         availability: orderToSend.availability,
+        subtotal_library: Number(subtotalLibrary()),
+        subtotal_printing: totalCart,
+        library_cart: libraryCart,
       });
       const id = response.data;
       return id;
@@ -384,7 +386,7 @@ export default function Cart() {
                                     {place?.address?.city}
                                   </span>
                                 </div>
-                                <button onClick={e => handleEditPlace(e)}>
+                                <button onClick={(e) => handleEditPlace(e)}>
                                   <EditIcon
                                     className={
                                       place?.address
@@ -436,7 +438,7 @@ export default function Cart() {
                               Notas adicionales para el pedido
                             </span>
                             <TextField
-                              onChange={e => handleInput(e)}
+                              onChange={(e) => handleInput(e)}
                               id="standard-basic"
                               label="Añadir un comentario"
                               name="description"
@@ -547,7 +549,7 @@ export default function Cart() {
                             </div>
                             {editComment ? (
                               <TextField
-                                onChange={e => handleInput(e)}
+                                onChange={(e) => handleInput(e)}
                                 id="standard-basic"
                                 label="Editar comentario"
                                 name="description"
@@ -569,7 +571,7 @@ export default function Cart() {
                           </span>
                           <section className="flex justify-between gap-4">
                             <TextField
-                              onChange={e => setCuponInput(e.target.value)}
+                              onChange={(e) => setCuponInput(e.target.value)}
                               id="standard-basic"
                               label={"Código de cupón"}
                               name="cupon"
@@ -581,7 +583,7 @@ export default function Cart() {
                               variant="outlined"
                               color="primary"
                               className="w-1/2 n-w-full flex items-center gap-1"
-                              onClick={e => handleCupon(e)}
+                              onClick={(e) => handleCupon(e)}
                             >
                               <LocalOfferIcon
                                 sx={{ width: "1rem", height: "1rem" }}
@@ -796,7 +798,7 @@ export default function Cart() {
                     )}
                   </section>
                   <Box className="bg-[#fff] rounded-b-md p-4 flex justify-between items-center pl-4">
-                    <section onClick={e => handleDeleteCart(e)}>
+                    <section onClick={(e) => handleDeleteCart(e)}>
                       <Button variant="text" color="error">
                         Vaciar carrito
                       </Button>

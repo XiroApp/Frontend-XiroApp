@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "fire-prod": "vite build && firebase deploy",
-    "fire-testing": "vite build && firebase deploy",
+    "fire-prod": "vite build && firebase deploy --only hosting",
+    "fire-testing": "vite build && firebase deploy --only hosting",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
