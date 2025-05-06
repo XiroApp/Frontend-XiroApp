@@ -678,6 +678,21 @@ export default function OrdersRow({
                               </div>
                             </AccordionDetails>
                           </Accordion>
+                          {/* //! Acá mostrar datos de librería
+                            <Accordion>
+                            <AccordionSummary>
+                              <Typography>Librería</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              {order.libraryCart.map(item => (
+                                <li key={item.id} className="flex gap-2">
+                                  <p>{item.name}</p>
+                                  <p>{item.quantity}</p>
+                                  <p>{item.price}</p>
+                                </li>
+                              ))}
+                            </AccordionDetails>
+                          </Accordion> */}
                           {index == 0 &&
                             len(order?.description?.trim()) > 0 && (
                               <Accordion>

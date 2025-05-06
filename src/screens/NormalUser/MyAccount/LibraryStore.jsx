@@ -17,8 +17,8 @@ export default function LibraryStore() {
     [quantities, setQuantities] = useState({}),
     [showModal, setShowModal] = useState(false),
     filteredProducts = searchProducts(),
-    productsCart = useSelector((state) => state.libraryCart || []),
-    inCart = (prodId) => productsCart.some((p) => p.id == prodId);
+    productsCart = useSelector(state => state.libraryCart || []),
+    inCart = prodId => productsCart.some(p => p.id == prodId);
 
   useEffect(() => {
     console.log("🟢 CARRITO 🟢");
@@ -29,7 +29,7 @@ export default function LibraryStore() {
   useEffect(() => {
     setLoading(true);
     getProducts()
-      .then((newProducts) => setProducts(newProducts))
+      .then(newProducts => setProducts(newProducts))
       .finally(() => setLoading(false));
   }, []);
 
@@ -45,7 +45,7 @@ export default function LibraryStore() {
   function searchProducts() {
     return searchTerm.trim() == ""
       ? products
-      : products.filter((p) =>
+      : products.filter(p =>
           normalizeStr(p.name).includes(normalizeStr(searchTerm))
         );
   }
@@ -55,13 +55,13 @@ export default function LibraryStore() {
     const maxStock = 10;
     if (inCart(prodId)) return setShowModal(true);
     setQuantities(prev => ({
-
       ...prev,
       [prodId]: Math.min(Math.max(1, val), maxStock),
     }));
   }
 
   return (
+
 
     <section className="w-full bg-white flex justify-start items-start rounded-2xl flex-col relative">
       <div className="sticky rounded-t-2xl top-0 left-0 right-0 bg-white z-20 px-4 sm:px-8 py-4 border-b w-full">
@@ -72,7 +72,7 @@ export default function LibraryStore() {
           <div className="flex jusify-center items-center gap-x-4">
             <Link
               to="/imprimir"
-              className="text-lg font-semibold text-slate-800 bg-green-300 hover:bg-green-400 duration-75 h-12 border border-green-400 rounded-lg px-4 py-2"
+              className="text-sm sm:text-lg font-semibold text-slate-800 bg-green-300 hover:bg-green-400 duration-75 flex items-center justify-center h-12 border border-green-400 rounded-lg px-2 sm:px-4 py-2"
             >
               Ir a Imprimir
             </Link>
@@ -85,7 +85,6 @@ export default function LibraryStore() {
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className="w-full sm:w-[280px] px-4 py-2 rounded-lg border-[1.5px] pl-10 bg-slate-100/90 placeholder:text-slate-600 border-green-300 focus:outline-none h-12"
-                
               />
             </div>
           </div>
@@ -132,16 +131,12 @@ export default function LibraryStore() {
             Cargando productos...
           </p>
         ) : (
-
           <ul className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 place-items-center">
-
             {len(filteredProducts) > 0 &&
-              filteredProducts.map((p) => (
+              filteredProducts.map(p => (
                 <li
                   key={p.id}
-
                   className="flex justify-between flex-col items-center bg-[#fef9e9] p-3 rounded-xl border border-black w-full max-w-[280px] h-[330px] relative"
-
                 >
                   {!p.visible && (
                     <div className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2.5 py-1.5 rounded-full z-10">
@@ -318,7 +313,7 @@ async function getProducts() {
 
   try {
     const query = await getDocs(PRODUCTS_TABLE);
-    const data = query.docs.map((doc) => ({
+    const data = query.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     }));
