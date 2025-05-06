@@ -1,5 +1,6 @@
-let _env = "DEV"; // DESARROLLO
-// let _env = "LOCAL"; // "EMULADOR"
+let _env = "PROD"; // PRODUCCION
+// let _env = "TESTING"; // AMBIENTE DE PRUEBAS
+// let _env = "LOCAL"; // "DESARROLLO LOCAL CON EMULADOR "
 
 import { ApiConstants } from "../Common/constants";
 
@@ -12,7 +13,7 @@ export class Settings {
       case "LOCAL":
         return ApiConstants.BASE_URL_LOCAL;
 
-      case "DEV":
+      case "PROD":
         return ApiConstants.BASE_URL_PROD;
 
       default:
@@ -32,7 +33,17 @@ export class Settings {
           appId: "1:795770640225:web:194d64648d2caea6e8d720",
           measurementId: "G-NV3WGWXXM6",
         };
-      case "DEV":
+      case "TESTING":
+        return {
+          apiKey: "AIzaSyCFHRqijYpi8qxik_UsfxGpd6k4r9fPs60",
+          authDomain: "testing-xiro-app.firebaseapp.com",
+          projectId: "testing-xiro-app",
+          storageBucket: "testing-xiro-app.firebasestorage.app",
+          messagingSenderId: "1041638889688",
+          appId: "1:1041638889688:web:1a5997f8929d3fb0e6dfad",
+          measurementId: "G-6XT50QQ9M7",
+        };
+      case "PROD":
         return {
           apiKey: "AIzaSyC0yeDOJlWXV5rTc3V5vtNyG9VT_BzVH7Y",
           authDomain: "xiro-app-2ec87.firebaseapp.com",
@@ -61,7 +72,7 @@ export class Settings {
         return {
           clientId: "8c0cd670273d451cbc9b351b11d22318", //  DEFAULT ADOBE ID FOR LOCAL (?)
         };
-      case "DEV":
+      case "PROD":
         return {
           clientId: "175a37c322904bfa803952dd4a3bc9bb", //  CIRO ID FOR deploy  (?)
         };
@@ -80,7 +91,7 @@ export class Settings {
         return {
           path: "http://localhost:1212/",
         };
-      case "DEV":
+      case "PROD":
         return {
           path: "http://34.176.135.142:1212",
         };
