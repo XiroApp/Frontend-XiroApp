@@ -86,13 +86,14 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               se envian el próximo dia de entrega.
             </p>
             <div className="text-center">
-              <p className="font-bold">
+              {/* ALERTAS DE ENVÍO */}
+              {/* <p className="font-bold">
                 Viernes 02-05: se entregaran solo domicilios y puntos de entrega
                 locales comerciales.
               </p>
               <p className="font-bold underline">
                 <span>Universidad proxima entrega 06-05-25</span>
-              </p>
+              </p> */}
             </div>
           </section>
           <section className="flex flex-col w-full px-5 py-5 gap-6 md:gap-10 overflow-y-auto max-h-[calc(90vh-200px)]">
