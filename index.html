@@ -38,39 +38,57 @@
     <meta http-equiv="Expires" content="0" />
 
     <script>
-      const APP_VERSION = __APP_VERSION__;
+      const APP_VERSION = "5.0.1"; // Reemplazar dinámicamente en el build
 
       (async function cleanupIfNeeded() {
-        const storedVersion = localStorage.getItem("app-version");
-        if (storedVersion !== APP_VERSION) {
-          localStorage.clear();
-          sessionStorage.clear();
-          document.cookie.split(";").forEach((cookie) => {
-            document.cookie = cookie
-              .replace(/^ +/, "")
-              .replace(
-                /=.*/,
-                "=;expires=" + new Date().toUTCString() + ";path=/"
-              );
-          });
+        try {
+          const storedVersion = localStorage.getItem("app-version");
+          if (storedVersion !== APP_VERSION) {
+            console.log("Nueva versión detectada. Limpiando datos...");
 
-          if (window.indexedDB?.databases) {
-            const dbs = await indexedDB.databases();
-            dbs.forEach((db) => indexedDB.deleteDatabase(db.name));
+            // Limpiar localStorage y sessionStorage
+            localStorage.clear();
+            sessionStorage.clear();
+
+            // Eliminar cookies
+            document.cookie.split(";").forEach((cookie) => {
+              document.cookie = cookie
+                .replace(/^ +/, "")
+                .replace(
+                  /=.*/,
+                  "=;expires=" + new Date(0).toUTCString() + ";path=/"
+                );
+            });
+
+            // Eliminar bases de datos IndexedDB
+            if (window.indexedDB?.databases) {
+              const dbs = await indexedDB.databases();
+              dbs.forEach((db) => indexedDB.deleteDatabase(db.name));
+            }
+
+            if ("serviceWorker" in navigator) {
+              navigator.serviceWorker
+                .getRegistrations()
+                .then((registrations) => {
+                  registrations.forEach((registration) => {
+                    registration.unregister().then(() => {
+                      console.log("Service Worker desregistrado.");
+                    });
+                  });
+                });
+            }
+            // Eliminar caches
+            if ("caches" in window) {
+              const names = await caches.keys();
+              await Promise.all(names.map((name) => caches.delete(name)));
+            }
+
+            // Guardar nueva versión y recargar
+            localStorage.setItem("app-version", APP_VERSION);
+            location.reload(); // Recargar para cargar la nueva versión
           }
-
-          if ("serviceWorker" in navigator) {
-            const regs = await navigator.serviceWorker.getRegistrations();
-            regs.forEach((reg) => reg.unregister());
-          }
-
-          if ("caches" in window) {
-            const names = await caches.keys();
-            names.forEach((name) => caches.delete(name));
-          }
-
-          localStorage.setItem("app-version", APP_VERSION);
-          location.reload(true); // Forzar recarga limpia
+        } catch (error) {
+          console.error("Error durante la limpieza de datos:", error);
         }
       })();
     </script>
