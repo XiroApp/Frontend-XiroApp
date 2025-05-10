@@ -28,18 +28,17 @@ import Delivery from "./screens/DeliveryUser/Delivery";
 import TyC from "./screens/TermsAndConditions/TyC";
 import PickUp from "./screens/PickUpUser/Pickup";
 import Distribution from "./screens/DistributionUser/Distribution";
-import { cleanUpResources, roleIs } from "./Common/helpers";
-import { Settings } from "./config";
+import { roleIs } from "./Common/helpers";
 
 function App() {
-  // const APP_VERSION = Settings.FRONTEND_VERSION; // Cambia esto con cada despliegue
+  // const APP_VERSION = Settings.FRONTEND_VERSION;
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const sessionUser = getSession();
-  const cart = useSelector((state) => state.cart);
-  const loggedUser = useSelector((state) => state.loggedUser);
-  const dataBaseUser = useSelector((state) => state.dataBaseUser);
+  const cart = useSelector(state => state.cart);
+  const loggedUser = useSelector(state => state.loggedUser);
+  const dataBaseUser = useSelector(state => state.dataBaseUser);
 
   // useEffect(() => {
   //   cleanUpResources(APP_VERSION);
@@ -76,7 +75,7 @@ function App() {
       pickup: "/pickup",
     };
 
-    const route = Object.keys(roleRoutes).find((role) => roleIs(role));
+    const route = Object.keys(roleRoutes).find(role => roleIs(role));
     navigate(route || "/");
   }
 
