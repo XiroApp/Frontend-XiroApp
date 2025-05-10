@@ -7,7 +7,7 @@ const URL_PICTURES = "pictures";
 
 export class Settings {
   static get FRONTEND_VERSION() {
-    return "5.0.5(beta)"; // Cambia esto con cada despliegue
+    return "5.0.6(beta)"; // Cambia esto con cada despliegue
   }
 
   static get SERVER_URL() {
