@@ -41,7 +41,7 @@ export default function OrderCard({
   const navigate = useNavigate();
   const [deleteOrderModal, setDeleteOrderModal] = useState(false);
   const [filesModal, setFilesModal] = useState(false);
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector(state => state.cart);
 
   /* FUNCIONES */
   function handleDeleteOrder(e) {
@@ -56,8 +56,6 @@ export default function OrderCard({
     // setDeleteOrderModal(true);
     setShowEditModal({ show: true, orderToEdit: order });
   }
-
-  console.log(order);
 
   return (
     <div className="flex flex-col gap-2 border-2 border-[#789360] rounded-md p-3 drop-shadow-2xl shadow-2xl">
@@ -79,7 +77,7 @@ export default function OrderCard({
             </button>
           </Tooltip> */}
           <Tooltip arrow placement="top" title="Eliminar" sx={{}}>
-            <button onClick={(e) => setDeleteOrderModal(true)}>
+            <button onClick={e => setDeleteOrderModal(true)}>
               <DeleteIcon sx={{ width: "0.8em", height: "0.8em" }} />
             </button>
           </Tooltip>
@@ -151,7 +149,7 @@ export default function OrderCard({
               </Button>
               <Button
                 color="error"
-                onClick={(e) => handleDeleteOrder(e)}
+                onClick={e => handleDeleteOrder(e)}
                 autoFocus
               >
                 <span className="text-lg font-[400]">Borrar</span>
@@ -201,7 +199,7 @@ export default function OrderCard({
               variant="contained"
               color="primary"
               className="text-sm font-light"
-              onClick={(e) => setFilesModal(false)}
+              onClick={e => setFilesModal(false)}
             >
               <span className="text-sm font-light">Cerrar</span>
             </Button>
