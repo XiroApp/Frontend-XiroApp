@@ -6,6 +6,10 @@ const URL_MESSAGES = "messages";
 const URL_PICTURES = "pictures";
 
 export class Settings {
+  static get FRONTEND_VERSION() {
+    return "5.0.0(beta)"; // Cambia esto con cada despliegue
+  }
+
   static get SERVER_URL() {
     switch (_env) {
       case "LOCAL":

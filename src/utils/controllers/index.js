@@ -16,9 +16,10 @@ function startSession({
 function getSession() {
   try {
     const data = decrypt(localStorage.getItem("logged-user"));
+    // if (!data || !data.uid) throw new Error("Datos inválidos");
     return data;
   } catch (err) {
-    localStorage.removeItem("loggedUser"); //* Remover datos antiguos no encriptados.
+    console.error("Error al obtener la sesión:", err.message);
     localStorage.removeItem("logged-user");
     return null;
   }

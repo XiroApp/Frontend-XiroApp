@@ -31,4 +31,92 @@ function roleIs(permission) {
   return user?.roles?.includes(permission);
 }
 
-export { sortByDateDesc, len, formatPrice, normalizeStr, roleIs, tLC };
+function cleanUpResources(APP_VERSION) {
+  console.log("Iniciando limpieza de recursos...");
+
+  // Desregistrar todos los Service Workers
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .getRegistrations()
+      .then((registrations) => {
+        registrations.forEach((registration) => {
+          registration
+            .unregister()
+            .then(() => {
+              console.log("Service Worker desregistrado con éxito.");
+            })
+            .catch((error) => {
+              console.error("Error al desregistrar el Service Worker:", error);
+            });
+        });
+      })
+      .catch((error) => {
+        console.error("Error al obtener los Service Workers:", error);
+      });
+  }
+
+  // Eliminar todos los caches, incluyendo workbox-precache
+  if ("caches" in window) {
+    caches
+      .keys()
+      .then((cacheNames) => {
+        cacheNames.forEach((cacheName) => {
+          if (cacheName.includes("workbox-precache")) {
+            console.log(`Eliminando cache específico: ${cacheName}`);
+          }
+          caches
+            .delete(cacheName)
+            .then(() => {
+              console.log(`Cache eliminado: ${cacheName}`);
+            })
+            .catch((error) => {
+              console.error(`Error al eliminar el cache ${cacheName}:`, error);
+            });
+        });
+      })
+      .catch((error) => {
+        console.error("Error al obtener los nombres de los caches:", error);
+      });
+  }
+
+  // Limpieza de almacenamiento local y cookies si cambia la versión
+  try {
+    const storedVersion = localStorage.getItem("app-version");
+    if (storedVersion !== APP_VERSION) {
+      console.log(
+        "Versión de la aplicación actualizada. Limpiando almacenamiento..."
+      );
+
+      // Limpia almacenamiento local y sessionStorage
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Limpia cookies
+      document.cookie.split(";").forEach((cookie) => {
+        document.cookie = cookie
+          .replace(/^ +/, "")
+          .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+
+      // Almacena la nueva versión
+      localStorage.setItem("app-version", APP_VERSION);
+      console.log("Almacenamiento local, sessionStorage y cookies limpiados.");
+    } else {
+      console.log(
+        "La versión de la aplicación no ha cambiado. No se requiere limpieza."
+      );
+    }
+  } catch (error) {
+    console.error("Error al limpiar almacenamiento local o cookies:", error);
+  }
+}
+
+export {
+  sortByDateDesc,
+  len,
+  formatPrice,
+  normalizeStr,
+  roleIs,
+  tLC,
+  cleanUpResources,
+};

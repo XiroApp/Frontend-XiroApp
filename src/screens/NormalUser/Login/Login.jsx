@@ -25,6 +25,8 @@ import { useDispatch } from "react-redux";
 import { createUserGoogle, xiroLogin, setToast } from "../../../redux/actions";
 import { useNavigate } from "react-router-dom";
 import propTypes from "prop-types";
+import { ApiConstants } from "../../../Common/constants";
+import { Settings } from "../../../config";
 
 export default function Login({ loggedUser, dataBaseUser }) {
   const dispatch = useDispatch();
@@ -49,8 +51,8 @@ export default function Login({ loggedUser, dataBaseUser }) {
     }
   });
 
-  const handleClickShowPassword = () => setShowPassword(show => !show);
-  const handleMouseDownPassword = event => {
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
   async function handleGoogleLogin() {
@@ -134,10 +136,12 @@ export default function Login({ loggedUser, dataBaseUser }) {
 
   return (
     <div className="bg-white flex flex-row h-full pb-5">
-      <span className=" text-sm absolute bottom-0 left-0">V 3.8.0(beta)</span>
+      <span className=" text-sm absolute bottom-0 left-0">
+        {Settings.FRONTEND_VERSION}
+      </span>
       {/* LOADER */}
       <Backdrop
-        sx={{ color: "#fff", zIndex: theme => theme.zIndex.drawer + 1 }}
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loader}
       >
         <CircularProgress color="inherit" />
@@ -175,7 +179,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
                 autoComplete="current-email"
                 variant="standard"
                 fullWidth
-                onChange={e => handleInput(e)}
+                onChange={(e) => handleInput(e)}
               />
 
               <FormControl sx={{}} variant="standard">
@@ -187,7 +191,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
                 </InputLabel>
                 <Input
                   name="password"
-                  onChange={e => handleInput(e)}
+                  onChange={(e) => handleInput(e)}
                   error={error.password}
                   type={showPassword ? "text" : "password"}
                   endAdornment={
@@ -227,7 +231,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
                       }}
                       color="primary"
                       name="rememberMe"
-                      onChange={e => handleInput(e)}
+                      onChange={(e) => handleInput(e)}
                       // defaultChecked
                       checked={input.rememberMe}
                       id="rememberMe"
@@ -261,7 +265,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
                       // defaultChecked
                       name="conditionsChecked"
                       checked={input.conditionsChecked}
-                      onChange={e => handleInput(e)}
+                      onChange={(e) => handleInput(e)}
                       id="TyC"
                     />
                     <label htmlFor="TyC" className="font-light w-fit mr-1">
@@ -284,7 +288,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
             </div>
 
             <Button
-              onClick={e => handleLogin(e)}
+              onClick={(e) => handleLogin(e)}
               variant="contained"
               disableElevation
               className="w-full"
@@ -295,7 +299,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
               variant="outlined"
               className="w-full flex gap-2"
               disableElevation
-              onClick={e => handleGoogleLogin(e)}
+              onClick={(e) => handleGoogleLogin(e)}
             >
               <img src={logoGoogle} alt="google-icon" className="h-5" />
               <span>Continuar con Google</span>
