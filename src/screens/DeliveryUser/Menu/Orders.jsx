@@ -1,18 +1,10 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-const baseUrl = Settings.SERVER_URL;
 import { Settings } from "../../../config/index.js";
 import axios from "axios";
-
-// import OrdersRow from "./OrdersRow";
+const baseUrl = Settings.SERVER_URL;
 import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
 import { Backdrop, CircularProgress, Input, Typography } from "@mui/material";
 
@@ -41,10 +33,10 @@ const columns = [
 ];
 
 export default function Orders({ editor }) {
-  const printingUsers = useSelector((state) => state.printingUsers);
-  const deliveryUsers = useSelector((state) => state.deliveryUsers);
+  const printingUsers = useSelector(state => state.printingUsers);
+  const deliveryUsers = useSelector(state => state.deliveryUsers);
 
-  const user = useSelector((state) => state.loggedUser);
+  const user = useSelector(state => state.loggedUser);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -60,7 +52,7 @@ export default function Orders({ editor }) {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = event => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
@@ -68,21 +60,21 @@ export default function Orders({ editor }) {
   /* CHANGE ORDER STATUS */
   const [filter, setFilter] = useState("no_filter");
   /* SEARCH  */
-  const handleSearch = (e) => {
+  const handleSearch = e => {
     setFilter("no_filter");
     e.target.value.length > 2
       ? setOrders(
-          orders.filter((order) =>
+          orders.filter(order =>
             order.paymentId.toString().includes(e.target.value)
           )
         )
       : setOrders(orders);
   };
 
-  const handleFilter = (e) => {
+  const handleFilter = e => {
     setFilter(e.target.name);
     e.target.name !== "no_filter"
-      ? setOrders(orders.filter((order) => order.orderStatus === e.target.name))
+      ? setOrders(orders.filter(order => order.orderStatus === e.target.name))
       : setOrders(orders);
   };
   /* ---------------------------- */
@@ -94,7 +86,7 @@ export default function Orders({ editor }) {
       let response = await axios.get(`${baseUrl}/delivery/orders/${user.uid}`);
 
       let formatedOrders = response.data
-        .map((order) => {
+        .map(order => {
           const fechaStr = order.paymentData.date_created;
           const fecha = new Date(fechaStr);
 
@@ -145,9 +137,8 @@ export default function Orders({ editor }) {
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl p-4">
-      {/* LOADER */}
       <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ color: "#fff", zIndex: theme => theme.zIndex.drawer + 1 }}
         open={loading}
       >
         <CircularProgress color="inherit" />
@@ -160,7 +151,7 @@ export default function Orders({ editor }) {
             name="email"
             type="number"
             placeholder={"Ingresa número de orden ..."}
-            onChange={(e) => handleSearch(e)}
+            onChange={e => handleSearch(e)}
             className="w-full"
           />
         </div>
@@ -182,17 +173,8 @@ export default function Orders({ editor }) {
                       color="blue-gray"
                       className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
                       id={column.label}
-                      // onClick={(e) => handleSortUsers(e)}
                     >
                       {column.label}
-                      {/* {index !== column.length - 1 && (
-                        <ChevronLeftSharp
-                          strokeWidth={2}
-                          className="h-4 w-4"
-                          id={column.filterName}
-                          onClick={(e) => handleSortUsers(e)}
-                        />
-                      )} */}
                     </Typography>
                   </th>
                 ))}
@@ -201,11 +183,6 @@ export default function Orders({ editor }) {
             <tbody>
               {orders?.length ? (
                 orders.map((order, index) => {
-                  const isLast = index === orders.length - 1;
-                  const classes = isLast
-                    ? "w-fit px-4"
-                    : "w-fit px-4 border-y border-green-500/50";
-
                   return (
                     <tr
                       role="button"
@@ -236,7 +213,7 @@ export default function Orders({ editor }) {
                 <Backdrop
                   sx={{
                     color: "#fff",
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                    zIndex: theme => theme.zIndex.drawer + 1,
                   }}
                   open={loading}
                 >

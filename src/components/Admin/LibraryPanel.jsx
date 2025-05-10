@@ -1,13 +1,10 @@
 import { Add as AddIcon, Search as SearchIcon } from "@mui/icons-material";
 import ProductAdmin from "./ProductAdmin";
 import { len, normalizeStr } from "../../Common/helpers";
-import { collection, getDocs } from "firebase/firestore/lite";
 import { useEffect, useState } from "react";
 import ModalsAdmin from "./ModalsAdmin";
-import { db } from "../../config/firebase";
 import { initLibraryProd } from "../../Common/constants";
-
-const PRODUCTS_TABLE = collection(db, "products");
+import { LibraryService } from "../../Services/library.service";
 
 export default function LibraryPanel() {
   const [products, setProducts] = useState([]),
@@ -24,7 +21,7 @@ export default function LibraryPanel() {
 
   useEffect(() => {
     setLoadingProducts(true);
-    getProducts()
+    LibraryService.getProducts()
       .then(newProducts => setProducts(newProducts))
       .finally(() => setLoadingProducts(false));
   }, []);
@@ -101,7 +98,6 @@ export default function LibraryPanel() {
         </div>
       )}
       <ModalsAdmin
-        COLLECTION={PRODUCTS_TABLE}
         products={products}
         setProducts={setProducts}
         newProduct={newProduct}
@@ -121,18 +117,4 @@ export default function LibraryPanel() {
       />
     </section>
   );
-}
-
-async function getProducts() {
-  try {
-    const query = await getDocs(PRODUCTS_TABLE);
-    const data = query.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    return data;
-  } catch (err) {
-    console.error(`catch 'getProducts' ${err.message}`);
-    return [];
-  }
 }

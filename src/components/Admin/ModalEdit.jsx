@@ -2,9 +2,9 @@ import propTypes from "prop-types";
 import { useState } from "react";
 import { len } from "../../Common/helpers.js";
 import { initLibraryProd } from "../../Common/constants.js";
-import { doc, setDoc } from "firebase/firestore/lite";
 import { setToast } from "../../redux/actions/index.js";
 import { useDispatch } from "react-redux";
+import { LibraryService } from "../../Services/library.service.js";
 
 function ModalEdit(props) {
   const [errors, setErrors] = useState({}),
@@ -13,7 +13,6 @@ function ModalEdit(props) {
       setShowEditModal,
       productSelected,
       setProductSelected,
-      COLLECTION,
       products,
       setProducts,
       setLoadingModal,
@@ -55,7 +54,7 @@ function ModalEdit(props) {
 
     try {
       setLoadingModal(true);
-      await setDoc(doc(COLLECTION, productSelected.id), productSelected);
+      await LibraryService.manageProduct(productSelected);
       setProducts(
         products.map(p => (p.id == productSelected.id ? productSelected : p))
       );
@@ -197,7 +196,6 @@ ModalEdit.propTypes = {
   setShowEditModal: propTypes.func,
   productSelected: propTypes.object,
   setProductSelected: propTypes.func,
-  COLLECTION: propTypes.any,
   setLoadingModal: propTypes.func,
   products: propTypes.array,
   setProducts: propTypes.func,

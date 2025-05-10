@@ -28,7 +28,7 @@ export function xiroLogin(user, rememberMe) {
         localStorage.removeItem("loggedUser");
       }
 
-      return console.log("Bienvenido a XIRO!");
+      return;
     } catch (error) {
       return console.error(error);
     }
@@ -68,8 +68,7 @@ export function logout() {
       dispatch({
         type: action.LOGOUT,
       });
-
-      return console.log("usuario deslogueado");
+      return;
     } catch (error) {
       return console.error(error);
     }

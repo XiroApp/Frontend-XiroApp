@@ -2,13 +2,12 @@ import propTypes from "prop-types";
 import { initLibraryProd } from "../../Common/constants.js";
 import { setToast } from "../../redux/actions/index.js";
 import { useDispatch } from "react-redux";
-import { doc, setDoc } from "firebase/firestore/lite";
+import { LibraryService } from "../../Services/library.service.js";
 
 function ModalVisible({
   setShowHiddenModal,
   setProductSelected,
   productSelected,
-  COLLECTION,
   setLoadingModal,
   products,
   setProducts,
@@ -28,10 +27,7 @@ function ModalVisible({
 
     try {
       setLoadingModal(true);
-      await setDoc(doc(COLLECTION, productSelected.id), {
-        ...productSelected,
-        visible: true,
-      });
+      await LibraryService.manageProduct(updatedProduct);
       resetData();
       setProducts(
         products.map(p => (p.id == productSelected.id ? updatedProduct : p))
@@ -80,7 +76,6 @@ ModalVisible.propTypes = {
   setShowHiddenModal: propTypes.func,
   setProductSelected: propTypes.func,
   productSelected: propTypes.object,
-  COLLECTION: propTypes.any,
   setLoadingModal: propTypes.func,
   products: propTypes.array,
   setProducts: propTypes.func,

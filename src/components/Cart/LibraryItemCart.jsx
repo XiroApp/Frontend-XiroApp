@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -19,16 +19,9 @@ import { formatPrice } from "../../Common/helpers";
 import propTypes from "prop-types";
 
 export default function LibraryItemCart({ item }) {
-  const dispatch = useDispatch();
-  const [deleteItemModal, setDeleteItemModal] = useState(false);
-  const libraryCart = useSelector(state => state.libraryCart);
-  const maxStock = 10;
-
-  useEffect(() => {
-    console.log("🟢 CARRITO 🟢");
-    console.log(libraryCart);
-    console.log("--------------");
-  }, [libraryCart]);
+  const dispatch = useDispatch(),
+    [deleteItemModal, setDeleteItemModal] = useState(false),
+    libraryCart = useSelector(state => state.libraryCart);
 
   function handleDelete() {
     const updatedCart = libraryCart.filter(cartItem => cartItem.id !== item.id);
@@ -38,8 +31,7 @@ export default function LibraryItemCart({ item }) {
   }
 
   function updateQuantity(newQuantity) {
-    if (newQuantity < 1 || newQuantity > maxStock) return;
-
+    if (newQuantity < 1 || newQuantity > 10) return;
     const updatedCart = libraryCart.map(cartItem => {
       if (cartItem.id === item.id) {
         return { ...cartItem, quantity: newQuantity };
@@ -71,7 +63,7 @@ export default function LibraryItemCart({ item }) {
           <IconButton
             size="small"
             onClick={() => updateQuantity(item.quantity + 1)}
-            disabled={item.quantity >= maxStock}
+            disabled={item.quantity >= 10}
             className="text-green-700"
             aria-label="Aumentar cantidad"
           >

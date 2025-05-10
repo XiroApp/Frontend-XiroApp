@@ -29,8 +29,7 @@ import { Settings } from "../../config";
 const STORAGE_URL = Settings.STORAGE_URL;
 const STORAGE_QUERY = Settings.STORAGE_TOKEN_QUERY;
 
-
-const Accordion = styled((props) => (
+const Accordion = styled(props => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
@@ -42,7 +41,7 @@ const Accordion = styled((props) => (
   },
 }));
 
-const AccordionSummary = styled((props) => (
+const AccordionSummary = styled(props => (
   <MuiAccordionSummary
     expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
     {...props}
@@ -99,7 +98,7 @@ export default function OrdersRow({
   /* FILES ACCORDION */
   const [expanded, setExpanded] = useState(false);
 
-  const handleChange = (panel) => (event, newExpanded) => {
+  const handleChange = panel => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
 
@@ -133,11 +132,11 @@ export default function OrdersRow({
   /* AUTOCOMPLETE STATE */
   const printingProps = {
     options: printingUsers,
-    getOptionLabel: (option) => option?.displayName ?? "N/A",
+    getOptionLabel: option => option?.displayName ?? "N/A",
   };
   const deliveryProps = {
     options: deliveryUsers,
-    getOptionLabel: (option) => option?.displayName ?? "N/A",
+    getOptionLabel: option => option?.displayName ?? "N/A",
   };
 
   function handleInput(e) {
@@ -169,20 +168,20 @@ export default function OrdersRow({
 
   function handleAssignStatus() {
     let selectedPrinting = printingUsers.find(
-      (user) =>
+      user =>
         user.displayName === input.uidPrinting || user.uid === input.uidPrinting
     );
 
     let selectedDelivery = deliveryUsers.find(
-      (user) =>
+      user =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
     let selectedDistribution = distributionUsers.find(
-      (user) =>
+      user =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
     let selectedPickup = pickupUsers.find(
-      (user) =>
+      user =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
 
@@ -205,7 +204,7 @@ export default function OrdersRow({
 
   return (
     <td key={column.id} align={column.align} className={classes}>
-      <div className="flex items-center w-fit">
+      <section className="flex items-center w-fit">
         {column.id === "price" && (
           <span className="text-sm font-bold">${value}</span>
         )}
@@ -314,11 +313,11 @@ export default function OrdersRow({
                       ? "Motivo: " + input.report
                       : null}
                   </Typography>
-                  <div className="w-full">
+                  <section className="w-full">
                     {/* AUTOCOMPLETE DE ESTADOS */}
-                    <div className="flex flex-col w-full">
+                    <section className="flex flex-col w-full">
                       {editor === "deliveryUser" && value == "distribution" ? (
-                        <div className="flex flex-col gap-1">
+                        <section className="flex flex-col gap-1">
                           <p>
                             Dirígete al punto de distribución para retirar el
                             pedido.
@@ -327,14 +326,14 @@ export default function OrdersRow({
                             <span className="font-bold"> Dirección: </span>
                             {`${order.distributionUser.addresses[0].name} ${order.distributionUser.addresses[0].number}, ${order.distributionUser.addresses[0].locality}, ${order.distributionUser.addresses[0].city}`}
                           </Typography>
-                        </div>
+                        </section>
                       ) : (
                         <>
                           <label className="py-2" htmlFor="orderStatus">
                             Cambiar estado de orden
                           </label>
                           <select
-                            onChange={(e) => handleInput(e)}
+                            onChange={e => handleInput(e)}
                             name="orderStatus"
                             id="orderStatus"
                             className="border rounded-l p-2 bg-white"
@@ -442,20 +441,20 @@ export default function OrdersRow({
                           </select>
                         </>
                       )}
-                    </div>
-                  </div>
+                    </section>
+                  </section>
 
                   {printingSelectStatus && editor === "adminUser" ? (
                     <>
                       <p>Seleccione imprenta:</p>
 
-                      <div className="flex flex-col w-full">
+                      <section className="flex flex-col w-full">
                         <Autocomplete
                           {...printingProps}
                           id="auto-complete"
                           name="uidPrinting"
-                          onSelect={(e) => handleInput(e)}
-                          renderInput={(params) => (
+                          onSelect={e => handleInput(e)}
+                          renderInput={params => (
                             <TextField
                               // error={error.city}
                               name="uidPrinting"
@@ -466,20 +465,20 @@ export default function OrdersRow({
                             />
                           )}
                         />
-                      </div>
+                      </section>
                     </>
                   ) : // false
                   deliverySelectStatus && editor === "adminUser" ? (
                     <>
                       <p>Seleccione delivery:</p>
 
-                      <div className="flex flex-col w-full">
+                      <section className="flex flex-col w-full">
                         <Autocomplete
                           {...deliveryProps}
                           id="auto-complete"
                           name="uidDelivery"
-                          onSelect={(e) => handleInput(e)}
-                          renderInput={(params) => (
+                          onSelect={e => handleInput(e)}
+                          renderInput={params => (
                             <TextField
                               // error={error.city}
                               name="uidDelivery"
@@ -490,7 +489,7 @@ export default function OrdersRow({
                             />
                           )}
                         />
-                      </div>
+                      </section>
                     </>
                   ) : // false
                   problemsSelectStatus ? (
@@ -500,7 +499,7 @@ export default function OrdersRow({
                         name="report"
                         id="report"
                         placeholder={"Ingrese su problema aquí..."}
-                        onChange={(e) => handleInput(e)}
+                        onChange={e => handleInput(e)}
                         className="w-full"
                       />
                     </>
@@ -518,7 +517,7 @@ export default function OrdersRow({
                 </Button>
                 <Button
                   variant="contained"
-                  onClick={(e) => handleAssignStatus(e)}
+                  onClick={e => handleAssignStatus(e)}
                 >
                   Aceptar
                 </Button>
@@ -531,7 +530,7 @@ export default function OrdersRow({
             <Button
               color="inherit"
               variant="text"
-              onClick={(e) => handleOpenFilesModal(e)}
+              onClick={e => handleOpenFilesModal(e)}
               // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
               <Inventory2Outlined />
@@ -651,7 +650,7 @@ export default function OrdersRow({
                               <div>
                                 <section className="flex flex-col gap-3">
                                   {order.files.map((file, index) => (
-                                    <div key={index} className="flex gap-2">
+                                    <section key={index} className="flex gap-2">
                                       <p>{`${file?.slice(20, 50)}`}</p>
                                       <Tooltip
                                         placement="top"
@@ -672,7 +671,7 @@ export default function OrdersRow({
                                           />
                                         </a>
                                       </Tooltip>
-                                    </div>
+                                    </section>
                                   ))}
                                 </section>
                               </div>
@@ -927,7 +926,7 @@ export default function OrdersRow({
             )}
           </div>
         )}
-      </div>
+      </section>
     </td>
   );
 }

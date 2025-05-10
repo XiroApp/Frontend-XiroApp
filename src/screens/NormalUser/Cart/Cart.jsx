@@ -18,7 +18,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import OrderCard from "../../../components/Cart/OrderCard";
 import LibraryItemCart from "../../../components/Cart/LibraryItemCart";
 import {
@@ -34,6 +34,7 @@ import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import { getDeliveryPricingByDistance } from "../../../utils/controllers/pricing.controller";
 import { formatPrice, len } from "../../../Common/helpers";
 import { ArrowRight } from "@mui/icons-material";
+import AddMoreLink from "../../../components/AddMoreLink";
 const steps = ["Detalles", "Resumen", "Pago"];
 const baseUrl = Settings.SERVER_URL;
 const PUBLIC_KEY = Settings.MERCADOPAGO_KEY;
@@ -41,13 +42,13 @@ const PUBLIC_KEY = Settings.MERCADOPAGO_KEY;
 export default function Cart() {
   const dispatch = useDispatch(),
     navigate = useNavigate(),
-    user = useSelector((state) => state.dataBaseUser),
-    place = useSelector((state) => state.place),
-    cart = useSelector((state) => state.cart),
-    coupon = useSelector((state) => state.coupon),
-    pricing = useSelector((state) => state.pricing),
-    distance = useSelector((state) => state.distance),
-    libraryCart = useSelector((state) => state.libraryCart),
+    user = useSelector(state => state.dataBaseUser),
+    place = useSelector(state => state.place),
+    cart = useSelector(state => state.cart),
+    coupon = useSelector(state => state.coupon),
+    pricing = useSelector(state => state.pricing),
+    distance = useSelector(state => state.distance),
+    libraryCart = useSelector(state => state.libraryCart),
     [shipment, setShipment] = useState(null),
     [delivery_distance, setDelivery_distance] = useState({
       text: null,
@@ -106,11 +107,11 @@ export default function Cart() {
     }
   }, [shipment, coupon, activeStep]);
 
-  const isStepOptional = (step) => {
+  const isStepOptional = step => {
     return step === 4;
   };
 
-  const isStepSkipped = (step) => {
+  const isStepSkipped = step => {
     return skipped.has(step);
   };
 
@@ -121,12 +122,14 @@ export default function Cart() {
       newSkipped.delete(activeStep);
     }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    window.scrollTo(0, 0);
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    window.scrollTo(0, 0);
+    setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
 
   const handleSkip = () => {
@@ -134,8 +137,8 @@ export default function Cart() {
       throw new Error("You can't skip a step that isn't optional.");
     }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setSkipped(prevSkipped => {
       const newSkipped = new Set(prevSkipped.values());
       newSkipped.add(activeStep);
       return newSkipped;
@@ -178,6 +181,7 @@ export default function Cart() {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     initMercadoPago(PUBLIC_KEY, { locale: "es-AR" });
   }, []);
 
@@ -319,12 +323,12 @@ export default function Cart() {
                               </p>
                             )}
                           </section>
-                          <Link
+                          <AddMoreLink
                             to="/imprimir"
-                            className="w-fit text-[14px] text-green-900 hover:underline hover:text-green-700"
-                          >
-                            +&nbsp;Agregar {len(cart) > 0 && "más "}impresiones
-                          </Link>
+                            text={`Agregar ${
+                              len(cart) > 0 ? "más " : ""
+                            }impresiones`}
+                          />
                         </div>
 
                         <div className="flex flex-col gap-3">
@@ -342,7 +346,7 @@ export default function Cart() {
                           <div className="flex flex-col justify-start items-start gap-y-2 pt-2">
                             {len(libraryCart) > 0 ? (
                               <ul className="w-full max-w-xl space-y-2">
-                                {libraryCart?.map((item) => (
+                                {libraryCart?.map(item => (
                                   <LibraryItemCart key={item.id} item={item} />
                                 ))}
                               </ul>
@@ -352,13 +356,12 @@ export default function Cart() {
                               </p>
                             )}
                           </div>
-                          <Link
+                          <AddMoreLink
                             to="/?libreria"
-                            className="pb-2 w-fit text-[14px] text-green-900 hover:underline hover:text-green-700"
-                          >
-                            +&nbsp;Agregar {len(libraryCart) > 0 && "más "}
-                            artículos de librería
-                          </Link>
+                            text={`Agregar ${
+                              len(libraryCart) > 0 ? "más " : ""
+                            }artículos de librería`}
+                          />
                         </div>
 
                         <div className="flex flex-col gap-3">
@@ -386,7 +389,7 @@ export default function Cart() {
                                     {place?.address?.city}
                                   </span>
                                 </div>
-                                <button onClick={(e) => handleEditPlace(e)}>
+                                <button onClick={e => handleEditPlace(e)}>
                                   <EditIcon
                                     className={
                                       place?.address
@@ -438,7 +441,7 @@ export default function Cart() {
                               Notas adicionales para el pedido
                             </span>
                             <TextField
-                              onChange={(e) => handleInput(e)}
+                              onChange={e => handleInput(e)}
                               id="standard-basic"
                               label="Añadir un comentario"
                               name="description"
@@ -473,19 +476,18 @@ export default function Cart() {
                                       ? "en blanco y negro"
                                       : "a color"}
                                     {" " + order.size}
-                                    {order.numberOfCopies > 1
-                                      ? ` - x${order.numberOfCopies} copias`
-                                      : ` - x${order.numberOfCopies} copia`}
+                                    {`- x${order.numberOfCopies} copia${
+                                      order.numberOfCopies > 1 ? "s" : ""
+                                    }`}
                                   </li>
                                 ))}
                               </ul>
                             ) : (
-                              <Link
+                              <AddMoreLink
                                 to="/imprimir"
-                                className="mt-1 w-fit text-[14px] text-green-900 hover:underline hover:text-green-700"
-                              >
-                                +&nbsp;Agregar impresiones
-                              </Link>
+                                text="Agregar impresiones"
+                                styles="mt-1"
+                              />
                             )}
                           </section>
 
@@ -495,25 +497,22 @@ export default function Cart() {
                             </span>
                             {len(libraryCart) > 0 ? (
                               <ul className="flex flex-col">
-                                {libraryCart.map((order) => (
+                                {libraryCart.map(order => (
                                   <li
                                     key={order.id}
                                     className="text-[14px] font-[400]"
                                   >
                                     * {order.name} - x{order.quantity}{" "}
-                                    {order.quantity == 1
-                                      ? "unidad"
-                                      : "unidades"}
+                                    {`unidad${order.quantity > 1 ? "es" : ""}`}
                                   </li>
                                 ))}
                               </ul>
                             ) : (
-                              <Link
+                              <AddMoreLink
                                 to="/?libreria"
-                                className="mt-1 w-fit text-[14px] text-green-900 hover:underline hover:text-green-700"
-                              >
-                                +&nbsp;Agregar artículos de librería
-                              </Link>
+                                text="Agregar artículos de librería"
+                                styles="mt-1"
+                              />
                             )}
                           </section>
 
@@ -549,7 +548,7 @@ export default function Cart() {
                             </div>
                             {editComment ? (
                               <TextField
-                                onChange={(e) => handleInput(e)}
+                                onChange={e => handleInput(e)}
                                 id="standard-basic"
                                 label="Editar comentario"
                                 name="description"
@@ -571,7 +570,7 @@ export default function Cart() {
                           </span>
                           <section className="flex justify-between gap-4">
                             <TextField
-                              onChange={(e) => setCuponInput(e.target.value)}
+                              onChange={e => setCuponInput(e.target.value)}
                               id="standard-basic"
                               label={"Código de cupón"}
                               name="cupon"
@@ -583,7 +582,7 @@ export default function Cart() {
                               variant="outlined"
                               color="primary"
                               className="w-1/2 n-w-full flex items-center gap-1"
-                              onClick={(e) => handleCupon(e)}
+                              onClick={e => handleCupon(e)}
                             >
                               <LocalOfferIcon
                                 sx={{ width: "1rem", height: "1rem" }}
@@ -798,7 +797,7 @@ export default function Cart() {
                     )}
                   </section>
                   <Box className="bg-[#fff] rounded-b-md p-4 flex justify-between items-center pl-4">
-                    <section onClick={(e) => handleDeleteCart(e)}>
+                    <section onClick={e => handleDeleteCart(e)}>
                       <Button variant="text" color="error">
                         Vaciar carrito
                       </Button>

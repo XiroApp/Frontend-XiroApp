@@ -8,7 +8,6 @@ import { useState } from "react";
 
 export default function ModalsAdmin(props) {
   const {
-      COLLECTION,
       setShowAddModal,
       showDeleteModal,
       setShowDeleteModal,
@@ -42,7 +41,6 @@ export default function ModalsAdmin(props) {
     <>
       {showAddModal && (
         <ModalAdd
-          COLLECTION={COLLECTION}
           newProduct={newProduct}
           setNewProduct={setNewProduct}
           setShowAddModal={setShowAddModal}
@@ -54,7 +52,6 @@ export default function ModalsAdmin(props) {
 
       {showDeleteModal && (
         <ModalDelete
-          COLLECTION={COLLECTION}
           productSelected={productSelected}
           setProductSelected={setProductSelected}
           setShowDeleteModal={setShowDeleteModal}
@@ -66,7 +63,6 @@ export default function ModalsAdmin(props) {
 
       {showEditModal && (
         <ModalEdit
-          COLLECTION={COLLECTION}
           productSelected={productSelected}
           setProductSelected={setProductSelected}
           setShowEditModal={setShowEditModal}
@@ -78,7 +74,6 @@ export default function ModalsAdmin(props) {
 
       {showVisibleModal && (
         <ModalHidden
-          COLLECTION={COLLECTION}
           setShowVisibleModal={setShowVisibleModal}
           setProductSelected={setProductSelected}
           productSelected={productSelected}
@@ -90,7 +85,6 @@ export default function ModalsAdmin(props) {
 
       {showHiddenModal && (
         <ModalVisible
-          COLLECTION={COLLECTION}
           setShowHiddenModal={setShowHiddenModal}
           setProductSelected={setProductSelected}
           productSelected={productSelected}
@@ -112,7 +106,6 @@ ModalsAdmin.propTypes = {
   showDeleteModal: propTypes.bool,
   productSelected: propTypes.object,
   setProductSelected: propTypes.func,
-  COLLECTION: propTypes.any,
   showEditModal: propTypes.bool,
   setShowEditModal: propTypes.func,
   showVisibleModal: propTypes.bool,
