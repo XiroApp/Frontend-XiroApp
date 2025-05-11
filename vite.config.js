@@ -21,7 +21,5 @@ export default defineConfig({
     hmr: true,
     historyApiFallback: true,
   },
-  server: {
-    port: 3000,
-  },
+
 });
