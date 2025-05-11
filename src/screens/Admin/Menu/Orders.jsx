@@ -8,7 +8,6 @@ import {
   Input,
   TableBody,
   TableHead,
-  TablePagination,
   TableRow,
   Typography,
 } from "@mui/material";
@@ -16,7 +15,7 @@ import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper.js";
 import { UsersAdapter } from "../../../Infra/Adapters/users.adapter.js";
 import { twMerge } from "tailwind-merge";
 import propTypes from "prop-types";
-import { normalize, tLC } from "../../../Common/helpers.js";
+import { normalizeStr, tLC } from "../../../Common/helpers.js";
 
 export default function Orders({ editor }) {
   const [printingUsers, setPrintingUsers] = useState([]);
@@ -87,7 +86,7 @@ export default function Orders({ editor }) {
     const filteredOrders = allOrders.filter(
       o =>
         tLC(o?.order_number ?? "").includes(searchTerm) ||
-        normalize(tLC(o?.clientUser?.displayName ?? "")).includes(searchTerm)
+        normalizeStr(tLC(o?.clientUser?.displayName ?? "")).includes(searchTerm)
     );
 
     setOrders(filteredOrders);

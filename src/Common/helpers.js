@@ -111,6 +111,12 @@ function cleanUpResources(APP_VERSION) {
   }
 }
 
+function pathIs(path, options) {
+  const pathname = window?.location?.pathname;
+  if (options?.exact) return pathname === path;
+  return pathname.includes(path);
+}
+
 export {
   sortByDateDesc,
   len,
@@ -119,4 +125,5 @@ export {
   roleIs,
   tLC,
   cleanUpResources,
+  pathIs,
 };
