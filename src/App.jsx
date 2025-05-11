@@ -31,6 +31,8 @@ import Distribution from "./screens/DistributionUser/Distribution";
 import { roleIs } from "./Common/helpers";
 
 function App() {
+  // const APP_VERSION = Settings.FRONTEND_VERSION;
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const sessionUser = getSession();
@@ -38,11 +40,17 @@ function App() {
   const loggedUser = useSelector(state => state.loggedUser);
   const dataBaseUser = useSelector(state => state.dataBaseUser);
 
+  // useEffect(() => {
+  //   cleanUpResources(APP_VERSION);
+  // }, [APP_VERSION]);
+
   useEffect(() => {
     if (sessionUser) {
       dispatch(getLoggedUser(sessionUser));
+      dispatch(getInAppLabels());
+    } else {
+      navigate("/login");
     }
-    dispatch(getInAppLabels());
   }, []);
 
   useEffect(() => {
@@ -54,33 +62,21 @@ function App() {
   useEffect(() => handleRole(), [dataBaseUser]);
 
   function handleRole() {
-    if (!dataBaseUser) return;
-
-    switch (true) {
-      case roleIs("admin"):
-        navigate("/admin");
-        break;
-
-      case roleIs("printing"):
-        navigate("/imprenta");
-        break;
-
-      case roleIs("distribution"):
-        navigate("/distribucion");
-        break;
-
-      case roleIs("delivery"):
-        navigate("/delivery");
-        break;
-
-      case roleIs("pickup"):
-        navigate("/pickup");
-        break;
-
-      default:
-        navigate("/");
-        break;
+    if (!dataBaseUser) {
+      navigate("/login");
+      return;
     }
+
+    const roleRoutes = {
+      admin: "/admin",
+      printing: "/imprenta",
+      distribution: "/distribucion",
+      delivery: "/delivery",
+      pickup: "/pickup",
+    };
+
+    const route = Object.keys(roleRoutes).find(role => roleIs(role));
+    navigate(route || "/");
   }
 
   return (

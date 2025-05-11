@@ -4,29 +4,86 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-    <title>XIRO TESTING</title>
+    <title>XIRO APP - Tu mejor compañero</title>
     <meta
       name="description"
-      content="Accede de manera rápida y sencilla a materiales de estudio impresos"
+      content="Accede de manera rápida a materiales de estudio impresos y artículos de librería"
     />
     <meta property="og:url" content="https://xiroapp.com.ar" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="XIRO APP" />
     <meta
       property="og:description"
-      content="Accede de manera rápida y sencilla a materiales de estudio impresos"
+      content="Accede de manera rápida a materiales de estudio impresos y artículos de librería"
     />
     <meta
       property="og:image"
-      content="https://opengraph.b-cdn.net/production/images/04d5ded6-860b-44da-a974-eb6c95d13848.png?token=PJRUHtqxQ-OcfX8tj8SZP9cfXHHfYINDMOdPVIv37o4&height=200&width=800&expires=33281857085"
+      content="https://opengraph.b-cdn.net/production/images/04d5ded6-860b-44da-a974-eb6c95d13848.png"
     />
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://xiroapp.com.ar" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+    style-src 'self' 'unsafe-inline' fonts.googleapis.com;
+    font-src 'self' https://fonts.gstatic.com https://http2.mlstatic.com;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://www.googletagmanager.com https://apis.google.com https://acrobatservices.adobe.com https://sdk.mercadopago.com https://http2.mlstatic.com;
+  "
+    />
+
+    <script>
+      const APP_VERSION = "v5.0.8 (beta)"; //! Cambiar en cada despliegue.
+      (async function cleanupIfNeeded() {
+        try {
+          const storedVersion = localStorage.getItem("app-version");
+          if (storedVersion !== APP_VERSION) {
+            console.log("Nueva versión detectada. Limpiando datos...");
+            localStorage.clear();
+            sessionStorage.clear();
+            document.cookie.split(";").forEach(cookie => {
+              document.cookie = cookie
+                .replace(/^ +/, "")
+                .replace(
+                  /=.*/,
+                  "=;expires=" + new Date(0).toUTCString() + ";path=/"
+                );
+            });
+            if (window.indexedDB?.databases) {
+              const dbs = await indexedDB.databases();
+              dbs.forEach(db => indexedDB.deleteDatabase(db.name));
+            }
+            if ("serviceWorker" in navigator) {
+              navigator.serviceWorker.getRegistrations().then(registrations => {
+                registrations.forEach(registration => {
+                  registration.unregister().then(() => {
+                    console.log("Service Worker desregistrado.");
+                  });
+                });
+              });
+            }
+            if ("caches" in window) {
+              const names = await caches.keys();
+              await Promise.all(names.map(name => caches.delete(name)));
+            }
+            localStorage.setItem("app-version", APP_VERSION);
+            location.reload();
+          }
+        } catch (error) {
+          console.error("Error durante la limpieza de datos:", error);
+        }
+      })();
+    </script>
   </head>
 
   <body>
     <div id="root"></div>
-    <script type="module" src="src/main.jsx"></script>
+    <script type="module" src="/src/main.jsx" crossorigin="anonymous"></script>
     <script src="https://acrobatservices.adobe.com/view-sdk/viewer.js"></script>
   </body>
 </html>

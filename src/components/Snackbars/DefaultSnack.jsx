@@ -4,6 +4,8 @@ import { useState } from "react";
 export default function DefaultSnack({ content = "" }) {
   const [open, setOpen] = useState(true);
 
+  if (content.trim() == "") return <></>;
+
   return (
     <div
       className={

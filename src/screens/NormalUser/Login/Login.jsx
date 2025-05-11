@@ -25,6 +25,7 @@ import { useDispatch } from "react-redux";
 import { createUserGoogle, xiroLogin, setToast } from "../../../redux/actions";
 import { useNavigate } from "react-router-dom";
 import propTypes from "prop-types";
+import { Settings } from "../../../config";
 
 export default function Login({ loggedUser, dataBaseUser }) {
   const dispatch = useDispatch();
@@ -134,7 +135,9 @@ export default function Login({ loggedUser, dataBaseUser }) {
 
   return (
     <div className="bg-white flex flex-row h-full pb-5">
-      <span className=" text-sm absolute bottom-0 left-0">V 4.0.0(beta)</span>
+      <span className=" text-sm absolute bottom-0 left-0">
+        {Settings.FRONTEND_VERSION}
+      </span>
       {/* LOADER */}
       <Backdrop
         sx={{ color: "#fff", zIndex: theme => theme.zIndex.drawer + 1 }}
