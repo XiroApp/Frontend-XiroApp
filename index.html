@@ -37,14 +37,14 @@
     style-src 'self' 'unsafe-inline' fonts.googleapis.com;
     font-src 'self' fonts.gstatic.com http2.mlstatic.com;
     script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://www.googletagmanager.com https://apis.google.com https://acrobatservices.adobe.com https://sdk.mercadopago.com https://http2.mlstatic.com;
-    connect-src 'self' https://api.mercadopago.com https://*.mercadopago.com https://*.mlstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com https://*.firebaseapp.com https://*.cloudfunctions.net;
+    connect-src 'self' https://api.mercadopago.com https://*.mercadopago.com https://*.mlstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com https://*.firebaseapp.com https://*.cloudfunctions.net https://pdf-converter-service.onrender.com;
     img-src 'self' data: https://*.mercadopago.com https://*.mlstatic.com https://*.googleusercontent.com;
     frame-src https://www.mercadopago.com https://*.mercadopago.com https://*.mlstatic.com https://*.firebaseapp.com https://accounts.google.com https://www.google.com;
   "
     />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <script>
-      const APP_VERSION = "v5.5.1 (Beta)"; //! Cambiar en cada despliegue.
+      const APP_VERSION = "v5.5.2 (Beta)"; //! Cambiar en cada despliegue.
       (async function cleanupIfNeeded() {
         try {
           const storedVersion = localStorage.getItem("app-version");
