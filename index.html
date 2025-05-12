@@ -31,14 +31,18 @@
     <meta
       http-equiv="Content-Security-Policy"
       content="
+    default-src 'self';
     style-src 'self' 'unsafe-inline' fonts.googleapis.com;
-    font-src 'self' https://fonts.gstatic.com https://http2.mlstatic.com;
+    font-src 'self' fonts.gstatic.com;
     script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://www.googletagmanager.com https://apis.google.com https://acrobatservices.adobe.com https://sdk.mercadopago.com https://http2.mlstatic.com;
+    connect-src 'self' https://api.mercadopago.com https://*.mercadopago.com https://*.mlstatic.com;
+    img-src 'self' data: https://*.mercadopago.com https://*.mlstatic.com;
+    frame-src https://www.mercadopago.com https://*.mercadopago.com https://*.mlstatic.com;
   "
     />
 
     <script>
-      const APP_VERSION = "v5.1.0 (vercel)"; //! Cambiar en cada despliegue.
+      const APP_VERSION = "v5.2.0 (Beta)"; //! Cambiar en cada despliegue.
       (async function cleanupIfNeeded() {
         try {
           const storedVersion = localStorage.getItem("app-version");
@@ -46,7 +50,7 @@
             console.log("Nueva versión detectada. Limpiando datos...");
             localStorage.clear();
             sessionStorage.clear();
-            document.cookie.split(";").forEach(cookie => {
+            document.cookie.split(";").forEach((cookie) => {
               document.cookie = cookie
                 .replace(/^ +/, "")
                 .replace(
@@ -56,20 +60,22 @@
             });
             if (window.indexedDB?.databases) {
               const dbs = await indexedDB.databases();
-              dbs.forEach(db => indexedDB.deleteDatabase(db.name));
+              dbs.forEach((db) => indexedDB.deleteDatabase(db.name));
             }
             if ("serviceWorker" in navigator) {
-              navigator.serviceWorker.getRegistrations().then(registrations => {
-                registrations.forEach(registration => {
-                  registration.unregister().then(() => {
-                    console.log("Service Worker desregistrado.");
+              navigator.serviceWorker
+                .getRegistrations()
+                .then((registrations) => {
+                  registrations.forEach((registration) => {
+                    registration.unregister().then(() => {
+                      console.log("Service Worker desregistrado.");
+                    });
                   });
                 });
-              });
             }
             if ("caches" in window) {
               const names = await caches.keys();
-              await Promise.all(names.map(name => caches.delete(name)));
+              await Promise.all(names.map((name) => caches.delete(name)));
             }
             localStorage.setItem("app-version", APP_VERSION);
             location.reload();
