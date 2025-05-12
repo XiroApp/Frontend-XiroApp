@@ -1,7 +1,7 @@
 {
   "name": "xiro-app",
   "private": true,
-  "version": "v5.5.0 (beta)",
+  "version": "v5.5.1 (beta)",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
