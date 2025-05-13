@@ -28,23 +28,12 @@
     />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin" />
-    <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="
-    default-src 'self';
-    style-src 'self' 'unsafe-inline' fonts.googleapis.com;
-    font-src 'self' fonts.gstatic.com http2.mlstatic.com;
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://www.googletagmanager.com https://apis.google.com https://acrobatservices.adobe.com https://sdk.mercadopago.com https://http2.mlstatic.com;
-    connect-src 'self' https://api.mercadopago.com https://*.mercadopago.com https://*.mlstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com https://*.firebaseapp.com https://*.cloudfunctions.net https://pdf-converter-service.onrender.com;
-    img-src 'self' data: https://*.mercadopago.com https://*.mlstatic.com https://*.googleusercontent.com;
-    frame-src https://www.mercadopago.com https://*.mercadopago.com https://*.mlstatic.com https://*.firebaseapp.com https://accounts.google.com https://www.google.com;
-  "
+      content="default-src 'self'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com http2.mlstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://www.googletagmanager.com https://apis.google.com https://acrobatservices.adobe.com https://sdk.mercadopago.com https://http2.mlstatic.com https://maps.googleapis.com; connect-src 'self' ws://localhost:3000 wss://xiroapp.com.ar https://api.mercadopago.com https://*.mercadolibre.com https://*.mercadopago.com https://*.mlstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com https://*.firebaseapp.com https://*.cloudfunctions.net https://pdf-converter-service.onrender.com; img-src 'self' data: https://flagcdn.com https://*.mercadopago.com https://*.mercadolibre.com https://*.mercadolivre.com https://*.mlstatic.com https://*.googleusercontent.com https://maps.googleapis.com https://maps.gstatic.com https://picsum.photos https://fastly.picsum.photos; frame-src https://www.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://*.mlstatic.com https://*.firebaseapp.com https://accounts.google.com https://www.google.com;"
     />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <script>
-      const APP_VERSION = "v5.5.2 (Beta)"; //! Cambiar en cada despliegue.
+      const APP_VERSION = "v6.0.0 (beta)"; //! Cambiar en cada despliegue.
       (async function cleanupIfNeeded() {
         try {
           const storedVersion = localStorage.getItem("app-version");
