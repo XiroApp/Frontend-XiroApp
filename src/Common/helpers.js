@@ -6,9 +6,9 @@ const sortByDateDesc = (a, b) => {
   return dateB - dateA;
 };
 
-const len = item => (item?.length ? item.length : 0);
+const len = (item) => (item?.length ? item.length : 0);
 
-const tLC = str => str.toString().toLowerCase().trim();
+const tLC = (str) => str.toString().toLowerCase().trim();
 
 function formatPrice(price) {
   return new Intl.NumberFormat("es-AR", {
@@ -31,6 +31,9 @@ function roleIs(permission) {
   return user?.roles?.includes(permission);
 }
 
+const normalize = (text) =>
+  text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
 function cleanUpResources(APP_VERSION) {
   console.log("Iniciando limpieza de recursos...");
 
@@ -38,19 +41,19 @@ function cleanUpResources(APP_VERSION) {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker
       .getRegistrations()
-      .then(registrations => {
-        registrations.forEach(registration => {
+      .then((registrations) => {
+        registrations.forEach((registration) => {
           registration
             .unregister()
             .then(() => {
               console.log("Service Worker desregistrado con éxito.");
             })
-            .catch(error => {
+            .catch((error) => {
               console.error("Error al desregistrar el Service Worker:", error);
             });
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error al obtener los Service Workers:", error);
       });
   }
@@ -59,8 +62,8 @@ function cleanUpResources(APP_VERSION) {
   if ("caches" in window) {
     caches
       .keys()
-      .then(cacheNames => {
-        cacheNames.forEach(cacheName => {
+      .then((cacheNames) => {
+        cacheNames.forEach((cacheName) => {
           if (cacheName.includes("workbox-precache")) {
             console.log(`Eliminando cache específico: ${cacheName}`);
           }
@@ -69,12 +72,12 @@ function cleanUpResources(APP_VERSION) {
             .then(() => {
               console.log(`Cache eliminado: ${cacheName}`);
             })
-            .catch(error => {
+            .catch((error) => {
               console.error(`Error al eliminar el cache ${cacheName}:`, error);
             });
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error al obtener los nombres de los caches:", error);
       });
   }
@@ -92,7 +95,7 @@ function cleanUpResources(APP_VERSION) {
       sessionStorage.clear();
 
       // Limpia cookies
-      document.cookie.split(";").forEach(cookie => {
+      document.cookie.split(";").forEach((cookie) => {
         document.cookie = cookie
           .replace(/^ +/, "")
           .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
@@ -126,4 +129,5 @@ export {
   tLC,
   cleanUpResources,
   pathIs,
+  normalize,
 };

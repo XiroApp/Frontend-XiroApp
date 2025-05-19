@@ -1,8 +1,10 @@
+
 import { collection, getDocs } from "firebase/firestore/lite";
 import { db } from "../../config/firebase";
 import { useEffect, useState } from "react";
 import useLoad from "../../utils/hooks/useLoad.js";
 import { Link } from "react-router-dom";
+
 
 export default function TyC() {
   const [html, setHtml] = useState("");
@@ -22,7 +24,9 @@ export default function TyC() {
   }, []);
 
   return (
+
     <section className="w-full justify-center items-center flex flex-col">
+
       {isLoading ? (
         <p className="text-2xl py-16 w-full text-center bg-white">
           Cargando...
@@ -48,6 +52,7 @@ export default function TyC() {
         </>
       )}
     </section>
+
   );
 }
 

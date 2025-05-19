@@ -43,10 +43,10 @@ export default function PersonalData({ user }) {
   const [input, setInput] = useState({ ...user });
   const [error, setError] = useState(false);
 
-  const handleInput = e =>
+  const handleInput = (e) =>
     setInput({ ...input, [e.target.name]: e.target.value });
-  const handleCountry = e => setInput({ ...input, areaCode: e.target.value });
-  const handleGender = e => setInput({ ...input, gender: e.target.name });
+  const handleCountry = (e) => setInput({ ...input, areaCode: e.target.value });
+  const handleGender = (e) => setInput({ ...input, gender: e.target.name });
 
   function handleCloseModal(e) {
     e.preventDefault();
@@ -108,12 +108,12 @@ export default function PersonalData({ user }) {
             sx={{ width: "100%" }}
             options={countries}
             onChange={handleCountry}
-            getOptionLabel={option =>
+            getOptionLabel={(option) =>
               option
-                ? `${option.label} (${option.code}) +${option.phone}`
-                : [countries.find(opt => opt.phone == input.areaCode)]?.map(
-                    option =>
-                      `${option.label} (${option.code}) +${option.phone}`
+                ? `${option?.label} (${option?.code}) +${option?.phone}`
+                : [countries.find((opt) => opt.phone == input.areaCode)]?.map(
+                    (option) =>
+                      `${option?.label} (${option?.code}) +${option?.phone}`
                   )[0]
             }
             renderOption={(props, option) => {
@@ -140,31 +140,38 @@ export default function PersonalData({ user }) {
                 </Box>
               );
             }}
-            renderInput={params => (
-              <TextField
-                sx={{
-                  input: {
-                    "&::placeholder": {
-                      opacity: 1,
+            renderInput={(params) => {
+              const selectedCountry = countries.find(
+                (opt) => opt.phone == input.areaCode
+              );
+              return (
+                <TextField
+                  sx={{
+                    input: {
+                      "&::placeholder": {
+                        opacity: 1,
+                      },
                     },
-                  },
-                }}
-                id="customPlaceholder"
-                variant="standard"
-                {...params}
-                placeholder={
-                  input.areaCode
-                    ? [countries.find(opt => opt.phone == input.areaCode)]?.map(
-                        option =>
-                          `${option.label} (${option.code}) +${option.phone}`
-                      )[0]
-                    : "Selecciona un código de area..."
-                }
-                slotprops={{
-                  htmlInput: { ...params.inputProps, autoComplete: "areaCode" },
-                }}
-              />
-            )}
+
+                  }}
+                  id="customPlaceholder"
+                  variant="standard"
+                  {...params}
+                  placeholder={
+                    selectedCountry
+                      ? `${selectedCountry.label} (${selectedCountry.code}) +${selectedCountry.phone}`
+                      : "Selecciona un código de área..."
+                  }
+                  slotprops={{
+                    htmlInput: {
+                      ...params.inputProps,
+                      autoComplete: "areaCode",
+                    },
+                  }}
+                />
+              );
+            }}
+
           />
         </fieldset>
 
