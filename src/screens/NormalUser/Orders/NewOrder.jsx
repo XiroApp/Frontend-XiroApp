@@ -3,12 +3,14 @@ import Navbar from "../../../components/Navbar/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import PDFViewer from "../../../components/PDFViewer";
 import { LoadingButton } from "@mui/lab";
-import { FaMotorcycle as MopedIcon } from "react-icons/fa6";
-import { FaStore as StoreIcon } from "react-icons/fa6";
-import { FaRegFilePdf as DescriptionIcon } from "react-icons/fa6";
-import { FaCopy as CopiesIcon } from "react-icons/fa6";
-import { FaBookOpen as FileCopySharpIcon } from "react-icons/fa6";
-import { FaFileInvoiceDollar as PrintSharpIcon } from "react-icons/fa6";
+import {
+  FaStore as StoreIcon,
+  FaRegFilePdf as FilesIcon,
+  FaCopy as CopiesIcon,
+  FaBookOpen as PagesIcon,
+  FaFileInvoiceDollar as PriceIcon,
+  FaMotorcycle as MopedIcon,
+} from "react-icons/fa6";
 import UploadIcon from "@mui/icons-material/UploadOutlined";
 import ErrorIcon from "@mui/icons-material/ErrorOutlined";
 import { styled } from "@mui/material/styles";
@@ -43,7 +45,7 @@ import {
   validateFileSize,
 } from "../../../utils/controllers/pricing.controller.js";
 import { formatPrice, len } from "../../../Common/helpers.js";
-import { ShoppingBag } from "@mui/icons-material";
+import { Create } from "@mui/icons-material";
 
 export default function NewOrder() {
   const dispatch = useDispatch(),
@@ -302,15 +304,15 @@ export default function NewOrder() {
 
         <div className="flex flex-col items-center justify-center gap-2 px-4 lg:px-0 h-full lg:w-9/12">
           <div className="lg:flex w-full pt-12 md:p-4">
-            <section className="bg-[#fff] flex flex-col md:flex-row-reverse md:justify-around md:items-center items-around justify-center w-full p-4 gap-4 rounded-lg">
-              <div className="flex items-center justify-center gap-3 sm:gap-1.5 flex-wrap">
+            <section className="bg-[#fff] flex md:flex-row-reverse md:justify-around md:items-center items-around justify-center w-full p-4 gap-4 rounded-lg flex-wrap">
+              <div className="flex items-center justify-center gap-1.5 sm:gap-1.5 flex-row">
                 {place?.type == "Envío a domicilio" || !place ? (
                   <button
                     onClick={() => updateState("choosePlace", true)}
-                    className="flex flex-col gap-1.5 items-center justify-center text-black border-[1.4px] border-[#789360] rounded-md w-20 h-20 hover:bg-green-400/30 hover:border-green-400/30 transition-colors"
+                    className="flex flex-col gap-1.5 items-center justify-center text-black border-[1.4px] border-[#789360] rounded-md w-16 h-20 hover:bg-green-400/30 hover:border-green-400/30 transition-colors"
                   >
                     <MopedIcon style={{ height: "1.8em", width: "1.8em" }} />
-                    <span className="text-[14px]">Envío</span>
+                    <span className="text-[12px]">Envío</span>
                   </button>
                 ) : (
                   <button
@@ -322,43 +324,43 @@ export default function NewOrder() {
                   </button>
                 )}
 
-                <section className="border-[1.4px] border-b-[#789360] rounded-md flex flex-col items-center justify-center px-2 gap-y-1.5 w-20 h-20">
+                <section className="border-[1.4px] border-b-[#789360] rounded-md flex flex-col items-center justify-center px-2 gap-y-1.5 w-16 h-20">
                   <div className="flex justify-center gap-x-2 items-center w-full">
-                    <DescriptionIcon
+                    {/* <FilesIcon
                       style={{ height: "1.5em", width: "1.5em" }}
-                    />
+                    /> */}
                     <span>{files.previews.length}</span>
                   </div>
-                  <span className="text-[14px] w-full text-center">
+                  <span className="text-[11px] w-full text-center">
                     Archivos
                   </span>
                 </section>
 
-                <section className="border-[1.4px] border-b-[#789360] rounded-md flex flex-col gap-1 items-center justify-center px-2 gap-y-1.5 w-20 h-20">
+                <section className="border-[1.4px] border-b-[#789360] rounded-md flex flex-col gap-1 items-center justify-center px-2 gap-y-1.5 w-16 h-20">
                   <div className="flex justify-center gap-x-2 items-center w-full">
-                    <CopiesIcon style={{ height: "1.5em", width: "1.5em" }} />
+                    {/* <CopiesIcon style={{ height: "1.5em", width: "1.5em" }} /> */}
                     <span>{resume.numberOfCopies}</span>
                   </div>
-                  <span className="text-[14px] w-full text-center">Copias</span>
+                  <span className="text-[12px] w-full text-center">Copias</span>
                 </section>
 
-                <section className="border-[1.4px] border-b-[#789360] rounded-md flex flex-col gap-1 items-center justify-center px-2 gap-y-1.5 w-20 h-20">
+                <section className="border-[1.4px] border-b-[#789360] rounded-md flex flex-col gap-1 items-center justify-center px-2 gap-y-1.5 w-16 h-20">
                   <div className="flex justify-center gap-x-2 items-center w-full">
-                    <FileCopySharpIcon
+                    {/* <PagesIcon
                       style={{ height: "1.5em", width: "1.5em" }}
-                    />
+                    /> */}
                     <span>{resume.totalPages}</span>
                   </div>
-                  <span className="text-[14px] w-full text-center">
+                  <span className="text-[12px] w-full text-center">
                     Páginas
                   </span>
                 </section>
 
                 <section className="flex flex-col items-center justify-center px-2 font-bold rounded-md p-2 bg-[#56713d] text-white shadow-xl gap-y-1.5 w-28 h-20">
                   <div className="flex justify-center items-center w-full">
-                    <PrintSharpIcon
+                    {/* <PriceIcon
                       style={{ height: "1.5em", width: "1.5em" }}
-                    />
+                    /> */}
                     <span className="pr-1">${formatPrice(pricing.total)}</span>
                   </div>
                   <span className="text-[14px] w-full text-center">Precio</span>
@@ -372,7 +374,7 @@ export default function NewOrder() {
                 >
                   <LoadingButton
                     style={{
-                      padding: "1em 2em",
+                      padding: "1em",
                     }}
                     loading={state.loading}
                     component="label"
@@ -388,7 +390,7 @@ export default function NewOrder() {
                     }
                   >
                     <span className="w-full text-lg sm:text-xl font-bold tracking-wide text-center">
-                      Cargar Archivos
+                      Cargar Archivo
                     </span>
                     <VisuallyHiddenInput
                       type="file"
@@ -415,11 +417,11 @@ export default function NewOrder() {
               <div className="flex items-center justify-center">
                 <Link
                   to="/?libreria"
-                  className="bg-yellow-400 hover:bg-yellow-500 transition-colors py-[0.9rem] sm:px-[1.rem] px-[2rem] font-semibold rounded-md flex gap-x-2 justify-center items-center"
+                  className="bg-yellow-300/90 hover:bg-yellow-500 transition-colors p-[1rem] font-semibold rounded-md flex gap-x-2 justify-center items-center"
                 >
-                  <ShoppingBag />
+                  <Create />
                   <span className="text-center text-sm lg:text-lg">
-                    Artículos de Librería
+                    Librería
                   </span>
                 </Link>
               </div>
@@ -608,7 +610,7 @@ export default function NewOrder() {
               </LoadingButton>
             )}
           </section>
-          {libraryModal && (
+          {!libraryModal && (
             <div
               onClick={() => setLibraryModal(false)}
               className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 pb-14"
