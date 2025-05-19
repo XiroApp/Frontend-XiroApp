@@ -76,6 +76,12 @@ function App() {
     };
 
     const route = Object.keys(roleRoutes).find(role => roleIs(role));
+    //! Revisar ruta success que se muestra solo medios segundo
+    // if (location.pathname == "/success") {
+    //   const timer = setTimeout(() => navigate(route || "/"), 4000);
+    //   return () => clearTimeout(timer);
+    // } else return navigate(route || "/");
+
     navigate(route || "/");
   }
 

@@ -468,7 +468,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
           {render == "personalData" ? (
             <PersonalData user={user} />
           ) : render == "accountData" ? (
-            <AccountData user={user} />
+            <AccountData />
           ) : render == "addressData" ? (
             <AddressData user={user} />
           ) : render == "FAQ" ? (

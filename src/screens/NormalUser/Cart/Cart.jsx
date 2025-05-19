@@ -376,9 +376,12 @@ export default function Cart() {
                               Forma de entrega
                             </Typography>
                           </section>
-                          <section className="flex flex-col gap-5">
+                          <section
+                            onClick={handleEditPlace}
+                            className="flex flex-col gap-5 w-full max-w-3xl cursor-pointer hover:bg-green-300/20"
+                          >
                             <div className="flex flex-col gap-1 border-2 border-[#789360] rounded-md p-3 shadow-xl drop-shadow-xl">
-                              <div className="flex  justify-between items-center">
+                              <div className="flex justify-between items-center">
                                 <div className="flex flex-col justify-center">
                                   <span className="text-[16px] text-black ">
                                     {place?.address?.name ||
@@ -389,15 +392,13 @@ export default function Cart() {
                                     {place?.address?.city}
                                   </span>
                                 </div>
-                                <button onClick={e => handleEditPlace(e)}>
-                                  <EditIcon
-                                    className={
-                                      place?.address
-                                        ? "text-green-700"
-                                        : "text-red-500"
-                                    }
-                                  />
-                                </button>
+                                <EditIcon
+                                  className={
+                                    place?.address
+                                      ? "text-green-700"
+                                      : "text-red-500"
+                                  }
+                                />
                               </div>
                               <div
                                 className={
@@ -436,7 +437,7 @@ export default function Cart() {
                             <Typography variant="h6">4</Typography>
                             <Typography variant="h6">Comentarios</Typography>
                           </section>
-                          <section className="flex flex-col justify-start">
+                          <section className="flex flex-col justify-start w-full max-w-3xl">
                             <span className="text-[14px] font-[400]">
                               Notas adicionales para el pedido
                             </span>
@@ -535,7 +536,7 @@ export default function Cart() {
                             </span>
                           </section>
 
-                          <section className="flex flex-col">
+                          <section className="flex flex-col w-full max-w-2xl pr-4">
                             <div className="flex justify-between">
                               <span className="underline text-[16px] font-[400] mb-1">
                                 Instrucciones de entrega
@@ -564,7 +565,7 @@ export default function Cart() {
                             )}
                           </section>
                         </div>
-                        <div className="flex flex-col pl-4">
+                        <div className="flex flex-col pl-4 w-full max-w-2xl">
                           <span className="underline text-[16px] font-[400] mb-1">
                             Cupones
                           </span>
@@ -833,11 +834,11 @@ export default function Cart() {
                             )
                           }
                         >
-                          <span className="text-lg">Continuar</span>
+                          <span className="text-xl p-1">Continuar</span>
                         </Button>
                       ) : (
                         <Button variant="contained" onClick={handleNext}>
-                          <span className="text-lg">Continuar</span>
+                          <span className="text-xl p-1">Continuar</span>
                         </Button>
                       )}
                     </section>

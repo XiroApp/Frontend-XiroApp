@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Backdrop,
-  Box,
-  Button,
-  CircularProgress,
-  Link,
-  Modal,
-} from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, Modal } from "@mui/material";
 import { FaMotorcycle as MopedIcon } from "react-icons/fa6";
 import { FaStore as StoreIcon } from "react-icons/fa6";
 import PlaceIcon from "@mui/icons-material/PlaceOutlined";
@@ -15,6 +8,7 @@ import NewAddressForm from "../../components/Forms/NewAddressForm";
 import { setOrderPlace, setToast } from "../../redux/actions";
 import { UsersAdapter } from "../../Infra/Adapters/users.adapter";
 import propTypes from "prop-types";
+import AddMoreLink from "../../components/AddMoreLink";
 
 ChoosePlaceModal.propTypes = {
   choosePlace: propTypes.bool,
@@ -101,7 +95,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               className={
                 resume?.place?.type === "Envío a domicilio"
                   ? "flex flex-row gap-3 md:gap-5 items-center justify-start p-3 md:p-4 border-2 border-[#000] bg-[#81A165] rounded-lg text-white"
-                  : "flex flex-row gap-3 md:gap-5 items-center justify-start p-3 md:p-4 border border-[#000] bg-[#fff]/50 rounded-lg hover:bg-green-500/60 transition-colors"
+                  : "flex flex-row gap-3 md:gap-5 items-center justify-start p-3 md:p-4 border border-[#000] bg-[#fff]/50 rounded-lg hover:bg-green-600/30 transition-colors"
               }
               onClick={() =>
                 setResume({
@@ -136,7 +130,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               className={
                 resume?.place?.type === "Retiro"
                   ? "flex flex-row gap-3 md:gap-5 items-center justify-start p-3 md:p-4 border-2 border-[#000] bg-[#81A165] rounded-lg text-white"
-                  : "flex flex-row gap-3 md:gap-5 items-center justify-start p-3 md:p-4 border border-[#000] bg-[#fff]/50 rounded-lg hover:bg-green-500/60 transition-colors"
+                  : "flex flex-row gap-3 md:gap-5 items-center justify-start p-3 md:p-4 border border-[#000] bg-[#fff]/50 rounded-lg hover:bg-green-600/30 transition-colors"
               }
               onClick={() =>
                 setResume({
@@ -213,7 +207,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                   )}
                 </div>
                 <button onClick={() => setOpen(!open)}>
-                  <Link className="font-[600]">+ Añadir dirección</Link>
+                  <AddMoreLink text="Añadir una nueva dirección" />
                 </button>
               </div>
             ) : resume?.place?.type === "Retiro" ? (
