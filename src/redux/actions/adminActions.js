@@ -119,6 +119,7 @@ export function getAllOrders(pageToken) {
             order_number: order.order_number,
             orderStatus: order.orderStatus,
             cart: order.cart,
+            library_cart: order.library_cart,
             paymentId: order.paymentData.id,
             paymentStatus: order.paymentData.status,
             transactionAmount:
