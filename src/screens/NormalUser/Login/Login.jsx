@@ -54,12 +54,27 @@ export default function Login({ loggedUser, dataBaseUser }) {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
   async function handleGoogleLogin() {
     if (input.conditionsChecked) {
       try {
         setLoader(true);
         setError({ email: false, password: false, conditionsChecked: false });
+
+        // Intentar iniciar sesión con Google
         let loginResponse = await loginWithGoogle();
+
+        // Verificar si el usuario está definido
+        if (!loginResponse || !loginResponse.user) {
+          console.warn("No se devolvió un usuario válido.");
+          dispatch(
+            setToast(
+              "Error: No se pudo obtener la información del usuario.",
+              "error"
+            )
+          );
+          throw new Error("No se devolvió un usuario válido.");
+        }
 
         const {
           email,
@@ -70,11 +85,10 @@ export default function Login({ loggedUser, dataBaseUser }) {
           phoneNumber = null,
         } = loginResponse.user;
 
-        let user = loginResponse.user;
-
         const { isNewUser } = getAdditionalUserInfo(loginResponse);
 
         if (isNewUser) {
+          // Crear un nuevo usuario en la base de datos
           dispatch(
             createUserGoogle({
               email,
@@ -86,17 +100,31 @@ export default function Login({ loggedUser, dataBaseUser }) {
               createdAt: new Date(),
             })
           );
-        } else dispatch(xiroLogin(user, input.rememberMe));
+        } else {
+          // Iniciar sesión con un usuario existente
+          dispatch(xiroLogin(loginResponse.user, input.rememberMe));
+        }
       } catch (error) {
-        console.error(error);
-        dispatch(setToast("Error al iniciar sesión", "error"));
+        // Manejar errores específicos
+        if (error.code === "auth/popup-closed-by-user") {
+          console.warn("El usuario cerró la ventana emergente.");
+          dispatch(
+            setToast("La ventana de inicio de sesión fue cerrada.", "warning")
+          );
+        } else {
+          console.error("Error durante el inicio de sesión:", error);
+          dispatch(setToast("Error al iniciar sesión", "error"));
+        }
       } finally {
+        // Asegurarse de que el loader se desactive
         setLoader(false);
       }
     } else {
+      // Mostrar error si no se aceptaron los términos y condiciones
       setError({ ...error, conditionsChecked: true });
     }
   }
+
   async function handleLogin() {
     setError({ email: false, password: false, conditionsChecked: false });
     if (input.conditionsChecked) {
@@ -133,6 +161,7 @@ export default function Login({ loggedUser, dataBaseUser }) {
       setError({ ...error, conditionsChecked: true });
     }
   }
+
   function handleInput(e) {
     const { name, value, checked } = e.target;
 
