@@ -15,7 +15,7 @@ const points = [
 ];
 
 const DeliveryRoutes = () => {
-  const orders = useSelector((state) => state.orders);
+  const orders = useSelector(state => state.orders);
 
   useEffect(() => {}, []);
 
@@ -55,7 +55,7 @@ const RoutesDelivery = () => {
     version: "weekly",
   });
 
-  if (!isLoaded) return <div>Loading...</div>;
+  if (!isLoaded) return <p>Cargando...</p>;
   return <Maps isLoaded={isLoaded} />;
 };
 
@@ -67,7 +67,7 @@ function Maps({ isLoaded }) {
     if (points.length > 1) {
       const directionService = new window.google.maps.DirectionsService();
 
-      const waypoints = points.slice(1, -1).map((point) => ({
+      const waypoints = points.slice(1, -1).map(point => ({
         location: { lat: point.lat, lng: point.lng },
         stopover: true,
       }));

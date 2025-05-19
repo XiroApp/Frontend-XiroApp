@@ -3,14 +3,13 @@ import { useState } from "react";
 import { len } from "../../Common/helpers";
 import { setToast } from "../../redux/actions";
 import { useDispatch } from "react-redux";
-import { doc, setDoc } from "firebase/firestore/lite";
+import { LibraryService } from "../../Services/library.service";
 
 export default function ModalAdd(props) {
   const {
       setShowAddModal,
       newProduct,
       setNewProduct,
-      COLLECTION,
       products,
       setProducts,
       setLoadingModal,
@@ -62,16 +61,13 @@ export default function ModalAdd(props) {
   }
 
   function handlePrice(e) {
-    // Verificar si el valor es numérico antes de procesarlo
     if (e.target.value === "") {
-      // Si el campo está vacío, establecer a 0
       e.target.value = "0";
       setNewProduct({ ...newProduct, price: 0 });
     } else if (e.target.validity.valid) {
       const price = Number(e.target.value);
       setNewProduct({ ...newProduct, price });
     } else {
-      // Si no es válido, mantener el valor anterior o establecer a 0
       e.target.value = newProduct.price || 0;
     }
   }
@@ -89,7 +85,7 @@ export default function ModalAdd(props) {
 
     try {
       setLoadingModal(true);
-      await setDoc(doc(COLLECTION, newID), productToDB);
+      await LibraryService.manageProduct(productToDB);
       setProducts([...(products ?? []), productToDB]);
       setShowAddModal(false);
     } catch (err) {
@@ -146,13 +142,10 @@ export default function ModalAdd(props) {
             <input
               onChange={handlePrice}
               onInput={e => {
-                // Si está vacío, establecer a 0
                 if (e.target.value === "") {
                   e.target.value = "0";
                   setNewProduct({ ...newProduct, price: 0 });
-                }
-                // Asegurar que solo se permitan números y un punto decimal
-                else if (!/^\d*\.?\d*$/.test(e.target.value)) {
+                } else if (!/^\d*\.?\d*$/.test(e.target.value)) {
                   e.target.value = e.target.value.replace(/[^\d.]/g, "");
                 }
               }}
@@ -215,7 +208,6 @@ ModalAdd.propTypes = {
   setShowAddModal: propTypes.func,
   newProduct: propTypes.object,
   setNewProduct: propTypes.func,
-  COLLECTION: propTypes.any,
   setProducts: propTypes.func,
   products: propTypes.array,
   setLoadingModal: propTypes.func,

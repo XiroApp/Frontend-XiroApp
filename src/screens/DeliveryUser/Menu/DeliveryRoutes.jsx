@@ -21,13 +21,13 @@ const DeliveryRoutes = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [points, setPoints] = useState({});
-  const user = useSelector((state) => state.loggedUser);
+  const user = useSelector(state => state.loggedUser);
 
   useEffect(() => {
     if (orders.length) {
       console.log(orders[0].distributionUser.addresses[0]);
 
-      const newPoints = orders.map((order) => {
+      const newPoints = orders.map(order => {
         return { lat: order.place.address.lat, lng: order.place.address.lng };
       });
       setPoints({
@@ -45,7 +45,7 @@ const DeliveryRoutes = () => {
   useEffect(() => {
     console.log(orders[0]?.distributionUser?.addresses[0]);
 
-    const newPoints = orders.map((order) => {
+    const newPoints = orders.map(order => {
       return { lat: order.place.address.lat, lng: order.place.address.lng };
     });
     setPoints({
@@ -63,7 +63,7 @@ const DeliveryRoutes = () => {
       let response = await axios.get(`${baseUrl}/delivery/orders/${user.uid}`);
 
       let formatedOrders = response.data
-        .map((order) => {
+        .map(order => {
           const fechaStr = order.paymentData.date_created;
           const fecha = new Date(fechaStr);
 
@@ -144,7 +144,7 @@ const RoutesDelivery = ({ points }) => {
     version: "weekly",
   });
 
-  if (!isLoaded) return <div>Loading...</div>;
+  if (!isLoaded) return <p>Cargando...</p>;
   return <Maps isLoaded={isLoaded} points={points} />;
 };
 
@@ -158,7 +158,7 @@ function Maps({ isLoaded, points }) {
     if (points) {
       const directionService = new window.google.maps.DirectionsService();
 
-      const waypoints = points?.waypoints?.map((point) => ({
+      const waypoints = points?.waypoints?.map(point => ({
         location: { lat: point.lat, lng: point.lng },
         stopover: true,
       }));

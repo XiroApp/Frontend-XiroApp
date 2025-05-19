@@ -6,9 +6,9 @@ const sortByDateDesc = (a, b) => {
   return dateB - dateA;
 };
 
-const len = item => (item?.length ? item.length : 0);
+const len = (item) => (item?.length ? item.length : 0);
 
-const tLC = str => str.toString().toLowerCase().trim();
+const tLC = (str) => str.toString().toLowerCase().trim();
 
 function formatPrice(price) {
   return new Intl.NumberFormat("es-AR", {
@@ -31,8 +31,8 @@ function roleIs(permission) {
   return user?.roles?.includes(permission);
 }
 
-
-const normalize = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+const normalize = (text) =>
+  text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
 function cleanUpResources(APP_VERSION) {
   console.log("Iniciando limpieza de recursos...");
@@ -114,6 +114,12 @@ function cleanUpResources(APP_VERSION) {
   }
 }
 
+function pathIs(path, options) {
+  const pathname = window?.location?.pathname;
+  if (options?.exact) return pathname === path;
+  return pathname.includes(path);
+}
+
 export {
   sortByDateDesc,
   len,
@@ -123,4 +129,5 @@ export {
   tLC,
   normalize,
   cleanUpResources,
+  pathIs,
 };

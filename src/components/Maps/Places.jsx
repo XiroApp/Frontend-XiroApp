@@ -17,7 +17,7 @@ export default function Places({ userAddress, onLocationChange, searchQuery }) {
     version: "weekly",
   });
 
-  if (!isLoaded) return <div>Loading...</div>;
+  if (!isLoaded) return <p>Cargando...</p>;
   return (
     <Maps
       userAddress={userAddress}
@@ -55,7 +55,7 @@ function Maps({ userAddress, onLocationChange, searchQuery }) {
     }
   }, [searchQuery]);
 
-  const handleDragEnd = async (event) => {
+  const handleDragEnd = async event => {
     const position = event.latLng;
     const lat = position.lat();
     const lng = position.lng();
@@ -73,10 +73,7 @@ function Maps({ userAddress, onLocationChange, searchQuery }) {
 
   return (
     <div className="w-[100%] h-[100%]">
-      <PlacesAutocomplete
-        setSelected={setSelected}
-        selected={selected}
-      />
+      <PlacesAutocomplete setSelected={setSelected} selected={selected} />
       <APIProvider apiKey={apiKey}>
         <Map
           mapId="DEMO_MAP_ID"
@@ -98,7 +95,7 @@ function Maps({ userAddress, onLocationChange, searchQuery }) {
     </div>
   );
 }
-const PlacesAutocomplete = ({ setSelected, selected}) => {
+const PlacesAutocomplete = ({ setSelected, selected }) => {
   const {
     ready,
     value,
@@ -113,7 +110,7 @@ const PlacesAutocomplete = ({ setSelected, selected}) => {
     }
   }, [selected.address, setValue]);
 
-  const handleSelect = async (address) => {
+  const handleSelect = async address => {
     setValue(address, false);
     clearSuggestions();
 
@@ -128,11 +125,13 @@ const PlacesAutocomplete = ({ setSelected, selected}) => {
 
   return (
     <div className="autocomplete-container w-full">
-      <Typography className="" variant="h6">Selecciona la ubicación en el mapa:</Typography>
+      <Typography className="" variant="h6">
+        Selecciona la ubicación en el mapa:
+      </Typography>
       <input
         type="text"
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={e => setValue(e.target.value)}
         disabled={!ready}
         placeholder="Buscar"
         className="autocomplete-input placeholder:text-zinc-400 my-1 focus:outline-none focus:ring-2 focus:ring-[#458552] focus:border-transparent"

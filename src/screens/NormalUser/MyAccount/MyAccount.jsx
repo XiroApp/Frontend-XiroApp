@@ -221,7 +221,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
     <>
       <Navbar cart={cart} loggedUser={dataBaseUser} title={"Cuenta"} />
       <div className="flex justify-center gap-5 p-5 ">
-        <Chatbot />
+        {render != "library" && <Chatbot />}
         <span className="lg:hidden fixed top-5 left-5 z-50">
           <MenuIcon onClick={toggleDrawer("left", true)} className="bg-white" />
           <Drawer
@@ -468,7 +468,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
           {render == "personalData" ? (
             <PersonalData user={user} />
           ) : render == "accountData" ? (
-            <AccountData user={user} />
+            <AccountData />
           ) : render == "addressData" ? (
             <AddressData user={user} />
           ) : render == "FAQ" ? (

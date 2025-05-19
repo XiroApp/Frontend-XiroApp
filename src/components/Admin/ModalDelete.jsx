@@ -1,15 +1,14 @@
 import propTypes from "prop-types";
 import { initLibraryProd } from "../../Common/constants.js";
-import { deleteDoc, doc } from "firebase/firestore/lite";
 import { useDispatch } from "react-redux";
 import { setToast } from "../../redux/actions/index.js";
+import { LibraryService } from "../../Services/library.service.js";
 
 function ModalDeleteAdmin(props) {
   const {
       setShowDeleteModal,
       setProductSelected,
       productSelected,
-      COLLECTION,
       setLoadingModal,
       products,
       setProducts,
@@ -24,7 +23,7 @@ function ModalDeleteAdmin(props) {
   async function removeProduct() {
     try {
       setLoadingModal(true);
-      await deleteDoc(doc(COLLECTION, productSelected.id));
+      await LibraryService.deleteProduct(productSelected.id);
       setProducts(products.filter(p => p.id != productSelected.id));
       resetData();
     } catch (err) {
@@ -71,7 +70,6 @@ ModalDeleteAdmin.propTypes = {
   setShowDeleteModal: propTypes.func,
   setProductSelected: propTypes.func,
   productSelected: propTypes.object,
-  COLLECTION: propTypes.any,
   setLoadingModal: propTypes.func,
   products: propTypes.array,
   setProducts: propTypes.func,
