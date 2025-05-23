@@ -185,14 +185,13 @@ export default function Orders({ editor }) {
             onChange={(e) => handleSearch(e.target.value)}
             className="w-full text-gray-800"
           />
-          {/* UPLOAD PERSONS */}
+
+        </div>
           <JsonToExcelConverter
-            text={"Descargar Excel"}
-            tooltipText="Descargar modelo de excel."
+            text={"Descargar Listado de órdenes"}
             icon={<FileDownloadIcon className="h-5 w-5" />}
             action={handleDownloadExcel}
           />
-        </div>
         <div className="w-full flex flex-col gap-y-2">
           <label
             htmlFor="filter-orders"

@@ -13,8 +13,7 @@ export default function JsonToExcelConverter({
     // <Tooltip content={tooltipText}>
     <Button onClick={exportFile} variant="contained" color="primary">
       {icon}
-      {/* {text} */}
-      Descargar Excel
+      {text}
     </Button>
     // </Tooltip>
   );

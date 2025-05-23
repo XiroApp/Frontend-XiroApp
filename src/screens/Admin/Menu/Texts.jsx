@@ -55,11 +55,15 @@ export default function Texts() {
               <div className="" key={index}>
                 <Typography variant="h6">
                   {item.id === "delivery_description"
-                    ? "Info delivery"
+                    ? "Info de delivery"
                     : item.id === "pick_up_point_description"
-                    ? "Info punto de entrega"
+                    ? "Info de punto de entrega"
                     : item.id === "snackbar_new_order_info"
                     ? "Info nueva orden"
+                    : item.id === "alert_info_new_order_modal"
+                    ? "Info al elegir lugar de entrega"
+                    : item.id === "week_alert "
+                    ? "Alerta semanal"
                     : item.id}
                 </Typography>
                 <TextareaAutosize

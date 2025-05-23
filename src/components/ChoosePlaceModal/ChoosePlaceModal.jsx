@@ -26,8 +26,6 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
   const place = useSelector((state) => state.place);
   const [loading, setLoading] = useState(false);
 
-  // const user = useSelector((state) => state.dataBaseUser);
-
   function handleChoice(e) {
     setLoading(true);
     try {
@@ -79,21 +77,10 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
             >
               ¿Donde queres recibir tu pedido?
             </h2>
-            <p>
-              Envíos domicilio y puntos: Martes y Viernes entre las 9-14hs o las
-              15-20hs. Los pedidos que ingresan hasta las 12pm del día previo,
-              ingresan en el día previsto. Los que ingresan posterior a horario
-              se envian el próximo dia de entrega.
-            </p>
+            <p>{labels?.alert_info_new_order_modal?.content}</p>
             <div className="text-center">
               {/* ALERTAS DE ENVÍO */}
-              {/* <p className="font-bold">
-                Viernes 02-05: se entregaran solo domicilios y puntos de entrega
-                locales comerciales.
-              </p>
-              <p className="font-bold underline">
-                <span>Universidad proxima entrega 06-05-25</span>
-              </p> */}
+              <p className="font-bold underline">{labels?.week_alert}</p>
             </div>
           </section>
           <section className="flex flex-col w-full px-5 py-5 gap-6 md:gap-10 overflow-y-auto max-h-[calc(90vh-200px)]">
