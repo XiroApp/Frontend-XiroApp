@@ -24,7 +24,7 @@ const ApiConstants = {
     "http://localhost:5001/xiro-app-2ec87/us-central1/api/xiro-app", //Emulador
 };
 
-const initProd = {
+  const initProd = {
   id: "",
   code: "",
   name: "",

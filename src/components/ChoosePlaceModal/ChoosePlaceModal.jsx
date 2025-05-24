@@ -13,7 +13,12 @@ import { FaStore as StoreIcon } from "react-icons/fa6";
 import PlaceIcon from "@mui/icons-material/PlaceOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import NewAddressForm from "../../components/Forms/NewAddressForm";
-import { setOrderPlace, setToast, updateUser } from "../../redux/actions";
+import {
+  getInAppLabels,
+  setOrderPlace,
+  setToast,
+  updateUser,
+} from "../../redux/actions";
 import { UsersAdapter } from "../../Infra/Adapters/users.adapter";
 
 export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
@@ -50,6 +55,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
 
   useEffect(() => {
     fetchPickupPoints();
+    dispatch(getInAppLabels());
   }, []);
 
   return (
