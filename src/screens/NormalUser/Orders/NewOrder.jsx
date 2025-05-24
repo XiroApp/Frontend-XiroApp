@@ -478,7 +478,7 @@ export default function NewOrder() {
 
           <section className="w-full h-full">
             <DefaultSnack content={labels?.snackbar_new_order_info} />
-
+            {console.log(files)}
             {files.previews.length > 0 ? (
               <div className="flex flex-col items-center justify-center">
                 <section className="flex justify-center w-screen h-full rounded-lg lg:px-6 lg:w-full">
