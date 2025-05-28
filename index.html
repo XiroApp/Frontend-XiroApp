@@ -35,7 +35,6 @@
       content="default-src 'self'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com http2.mlstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://www.googletagmanager.com https://apis.google.com https://acrobatservices.adobe.com https://sdk.mercadopago.com https://http2.mlstatic.com https://maps.googleapis.com; connect-src 'self' ws://localhost:3000 wss://xiroapp.com.ar https://api.mercadopago.com https://*.mercadolibre.com https://*.mercadopago.com https://*.mlstatic.com https://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com https://*.firebaseapp.com https://*.cloudfunctions.net https://pdf-converter-service.onrender.com; img-src 'self' data: https://flagcdn.com https://*.mercadopago.com https://*.mercadolibre.com https://*.mercadolivre.com https://*.mlstatic.com https://*.googleusercontent.com https://maps.googleapis.com https://maps.gstatic.com https://picsum.photos https://fastly.picsum.photos; frame-src https://www.mercadopago.com https://*.mercadopago.com https://*.mercadolibre.com https://*.mlstatic.com https://*.firebaseapp.com https://accounts.google.com https://www.google.com;"
     />
     <script>
-
       const APP_VERSION = "v6.0.1 (beta)"; //! Cambiar en cada despliegue.
 
       (async function cleanupIfNeeded() {
@@ -45,7 +44,7 @@
             console.log("Nueva versión detectada. Limpiando datos...");
             localStorage.clear();
             sessionStorage.clear();
-            document.cookie.split(";").forEach((cookie) => {
+            document.cookie.split(";").forEach(cookie => {
               document.cookie = cookie
                 .replace(/^ +/, "")
                 .replace(
@@ -55,22 +54,20 @@
             });
             if (window.indexedDB?.databases) {
               const dbs = await indexedDB.databases();
-              dbs.forEach((db) => indexedDB.deleteDatabase(db.name));
+              dbs.forEach(db => indexedDB.deleteDatabase(db.name));
             }
             if ("serviceWorker" in navigator) {
-              navigator.serviceWorker
-                .getRegistrations()
-                .then((registrations) => {
-                  registrations.forEach((registration) => {
-                    registration.unregister().then(() => {
-                      console.log("Service Worker desregistrado.");
-                    });
+              navigator.serviceWorker.getRegistrations().then(registrations => {
+                registrations.forEach(registration => {
+                  registration.unregister().then(() => {
+                    console.log("Service Worker desregistrado.");
                   });
                 });
+              });
             }
             if ("caches" in window) {
               const names = await caches.keys();
-              await Promise.all(names.map((name) => caches.delete(name)));
+              await Promise.all(names.map(name => caches.delete(name)));
             }
             localStorage.setItem("app-version", APP_VERSION);
             location.reload();

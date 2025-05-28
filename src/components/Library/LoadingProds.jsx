@@ -1,5 +1,9 @@
+import { CircularProgress } from "@mui/material";
+
 export default function LoadingProds() {
   return (
-    <p className="w-full text-center text-2xl pt-16">Cargando productos...</p>
+    <div className="flex justify-center items-center pt-16 w-full min-h-20">
+      <CircularProgress color="primary" size={50} />
+    </div>
   );
 }

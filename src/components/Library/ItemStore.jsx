@@ -2,16 +2,9 @@ import { twMerge } from "tailwind-merge";
 import { formatPrice, len } from "../../Common/helpers";
 import { Link } from "react-router-dom";
 import propTypes from "prop-types";
+import logo from "/xiro-head.webp";
 
-ItemStore.propTypes = {
-  product: propTypes.object,
-  inCart: propTypes.func,
-  handleQuantity: propTypes.func,
-  addProdToCart: propTypes.func,
-  quantities: propTypes.object,
-};
-
-function ItemStore(props) {
+export default function ItemStore(props) {
   const { product, inCart, handleQuantity, addProdToCart, quantities } = props;
   return (
     <li className="flex justify-between flex-col items-center bg-[#fef9e9] p-3 rounded-xl border border-black w-full max-w-[280px] h-[330px] relative">
@@ -30,7 +23,8 @@ function ItemStore(props) {
       )}
       <div className="w-full h-32 mb-2 overflow-hidden rounded-md">
         <img
-          src={product.cover}
+          //! agregar esto en producción: src={product.cover || logo}
+          src={logo}
           alt={"Imágen de " + product.name}
           className="w-full h-full object-cover rounded-md border-[0.1px] border-black"
         />
@@ -148,7 +142,7 @@ function ItemStore(props) {
               </Link>
             ) : (
               <button
-                className="bg-green-600 hover:bg-green-700 brightness-110 text-white font-medium py-2 rounded-lg transition-colors w-full text-center text-sm sm:text-base"
+                className="bg-green-600/90 hover:bg-green-500 text-white font-medium py-2 rounded-lg transition-colors w-full text-center text-sm sm:text-base"
                 onClick={() => addProdToCart(product)}
               >
                 Agregar al Carrito
@@ -165,4 +159,10 @@ function ItemStore(props) {
   );
 }
 
-export default ItemStore;
+ItemStore.propTypes = {
+  product: propTypes.object,
+  inCart: propTypes.func,
+  handleQuantity: propTypes.func,
+  addProdToCart: propTypes.func,
+  quantities: propTypes.object,
+};

@@ -1,72 +1,56 @@
-import { IconButton, Snackbar } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import CloseIcon from "@mui/icons-material/Close";
+import { Snackbar } from "@mui/material";
+import { useEffect, useState } from "react";
+import {
+  Close as CloseIcon,
+  CheckCircle as CheckCircleIcon,
+  Error as ErrorIcon,
+} from "@mui/icons-material";
 import { useSelector } from "react-redux";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ErrorIcon from "@mui/icons-material/Error";
+
 export default function ToastAlert() {
-  const toastAlert = useSelector((state) => state.toastAlert);
+  const toastAlert = useSelector(state => state.toastAlert),
+    [state, setState] = useState({
+      open: false,
+      vertical: "top",
+      horizontal: "center",
+      message: "",
+      variant: "",
+    }),
+    { vertical, horizontal, open, message } = state,
+    handleClose = () => setState({ ...state, open: false });
 
-  const [state, setState] = useState({
-    open: false,
-    vertical: "top",
-    horizontal: "center",
-    message: "",
-    variant: "",
-  });
+  useEffect(() => setState({ ...toastAlert }), [toastAlert]);
 
-  const { vertical, horizontal, open, message } = state;
-
-  useEffect(() => {
-    setState({
-      ...toastAlert,
-    });
-  }, [toastAlert]);
-
-  const handleClose = () => {
-    setState({ ...state, open: false });
-  };
+  function renderIcon(variant) {
+    switch (variant) {
+      case "success":
+        return <CheckCircleIcon color="success" />;
+      case "error":
+        return <ErrorIcon color="error" />;
+      case "info":
+        return <ErrorIcon color="primary" />;
+      case "warning":
+        return <ErrorIcon color="warning" />;
+      default:
+        return <></>;
+    }
+  }
 
   return (
-    <div>
-      <Snackbar
-        sx={{
-          backgroundColor: "#fff",
-          borderRadius: "4px",
-          border: "1px solid rgb(160, 160, 160)",
-        }}
-        open={open}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        // action={action}
-        anchorOrigin={{ vertical, horizontal }}
-        message={message}
-        key={vertical + horizontal}
-        className="drop-shadow-2xl"
-      >
-        <section className="flex gap-4 justify-between items-center p-4 rounded-[55px] drop-shadow-2xl">
-          {state.variant === "success" ? (
-            <CheckCircleIcon color="success" />
-          ) : state.variant === "error" ? (
-            <ErrorIcon color="error" />
-          ) : state.variant === "info" ? (
-            <ErrorIcon color="primary" />
-          ) : state.variant === "warning" ? (
-            <ErrorIcon color="warning" />
-          ) : (
-            false
-          )}
-          <span className="text-[14px] text-black">{state.message}</span>
-          <IconButton
-            size="small"
-            aria-label="close"
-            color="primary"
-            onClick={handleClose}
-          >
-            <CloseIcon />
-          </IconButton>
-        </section>
-      </Snackbar>
-    </div>
+    <Snackbar
+      open={open}
+      autoHideDuration={5000}
+      onClose={handleClose}
+      anchorOrigin={{ vertical, horizontal }}
+      message={message}
+      key={vertical + horizontal}
+      className="shadow-sm shadow-black bg-gray-200 hover:bg-gray-100 duration-75 border-2 border-gray-700 rounded-md h-20"
+    >
+      <section className="flex gap-4 justify-between items-center px-6">
+        {renderIcon(state.variant)}
+        <span className="text-[15px] text-black">{state.message}</span>
+        <CloseIcon onClick={handleClose} className="cursor-pointer mt-1 mx-2" />
+      </section>
+    </Snackbar>
   );
 }

@@ -31,7 +31,6 @@ export default function LibraryStore() {
   }, []);
 
   function addProdToCart(prod) {
-    // Usar la cantidad preseleccionada o 1 por defecto
     const quantity = tempQuantities[prod.id] || 1;
     const productWithQuantity = { ...prod, quantity };
     const updatedCart = [...productsCart, productWithQuantity];
@@ -39,7 +38,6 @@ export default function LibraryStore() {
     dispatch(setToast("Producto agregado al carrito", "success"));
     dispatch(setLibraryCart(updatedCart));
 
-    // Limpiar la cantidad temporal después de añadir al carrito
     const newTempQuantities = { ...tempQuantities };
     delete newTempQuantities[prod.id];
     setTempQuantities(newTempQuantities);

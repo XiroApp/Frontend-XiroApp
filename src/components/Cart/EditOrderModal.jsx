@@ -43,45 +43,14 @@ import {
   validateFileSize,
 } from "../../utils/controllers/pricing.controller";
 import { useNavigate } from "react-router-dom";
+import propTypes from "prop-types";
 
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
-
-const modalStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "#fff",
-  borderRadius: "8px",
-  boxShadow: 24,
-};
-
-const initialResumeState = {
-  totalPages: 0,
-  numberOfCopies: 1,
-  color: "BN",
-  size: "A4",
-  printWay: "Simple faz",
-  copiesPerPage: "Normal",
-  orientacion: "Vertical",
-  finishing: "Sin anillado",
-  group: "Sin agrupar",
+EditoOrderModal.propTypes = {
+  orderToEdit: propTypes.object,
+  setShowEditModal: propTypes.func,
 };
 
 export default function EditoOrderModal({ orderToEdit, setShowEditModal }) {
-  console.log(orderToEdit);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector(state => state.dataBaseUser);
@@ -89,8 +58,6 @@ export default function EditoOrderModal({ orderToEdit, setShowEditModal }) {
   const labels = useSelector(state => state.labels);
   const pricingState = useSelector(state => state.pricing);
   const place = useSelector(state => state.place);
-
-  // Estados consolidados
   const [state, setState] = useState({
     loading: false,
     resetModal: false,
@@ -112,7 +79,6 @@ export default function EditoOrderModal({ orderToEdit, setShowEditModal }) {
     const uniqueDetails = [];
     const seenNames = new Set();
 
-    // Filtrar details para mantener solo los únicos
     currentFiles.details.forEach(file => {
       if (!seenNames.has(file.name)) {
         seenNames.add(file.name);
@@ -126,7 +92,6 @@ export default function EditoOrderModal({ orderToEdit, setShowEditModal }) {
     };
   };
 
-  // Pricing calculado
   const pricing = useMemo(() => {
     const basePricing = {
       BIG_ringed: Number(pricingState?.BIG_ringed) || 0,
@@ -151,7 +116,6 @@ export default function EditoOrderModal({ orderToEdit, setShowEditModal }) {
     return { ...basePricing, total: isNaN(total) ? 0 : Number(total) };
   }, [pricingState, resume, files.details]);
 
-  // Efectos optimizados
   useEffect(() => {
     dispatch(getPricing());
   }, [dispatch]);
@@ -160,9 +124,9 @@ export default function EditoOrderModal({ orderToEdit, setShowEditModal }) {
     const cleanedFiles = removeDuplicateDetails(files);
     if (cleanedFiles.details.length !== files.details.length) {
       setFiles(cleanedFiles);
-      return; // Salir temprano porque setFiles disparará otro efecto
+      return;
     }
-    // Resto de tu lógica actual
+
     if (cleanedFiles.details.length === 0) {
       setResume(initialResumeState);
       setState(prev => ({ ...prev, loading: false }));
@@ -185,7 +149,6 @@ export default function EditoOrderModal({ orderToEdit, setShowEditModal }) {
     }
   }, [files.details]);
 
-  // Handlers optimizados con useCallback
   const handleSetResume = useCallback((newResume, colorAlert = false) => {
     setResume(newResume);
     if (colorAlert) {
@@ -249,7 +212,7 @@ export default function EditoOrderModal({ orderToEdit, setShowEditModal }) {
 
         setFiles(prev => ({
           ...prev,
-          previews: [...prev?.previews, ...newFiles.map(f => f.preview)],
+          previews: [...prev.previews, ...newFiles.map(f => f.preview)], //! Estaba así: ...prev?.previews
         }));
       } catch (error) {
         dispatch(setToast("Error al subir archivos", "error"));
@@ -297,7 +260,6 @@ export default function EditoOrderModal({ orderToEdit, setShowEditModal }) {
 
   return (
     <div className="h-screen w-screen flex flex-col justify-between">
-      {/* Modales y diálogos */}
       {state.openColorAlertModal && (
         <Dialog open={state.openColorAlertModal} onClose={handleColorAlert}>
           <DialogTitle className="text-center relative">
@@ -641,3 +603,38 @@ export default function EditoOrderModal({ orderToEdit, setShowEditModal }) {
     </div>
   );
 }
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
+
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "#fff",
+  borderRadius: "8px",
+  boxShadow: 24,
+};
+
+const initialResumeState = {
+  totalPages: 0,
+  numberOfCopies: 1,
+  color: "BN",
+  size: "A4",
+  printWay: "Simple faz",
+  copiesPerPage: "Normal",
+  orientacion: "Vertical",
+  finishing: "Sin anillado",
+  group: "Sin agrupar",
+};

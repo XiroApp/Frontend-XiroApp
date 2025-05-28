@@ -24,7 +24,7 @@ export default function Success({ loggedUser }) {
           Te enviaremos un email con los detalles de tu pedido a
           <br />
           <address className="pt-1 font-[500]" style={{ fontFamily: "Arial" }}>
-            {loggedUser?.email ?? ""}
+            {loggedUser?.email ?? "@"}
           </address>
         </span>
         <Link

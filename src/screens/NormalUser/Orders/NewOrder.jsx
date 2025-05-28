@@ -8,7 +8,6 @@ import {
   FaRegFilePdf as FilesIcon,
   FaCopy as CopiesIcon,
   FaBookOpen as PagesIcon,
-  FaFileInvoiceDollar as PriceIcon,
   FaMotorcycle as MopedIcon,
 } from "react-icons/fa6";
 import UploadIcon from "@mui/icons-material/UploadOutlined";
@@ -45,7 +44,8 @@ import {
   validateFileSize,
 } from "../../../utils/controllers/pricing.controller.js";
 import { formatPrice, len } from "../../../Common/helpers.js";
-import { Create } from "@mui/icons-material";
+import { Create as CreatIcon } from "@mui/icons-material";
+import BackBtn from "../../../components/BackBtn.jsx";
 
 export default function NewOrder() {
   const dispatch = useDispatch(),
@@ -124,7 +124,7 @@ export default function NewOrder() {
 
     if (cleanedFiles.details.length === 0) {
       setResume(initialResumeState);
-      setState(prev => ({ ...prev, loading: false }));
+      updateState("loading", false);
     } else {
       const totalPages = cleanedFiles.details.reduce(
         (sum, file) => sum + file.pages,
@@ -148,12 +148,12 @@ export default function NewOrder() {
   const handleSetResume = useCallback((newResume, colorAlert = false) => {
     setResume(newResume);
     if (colorAlert) {
-      setState(prev => ({ ...prev, openColorAlertModal: true }));
+      updateState("openColorAlertModal", true);
     }
   }, []);
 
   const handleDeleteFile = useCallback(fileToDelete => {
-    setState(prev => ({ ...prev, loading: true }));
+    updateState("loading", true);
     setFiles(prevFiles => {
       const newDetails = prevFiles.details.filter(f => {
         return f.name !== fileToDelete;
@@ -162,18 +162,18 @@ export default function NewOrder() {
 
       return { previews: newPreviews, details: newDetails };
     });
-    setState(prev => ({ ...prev, loading: false }));
+    updateState("loading", false);
   }, []);
 
   const handleSubmitLoadFile = useCallback(
-    async e => {
+    async function (e) {
       e.preventDefault();
       const filesInput = e.target.files;
       const maxSizeMB = 500;
 
-      if (!filesInput || filesInput.length === 0) return;
+      if (!filesInput || len(filesInput) == 0) return;
 
-      setState(prev => ({ ...prev, loading: true }));
+      updateState("loading", true);
 
       try {
         const uploadPromises = Array.from(filesInput)
@@ -196,8 +196,7 @@ export default function NewOrder() {
             } else {
               const formData = new FormData();
               formData.append("files", file);
-              const newDocuments = await dispatch(uploadMulter(formData));
-
+              const newDocuments = await dispatch(uploadMulter(formData)); // Este await es necesario.
               return newDocuments.map(doc => ({ preview: doc }));
             }
           });
@@ -210,9 +209,16 @@ export default function NewOrder() {
           previews: [...prev.previews, ...newFiles.map(f => f.preview)],
         }));
       } catch (err) {
-        dispatch(setToast("Error al subir archivos", "error"));
+        dispatch(
+          setToast("Error al subir archivos, intenta nuevamente", "error")
+        );
         console.error(`catch 'handleSubmitLoadFile' ${err.message}`);
-        setState(prev => ({ ...prev, loading: false }));
+        updateState("loading", false);
+      } finally {
+        // dispatch(
+        //   setToast("Error al subir archivos, intenta nuevamente", "error")
+        // );
+        updateState("loading", false);
       }
     },
     [dispatch]
@@ -221,7 +227,7 @@ export default function NewOrder() {
   const handleResetOrder = useCallback(() => {
     setFiles({ details: [], previews: [] });
     setResume(initialResumeState);
-    setState(prev => ({ ...prev, resetModal: false }));
+    updateState("resetModal", false);
   }, []);
 
   const handleSetOrder = useCallback(() => {
@@ -234,7 +240,7 @@ export default function NewOrder() {
     );
     setFiles({ details: [], previews: [] });
     setResume(initialResumeState);
-    setState(prev => ({ ...prev, review: false }));
+    updateState("review", false);
   }, [dispatch, user, resume, files.previews, pricing.total]);
 
   const updateState = useCallback((key, value) => {
@@ -249,22 +255,30 @@ export default function NewOrder() {
   }, []);
 
   const handleSettings = useCallback(e => {
-    setState(prev => ({ ...prev, currentSetting: e.target.name }));
+    updateState("currentSetting", e.target.name);
   }, []);
+
+  // ! Revisar si se deja.
+  // useEffect(() => {
+  //   if (state.loading) {
+  //     const timer = setTimeout(() => {
+  //       updateState("loading", false);
+  //       dispatch(
+  //         setToast("Se excedió el tiempo de carga, intenta nuevamente", "error")
+  //       );
+  //     }, 8000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [state.loading]);
+  // !------------------
 
   return (
     <div className="h-screen w-screen flex flex-col justify-between">
       {state.openColorAlertModal && (
         <Dialog open={state.openColorAlertModal} onClose={handleColorAlert}>
           <DialogTitle className="text-center relative">
-            Aviso cobertura color de mayor 50%
-            <Button
-              onClick={handleColorAlert}
-              variant="text"
-              sx={{ position: "absolute", right: 0 }}
-            >
-              X
-            </Button>
+            Cobertura de color superior al 50%
+            <BackBtn close={handleColorAlert} />
           </DialogTitle>
           <DialogContent dividers className="flex flex-col gap-6">
             <Typography>
@@ -273,12 +287,16 @@ export default function NewOrder() {
               la empresa comunicarse por WhatsApp y realizar la devolución del
               dinero.
             </Typography>
-            <Typography align="right">Muchas gracias.</Typography>
+            <Typography align="right">Muchas gracias</Typography>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleColorAlert} variant="outlined">
+            <button
+              type="button"
+              className="px-6 py-2 border rounded-md bg-green-400/70 hover:bg-green-400 duration-100"
+              onClick={handleColorAlert}
+            >
               Aceptar
-            </Button>
+            </button>
           </DialogActions>
         </Dialog>
       )}
@@ -294,8 +312,8 @@ export default function NewOrder() {
 
       <section className="relative w-full h-full lg:flex">
         {state.loading && (
-          <div className="absolute w-screen h-screen z-[9999] bg-gray-600/50 flex items-center justify-center">
-            <div className="border-2 border-green-300/60 flex flex-col items-center justify-center gap-y-5 bg-gray-800/40 p-6 rounded-3xl backdrop-blur-sm mb-20">
+          <div className="absolute w-screen h-screen z-[9999] bg-gray-600/55 flex items-center justify-center">
+            <div className="border-2 border-gray-300/15 flex flex-col items-center justify-center gap-y-5 bg-gray-800/40 p-6 rounded-[30px] backdrop-blur-sm mb-36">
               <CircularProgress color="secondary" size={50} />
               <span className="text-white text-3xl">Cargando</span>
             </div>
@@ -308,14 +326,16 @@ export default function NewOrder() {
               <div className="flex items-center justify-center gap-1.5 sm:gap-1.5 flex-row">
                 {place?.type == "Envío a domicilio" || !place ? (
                   <button
+                    type="button"
                     onClick={() => updateState("choosePlace", true)}
-                    className="flex flex-col gap-1.5 items-center justify-center text-black border-[1.4px] border-[#789360] rounded-md w-16 h-20 hover:bg-green-400/30 hover:border-green-400/30 transition-colors"
+                    className="flex flex-col gap-1.5 items-center justify-center text-black border-[1.4px] border-[#789360] rounded-md w-16 sm:w-20 h-20 hover:bg-green-400/30 hover:border-green-400/30 transition-colors"
                   >
                     <MopedIcon style={{ height: "1.8em", width: "1.8em" }} />
-                    <span className="text-[12px]">Envío</span>
+                    <span className="text-[12px] sm:text-[13px]">Envío</span>
                   </button>
                 ) : (
                   <button
+                    type="button"
                     onClick={() => updateState("choosePlace", true)}
                     className="flex flex-col gap-y-1.5 items-center justify-center text-black border-[1.4px] border-[#789360] rounded-md w-20 h-20 hover:bg-green-400/30 hover:border-green-400/30 transition-colors"
                   >
@@ -324,59 +344,65 @@ export default function NewOrder() {
                   </button>
                 )}
 
-                <section className="border-[1.4px] border-b-[#789360] rounded-md flex flex-col items-center justify-center px-2 gap-y-1.5 w-16 h-20">
+                <section className="border-[1.4px] border-b-[#789360] rounded-md flex flex-col items-center justify-center px-2 gap-y-1.5 w-16 sm:w-20 h-20">
                   <div className="flex justify-center gap-x-2 items-center w-full">
-                    {/* <FilesIcon
+                    <FilesIcon
+                      className="hidden sm:block"
                       style={{ height: "1.5em", width: "1.5em" }}
-                    /> */}
+                    />
                     <span>{files.previews.length}</span>
                   </div>
-                  <span className="text-[11px] w-full text-center">
+                  <span className="text-[11px] sm:text-[13px] w-full text-center">
                     Archivos
                   </span>
                 </section>
 
-                <section className="border-[1.4px] border-b-[#789360] rounded-md flex flex-col gap-1 items-center justify-center px-2 gap-y-1.5 w-16 h-20">
+                <section className="border-[1.4px] border-b-[#789360] rounded-md flex flex-col gap-1 items-center justify-center px-2 gap-y-1.5 w-16 sm:w-20 h-20">
                   <div className="flex justify-center gap-x-2 items-center w-full">
-                    {/* <CopiesIcon style={{ height: "1.5em", width: "1.5em" }} /> */}
+                    <CopiesIcon
+                      className="hidden sm:block"
+                      style={{ height: "1.5em", width: "1.5em" }}
+                    />
                     <span>{resume.numberOfCopies}</span>
                   </div>
-                  <span className="text-[12px] w-full text-center">Copias</span>
+                  <span className="text-[12px] sm:text-[13px] w-full text-center">
+                    Copias
+                  </span>
                 </section>
 
-                <section className="border-[1.4px] border-b-[#789360] rounded-md flex flex-col gap-1 items-center justify-center px-2 gap-y-1.5 w-16 h-20">
+                <section className="border-[1.4px] border-b-[#789360] rounded-md flex flex-col gap-1 items-center justify-center px-2 gap-y-1.5 w-16 sm:w-20 h-20">
                   <div className="flex justify-center gap-x-2 items-center w-full">
-                    {/* <PagesIcon
+                    <PagesIcon
+                      className="hidden sm:block"
                       style={{ height: "1.5em", width: "1.5em" }}
-                    /> */}
+                    />
                     <span>{resume.totalPages}</span>
                   </div>
-                  <span className="text-[12px] w-full text-center">
+                  <span className="text-[12px] sm:text-[13px] w-full text-center">
                     Páginas
                   </span>
                 </section>
 
-                <section className="flex flex-col items-center justify-center px-2 font-bold rounded-md p-2 bg-[#56713d] text-white shadow-xl gap-y-1.5 w-28 h-20">
-                  <div className="flex justify-center items-center w-full">
-                    {/* <PriceIcon
-                      style={{ height: "1.5em", width: "1.5em" }}
-                    /> */}
-                    <span className="pr-1">${formatPrice(pricing.total)}</span>
-                  </div>
-                  <span className="text-[14px] w-full text-center">Precio</span>
+                <section className="flex flex-col items-center justify-center px-2 font-bold rounded-md p-2 bg-[#56713d] text-white shadow-xl gap-y-1 w-28 h-20">
+                  <span className="w-full text-center">
+                    ${formatPrice(pricing.total)}
+                  </span>
+                  <span className="text-[14px] sm:text-[15px] w-full text-center">
+                    Precio
+                  </span>
                 </section>
               </div>
 
-              <div className="flex h-1/2 md:h-full md:justify-center md:gap-1 justify-between flex-col">
+              <div className="flex w-max justify-center items-center flex-row-reverse gap-x-4">
                 <form
                   encType="multipart/form-data"
-                  className="flex items-center justify-center w-full"
+                  className="flex items-center justify-center w-full flex-col relative"
                 >
                   <LoadingButton
                     style={{
-                      padding: "1em",
+                      paddingTop: "1em",
+                      paddingBottom: "1em",
                     }}
-                    loading={state.loading}
                     component="label"
                     variant="contained"
                     color="primary"
@@ -389,7 +415,7 @@ export default function NewOrder() {
                       />
                     }
                   >
-                    <span className="w-full text-lg sm:text-xl font-bold tracking-wide text-center">
+                    <span className="w-full md:px-1.5 text-lg sm:text-xl font-bold tracking-wide text-center">
                       Cargar Archivo
                     </span>
                     <VisuallyHiddenInput
@@ -398,32 +424,31 @@ export default function NewOrder() {
                       id="uploadInput"
                       accept=".pdf, .doc, .docx, .xls, .xlsx, image/*, .txt"
                       onChange={handleSubmitLoadFile}
-                      disabled={state.loading}
+                      // disabled={state.loading}
                     />
                   </LoadingButton>
-                </form>
-
-                {len(files.previews) > 0 && (
-                  <div className="flex items-center justify-center pt-0.5">
+                  {len(files.previews) > 0 && (
                     <button
-                      className="hover:underline text-lg text-slate-900 hover:text-black"
+                      type="button"
+                      className="text-lg transition-colors text-slate-900 absolute top-44 lg:top-16 bg-red-50 hover:bg-red-100 px-2 py-0.5 rounded-md border"
                       onClick={() => updateState("resetModal", true)}
                     >
                       Quitar mis archivos
                     </button>
-                  </div>
-                )}
-              </div>
-              <div className="flex items-center justify-center">
-                <Link
-                  to="/?libreria"
-                  className="bg-yellow-300/90 hover:bg-yellow-500 transition-colors p-[1rem] font-semibold rounded-md flex gap-x-2 justify-center items-center"
-                >
-                  <Create />
-                  <span className="text-center text-sm lg:text-lg">
-                    Librería
-                  </span>
-                </Link>
+                  )}
+                </form>
+
+                <div className="flex items-center justify-center">
+                  <Link
+                    to="/?libreria"
+                    className="bg-yellow-300/90 hover:bg-yellow-400/90 transition-colors px-[1rem] py-[0.9rem] font-semibold rounded-md flex gap-x-2 justify-center items-center shadow-md"
+                  >
+                    <CreatIcon />
+                    <span className="text-center md:px-1.5 text-sm lg:text-lg">
+                      Librería
+                    </span>
+                  </Link>
+                </div>
               </div>
             </section>
 
@@ -580,12 +605,14 @@ export default function NewOrder() {
             )}
           </section>
 
-          <section className="flex w-full justify-around pb-4">
+          <section className="flex w-full justify-between max-w-3xl pb-8">
             <LoadingButton
-              loading={state.loading}
               variant="contained"
               color="primary"
-              sx={{ border: "2px solid white" }}
+              sx={{
+                border: "2px solid white",
+                maxWidth: "300px",
+              }}
               className={len(cart) ? "w-1/3" : "w-1/2"}
               disabled={len(files.details) == 0}
               onClick={() => updateState("review", true)}
@@ -598,8 +625,11 @@ export default function NewOrder() {
                 loading={state.loading}
                 variant="contained"
                 color="primary"
-                sx={{ border: "2px solid white" }}
-                className="w-1/3"
+                sx={{
+                  border: "2px solid white",
+                  maxWidth: "300px",
+                  width: "100%",
+                }}
                 onClick={() =>
                   len(libraryCart) == 0
                     ? setLibraryModal(true)
@@ -649,7 +679,7 @@ export default function NewOrder() {
                   <button
                     type="button"
                     onClick={() => navigate("/carrito")}
-                    className="bg-green-400 border border-green-500 hover:bg-green-500 text-black font-medium py-2 px-4 md:px-6 rounded-lg transition-colors text-sm sm:text-xl"
+                    className="bg-green-300 border border-green-400 hover:bg-green-400 text-black font-medium py-2 px-4 md:px-6 rounded-lg transition-colors text-sm sm:text-xl"
                   >
                     Avanzar al carrito
                   </button>
@@ -657,9 +687,9 @@ export default function NewOrder() {
                     type="button"
                     autoFocus
                     onClick={() => navigate("/?libreria")}
-                    className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-2 px-4 md:px-6 rounded-lg transition-colors text-sm sm:text-xl border border-black"
+                    className="bg-yellow-300/90 hover:bg-yellow-400/90 text-black font-medium py-2 px-4 md:px-6 rounded-lg transition-colors text-sm sm:text-xl border border-black"
                   >
-                    Ver artículos de librería
+                    Ver librería
                   </button>
                 </div>
               </div>
@@ -687,7 +717,7 @@ export default function NewOrder() {
           >
             <ErrorIcon color="warning" sx={{ height: "4em", width: "4em" }} />
             <span className="text-xl lg:text-xl">
-              ¿Está seguro que desea eliminar los archivos cargados?
+              ¿Estás seguro que deseas eliminar los archivos cargados?
             </span>
           </DialogTitle>
 

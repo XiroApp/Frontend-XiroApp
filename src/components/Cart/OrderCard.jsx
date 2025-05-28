@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import ErrorIcon from "@mui/icons-material/Error";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -16,47 +15,32 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
 import { useDispatch, useSelector } from "react-redux";
 import { deleteOrderFromCart } from "../../redux/actions";
 import { Settings } from "../../config";
+import propTypes from "prop-types";
+
 const STORAGE_URL = Settings.STORAGE_URL;
 const STORAGE_QUERY = Settings.STORAGE_TOKEN_QUERY;
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 500,
-  bgcolor: "#fff",
-  borderRadius: "8px",
-  boxShadow: 14,
+OrderCard.propTypes = {
+  order: propTypes.object.isRequired,
+  user: propTypes.object.isRequired,
 };
-export default function OrderCard({
-  order,
-  user,
-  showEditModal,
-  setShowEditModal,
-}) {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [deleteOrderModal, setDeleteOrderModal] = useState(false);
-  const [filesModal, setFilesModal] = useState(false);
-  const cart = useSelector(state => state.cart);
 
-  /* FUNCIONES */
-  function handleDeleteOrder(e) {
+export default function OrderCard({ order, user }) {
+  const dispatch = useDispatch(),
+    navigate = useNavigate(),
+    [deleteOrderModal, setDeleteOrderModal] = useState(false),
+    [filesModal, setFilesModal] = useState(false),
+    cart = useSelector(state => state.cart);
+
+  function handleDeleteOrder() {
     dispatch(deleteOrderFromCart(user, order.orderUid));
     setDeleteOrderModal(false);
     if (cart.length <= 1) {
       navigate("/");
     }
-  }
-  function handleEditOrder(e) {
-    // dispatch(getCartOrder(user, order));
-    // setDeleteOrderModal(true);
-    setShowEditModal({ show: true, orderToEdit: order });
   }
 
   return (
@@ -69,17 +53,11 @@ export default function OrderCard({
           </span>
           <span className="text-black text-[12px] font-[600]">
             Total de páginas:{`${order?.totalPages}`}
-            {/* ${order?.totalPages > 1 ? "páginas" : "página"} */}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          {/* <Tooltip arrow placement="top" title="Editar" sx={{}}>
-            <button onClick={(e) => handleEditOrder(e)}>
-              <EditIcon sx={{ width: "0.8em", height: "0.8em" }} />
-            </button>
-          </Tooltip> */}
           <Tooltip arrow placement="top" title="Eliminar" sx={{}}>
-            <button onClick={e => setDeleteOrderModal(true)}>
+            <button onClick={() => setDeleteOrderModal(true)}>
               <DeleteIcon sx={{ width: "0.8em", height: "0.8em" }} />
             </button>
           </Tooltip>
@@ -104,10 +82,6 @@ export default function OrderCard({
         <div className="border-2 border-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
           {order?.finishing} {order?.group}
         </div>
-        {/* <div className="border-2 border-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center"></div> */}
-        {/* <div className="bg-[#789360] w-fit px-4 py-1 rounded-full text-[10px] text-center">
-          
-        </div> */}
       </div>
       <div>
         <Button variant="contained" onClick={() => setFilesModal(true)}>
@@ -115,9 +89,7 @@ export default function OrderCard({
           <span>Ver documentos adjuntos</span>
         </Button>
       </div>
-      {/* DELETE MODAL  */}
       <Dialog
-        // fullScreen={fullScreen}
         open={deleteOrderModal}
         onClose={() => setDeleteOrderModal(false)}
         aria-labelledby="responsive-dialog-title"
@@ -184,6 +156,7 @@ export default function OrderCard({
                 </span>
                 <Tooltip placement="top" title="Ver en pantalla completa">
                   <a
+                    rel="noreferrer"
                     target="_blank"
                     href={`${STORAGE_URL}${file}${STORAGE_QUERY}`}
                   >
@@ -201,7 +174,7 @@ export default function OrderCard({
               variant="contained"
               color="primary"
               className="text-sm font-light"
-              onClick={e => setFilesModal(false)}
+              onClick={() => setFilesModal(false)}
             >
               <span className="text-sm font-light">Cerrar</span>
             </Button>
@@ -211,3 +184,14 @@ export default function OrderCard({
     </div>
   );
 }
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 500,
+  bgcolor: "#fff",
+  borderRadius: "8px",
+  boxShadow: 14,
+};
