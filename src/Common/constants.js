@@ -9,6 +9,7 @@ const ApiConstants = {
     "https://firebasestorage.googleapis.com/v0/b/xiro-app-2ec87.firebasestorage.app/o/",
   STORAGE_TOKEN_QUERY_PROD:
     "?alt=media&token=e7b0f280-413a-4546-aa2b-da0cd3523289",
+  /* ----------------------------------------------------- */
   /* --------------------- TESTING --------------------- */
   BASE_URL_TESTING:
     "https://us-central1-testing-xiro-app.cloudfunctions.net/api/xiro-app",
@@ -17,12 +18,13 @@ const ApiConstants = {
     "https://firebasestorage.googleapis.com/v0/b/testing-xiro-app.firebasestorage.app/o/",
   STORAGE_TOKEN_QUERY_TESTING:
     "?alt=media&token=925e6b5a-540b-4915-8dfa-d1bbc2f319d8",
+  /* ----------------------------------------------------- */
   /*--------------------- EMULADOR LOCAL ---------------------*/
   BASE_URL_LOCAL:
-    "http://localhost:5001/xiro-app-2ec87/us-central1/api/xiro-app",
+    "http://localhost:5001/xiro-app-2ec87/us-central1/api/xiro-app", //Emulador
 };
 
-const initLibraryProd = {
+const initProd = {
   id: "",
   code: "",
   name: "",
@@ -31,4 +33,4 @@ const initLibraryProd = {
   visible: true,
 };
 
-export { ApiConstants, initLibraryProd };
+export { ApiConstants, initProd };

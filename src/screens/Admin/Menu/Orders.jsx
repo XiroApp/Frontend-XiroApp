@@ -2,11 +2,17 @@ import { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import TableContainer from "@mui/material/TableContainer";
 import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import {
   Backdrop,
+  Button,
   CircularProgress,
+  FormControl,
   Input,
+  MenuItem,
+  Select,
   TableBody,
+  TableFooter,
   TableHead,
   TableRow,
   Typography,
@@ -15,7 +21,8 @@ import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper.js";
 import { UsersAdapter } from "../../../Infra/Adapters/users.adapter.js";
 import { twMerge } from "tailwind-merge";
 import propTypes from "prop-types";
-import { normalizeStr, tLC } from "../../../Common/helpers.js";
+import { tLC } from "../../../Common/helpers.js";
+import JsonToExcelConverter from "../../../components/FileConverter/JsonToExcelConverter.jsx";
 
 export default function Orders({ editor }) {
   const [printingUsers, setPrintingUsers] = useState([]);
@@ -23,47 +30,71 @@ export default function Orders({ editor }) {
   const [distributionUsers, setDistributionUsers] = useState([]);
   const [pickupUsers, setPickupUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [, setError] = useState(null);
-  const [pageSize] = useState(15);
-  const [lastDocument, setLastDocument] = useState(null);
-  const [, setHasMore] = useState(true);
+  const [error, setError] = useState(null);
   const [orders, setOrders] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [filter, setFilter] = useState("no_filter");
   const [allOrders, setAllOrders] = useState([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  /* -------------------------------------------- */
+  /* PAGINADO DEL BACK NUEVO 2025 V 78598.1.0.156 */
+  const limitOptions = [10, 25, 50, 100]; // Opciones de límite
+  const [limit, setLimit] = useState(25); // Estado para el límite/pageSize
+  // Estado para guardar los cursores recibidos del backend
+  const [currentNextCursor, setCurrentNextCursor] = useState(null); // para pedir la siguiente pagina
+  const [currentPreviousCursor, setCurrentPreviousCursor] = useState(null); // para pedir la pagina anterior
+  // No necesitamos 'page', 'lastDocument' o 'direction' directamente
+  // porque usamos los cursores del backend
+  /* -------------------------------------------- */
+  /* -------------------------------------------- */
 
   useEffect(() => {
-    fetchOrders("next");
+    fetchOrders({ currentNextCursor, currentPreviousCursor });
     fetchUsersByRole();
-  }, []);
+  }, [limit]);
 
-  async function fetchOrders(direction = "next") {
+  async function fetchOrders({
+    startAfterValue = null,
+    endBeforeValue = null,
+  }) {
     setLoading(true);
     setError(null);
     setOrders([]);
-
+    setAllOrders([]);
     try {
+      console.log(
+        `Fetching orders with limit: ${limit}, startAfter: ${startAfterValue}, endBefore: ${endBeforeValue}`
+      );
       const data = await OrdersAdapter.getOrdersPaginated(
-        pageSize,
-        page,
-        lastDocument,
-        "admin",
-        direction
+        limit,
+        startAfterValue,
+        endBeforeValue,
+        "admin"
       );
 
-      const { orders: fetchedOrders, lastVisible: newLastVisible } = data;
+      // El backend te devuelve { orders: [...], nextPageStartAfter: ..., previousPageEndBefore: ... }
+      const {
+        orders: fetchedOrders,
+        nextPageStartAfter,
+        previousPageEndBefore,
+      } = data;
 
-      console.log(fetchedOrders);
-      
-      const sortedOrders = fetchedOrders.sort(
-        (a, b) => a.order_number < b.order_number
-      );
-      setOrders(sortedOrders);
-      setAllOrders(sortedOrders);
-      setLastDocument(newLastVisible);
-      setHasMore(fetchedOrders.length === pageSize);
+      // Si estábamos paginando hacia atrás, el backend nos dio los resultados
+      // en orden ascendente para que Firestore pudiera usar startAt().
+      // Ahora en el frontend, si endBeforeValue no es null, debemos invertir
+      // los resultados para que se muestren en orden descendente (como el orderBy original).
+      let ordersToDisplay = fetchedOrders;
+      // if (endBeforeValue !== null) {
+      //   ordersToDisplay = fetchedOrders.reverse();
+      // }
+
+      setOrders(ordersToDisplay);
+      setAllOrders(ordersToDisplay);
+      // Actualiza los cursores para la próxima/anterior página basados en la respuesta
+      setCurrentNextCursor(nextPageStartAfter);
+      setCurrentPreviousCursor(previousPageEndBefore);
+      // setHasMore(fetchedOrders.length === limit); // hasMore ya no es tan simple con paginación bidireccional
+      // Los cursores (currentNextCursor, currentPreviousCursor)
+      // son una mejor indicación de si hay páginas
     } catch (err) {
       setError(err.message);
     } finally {
@@ -72,7 +103,7 @@ export default function Orders({ editor }) {
   }
 
   function fetchUsersByRole() {
-    UsersAdapter.getSpecialUsers().then((res) => {
+    UsersAdapter.getSpecialUsers().then(res => {
       setDeliveryUsers(res.deliveryUsers);
       setPrintingUsers(res.printingUsers);
       setDistributionUsers(res.distributionUsers);
@@ -86,7 +117,7 @@ export default function Orders({ editor }) {
     if (searchTerm == "") return setOrders(allOrders);
 
     const filteredOrders = allOrders.filter(
-      (o) =>
+      o =>
         tLC(o?.order_number ?? "").includes(searchTerm) ||
         normalizeStr(tLC(o?.clientUser?.displayName ?? "")).includes(searchTerm)
     );
@@ -94,21 +125,33 @@ export default function Orders({ editor }) {
     setOrders(filteredOrders);
   }
 
-  function handleFilter(status) {
+  async function handleFilter(status) {
     setFilter(status);
-    return status != "no_filter"
-      ? setOrders(allOrders.filter((o) => o?.orderStatus == tLC(status)))
-      : setOrders(allOrders);
+    console.log(status);
+    console.log(orders);
+
+    if (status != "no_filter") {
+      setAllOrders(orders.filter(o => o?.orderStatus == tLC(status)));
+    } else {
+      const orders = await fetchOrders({});
+      setAllOrders(orders);
+    }
   }
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+  function handleLimitChange(e) {
+    setLimit(e.target.value);
+  }
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(event.target.value);
-    setPage(0);
-  };
+  async function handleDownloadExcel() {
+    try {
+      setLoading(true);
+      await OrdersAdapter.downloadOrdersExcel();
+    } catch (error) {
+      alert("Error al descargar el archivo");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl p-4 ">
@@ -117,6 +160,11 @@ export default function Orders({ editor }) {
           <label
             htmlFor="search-orders"
             className="text-lg flex gap-x-3 items-center justify-start"
+            onClick={
+              () => {
+                fetchOrders({});
+              } // Reset the orders when clicking the label
+            }
           >
             <svg
               className="w-5 h-5 font-bold"
@@ -133,10 +181,15 @@ export default function Orders({ editor }) {
             name="email"
             type="text"
             placeholder="Ingresa una órden..."
-            onChange={(e) => handleSearch(e.target.value)}
+            onChange={e => handleSearch(e.target.value)}
             className="w-full text-gray-800"
           />
         </div>
+        <JsonToExcelConverter
+          text={"Descargar Listado de órdenes"}
+          icon={<FileDownloadIcon className="h-5 w-5" />}
+          action={handleDownloadExcel}
+        />
         <div className="w-full flex flex-col gap-y-2">
           <label
             htmlFor="filter-orders"
@@ -331,7 +384,7 @@ export default function Orders({ editor }) {
                 <Backdrop
                   sx={{
                     color: "#fff",
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                    zIndex: theme => theme.zIndex.drawer + 1,
                   }}
                   open={loading}
                 >
@@ -341,6 +394,93 @@ export default function Orders({ editor }) {
             </TableBody>
           </table>
         </TableContainer>
+        <TableFooter>
+          {/* Usamos TableRow y TableCell para que ocupe el ancho de la tabla */}
+          <TableRow>
+            {/* El colspan="XXX" debe ser igual al número de columnas en tu tabla */}
+            {/* Cuenta cuántas <th> tienes en tu TableHead (N° de orden, Fecha, etc.) */}
+            {/* En tu código original hay 10 columnas, así que usamos colspan="10" */}
+            <td colSpan={10} className="p-2 border-none">
+              {" "}
+              {/* Ajusta el colspan si tienes un número diferente de columnas */}
+              <div className="flex items-center justify-end gap-4">
+                {" "}
+                {/* Flexbox para alinear elementos a la derecha */}
+                {/* Selector de Límite (Filas por página) */}
+                <div className="flex items-center gap-2">
+                  <Typography variant="body2" color="textSecondary">
+                    Filas por página:
+                  </Typography>
+                  <FormControl
+                    variant="standard"
+                    sx={{ m: 1, minWidth: 60 }}
+                    size="small"
+                  >
+                    {/* No necesitamos InputLabel si usamos variant="standard" y el texto fuera */}
+                    {/* <InputLabel id="limit-select-label">Límite</InputLabel> */}
+                    <Select
+                      labelId="limit-select-label"
+                      id="limit-select"
+                      value={limit} // Conectado al estado 'limit'
+                      onChange={handleLimitChange} // Conectado al handler
+                      // label="Límite" // No necesario con variant="standard"
+                      disableUnderline={true} // Estilo minimalista: quita el subrayado
+                      sx={{
+                        ".MuiSelect-select": {
+                          paddingRight: "24px !important",
+                        },
+                      }} // Ajuste de padding si es necesario
+                    >
+                      {/* Mapea las opciones de límite. Asegúrate de que 'limitOptions' esté definido en tu componente (ej: [10, 25, 50, 100]) */}
+                      {limitOptions.map(option => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+                {/* Información opcional (si no tienes el total de count, esto puede ser solo indicativo) */}
+                <Typography variant="body2" color="textSecondary">
+                  {loading
+                    ? "Cargando..."
+                    : `Mostrando ${orders?.length} órdenes`}{" "}
+                  {/* Podrías refinar este texto */}
+                </Typography>
+                {/* Botón para ir a la página anterior */}
+                <Button
+                  onClick={() =>
+                    fetchOrders({
+                      startAfterValue: null,
+                      endBeforeValue: currentPreviousCursor,
+                    })
+                  } // Llama a fetchOrders con el cursor anterior
+                  disabled={!currentPreviousCursor || loading} // Deshabilitado si no hay cursor anterior o está cargando
+                  variant="outlined" // Estilo outlined minimalista
+                  size="small" // Tamaño pequeño
+                  sx={{ textTransform: "none" }} // Evita MAYÚSCULAS automáticas
+                >
+                  Anterior
+                </Button>
+                {/* Botón para ir a la página siguiente */}
+                <Button
+                  onClick={() =>
+                    fetchOrders({
+                      startAfterValue: currentNextCursor,
+                      endBeforeValue: null,
+                    })
+                  } // Llama a fetchOrders con el cursor siguiente
+                  disabled={!currentNextCursor || loading} // Deshabilitado si no hay cursor siguiente (llegaste al final) o está cargando
+                  variant="outlined" // Estilo outlined minimalista
+                  size="small" // Tamaño pequeño
+                  sx={{ textTransform: "none" }} // Evita MAYÚSCULAS automáticas
+                >
+                  Siguiente
+                </Button>
+              </div>
+            </td>
+          </TableRow>
+        </TableFooter>
         {/* <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"

@@ -5,7 +5,7 @@ const url = Settings.SERVER_URL;
 
 export class InAppTextsService {
   static async getLabels() {
-    const response = (await axios.get(`${url}/labels/all`)).data;
+    const response = (await axios.get(`${url}/labels/labels_array`)).data;
     return response;
   }
 

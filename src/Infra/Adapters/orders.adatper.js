@@ -1,33 +1,50 @@
 import axios from "axios";
 import { Settings } from "../../config/index";
+import { utils, writeFileXLSX } from "xlsx";
 
 const baseUrl = Settings.SERVER_URL;
 
 export class OrdersAdapter {
+  static async getAllOrders() {
+    const url = `${baseUrl}/admin/orders`;
+    const response = await axios.get(url);
+    return response.data;
+  }
+
   static async getOrdersPaginated(
-    pageSize,
-    page,
-    lastDocument,
+    limit,
+    startAfterValue,
+    endBeforeValue,
     role,
-    direction,
     uid
   ) {
+    console.log("en el adapter");
     let url = "";
 
     if (uid) {
-      url = `${baseUrl}/${role}/orders/${uid}?pageSize=${pageSize}&direction=${direction}&lastVisible=${
-        lastDocument ? lastDocument : ""
-      }`;
+      url = `${baseUrl}/${role}/orders/${uid}?limit=${limit}`; // Usamos el estado 'limit'
+      if (startAfterValue !== null) {
+        // Si vamos a la siguiente página, añadimos startAfter
+        url += `&startAfter=${startAfterValue}`;
+      } else if (endBeforeValue !== null) {
+        // Si vamos a la página anterior, añadimos endBefore
+        url += `&endBefore=${endBeforeValue}`;
+      }
     } else {
-      url = `${baseUrl}/${role}/orders?pageSize=${pageSize}&direction=${direction}&lastVisible=${
-        lastDocument ? lastDocument : ""
-      }`;
+      url = `${baseUrl}/${role}/orders/paginated?limit=${limit}`; // Usamos el estado 'limit'
+      if (startAfterValue !== null) {
+        // Si vamos a la siguiente página, añadimos startAfter
+        url += `&startAfter=${startAfterValue}`;
+      } else if (endBeforeValue !== null) {
+        // Si vamos a la página anterior, añadimos endBefore
+        url += `&endBefore=${endBeforeValue}`;
+      }
     }
 
     const response = await axios.get(url);
     const data = response.data;
 
-    const sortedOrders = data.orders.map(order => {
+    const sortedOrders = data.orders.map((order) => {
       const fechaFormateada = order.created_at
         .split("T")[0]
         .split("-")
@@ -35,7 +52,7 @@ export class OrdersAdapter {
         .join("/");
 
       return {
-        uid: order.uid,
+        uid: order.uid || order.id,
         order_number: order.order_number,
         orderStatus: order.orderStatus,
         cart: order.cart,
@@ -79,5 +96,18 @@ export class OrdersAdapter {
   static async setBatchToDelivery(batch, uidDelivery) {
     let { data } = await axios.post(`${baseUrl}/batch`, { batch, uidDelivery });
     console.log(data);
+  }
+
+  static async downloadOrdersExcel() {
+    // Obtiene todos los pedidos
+    const orders = await OrdersAdapter.getAllOrders();
+
+    // Crea la hoja de cálculo
+    const worksheet = utils.json_to_sheet(orders);
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, "Pedidos");
+
+    // Descarga el archivo Excel
+    writeFileXLSX(workbook, "Listado de reporte.xlsx");
   }
 }

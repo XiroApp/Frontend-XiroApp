@@ -5,7 +5,12 @@ import { FaStore as StoreIcon } from "react-icons/fa6";
 import PlaceIcon from "@mui/icons-material/PlaceOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import NewAddressForm from "../../components/Forms/NewAddressForm";
-import { setOrderPlace, setToast } from "../../redux/actions";
+import {
+  getInAppLabels,
+  setOrderPlace,
+  setToast,
+  updateUser,
+} from "../../redux/actions";
 import { UsersAdapter } from "../../Infra/Adapters/users.adapter";
 import propTypes from "prop-types";
 import AddMoreLink from "../../components/AddMoreLink";
@@ -25,7 +30,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
   const place = useSelector(state => state.place);
   const [loading, setLoading] = useState(false);
 
-  function handleChoice() {
+  function handleChoice(e) {
     setLoading(true);
     try {
       if (resume?.place?.type && resume?.place?.address) {
@@ -49,6 +54,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
 
   useEffect(() => {
     fetchPickupPoints();
+    dispatch(getInAppLabels());
   }, []);
 
   return (
@@ -71,23 +77,12 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               id="parent-modal-title"
               className="text-center text-[20px] font-bold "
             >
-              ¿Dónde querés recibir tu pedido?
-            </p>
-            <p className="py-6 w-full text-center px-2 text-pretty">
-              Envíos domicilio y puntos: Martes y Viernes entre las 9-14hs o las
-              15-20hs. Los pedidos que ingresan hasta las 12pm del día previo,
-              ingresan en el día previsto. Los que ingresan posterior a horario
-              se envian el próximo dia de entrega.
-            </p>
+              ¿Donde queres recibir tu pedido?
+            </h2>
+            <p>{labels?.alert_info_new_order_modal?.content}</p>
             <div className="text-center">
               {/* ALERTAS DE ENVÍO */}
-              {/* <p className="font-bold">
-                Viernes 02-05: se entregaran solo domicilios y puntos de entrega
-                locales comerciales.
-              </p>
-              <p className="font-bold underline">
-                <span>Universidad proxima entrega 06-05-25</span>
-              </p> */}
+              <p className="font-bold underline">{labels?.week_alert}</p>
             </div>
           </section>
           <section className="flex flex-col w-full px-5 py-5 gap-6 overflow-y-auto max-h-[calc(90vh-200px)]">

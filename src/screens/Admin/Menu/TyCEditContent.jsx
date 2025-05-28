@@ -12,10 +12,7 @@ export default function TyCEditContent() {
     (async function () {
       setLoad(true);
       InAppTextsAdapter.getTyCLabel()
-        .then(data => {
-          console.log(data);
-          setHtml(data);
-        })
+        .then(data => setHtml(data))
         .finally(() => setLoad(false));
     })();
   }, []);

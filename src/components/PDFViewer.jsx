@@ -104,7 +104,7 @@ export default function PDFViewer({
             <FileCopySharpIcon sx={{ height: "0.7em", width: "0.7em" }} />
             <span>{numPages}</span>
             <span className="text-[12px] lg:text-[14px]  text-center ">
-              {numPages > 1 ? `Páginas` : numPages == 1 ? `Página` : null}
+              {numPages > 1 ? "Páginas" : numPages == 1 ? "Página" : null}
             </span>
           </div>
         </div>

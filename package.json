@@ -1,7 +1,7 @@
 {
   "name": "xiro-app",
   "private": true,
-  "version": "v6.0.1(beta)",
+  "version": "v6.0.3 (beta)",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
@@ -43,7 +43,8 @@
     "redux-thunk": "^2.4.2",
     "tailwind-merge": "^3.0.1",
     "use-places-autocomplete": "^4.0.1",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/mercadopago": "^1.5.11",
