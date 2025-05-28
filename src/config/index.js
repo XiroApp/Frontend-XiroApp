@@ -1,5 +1,5 @@
-let _env = "PROD"; // PRODUCCION
-// let _env = "TESTING"; // AMBIENTE DE PRUEBAS
+// let _env = "PROD"; // PRODUCCION
+let _env = "TESTING"; // AMBIENTE DE PRUEBAS
 // let _env = "LOCAL"; // "DESARROLLO LOCAL CON EMULADOR BACKEND"
 
 import { ApiConstants } from "../Common/constants";
