@@ -131,7 +131,7 @@ export default function NewOrder() {
         0
       );
 
-      setResume((prev) => ({
+      setResume(prev => ({
         ...prev,
         printWay: totalPages > 1 ? prev.printWay : "Simple faz",
         totalPages,
@@ -158,7 +158,7 @@ export default function NewOrder() {
       const newDetails = prevFiles.details.filter(f => {
         return f.name !== fileToDelete;
       });
-      const newPreviews = prevFiles.previews.filter((f) => f !== fileToDelete);
+      const newPreviews = prevFiles.previews.filter(f => f !== fileToDelete);
 
       return { previews: newPreviews, details: newDetails };
     });
@@ -166,7 +166,6 @@ export default function NewOrder() {
   }, []);
 
   const handleSubmitLoadFile = useCallback(
-    async function (e) {
     async function (e) {
       e.preventDefault();
       const filesInput = e.target.files;
@@ -180,7 +179,7 @@ export default function NewOrder() {
 
       try {
         const uploadPromises = Array.from(filesInput)
-          .filter((file) => {
+          .filter(file => {
             if (!validateFileSize(file, maxSizeMB)) {
               dispatch(
                 setToast(
@@ -192,7 +191,7 @@ export default function NewOrder() {
             }
             return true;
           })
-          .map(async (file) => {
+          .map(async file => {
             if (validatePDFFile(file.name)) {
               const uploadedFile = await uploadFile(file);
               return { preview: uploadedFile };
@@ -207,24 +206,15 @@ export default function NewOrder() {
         const results = await Promise.all(uploadPromises);
         const newFiles = results.flat();
 
-        setFiles((prev) => ({
+        setFiles(prev => ({
           ...prev,
-          previews: [...prev.previews, ...newFiles.map((f) => f.preview)],
+          previews: [...prev.previews, ...newFiles.map(f => f.preview)],
         }));
       } catch (err) {
         dispatch(
           setToast("Error al subir archivos, intenta nuevamente", "error")
         );
-        dispatch(
-          setToast("Error al subir archivos, intenta nuevamente", "error")
-        );
         console.error(`catch 'handleSubmitLoadFile' ${err.message}`);
-        updateState("loading", false);
-      } finally {
-        // dispatch(
-        //   setToast("Error al subir archivos, intenta nuevamente", "error")
-        // );
-        updateState("loading", false);
         updateState("loading", false);
       } finally {
         // dispatch(
@@ -256,11 +246,11 @@ export default function NewOrder() {
   }, [dispatch, user, resume, files.previews, pricing.total]);
 
   const updateState = useCallback((key, value) => {
-    setState((prev) => ({ ...prev, [key]: value }));
+    setState(prev => ({ ...prev, [key]: value }));
   }, []);
 
   const handleColorAlert = useCallback(() => {
-    setState((prev) => ({
+    setState(prev => ({
       ...prev,
       openColorAlertModal: !prev.openColorAlertModal,
     }));
@@ -316,7 +306,7 @@ export default function NewOrder() {
       {state.choosePlace && (
         <ChoosePlaceModal
           choosePlace={state.choosePlace}
-          setChoosePlace={(value) => updateState("choosePlace", value)}
+          setChoosePlace={value => updateState("choosePlace", value)}
         />
       )}
 
@@ -475,7 +465,7 @@ export default function NewOrder() {
               <section className="w-full">
                 <NewOrderSettings
                   helpModal={state.helpModal}
-                  setHelpModal={(value) => updateState("helpModal", value)}
+                  setHelpModal={value => updateState("helpModal", value)}
                   currentSetting={state.currentSetting}
                   resume={resume}
                   setResume={handleSetResume}
@@ -498,9 +488,9 @@ export default function NewOrder() {
                           index={index}
                           resume={resume}
                           setResume={setResume}
-                          setLoading={(value) => updateState("loading", value)}
-                          setFilesDetail={(detail) =>
-                            setFiles((prev) => {
+                          setLoading={value => updateState("loading", value)}
+                          setFilesDetail={detail =>
+                            setFiles(prev => {
                               return {
                                 ...prev,
                                 details: [...detail],
@@ -652,7 +642,7 @@ export default function NewOrder() {
               </LoadingButton>
             )}
           </section>
-          {!libraryModal && (
+          {libraryModal && (
             <div
               onClick={() => setLibraryModal(false)}
               className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 pb-14"

@@ -1,53 +1,50 @@
+import { useEffect, useState } from "react";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import {
+  Box,
+  Button,
+  Modal,
+  TextareaAutosize,
+  Typography,
+} from "@mui/material";
+import { useDispatch } from "react-redux";
+import { InAppTextsAdapter } from "../../../Adapters/inAppTexts.adapter";
+import { setToast } from "../../../redux/actions";
+
 export default function Texts() {
-  return <p>Debo ser reparado</p>;
-}
-// import { useEffect, useState } from "react";
-// import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-// import {
-//   Box,
-//   Button,
-//   Modal,
-//   TextareaAutosize,
-//   Typography,
-// } from "@mui/material";
-// import { useDispatch } from "react-redux";
-// import { InAppTextsAdapter } from "../../../Adapters/inAppTexts.adapter";
-// import { setToast } from "../../../redux/actions";
+  const dispatch = useDispatch();
+  const [openModal, setOpenModal] = useState(false);
+  const [labels, setLabels] = useState([]);
+  const [input, setInput] = useState({});
 
-// export default function Texts() {
-//   const dispatch = useDispatch();
-//   const [openModal, setOpenModal] = useState(false);
-//   const [labels, setLabels] = useState([]);
-//   const [input, setInput] = useState({});
+  useEffect(() => {
+    InAppTextsAdapter.getLabels().then(res => {
+      setLabels(res);
+    });
+  }, []);
 
-//   useEffect(() => {
-//     InAppTextsAdapter.getLabels().then(res => {
-//       setLabels(res);
-//     });
-//   }, []);
+  function handleCloseModal() {
+    setOpenModal(!openModal);
+  }
 
-//   function handleCloseModal() {
-//     setOpenModal(!openModal);
-//   }
+  const handleInput = e =>
+    setInput({ ...input, [e.target.name]: e.target.value });
 
-//   const handleInput = e =>
-//     setInput({ ...input, [e.target.name]: e.target.value });
+  async function handleSubmit(e) {
+    try {
+      e.preventDefault();
+      const dataArray = Object.entries(input).map(([key, value]) => ({
+        id: key,
+        content: value,
+      }));
 
-//   async function handleSubmit(e) {
-//     try {
-//       e.preventDefault();
-//       const dataArray = Object.entries(input).map(([key, value]) => ({
-//         id: key,
-//         content: value,
-//       }));
-
-      await InAppTextsAdapter.editLabels(dataArray).then((res) => {
+      await InAppTextsAdapter.editLabels(dataArray).then(() => {
         dispatch(setToast("Textos editados correctamente.", "success"));
       });
     } catch (error) {
       dispatch(setToast(error.message, "error"));
     }
-  };
+  }
 
   return (
     <div className="flex flex-col items-center rounded-2xl lg:h-full p-6 gap-4">

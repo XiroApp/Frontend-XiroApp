@@ -78,7 +78,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
               className="text-center text-[20px] font-bold "
             >
               ¿Donde queres recibir tu pedido?
-            </h2>
+            </p>
             <p>{labels?.alert_info_new_order_modal?.content}</p>
             <div className="text-center">
               {/* ALERTAS DE ENVÍO */}
