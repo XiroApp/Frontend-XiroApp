@@ -1,6 +1,6 @@
-let _env = "PROD"; // PRODUCCION
-// let _env = "TESTING"; // AMBIENTE DE PRUEBAS
 // let _env = "LOCAL"; // "DESARROLLO LOCAL CON EMULADOR BACKEND"
+// let _env = "TESTING"; // AMBIENTE DE PRUEBAS
+let _env = "PROD"; // PRODUCCION
 
 import { ApiConstants } from "../Common/constants";
 
@@ -9,7 +9,7 @@ const URL_PICTURES = "pictures";
 
 export class Settings {
   static get FRONTEND_VERSION() {
-    return "v6.0.3 (beta)"; //! Cambiar en cada despliegue.
+    return "v6.0.4 (beta)"; //! Cambiar en cada despliegue.
   }
 
   static get SERVER_URL() {
@@ -31,7 +31,7 @@ export class Settings {
   static get STORAGE_URL() {
     switch (_env) {
       case "LOCAL":
-        return ApiConstants.STORAGE_URL_TESTING;
+        return ApiConstants.STORAGE_URL_PROD;
 
       case "TESTING":
         return ApiConstants.STORAGE_URL_TESTING;
@@ -47,7 +47,7 @@ export class Settings {
   static get STORAGE_TOKEN_QUERY() {
     switch (_env) {
       case "LOCAL":
-        return ApiConstants.STORAGE_TOKEN_QUERY_TESTING;
+        return ApiConstants.STORAGE_TOKEN_QUERY_PROD;
 
       case "TESTING":
         return ApiConstants.STORAGE_TOKEN_QUERY_TESTING;
@@ -63,7 +63,7 @@ export class Settings {
   static get MERCADOPAGO_KEY() {
     switch (_env) {
       case "LOCAL":
-        return ApiConstants.MERCADOPAGO_TESTING;
+        return ApiConstants.MERCADOPAGO_PUBLIC_KEY;
 
       case "TESTING":
         return ApiConstants.MERCADOPAGO_TESTING;
@@ -80,13 +80,13 @@ export class Settings {
     switch (_env) {
       case "LOCAL":
         return {
-          apiKey: "AIzaSyCFHRqijYpi8qxik_UsfxGpd6k4r9fPs60",
-          authDomain: "testing-xiro-app.firebaseapp.com",
-          projectId: "testing-xiro-app",
-          storageBucket: "testing-xiro-app.firebasestorage.app",
-          messagingSenderId: "1041638889688",
-          appId: "1:1041638889688:web:1a5997f8929d3fb0e6dfad",
-          measurementId: "G-6XT50QQ9M7",
+          apiKey: "AIzaSyC0yeDOJlWXV5rTc3V5vtNyG9VT_BzVH7Y",
+          authDomain: "xiro-app-2ec87.firebaseapp.com",
+          projectId: "xiro-app-2ec87",
+          storageBucket: "xiro-app-2ec87.firebasestorage.app",
+          messagingSenderId: "795770640225",
+          appId: "1:795770640225:web:194d64648d2caea6e8d720",
+          measurementId: "G-NV3WGWXXM6",
         };
       case "TESTING":
         return {
