@@ -33,10 +33,10 @@ export default function Orders({ editor }) {
   const [error, setError] = useState(null);
   const [orders, setOrders] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [filter, setFilter] = useState("no_filter");
+  const [filter, setFilter] = useState(null);
   const [allOrders, setAllOrders] = useState([]);
   /* -------------------------------------------- */
-  /* PAGINADO DEL BACK NUEVO 2025 V 78598.1.0.156 */
+  /* PAGINADO DEL BACK NUEVO 2025 V 78598.1.0.1 56 */
   const limitOptions = [10, 25, 50, 100]; // Opciones de límite
   const [limit, setLimit] = useState(25); // Estado para el límite/pageSize
   // Estado para guardar los cursores recibidos del backend
@@ -50,7 +50,7 @@ export default function Orders({ editor }) {
   useEffect(() => {
     fetchOrders({ currentNextCursor, currentPreviousCursor });
     fetchUsersByRole();
-  }, [limit]);
+  }, [limit, filter]);
 
   async function fetchOrders({
     startAfterValue = null,
@@ -68,6 +68,7 @@ export default function Orders({ editor }) {
         limit,
         startAfterValue,
         endBeforeValue,
+        filter,
         "admin"
       );
 
@@ -126,16 +127,10 @@ export default function Orders({ editor }) {
   }
 
   async function handleFilter(status) {
-    setFilter(status);
-    console.log(status);
-    console.log(orders);
-
-    if (status != "no_filter") {
-      setAllOrders(orders.filter(o => o?.orderStatus == tLC(status)));
-    } else {
-      const orders = await fetchOrders({});
-      setAllOrders(orders);
+    if (!status) {
+      fetchOrders({});
     }
+    setFilter(status);
   }
 
   function handleLimitChange(e) {
@@ -185,11 +180,6 @@ export default function Orders({ editor }) {
             className="w-full text-gray-800"
           />
         </div>
-        <JsonToExcelConverter
-          text={"Descargar Listado de órdenes"}
-          icon={<FileDownloadIcon className="h-5 w-5" />}
-          action={handleDownloadExcel}
-        />
         <div className="w-full flex flex-col gap-y-2">
           <label
             htmlFor="filter-orders"
@@ -300,16 +290,21 @@ export default function Orders({ editor }) {
             <button
               type="button"
               name="no_filter"
-              onClick={() => handleFilter("no_filter")}
+              onClick={() => handleFilter(null)}
               className="bg-gray-100 hover:bg-gray-200"
             >
               Quitar filtros
             </button>
           </div>
         </div>
+        <JsonToExcelConverter
+          text={"Descargar reporte"}
+          icon={<FileDownloadIcon className="h-5 w-5" />}
+          action={handleDownloadExcel}
+        />
       </div>
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 550, backgroundColor: "#f2f2f4" }}>
+        <TableContainer sx={{ maxHeight: 650, backgroundColor: "#f2f2f4" }}>
           <table className="w-full min-w-max table-auto text-left">
             <TableHead>
               <TableRow>
@@ -481,15 +476,6 @@ export default function Orders({ editor }) {
             </td>
           </TableRow>
         </TableFooter>
-        {/* <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={allOrders.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        /> */}
       </Paper>
     </div>
   );
