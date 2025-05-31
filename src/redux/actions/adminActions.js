@@ -94,7 +94,7 @@ export function getAllCoupons() {
 export function getAllOrders(pageToken) {
   return async function (dispatch) {
     try {
-      const url = `${baseUrl}/orders`;
+      let url = `${baseUrl}/orders`;
 
       if (pageToken) {
         url += `?pageToken=${pageToken}`;

@@ -25,7 +25,8 @@ import {
   DialogActions,
   DialogTitle,
   DialogContentText,
-  DialogContent, // Importar IconButton
+  DialogContent,
+  TextField, // Importar IconButton
 } from "@mui/material";
 import ReplayIcon from "@mui/icons-material/Replay";
 import ClearIcon from "@mui/icons-material/Clear"; // Importar icono de limpiar
@@ -59,6 +60,9 @@ export default function Orders({ editor }) {
   const [hasMoreForward, setHasMoreForward] = useState(false); // Indica si hay más páginas hacia adelante
   const [hasMoreBackward, setHasMoreBackward] = useState(false); // Indica si hay más páginas hacia atrás
   /* -------------------------------------------- */
+  /* REPORTES */
+  const [startDate, setStartDate] = useState(""); // State for start date
+  const [endDate, setEndDate] = useState(""); // State for end date
   /* -------------------------------------------- */
 
   // Opciones de filtro para el desplegable
@@ -172,9 +176,13 @@ export default function Orders({ editor }) {
   async function handleDownloadExcel() {
     setLoading(true);
     try {
-      await OrdersAdapter.downloadOrdersExcel();
+      // Pass selected dates to the adapter
+      await OrdersAdapter.downloadOrdersExcel(startDate, endDate);
     } catch (error) {
-      alert("Error al descargar el archivo");
+      // Using a custom message box instead of alert()
+      console.error("Error al descargar el archivo:", error);
+      // You might want to implement a more user-friendly modal for errors
+      alert("Error al descargar el archivo. Por favor, intente de nuevo."); // Fallback for demonstration
     } finally {
       setLoading(false);
       handleReportModal();
@@ -190,9 +198,14 @@ export default function Orders({ editor }) {
     }
   }
 
-  function handleReportModal() {
+  const handleReportModal = () => {
     setReportModal(!reportModal);
-  }
+    // Reset dates when closing the modal
+    if (!reportModal) {
+      setStartDate("");
+      setEndDate("");
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl p-4 ">
@@ -451,9 +464,35 @@ export default function Orders({ editor }) {
       >
         <DialogTitle id="alert-dialog-title">Generar reporte</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Seleccione las fechas
-          </DialogContentText>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Seleccione las fechas
+            </DialogContentText>
+            <div className="flex flex-col gap-4 mt-4">
+              <TextField
+                label="Fecha de Inicio"
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                fullWidth
+                variant="outlined"
+              />
+              <TextField
+                label="Fecha de Fin"
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                fullWidth
+                variant="outlined"
+              />
+            </div>
+          </DialogContent>
         </DialogContent>
         <DialogActions>
           <Button variant="text" onClick={handleReportModal}>
