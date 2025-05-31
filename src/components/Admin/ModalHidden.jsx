@@ -2,8 +2,7 @@ import propTypes from "prop-types";
 import { initLibraryProd } from "../../Common/constants.js";
 import { setToast } from "../../redux/actions/index.js";
 import { useDispatch } from "react-redux";
-import { LibraryService } from "../../Services/library.service.js";
-
+import { LibraryService } from "../../Infra/Services/library.service";
 function ModalHidden({
   setShowVisibleModal,
   setProductSelected,

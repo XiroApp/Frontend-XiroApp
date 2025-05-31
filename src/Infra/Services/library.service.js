@@ -5,7 +5,7 @@ import {
   getDocs,
   setDoc,
 } from "firebase/firestore/lite";
-import { db } from "../config/firebase";
+import { db } from "../../config/firebase";
 
 const TABLE = collection(db, "products");
 

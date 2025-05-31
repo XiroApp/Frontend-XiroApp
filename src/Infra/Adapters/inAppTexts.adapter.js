@@ -1,4 +1,4 @@
-import { InAppTextsService } from "../Services/inAppTexts.service";
+import { InAppTextsService } from "../../Infra/Services/inAppTexts.service";
 
 export class InAppTextsAdapter {
   static async getLabels() {
@@ -13,6 +13,7 @@ export class InAppTextsAdapter {
 
   static async getTyCLabel() {
     const response = await InAppTextsService.getTyCLabel();
+    console.log(response)
     return response;
   }
 

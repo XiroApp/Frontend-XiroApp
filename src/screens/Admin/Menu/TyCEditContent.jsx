@@ -1,7 +1,8 @@
 import { useEffect } from "react";
-import { InAppTextsAdapter } from "../../../Adapters/inAppTexts.adapter";
+import { InAppTextsAdapter } from "../../../Infra/Adapters/inAppTexts.adapter";
 import { useState } from "react";
 import TinyTextEditor from "../../../components/TextEditor/TinyTextEditor";
+import { Button, Typography } from "@mui/material";
 // import parse from "html-react-parser";
 
 export default function TyCEditContent() {
@@ -9,12 +10,10 @@ export default function TyCEditContent() {
   const [load, setLoad] = useState(false);
 
   useEffect(() => {
-    (async function () {
-      setLoad(true);
-      InAppTextsAdapter.getTyCLabel()
-        .then(data => setHtml(data))
-        .finally(() => setLoad(false));
-    })();
+    setLoad(true);
+    InAppTextsAdapter.getTyCLabel()
+      .then((data) => setHtml(data.html))
+      .finally(() => setLoad(false));
   }, []);
 
   async function saveData() {
@@ -28,28 +27,20 @@ export default function TyCEditContent() {
   }
 
   return (
-    <section className="w-ful flex justify-center items-center relative">
-      <button
+    <section className="w-full h-[80vh] flex flex-col justify-center p-4">
+      <Typography variant="h3" className="pb-4">
+        Términos y condiciones
+      </Typography>
+      <TinyTextEditor initialValue={html} setValue={setHtml} disabled={load} />
+
+      <Button
+        variant="contained"
         onClick={saveData}
         type="button"
-        className="absolute top-8 right-10 transition-colors hover:bg-green-400/80 hover:border-green-400/95 bg-green-400/95 text-2xl px-6 py-2 rounded-lg border-2 border-green-500"
+        className="w-full"
       >
         Guardar
-      </button>
-      {load ? (
-        <p className="text-2xl w-full text-center min-h-[250px] flex justify-center items-start pt-10">
-          Cargando...
-        </p>
-      ) : (
-        <div className="w-full max-w-3xl h-[500px] py-8">
-          <TinyTextEditor
-            initialValue={html}
-            setValue={setHtml}
-            disabled={load}
-          />
-        </div>
-      )}
-      {<div dangerouslySetInnerHTML={{ __html: html }} />}
+      </Button>
     </section>
   );
 }
