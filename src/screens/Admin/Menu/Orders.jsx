@@ -3,6 +3,7 @@ import Paper from "@mui/material/Paper";
 import TableContainer from "@mui/material/TableContainer";
 import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import AssessmentIcon from "@mui/icons-material/Assessment";
 import {
   Backdrop,
   Button,
@@ -19,9 +20,14 @@ import {
   InputLabel,
   OutlinedInput, // Importar OutlinedInput
   InputAdornment, // Importar InputAdornment
-  IconButton, // Importar IconButton
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContentText,
+  DialogContent, // Importar IconButton
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search"; // Importar icono de búsqueda
+import ReplayIcon from "@mui/icons-material/Replay";
 import ClearIcon from "@mui/icons-material/Clear"; // Importar icono de limpiar
 import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper.js";
 import { UsersAdapter } from "../../../Infra/Adapters/users.adapter.js";
@@ -42,6 +48,7 @@ export default function Orders({ editor }) {
   const [filter, setFilter] = useState(null); // Estado para el filtro seleccionado
   const [allOrders, setAllOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // Nuevo estado para el término de búsqueda
+  const [reportModal, setReportModal] = useState(false); // Nuevo estado para el término de búsqueda
   /* -------------------------------------------- */
   /* PAGINADO DEL BACK NUEVO 2025 V 78598.1.0.1 56 */
   const limitOptions = [10, 25, 50, 100]; // Opciones de límite
@@ -56,7 +63,7 @@ export default function Orders({ editor }) {
 
   // Opciones de filtro para el desplegable
   const filterOptions = [
-    { value: null, label: "Quitar filtros" },
+    { value: null, label: "Todos" },
     { value: "pending", label: "Pendientes" },
     { value: "unassigned", label: "Sin Asignar" },
     { value: "process", label: "En proceso" },
@@ -163,74 +170,94 @@ export default function Orders({ editor }) {
   }
 
   async function handleDownloadExcel() {
+    setLoading(true);
     try {
-      setLoading(true);
       await OrdersAdapter.downloadOrdersExcel();
     } catch (error) {
       alert("Error al descargar el archivo");
     } finally {
       setLoading(false);
+      handleReportModal();
     }
+  }
+
+  async function handleRefresh() {
+    if (filter) {
+      setSearchTerm("");
+      setFilter(null);
+    } else {
+      fetchOrders({});
+    }
+  }
+
+  function handleReportModal() {
+    setReportModal(!reportModal);
   }
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl p-4 ">
-      <div className="flex flex-col lg:flex-row rounded-lg lg:w-full p-2 gap-y-4 gap-x-10">
-        {/* Reemplazado el label y Input por FormControl con OutlinedInput */}
-        <FormControl variant="outlined" size="small" className="w-56">
-          <InputLabel htmlFor="search-orders-input">Buscar órdenes</InputLabel>
-          <OutlinedInput
-            id="search-orders-input"
-            type="text"
-            value={searchTerm} // Conectado al nuevo estado searchTerm
-            onChange={(e) => handleSearch(e.target.value)}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="clear search"
-                  onClick={handleClearSearch} // Llama a la nueva función para limpiar
-                  edge="end"
-                  disabled={searchTerm === ""} // Deshabilitar si no hay texto
-                >
-                  <ClearIcon />
-                </IconButton>
-              </InputAdornment>
-            }
-            startAdornment={
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            }
-            label="Buscar órdenes" // Debe coincidir con el InputLabel
-            sx={{ borderRadius: "8px" }} // Tailwind rounded corners
-          />
-        </FormControl>
+      <div className="flex flex-col lg:flex-row justify-between rounded-lg lg:w-full p-2 gap-y-4 gap-x-10">
+        <div className="flex gap-4 items-center">
+          {/* Reemplazado el label y Input por FormControl con OutlinedInput */}
+          <FormControl variant="outlined" size="small" className="w-56">
+            <InputLabel htmlFor="search-orders-input">
+              Buscar órdenes
+            </InputLabel>
+            <OutlinedInput
+              id="search-orders-input"
+              type="text"
+              value={searchTerm} // Conectado al nuevo estado searchTerm
+              onChange={(e) => handleSearch(e.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="clear search"
+                    onClick={handleClearSearch} // Llama a la nueva función para limpiar
+                    edge="end"
+                    disabled={searchTerm === ""} // Deshabilitar si no hay texto
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </InputAdornment>
+              }
+              // startAdornment={
+              //   <InputAdornment position="start">
+              //     <SearchIcon />
+              //   </InputAdornment>
+              // }
+              label="Buscar órdenes" // Debe coincidir con el InputLabel
+              sx={{ borderRadius: "8px" }} // Tailwind rounded corners
+            />
+          </FormControl>
 
-        <FormControl variant="outlined" size="small" className="w-56">
-          <InputLabel id="order-status-filter-label">
-            Estado de Orden
-          </InputLabel>
-          <Select
-            labelId="order-status-filter-label"
-            id="order-status-filter"
-            value={filter || ""} // Si filter es null, el value es "" para mostrar el placeholder
-            onChange={handleFilter}
-            label="Estado de Orden"
-            sx={{ borderRadius: "8px" }} // Tailwind rounded corners
-          >
-            {filterOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+          <FormControl variant="outlined" size="small" className="w-56">
+            <InputLabel id="order-status-filter-label">
+              Filtrar por estado
+            </InputLabel>
+            <Select
+              labelId="order-status-filter-label"
+              id="order-status-filter"
+              value={filter || ""} // Si filter es null, el value es "" para mostrar el placeholder
+              onChange={handleFilter}
+              label="Estado de Orden"
+              sx={{ borderRadius: "8px" }} // Tailwind rounded corners
+            >
+              {filterOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button onClick={handleRefresh}>
+            Borrar filtros <ReplayIcon />
+          </Button>
+        </div>
 
-        <JsonToExcelConverter
-          text={"Descargar reporte"}
-          icon={<FileDownloadIcon className="h-5 w-5" />}
-          action={handleDownloadExcel}
-        />
+        <Button variant="contained" onClick={handleReportModal}>
+          <AssessmentIcon />
+          Generar reporte
+        </Button>
       </div>
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <TableContainer sx={{ maxHeight: 650, backgroundColor: "#f2f2f4" }}>
@@ -416,6 +443,29 @@ export default function Orders({ editor }) {
           onRowsPerPageChange={handleChangeRowsPerPage}
         /> */}
       </Paper>
+      <Dialog
+        open={reportModal}
+        onClose={handleReportModal}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Generar reporte</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Seleccione las fechas
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="text" onClick={handleReportModal}>
+            Cerrar
+          </Button>
+          <JsonToExcelConverter
+            text={"Descargar"}
+            icon={<FileDownloadIcon className="h-5 w-5" />}
+            action={handleDownloadExcel}
+          />
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
