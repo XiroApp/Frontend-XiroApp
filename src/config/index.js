@@ -1,7 +1,7 @@
-
-// let _env = "LOCAL"; // "DESARROLLO LOCAL CON EMULADOR BACKEND"
-let _env = "TESTING"; // AMBIENTE DE PRUEBAS
-// let _env = "PROD"; // PRODUCCION
+// let _env = "LOCAL"; // "DESARROLLO LOCAL CON EMULADOR BACKEND DE PRODUCCIÓN"
+// let _env = "PROD"; // CONECTADO A API DE PRODUCCION
+let _env = "TESTING"; // AMBIENTE DE PRUEBAS CON API DE TESTING
+// let _env = "TESTING-LOCAL"; // AMBIENTE DE PRUEBAS CON EMULADOR DE TESTINGL
 
 import { ApiConstants } from "../Common/constants";
 
@@ -21,6 +21,9 @@ export class Settings {
       case "TESTING":
         return ApiConstants.BASE_URL_TESTING;
 
+      case "TESTING-LOCAL":
+        return ApiConstants.BASE_URL_LOCAL;
+
       case "PROD":
         return ApiConstants.BASE_URL_PROD;
 
@@ -35,6 +38,9 @@ export class Settings {
         return ApiConstants.STORAGE_URL_PROD;
 
       case "TESTING":
+        return ApiConstants.STORAGE_URL_TESTING;
+
+      case "TESTING-LOCAL":
         return ApiConstants.STORAGE_URL_TESTING;
 
       case "PROD":
@@ -53,6 +59,9 @@ export class Settings {
       case "TESTING":
         return ApiConstants.STORAGE_TOKEN_QUERY_TESTING;
 
+      case "TESTING-LOCAL":
+        return ApiConstants.STORAGE_TOKEN_QUERY_TESTING;
+
       case "PROD":
         return ApiConstants.STORAGE_TOKEN_QUERY_PROD;
 
@@ -67,6 +76,9 @@ export class Settings {
         return ApiConstants.MERCADOPAGO_PUBLIC_KEY;
 
       case "TESTING":
+        return ApiConstants.MERCADOPAGO_TESTING;
+
+      case "TESTING-LOCAL":
         return ApiConstants.MERCADOPAGO_TESTING;
 
       case "PROD":
@@ -90,6 +102,16 @@ export class Settings {
           measurementId: "G-NV3WGWXXM6",
         };
       case "TESTING":
+        return {
+          apiKey: "AIzaSyCFHRqijYpi8qxik_UsfxGpd6k4r9fPs60",
+          authDomain: "testing-xiro-app.firebaseapp.com",
+          projectId: "testing-xiro-app",
+          storageBucket: "testing-xiro-app.firebasestorage.app",
+          messagingSenderId: "1041638889688",
+          appId: "1:1041638889688:web:1a5997f8929d3fb0e6dfad",
+          measurementId: "G-6XT50QQ9M7",
+        };
+      case "TESTING-LOCAL":
         return {
           apiKey: "AIzaSyCFHRqijYpi8qxik_UsfxGpd6k4r9fPs60",
           authDomain: "testing-xiro-app.firebaseapp.com",
