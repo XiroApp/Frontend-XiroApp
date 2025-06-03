@@ -5,32 +5,27 @@ import { FaStore as StoreIcon } from "react-icons/fa6";
 import PlaceIcon from "@mui/icons-material/PlaceOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import NewAddressForm from "../../components/Forms/NewAddressForm";
-import {
-  getInAppLabels,
-  setOrderPlace,
-  setToast,
-  updateUser,
-} from "../../redux/actions";
+import { getInAppLabels, setOrderPlace, setToast } from "../../redux/actions";
 import { UsersAdapter } from "../../Infra/Adapters/users.adapter";
 import propTypes from "prop-types";
 import AddMoreLink from "../../components/AddMoreLink";
 
-ChoosePlaceModal.propTypes = {
-  choosePlace: propTypes.bool,
-  setChoosePlace: propTypes.func,
-};
-
 export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
-  const dispatch = useDispatch();
-  const labels = useSelector(state => state.labels);
-  const [open, setOpen] = useState(false);
-  const [resume, setResume] = useState({ place: null });
-  const [pickupUsers, setPickupUsers] = useState([]);
-  const addresses = useSelector(state => state.addresses);
-  const place = useSelector(state => state.place);
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch(),
+    labels = useSelector(state => state.labels),
+    [open, setOpen] = useState(false),
+    [resume, setResume] = useState({ place: null }),
+    [pickupUsers, setPickupUsers] = useState([]),
+    addresses = useSelector(state => state.addresses),
+    place = useSelector(state => state.place),
+    [loading, setLoading] = useState(false);
 
-  function handleChoice(e) {
+  useEffect(() => {
+    fetchPickupPoints();
+    dispatch(getInAppLabels());
+  }, []);
+
+  function handleChoice() {
     setLoading(true);
     try {
       if (resume?.place?.type && resume?.place?.address) {
@@ -40,22 +35,17 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
       } else {
         setChoosePlace(false);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error(`catch 'handleChoice' ${err.message}`);
     } finally {
       setLoading(false);
       setChoosePlace(false);
     }
   }
 
-  const fetchPickupPoints = async () => {
+  async function fetchPickupPoints() {
     UsersAdapter.getPickupUsers().then(res => setPickupUsers(res));
-  };
-
-  useEffect(() => {
-    fetchPickupPoints();
-    dispatch(getInAppLabels());
-  }, []);
+  }
 
   return (
     <>
@@ -72,23 +62,22 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
         className=" flex items-center justify-center"
       >
         <Box className="bg-[#fff] rounded-lg w-[95%] max-w-[500px] h-[90vh] overflow-hidden flex flex-col justify-between shadow-lg">
-          <section className=" p-4 ">
+          <section className="px-4 md:px-6 pt-6 md:pt-8 pb-2 md:pb-4 gap-y-6 flex flex-col items-center justify-center">
             <p
               id="parent-modal-title"
-              className="text-center text-[20px] font-bold "
+              className="text-center text-[20px] font-bold"
             >
-              ¿Donde queres recibir tu pedido?
+              ¿Dónde querés recibir tu pedido?
             </p>
             <p>{labels?.alert_info_new_order_modal?.content}</p>
             <div className="text-center">
-              {/* ALERTAS DE ENVÍO */}
               <p className="font-bold underline">{labels?.week_alert}</p>
             </div>
           </section>
           <section className="flex flex-col w-full px-5 py-5 gap-6 overflow-y-auto max-h-[calc(90vh-200px)]">
             <button
               className={
-                resume?.place?.type === "Envío a domicilio"
+                resume?.place?.type == "Envío a domicilio"
                   ? "flex flex-row gap-3 md:gap-5 items-center justify-start p-3 md:p-4 border-2 border-[#000] bg-[#81A165] rounded-lg text-white"
                   : "flex flex-row gap-3 md:gap-5 items-center justify-start p-3 md:p-4 border border-[#000] bg-[#fff]/50 rounded-lg hover:bg-green-600/30 transition-colors"
               }
@@ -123,7 +112,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
 
             <button
               className={
-                resume?.place?.type === "Retiro"
+                resume?.place?.type == "Retiro"
                   ? "flex flex-row gap-3 md:gap-5 items-center justify-start p-3 md:p-4 border-2 border-[#000] bg-[#81A165] rounded-lg text-white"
                   : "flex flex-row gap-3 md:gap-5 items-center justify-start p-3 md:p-4 border border-[#000] bg-[#fff]/50 rounded-lg hover:bg-green-600/30 transition-colors"
               }
@@ -155,7 +144,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
           </section>
 
           <section className="flex flex-col items-center py-2 w-full">
-            {resume?.place?.type === "Envío a domicilio" ? (
+            {resume?.place?.type == "Envío a domicilio" ? (
               <div className="flex flex-col items-center">
                 <span className="font-[500]">Seleccioná tu domicilio</span>
                 <div className="flex flex-col justify-start p-2 gap-2">
@@ -164,7 +153,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                       <button
                         key={index}
                         className={
-                          resume.place.address === address
+                          resume.place.address == address
                             ? " p-2 rounded-md  bg-[#81A165] border-2 border-[#000] hover:bg-[#81A165] text-white w-[200px] "
                             : "w-[200px] p-2 rounded-md border border-gray-400 hover:bg-[#81A165] bg-[#fff]/60 "
                         }
@@ -197,15 +186,15 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                   ) : (
                     <span className="font-[400] text-sm">
                       {" "}
-                      No tienes direcciones agregadas.
+                      No tenés direcciones agregadas
                     </span>
                   )}
                 </div>
-                <button onClick={() => setOpen(!open)}>
+                <button type="button" onClick={() => setOpen(!open)}>
                   <AddMoreLink text="Añadir una nueva dirección" />
                 </button>
               </div>
-            ) : resume?.place?.type === "Retiro" ? (
+            ) : resume?.place?.type == "Retiro" ? (
               <div className="flex flex-col items-center w-full gap-2">
                 <span className="font-[500]">
                   Seleccioná donde retirar tu pedido
@@ -216,7 +205,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                         <button
                           key={index}
                           className={
-                            resume.place.address === pickup.address
+                            resume.place.address == pickup.address
                               ? " p-2 rounded-md  bg-[#81A165] border-2 border-[#000] hover:bg-[#81A165] text-white "
                               : " p-2 rounded-md border border-gray-400 hover:bg-[#81A165] bg-[#fff]/60 "
                           }
@@ -262,7 +251,7 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
                 </div>
               </div>
             ) : (
-              false
+              <></>
             )}
           </section>
           <section className="flex justify-end items-center px-5 pb-5">
@@ -277,8 +266,12 @@ export default function ChoosePlaceModal({ choosePlace, setChoosePlace }) {
           </section>
         </Box>
       </Modal>
-      {/* New Address modal */}
       <NewAddressForm open={open} setOpen={setOpen} />
     </>
   );
 }
+
+ChoosePlaceModal.propTypes = {
+  choosePlace: propTypes.bool,
+  setChoosePlace: propTypes.func,
+};
