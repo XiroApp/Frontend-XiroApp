@@ -44,7 +44,10 @@ import {
   validateFileSize,
 } from "../../../utils/controllers/pricing.controller.js";
 import { formatPrice, len } from "../../../Common/helpers.js";
-import { Create as CreatIcon } from "@mui/icons-material";
+import {
+  Create as CreatIcon,
+  DeleteForever as RemoveFilesIcon,
+} from "@mui/icons-material";
 import BackBtn from "../../../components/BackBtn.jsx";
 
 export default function NewOrder() {
@@ -217,9 +220,6 @@ export default function NewOrder() {
         console.error(`catch 'handleSubmitLoadFile' ${err.message}`);
         updateState("loading", false);
       } finally {
-        // dispatch(
-        //   setToast("Error al subir archivos, intenta nuevamente", "error")
-        // );
         updateState("loading", false);
       }
     },
@@ -260,19 +260,19 @@ export default function NewOrder() {
     updateState("currentSetting", e.target.name);
   }, []);
 
-  // ! Revisar si se deja.
-  // useEffect(() => {
-  //   if (state.loading) {
-  //     const timer = setTimeout(() => {
-  //       updateState("loading", false);
-  //       dispatch(
-  //         setToast("Se excedió el tiempo de carga, intenta nuevamente", "error")
-  //       );
-  //     }, 8000);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [state.loading]);
-  // !------------------
+  /* //! REVISAR SI SE DEJA
+  useEffect(() => {
+    if (state.loading) {
+      const timer = setTimeout(() => {
+        updateState("loading", false);
+        dispatch(
+          setToast("Se excedió el tiempo de carga, intenta nuevamente", "error")
+        );
+      }, 8000);
+      return () => clearTimeout(timer);
+    }
+  }, [state.loading]);
+  ! ------------------ */
 
   return (
     <div className="h-screen w-screen flex flex-col justify-between">
@@ -395,7 +395,27 @@ export default function NewOrder() {
                 </section>
               </div>
 
-              <div className="flex w-max justify-center items-center flex-row-reverse gap-x-4">
+              <div className="flex w-max justify-center items-center flex-row-reverse gap-x-3 md:gap-x-5">
+                {len(files.previews) > 0 && (
+                  <button
+                    type="button"
+                    title="Quitar mis archivos"
+                    onClick={() => updateState("resetModal", true)}
+                  >
+                    <RemoveFilesIcon
+                      sx={{
+                        fontSize: 32,
+                        backgroundColor: "#fecaca",
+                        color: "#000",
+                        borderRadius: "5px",
+                        padding: "2px",
+                        ":hover": {
+                          backgroundColor: "#fca5a5",
+                        },
+                      }}
+                    />
+                  </button>
+                )}
                 <form
                   encType="multipart/form-data"
                   className="flex items-center justify-center w-full flex-col relative"
@@ -429,15 +449,6 @@ export default function NewOrder() {
                       // disabled={state.loading}
                     />
                   </LoadingButton>
-                  {len(files.previews) > 0 && (
-                    <button
-                      type="button"
-                      className="text-lg transition-colors text-slate-900 absolute top-44 lg:top-16 bg-red-50 hover:bg-red-100 px-2 py-0.5 rounded-md border"
-                      onClick={() => updateState("resetModal", true)}
-                    >
-                      Quitar mis archivos
-                    </button>
-                  )}
                 </form>
 
                 <div className="flex items-center justify-center">
