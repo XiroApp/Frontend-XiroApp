@@ -3,12 +3,13 @@ import Paper from "@mui/material/Paper";
 import TableContainer from "@mui/material/TableContainer";
 import OrdersRow from "../../../components/OrdersRow/OrdersRow.jsx";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import AssessmentIcon from "@mui/icons-material/Assessment";
 import {
   Backdrop,
   Button,
   CircularProgress,
   FormControl,
-  Input,
+  Input, // Mantener Input si se usa en otro lugar, pero para la búsqueda usaremos OutlinedInput
   MenuItem,
   Select,
   TableBody,
@@ -16,7 +17,18 @@ import {
   TableHead,
   TableRow,
   Typography,
+  InputLabel,
+  OutlinedInput, // Importar OutlinedInput
+  InputAdornment, // Importar InputAdornment
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContentText,
+  DialogContent, // Importar IconButton
 } from "@mui/material";
+import ReplayIcon from "@mui/icons-material/Replay";
+import ClearIcon from "@mui/icons-material/Clear"; // Importar icono de limpiar
 import { OrdersAdapter } from "../../../Infra/Adapters/orders.adatper.js";
 import { UsersAdapter } from "../../../Infra/Adapters/users.adapter.js";
 import { twMerge } from "tailwind-merge";
@@ -33,24 +45,41 @@ export default function Orders({ editor }) {
   const [error, setError] = useState(null);
   const [orders, setOrders] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [filter, setFilter] = useState("no_filter");
+  const [filter, setFilter] = useState(null); // Estado para el filtro seleccionado
   const [allOrders, setAllOrders] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(""); // Nuevo estado para el término de búsqueda
+  const [reportModal, setReportModal] = useState(false); // Nuevo estado para el término de búsqueda
   /* -------------------------------------------- */
-  /* PAGINADO DEL BACK NUEVO 2025 V 78598.1.0.156 */
+  /* PAGINADO DEL BACK NUEVO 2025 V 78598.1.0.1 56 */
   const limitOptions = [10, 25, 50, 100]; // Opciones de límite
   const [limit, setLimit] = useState(25); // Estado para el límite/pageSize
   // Estado para guardar los cursores recibidos del backend
   const [currentNextCursor, setCurrentNextCursor] = useState(null); // para pedir la siguiente pagina
   const [currentPreviousCursor, setCurrentPreviousCursor] = useState(null); // para pedir la pagina anterior
-  // No necesitamos 'page', 'lastDocument' o 'direction' directamente
-  // porque usamos los cursores del backend
+  const [hasMoreForward, setHasMoreForward] = useState(false); // Indica si hay más páginas hacia adelante
+  const [hasMoreBackward, setHasMoreBackward] = useState(false); // Indica si hay más páginas hacia atrás
   /* -------------------------------------------- */
   /* -------------------------------------------- */
 
+  // Opciones de filtro para el desplegable
+  const filterOptions = [
+    { value: null, label: "Todos" },
+    { value: "pending", label: "Pendientes" },
+    { value: "unassigned", label: "Sin Asignar" },
+    { value: "process", label: "En proceso" },
+    { value: "printed", label: "Impresas" },
+    { value: "in_delivery", label: "En delivery" },
+    { value: "distribution", label: "En punto de dist." },
+    { value: "pickup", label: "En punto de retiro" },
+    { value: "received", label: "Recibidas" },
+    { value: "problems", label: "Con problemas" },
+  ];
+
   useEffect(() => {
-    fetchOrders({ currentNextCursor, currentPreviousCursor });
+    // Al cambiar el límite o el filtro, siempre se debe reiniciar a la primera página
+    fetchOrders({ startAfterValue: null, endBeforeValue: null });
     fetchUsersByRole();
-  }, [limit]);
+  }, [limit, filter]); // Las dependencias son limit y filter, no los cursores
 
   async function fetchOrders({
     startAfterValue = null,
@@ -68,33 +97,29 @@ export default function Orders({ editor }) {
         limit,
         startAfterValue,
         endBeforeValue,
+        filter, // Usar el estado `filter`
         "admin"
       );
 
-      // El backend te devuelve { orders: [...], nextPageStartAfter: ..., previousPageEndBefore: ... }
+      // El backend te devuelve { orders: [...], nextPageStartAfter: ..., previousPageEndBefore: ..., hasMoreForward, hasMoreBackward }
       const {
         orders: fetchedOrders,
         nextPageStartAfter,
         previousPageEndBefore,
+        hasMoreForward: fetchedHasMoreForward,
+        hasMoreBackward: fetchedHasMoreBackward,
       } = data;
 
-      // Si estábamos paginando hacia atrás, el backend nos dio los resultados
-      // en orden ascendente para que Firestore pudiera usar startAt().
-      // Ahora en el frontend, si endBeforeValue no es null, debemos invertir
-      // los resultados para que se muestren en orden descendente (como el orderBy original).
+      // El backend ya garantiza el orden descendente, así que no necesitamos invertir aquí.
       let ordersToDisplay = fetchedOrders;
-      // if (endBeforeValue !== null) {
-      //   ordersToDisplay = fetchedOrders.reverse();
-      // }
 
       setOrders(ordersToDisplay);
       setAllOrders(ordersToDisplay);
-      // Actualiza los cursores para la próxima/anterior página basados en la respuesta
+      // Actualiza los cursores y los indicadores de "hay más" basados en la respuesta del backend
       setCurrentNextCursor(nextPageStartAfter);
       setCurrentPreviousCursor(previousPageEndBefore);
-      // setHasMore(fetchedOrders.length === limit); // hasMore ya no es tan simple con paginación bidireccional
-      // Los cursores (currentNextCursor, currentPreviousCursor)
-      // son una mejor indicación de si hay páginas
+      setHasMoreForward(fetchedHasMoreForward);
+      setHasMoreBackward(fetchedHasMoreBackward);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -112,204 +137,129 @@ export default function Orders({ editor }) {
   }
 
   function handleSearch(term) {
-    const searchTerm = tLC(term);
-
-    if (searchTerm == "") return setOrders(allOrders);
-
-    const filteredOrders = allOrders.filter(
-      o =>
-        tLC(o?.order_number ?? "").includes(searchTerm) ||
-        normalizeStr(tLC(o?.clientUser?.displayName ?? "")).includes(searchTerm)
-    );
-
-    setOrders(filteredOrders);
-  }
-
-  async function handleFilter(status) {
-    setFilter(status);
-    console.log(status);
-    console.log(orders);
-
-    if (status != "no_filter") {
-      setAllOrders(orders.filter(o => o?.orderStatus == tLC(status)));
+    setSearchTerm(term); // Actualiza el estado del término de búsqueda
+    const searchTermLower = tLC(term);
+    if (searchTermLower === "") {
+      setOrders(allOrders); // Si el campo está vacío, muestra todas las órdenes
     } else {
-      const orders = await fetchOrders({});
-      setAllOrders(orders);
+      const filteredOrders = allOrders.filter(
+        (o) =>
+          tLC(o?.order_number ?? "").includes(searchTermLower) ||
+          tLC(o?.clientUser?.displayName ?? "").includes(searchTermLower)
+      );
+      setOrders(filteredOrders);
     }
   }
 
+  function handleClearSearch() {
+    setSearchTerm(""); // Vacía el campo de búsqueda
+    fetchOrders({}); // Reinicia las órdenes a la primera página sin filtro de búsqueda
+  }
+
+  function handleFilter(event) {
+    // Al aplicar un filtro, se debe reiniciar la paginación a la primera página
+    setFilter(event.target.value); // El valor del Select se obtiene de event.target.value
+    // El useEffect se encargará de llamar a fetchOrders con los cursores a null
+  }
+
   function handleLimitChange(e) {
+    // Al cambiar el límite, se debe reiniciar la paginación a la primera página
     setLimit(e.target.value);
+    // El useEffect se encargará de llamar a fetchOrders con los cursores a null
   }
 
   async function handleDownloadExcel() {
+    setLoading(true);
     try {
-      setLoading(true);
       await OrdersAdapter.downloadOrdersExcel();
     } catch (error) {
       alert("Error al descargar el archivo");
     } finally {
       setLoading(false);
+      handleReportModal();
     }
+  }
+
+  async function handleRefresh() {
+    if (filter) {
+      setSearchTerm("");
+      setFilter(null);
+    } else {
+      fetchOrders({});
+    }
+  }
+
+  function handleReportModal() {
+    setReportModal(!reportModal);
   }
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl p-4 ">
-      <div className="flex flex-col lg:flex-row rounded-lg lg:w-full p-2 gap-y-4 gap-x-10">
-        <div className="flex flex-col gap-y-1 w-full max-w-[200px]">
-          <label
-            htmlFor="search-orders"
-            className="text-lg flex gap-x-3 items-center justify-start"
-            onClick={
-              () => {
-                fetchOrders({});
-              } // Reset the orders when clicking the label
-            }
-          >
-            <svg
-              className="w-5 h-5 font-bold"
-              fill="#000000"
-              viewBox="0 0 32 32"
+      <div className="flex flex-col lg:flex-row justify-between rounded-lg lg:w-full p-2 gap-y-4 gap-x-10">
+        <div className="flex gap-4 items-center">
+          {/* Reemplazado el label y Input por FormControl con OutlinedInput */}
+          <FormControl variant="outlined" size="small" className="w-56">
+            <InputLabel htmlFor="search-orders-input">
+              Buscar órdenes
+            </InputLabel>
+            <OutlinedInput
+              id="search-orders-input"
+              type="text"
+              value={searchTerm} // Conectado al nuevo estado searchTerm
+              onChange={(e) => handleSearch(e.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="clear search"
+                    onClick={handleClearSearch} // Llama a la nueva función para limpiar
+                    edge="end"
+                    disabled={searchTerm === ""} // Deshabilitar si no hay texto
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </InputAdornment>
+              }
+              // startAdornment={
+              //   <InputAdornment position="start">
+              //     <SearchIcon />
+              //   </InputAdornment>
+              // }
+              label="Buscar órdenes" // Debe coincidir con el InputLabel
+              sx={{ borderRadius: "8px" }} // Tailwind rounded corners
+            />
+          </FormControl>
+
+          <FormControl variant="outlined" size="small" className="w-56">
+            <InputLabel id="order-status-filter-label">
+              Filtrar por estado
+            </InputLabel>
+            <Select
+              labelId="order-status-filter-label"
+              id="order-status-filter"
+              value={filter || ""} // Si filter es null, el value es "" para mostrar el placeholder
+              onChange={handleFilter}
+              label="Estado de Orden"
+              sx={{ borderRadius: "8px" }} // Tailwind rounded corners
             >
-              <path d="M31.707 30.282l-9.717-9.776c1.811-2.169 2.902-4.96 2.902-8.007 0-6.904-5.596-12.5-12.5-12.5s-12.5 5.596-12.5 12.5 5.596 12.5 12.5 12.5c3.136 0 6.002-1.158 8.197-3.067l9.703 9.764c0.39 0.39 1.024 0.39 1.415 0s0.39-1.023 0-1.415zM12.393 23.016c-5.808 0-10.517-4.709-10.517-10.517s4.708-10.517 10.517-10.517c5.808 0 10.516 4.708 10.516 10.517s-4.709 10.517-10.517 10.517z" />
-            </svg>
-            Buscar órdenes
-          </label>
-          <Input
-            autoFocus
-            id="search-orders"
-            name="email"
-            type="text"
-            placeholder="Ingresa una órden..."
-            onChange={e => handleSearch(e.target.value)}
-            className="w-full text-gray-800"
-          />
+              {filterOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button onClick={handleRefresh}>
+            Borrar filtros <ReplayIcon />
+          </Button>
         </div>
-        <JsonToExcelConverter
-          text={"Descargar Listado de órdenes"}
-          icon={<FileDownloadIcon className="h-5 w-5" />}
-          action={handleDownloadExcel}
-        />
-        <div className="w-full flex flex-col gap-y-2">
-          <label
-            htmlFor="filter-orders"
-            className="text-lg flex gap-x-2 items-center justify-start"
-          >
-            <svg className="w-5 h-5 font-bold" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M3 4.6C3 4.03995 3 3.75992 3.10899 3.54601C3.20487 3.35785 3.35785 3.20487 3.54601 3.10899C3.75992 3 4.03995 3 4.6 3H19.4C19.9601 3 20.2401 3 20.454 3.10899C20.6422 3.20487 20.7951 3.35785 20.891 3.54601C21 3.75992 21 4.03995 21 4.6V6.33726C21 6.58185 21 6.70414 20.9724 6.81923C20.9479 6.92127 20.9075 7.01881 20.8526 7.10828C20.7908 7.2092 20.7043 7.29568 20.5314 7.46863L14.4686 13.5314C14.2957 13.7043 14.2092 13.7908 14.1474 13.8917C14.0925 13.9812 14.0521 14.0787 14.0276 14.1808C14 14.2959 14 14.4182 14 14.6627V17L10 21V14.6627C10 14.4182 10 14.2959 9.97237 14.1808C9.94787 14.0787 9.90747 13.9812 9.85264 13.8917C9.7908 13.7908 9.70432 13.7043 9.53137 13.5314L3.46863 7.46863C3.29568 7.29568 3.2092 7.2092 3.14736 7.10828C3.09253 7.01881 3.05213 6.92127 3.02763 6.81923C3 6.70414 3 6.58185 3 6.33726V4.6Z"
-                stroke="#000000"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Filtrar órdenes
-          </label>
-          <div className="w-full flex flex-wrap gap-1.5 justify-start items-center [&>button]:border [&>button]:px-3 [&>button]:py-1 [&>button]:rounded-md [&>button]:text-sm [&>button]:transition-colors">
-            <button
-              type="button"
-              name="pending"
-              onClick={() => handleFilter("pending")}
-              className={twMerge(
-                filter == "pending" ? "bg-green-300" : "hover:bg-green-300"
-              )}
-            >
-              Pendientes
-            </button>
-            <button
-              type="button"
-              name="unassigned"
-              onClick={() => handleFilter("unassigned")}
-              className={twMerge(
-                filter == "unassigned" ? "bg-green-300" : "hover:bg-green-300"
-              )}
-            >
-              Sin Asignar
-            </button>
-            <button
-              type="button"
-              name="process"
-              onClick={() => handleFilter("process")}
-              className={twMerge(
-                filter == "process" ? "bg-green-300" : "hover:bg-green-300"
-              )}
-            >
-              En proceso
-            </button>
-            <button
-              type="button"
-              name="printed"
-              onClick={() => handleFilter("printed")}
-              className={twMerge(
-                filter == "printed" ? "bg-green-300" : "hover:bg-green-300"
-              )}
-            >
-              Impresas
-            </button>
-            <button
-              type="button"
-              name="in_delivery"
-              onClick={() => handleFilter("in_delivery")}
-              className={twMerge(
-                filter == "in_delivery" ? "bg-green-300" : "hover:bg-green-300"
-              )}
-            >
-              En delivery
-            </button>
-            <button
-              type="button"
-              name="distribution"
-              onClick={() => handleFilter("distribution")}
-              className={twMerge(
-                filter == "distribution" ? "bg-green-300" : "hover:bg-green-300"
-              )}
-            >
-              En punto de dist.
-            </button>
-            <button
-              type="button"
-              name="pickup"
-              onClick={() => handleFilter("pickup")}
-              className={twMerge(
-                filter == "pickup" ? "bg-green-300" : "hover:bg-green-300"
-              )}
-            >
-              En punto de retiro
-            </button>
-            <button
-              type="button"
-              name="received"
-              onClick={() => handleFilter("received")}
-              className={twMerge(
-                filter == "received" ? "bg-green-300" : "hover:bg-green-300"
-              )}
-            >
-              Recibidas
-            </button>
-            <button
-              type="button"
-              name="problems"
-              onClick={() => handleFilter("problems")}
-              className={twMerge(
-                filter == "problems" ? "bg-green-300" : "hover:bg-green-300"
-              )}
-            >
-              Con problemas
-            </button>
-            <button
-              type="button"
-              name="no_filter"
-              onClick={() => handleFilter("no_filter")}
-              className="bg-gray-100 hover:bg-gray-200"
-            >
-              Quitar filtros
-            </button>
-          </div>
-        </div>
+
+        <Button variant="contained" onClick={handleReportModal}>
+          <AssessmentIcon />
+          Generar reporte
+        </Button>
       </div>
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 550, backgroundColor: "#f2f2f4" }}>
+        <TableContainer sx={{ maxHeight: 650, backgroundColor: "#f2f2f4" }}>
           <table className="w-full min-w-max table-auto text-left">
             <TableHead>
               <TableRow>
@@ -455,7 +405,7 @@ export default function Orders({ editor }) {
                       endBeforeValue: currentPreviousCursor,
                     })
                   } // Llama a fetchOrders con el cursor anterior
-                  disabled={!currentPreviousCursor || loading} // Deshabilitado si no hay cursor anterior o está cargando
+                  disabled={!hasMoreBackward || loading} // Deshabilitado si no hay cursor anterior o está cargando
                   variant="outlined" // Estilo outlined minimalista
                   size="small" // Tamaño pequeño
                   sx={{ textTransform: "none" }} // Evita MAYÚSCULAS automáticas
@@ -470,7 +420,7 @@ export default function Orders({ editor }) {
                       endBeforeValue: null,
                     })
                   } // Llama a fetchOrders con el cursor siguiente
-                  disabled={!currentNextCursor || loading} // Deshabilitado si no hay cursor siguiente (llegaste al final) o está cargando
+                  disabled={!hasMoreForward || loading} // Deshabilitado si no hay cursor siguiente (llegaste al final) o está cargando
                   variant="outlined" // Estilo outlined minimalista
                   size="small" // Tamaño pequeño
                   sx={{ textTransform: "none" }} // Evita MAYÚSCULAS automáticas
@@ -481,16 +431,30 @@ export default function Orders({ editor }) {
             </td>
           </TableRow>
         </TableFooter>
-        {/* <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={allOrders.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        /> */}
       </Paper>
+      <Dialog
+        open={reportModal}
+        onClose={handleReportModal}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Generar reporte</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Seleccione las fechas
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="text" onClick={handleReportModal}>
+            Cerrar
+          </Button>
+          <JsonToExcelConverter
+            text={"Descargar"}
+            icon={<FileDownloadIcon className="h-5 w-5" />}
+            action={handleDownloadExcel}
+          />
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

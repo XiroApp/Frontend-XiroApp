@@ -3,7 +3,7 @@ import { useState } from "react";
 import { len } from "../../Common/helpers";
 import { setToast } from "../../redux/actions";
 import { useDispatch } from "react-redux";
-import { LibraryService } from "../../Services/library.service";
+import { LibraryService } from "../../Infra/Services/library.service";
 
 export default function ModalAdd(props) {
   const {

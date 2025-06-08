@@ -7,7 +7,7 @@ import AlertProd from "../../../components/Library/AlertProd";
 import LoadingProds from "../../../components/Library/LoadingProds";
 import NoMatches from "../../../components/NoMatches";
 import HeaderLibrary from "../../../components/Library/HeaderLibrary";
-import { LibraryService } from "../../../Services/library.service";
+import { LibraryService } from "../../../Infra/Services/library.service";
 import ContinueBtn from "../../../components/Library/ContinueBtn";
 
 export default function LibraryStore() {

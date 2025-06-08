@@ -2,7 +2,7 @@ import propTypes from "prop-types";
 import { initLibraryProd } from "../../Common/constants.js";
 import { useDispatch } from "react-redux";
 import { setToast } from "../../redux/actions/index.js";
-import { LibraryService } from "../../Services/library.service.js";
+import { LibraryService } from "../../Infra/Services/library.service";
 
 function ModalDeleteAdmin(props) {
   const {

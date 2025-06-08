@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { InAppTextsAdapter } from "../../../Adapters/inAppTexts.adapter";
+import { InAppTextsAdapter } from "../../../Infra/Adapters/inAppTexts.adapter";
 import { setToast } from "../../../redux/actions";
 
 export default function Texts() {

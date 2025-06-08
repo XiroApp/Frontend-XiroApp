@@ -4,7 +4,7 @@ import { len, normalizeStr } from "../../Common/helpers";
 import { useEffect, useState } from "react";
 import ModalsAdmin from "./ModalsAdmin";
 import { initLibraryProd } from "../../Common/constants";
-import { LibraryService } from "../../Services/library.service";
+import { LibraryService } from "../../Infra/Services/library.service";
 
 export default function LibraryPanel() {
   const [products, setProducts] = useState([]),

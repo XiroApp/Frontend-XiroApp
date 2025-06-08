@@ -15,6 +15,7 @@ export class OrdersAdapter {
     limit,
     startAfterValue,
     endBeforeValue,
+    status_filter,
     role,
     uid
   ) {
@@ -22,7 +23,7 @@ export class OrdersAdapter {
     let url = "";
 
     if (uid) {
-      url = `${baseUrl}/${role}/orders/${uid}?limit=${limit}`; // Usamos el estado 'limit'
+      url = `${baseUrl}/${role}/orders/${uid}?limit=${limit}&status=${status_filter}`; // Usamos el estado 'limit'
       if (startAfterValue !== null) {
         // Si vamos a la siguiente página, añadimos startAfter
         url += `&startAfter=${startAfterValue}`;
@@ -31,7 +32,7 @@ export class OrdersAdapter {
         url += `&endBefore=${endBeforeValue}`;
       }
     } else {
-      url = `${baseUrl}/${role}/orders/paginated?limit=${limit}`; // Usamos el estado 'limit'
+      url = `${baseUrl}/${role}/orders/paginated?limit=${limit}&status=${status_filter}`; // Usamos el estado 'limit'
       if (startAfterValue !== null) {
         // Si vamos a la siguiente página, añadimos startAfter
         url += `&startAfter=${startAfterValue}`;

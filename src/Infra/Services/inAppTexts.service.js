@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Settings } from "../config";
+import { Settings } from "../../config";
 
 const url = Settings.SERVER_URL;
 
@@ -20,7 +20,8 @@ export class InAppTextsService {
   }
 
   static async updateTyCLabel(html) {
-    const response = (await axios.put(`${url}/labels/tyc`, html)).data;
+    const response = (await axios.put(`${url}/labels/tyc`, { tyc_html: html }))
+      .data;
     return response;
   }
 }
