@@ -9,7 +9,7 @@ const URL_PICTURES = "pictures";
 
 export class Settings {
   static get FRONTEND_VERSION() {
-    return "v6.0.6 (beta)"; //! Cambiar en cada despliegue.
+    return "v6.0.7 (beta)"; //! Cambiar en cada despliegue.
   }
 
   static get SERVER_URL() {
