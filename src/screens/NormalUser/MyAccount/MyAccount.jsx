@@ -30,19 +30,20 @@ import { len } from "../../../Common/helpers";
 export default function MyAccount({ cart, dataBaseUser }) {
   const navigate = useNavigate(),
     dispatch = useDispatch(),
-    user = useSelector(state => state.dataBaseUser),
-    clientOrders = useSelector(state => state.clientOrders),
+    user = useSelector((state) => state.dataBaseUser),
+    clientOrders = useSelector((state) => state.clientOrders),
     [openCollapse, setOpenCollapse] = useState(false),
     cartRef = useLocation().search == "?libreria",
     [render, setRender] = useState(cartRef ? "library" : "personalData"),
     [state, setState] = useState({ left: false });
   let { photoURL, email, displayName } = user;
+  console.log(clientOrders);
 
   useEffect(() => {
     dispatch(getOrdersByClientUid(dataBaseUser.uid));
   }, []);
 
-  const toggleDrawer = (anchor, open) => event => {
+  const toggleDrawer = (anchor, open) => (event) => {
     if (
       event.type === "keydown" &&
       (event.key === "Tab" || event.key === "Shift")
@@ -53,7 +54,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
     setState({ ...state, [anchor]: open });
   };
 
-  const list = anchor => (
+  const list = (anchor) => (
     <Box
       sx={{
         borderRadius: "10px",
@@ -405,7 +406,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                   }}
                   startIcon={<AddCircle sx={{ width: 30, height: 30 }} />}
                   color="primary"
-                  onClick={e => handleNewOrderButton(e)}
+                  onClick={(e) => handleNewOrderButton(e)}
                 >
                   <span className="text-white text-lg lg:text-2xl font-bold">
                     Nuevo pedido
@@ -423,7 +424,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                       <span className="text-3xl ">
                         {len(
                           clientOrders?.filter(
-                            order => order.orderStatus !== "received"
+                            (order) => order.orderStatus !== "received"
                           )
                         )}
                       </span>
@@ -450,7 +451,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
                         <span className="text-xl ">
                           {len(
                             clientOrders?.filter(
-                              order => order.orderStatus != "received"
+                              (order) => order.orderStatus != "received"
                             )
                           )}
                         </span>
