@@ -38,7 +38,7 @@ import SettingButtons from "../../../components/NewOrderSettings/SettingButtons"
 import ChoosePlaceModal from "../../../components/ChoosePlaceModal/ChoosePlaceModal";
 import NewOrderSettingsDesktop from "../../../components/NewOrderSettings/NewOrderSettingsDesktop";
 import DefaultSnack from "../../../components/Snackbars/DefaultSnack";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   pricingSetter,
   validateFileSize,
@@ -60,6 +60,8 @@ export default function NewOrder() {
     pricingState = useSelector(state => state.pricing),
     place = useSelector(state => state.place),
     [libraryModal, setLibraryModal] = useState(false),
+    [showUnsavedModal, setShowUnsavedModal] = useState(false),
+    [loadFileBtn, setLoadFileBtn] = useState(false),
     [state, setState] = useState({
       loading: false,
       resetModal: false,
@@ -115,8 +117,14 @@ export default function NewOrder() {
     }, [pricingState, resume, files.details]);
 
   useEffect(() => {
+    if (state.loading) {
+      setLoadFileBtn(true);
+    } else setLoadFileBtn(false);
+  }, [state.loading]);
+
+  useEffect(() => {
     dispatch(getPricing());
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     const cleanedFiles = removeDuplicateDetails(files);
@@ -168,63 +176,57 @@ export default function NewOrder() {
     updateState("loading", false);
   }, []);
 
-  const handleSubmitLoadFile = useCallback(
-    async function (e) {
-      e.preventDefault();
-      const filesInput = e.target.files;
-      const maxSizeMB = 500;
+  const handleSubmitLoadFile = useCallback(async function (e) {
+    e.preventDefault();
+    const filesInput = e.target.files;
+    const maxSizeMB = 500;
 
-      if (!filesInput || len(filesInput) == 0) return;
-      if (!filesInput || len(filesInput) == 0) return;
+    if (!filesInput || len(filesInput) == 0) return;
+    if (!filesInput || len(filesInput) == 0) return;
 
-      updateState("loading", true);
-      updateState("loading", true);
+    updateState("loading", true);
 
-      try {
-        const uploadPromises = Array.from(filesInput)
-          .filter(file => {
-            if (!validateFileSize(file, maxSizeMB)) {
-              dispatch(
-                setToast(
-                  `El archivo no puede superar los ${maxSizeMB}MB`,
-                  "error"
-                )
-              );
-              return false;
-            }
-            return true;
-          })
-          .map(async file => {
-            if (validatePDFFile(file.name)) {
-              const uploadedFile = await uploadFile(file);
-              return { preview: uploadedFile };
-            } else {
-              const formData = new FormData();
-              formData.append("files", file);
-              const newDocuments = await dispatch(uploadMulter(formData)); // Este await es necesario.
-              return newDocuments.map(doc => ({ preview: doc }));
-            }
-          });
+    try {
+      const uploadPromises = Array.from(filesInput)
+        .filter(file => {
+          if (!validateFileSize(file, maxSizeMB)) {
+            dispatch(
+              setToast(
+                `El archivo no puede superar los ${maxSizeMB}MB`,
+                "error"
+              )
+            );
+            return false;
+          }
+          return true;
+        })
+        .map(async file => {
+          if (validatePDFFile(file.name)) {
+            const uploadedFile = await uploadFile(file);
+            return { preview: uploadedFile };
+          } else {
+            const formData = new FormData();
+            formData.append("files", file);
+            const newDocuments = await dispatch(uploadMulter(formData)); // Este await es necesario.
+            return newDocuments.map(doc => ({ preview: doc }));
+          }
+        });
 
-        const results = await Promise.all(uploadPromises);
-        const newFiles = results.flat();
+      const results = await Promise.all(uploadPromises);
+      const newFiles = results.flat();
 
-        setFiles(prev => ({
-          ...prev,
-          previews: [...prev.previews, ...newFiles.map(f => f.preview)],
-        }));
-      } catch (err) {
-        dispatch(
-          setToast("Error al subir archivos, intenta nuevamente", "error")
-        );
-        console.error(`catch 'handleSubmitLoadFile' ${err.message}`);
-        updateState("loading", false);
-      } finally {
-        updateState("loading", false);
-      }
-    },
-    [dispatch]
-  );
+      setFiles(prev => ({
+        ...prev,
+        previews: [...prev.previews, ...newFiles.map(f => f.preview)],
+      }));
+    } catch (err) {
+      dispatch(
+        setToast("Error al subir archivos, intenta nuevamente", "error")
+      );
+      console.error(`catch 'handleSubmitLoadFile' ${err.message}`);
+      updateState("loading", false);
+    }
+  }, []);
 
   const handleResetOrder = useCallback(() => {
     setFiles({ details: [], previews: [] });
@@ -260,19 +262,12 @@ export default function NewOrder() {
     updateState("currentSetting", e.target.name);
   }, []);
 
-  /* //! REVISAR SI SE DEJA
-  useEffect(() => {
-    if (state.loading) {
-      const timer = setTimeout(() => {
-        updateState("loading", false);
-        dispatch(
-          setToast("Se excedió el tiempo de carga, intenta nuevamente", "error")
-        );
-      }, 8000);
-      return () => clearTimeout(timer);
-    }
-  }, [state.loading]);
-  ! ------------------ */
+  function handleLibraryAlert() {
+    setLibraryModal(false);
+    if (len(files.details) > 0) {
+      setShowUnsavedModal(true);
+    } else navigate("/?libreria");
+  }
 
   return (
     <div className="h-screen w-screen flex flex-col justify-between">
@@ -421,6 +416,7 @@ export default function NewOrder() {
                   className="flex items-center justify-center w-full flex-col relative"
                 >
                   <LoadingButton
+                    disabled={loadFileBtn}
                     style={{
                       paddingTop: "1em",
                       paddingBottom: "1em",
@@ -446,21 +442,21 @@ export default function NewOrder() {
                       id="uploadInput"
                       accept=".pdf, .doc, .docx, .xls, .xlsx, image/*, .txt"
                       onChange={handleSubmitLoadFile}
-                      // disabled={state.loading}
                     />
                   </LoadingButton>
                 </form>
 
                 <div className="flex items-center justify-center">
-                  <Link
-                    to="/?libreria"
+                  <button
+                    type="button"
+                    onClick={handleLibraryAlert}
                     className="bg-yellow-300/90 hover:bg-yellow-400/90 transition-colors px-[1rem] py-[0.9rem] font-semibold rounded-md flex gap-x-2 justify-center items-center shadow-md"
                   >
                     <CreatIcon />
                     <span className="text-center md:px-1.5 text-sm lg:text-lg">
                       Librería
                     </span>
-                  </Link>
+                  </button>
                 </div>
               </div>
             </section>
@@ -486,7 +482,6 @@ export default function NewOrder() {
           </div>
           <section className="w-full h-full">
             <DefaultSnack content={labels?.snackbar_new_order_info} />
-            {console.log(files)}
             {files.previews.length > 0 ? (
               <div className="flex flex-col items-center justify-center">
                 <section className="flex justify-center w-screen h-full rounded-lg lg:px-6 lg:w-full">
@@ -635,7 +630,6 @@ export default function NewOrder() {
 
             {len(cart) > 0 && (
               <LoadingButton
-                loading={state.loading}
                 variant="contained"
                 color="primary"
                 sx={{
@@ -697,12 +691,71 @@ export default function NewOrder() {
                     Avanzar al carrito
                   </button>
                   <button
-                    type="button"
                     autoFocus
-                    onClick={() => navigate("/?libreria")}
-                    className="bg-yellow-300/90 hover:bg-yellow-400/90 text-black font-medium py-2 px-4 md:px-6 rounded-lg transition-colors text-sm sm:text-xl border border-black"
+                    type="button"
+                    className="bg-yellow-300/90 hover:bg-yellow-400/90 text-black font-medium py-2 px-6 md:px-10 rounded-lg transition-colors text-sm sm:text-xl border border-black"
+                    onClick={handleLibraryAlert}
                   >
                     Ver librería
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          {showUnsavedModal && (
+            <div
+              onClick={() => setShowUnsavedModal(false)}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 pb-14"
+            >
+              <div
+                role="alert"
+                onClick={e => e.stopPropagation()}
+                className="bg-white rounded-lg p-6 max-w-xl w-full h-[300px] shadow-xl relative flex flex-col justify-between items-start"
+              >
+                <p className="text-2xl font-semibold text-slate-800 w-full">
+                  ¡Tienes archivos sin guardar!
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowUnsavedModal(false)}
+                  className="absolute top-2 right-2 p-1 bg-slate-100 rounded-lg"
+                >
+                  <svg
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+                <p className="text-slate-800 text-lg md:text-xl">
+                  Si vas a la librería, perderás los archivos y
+                  personalizaciones que no hayas añadido al carrito.
+                </p>
+                <div className="flex flex-col justify-center gap-y-4 w-full items-center">
+                  <button
+                    type="button"
+                    onClick={() => setShowUnsavedModal(false)}
+                    className="bg-green-300 border border-green-400 hover:bg-green-400 text-black font-medium py-2 rounded-lg transition-colors text-sm sm:text-xl w-full"
+                  >
+                    Quedarme en la personalización
+                  </button>
+                  <button
+                    autoFocus
+                    type="button"
+                    className="bg-yellow-300/90 hover:bg-yellow-400/90 text-black font-medium py-2 rounded-lg transition-colors text-sm sm:text-xl border border-black w-full"
+                    onClick={() => {
+                      setShowUnsavedModal(false);
+                      navigate("/?libreria");
+                    }}
+                  >
+                    Ver librería de todos modos
                   </button>
                 </div>
               </div>

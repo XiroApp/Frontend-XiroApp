@@ -51,8 +51,10 @@ export default function PDFViewer({
     } catch (err) {
       dispatch(setToast("Error cargando el archivo, reintentalo.", "error"));
       console.error(`Error cargando el archivo: ${err.message}`);
-    } finally {
       setLoading(false);
+    } finally {
+      const timer = setTimeout(() => setLoading(false), 1000);
+      clearTimeout(timer);
     }
   }
 
