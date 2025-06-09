@@ -29,7 +29,7 @@ import { Settings } from "../../config";
 const STORAGE_URL = Settings.STORAGE_URL;
 const STORAGE_QUERY = Settings.STORAGE_TOKEN_QUERY;
 
-const Accordion = styled(props => (
+const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
@@ -41,7 +41,7 @@ const Accordion = styled(props => (
   },
 }));
 
-const AccordionSummary = styled(props => (
+const AccordionSummary = styled((props) => (
   <MuiAccordionSummary
     expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
     {...props}
@@ -98,7 +98,7 @@ export default function OrdersRow({
   /* FILES ACCORDION */
   const [expanded, setExpanded] = useState(false);
 
-  const handleChange = panel => (event, newExpanded) => {
+  const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
 
@@ -132,11 +132,11 @@ export default function OrdersRow({
   /* AUTOCOMPLETE STATE */
   const printingProps = {
     options: printingUsers,
-    getOptionLabel: option => option?.displayName ?? "N/A",
+    getOptionLabel: (option) => option?.displayName ?? "N/A",
   };
   const deliveryProps = {
     options: deliveryUsers,
-    getOptionLabel: option => option?.displayName ?? "N/A",
+    getOptionLabel: (option) => option?.displayName ?? "N/A",
   };
 
   function handleInput(e) {
@@ -168,20 +168,20 @@ export default function OrdersRow({
 
   function handleAssignStatus() {
     let selectedPrinting = printingUsers.find(
-      user =>
+      (user) =>
         user.displayName === input.uidPrinting || user.uid === input.uidPrinting
     );
 
     let selectedDelivery = deliveryUsers.find(
-      user =>
+      (user) =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
     let selectedDistribution = distributionUsers.find(
-      user =>
+      (user) =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
     let selectedPickup = pickupUsers.find(
-      user =>
+      (user) =>
         user.displayName === input.uidDelivery || user.uid === input.uidDelivery
     );
 
@@ -333,7 +333,7 @@ export default function OrdersRow({
                             Cambiar estado de orden
                           </label>
                           <select
-                            onChange={e => handleInput(e)}
+                            onChange={(e) => handleInput(e)}
                             name="orderStatus"
                             id="orderStatus"
                             className="border rounded-l p-2 bg-white"
@@ -453,8 +453,8 @@ export default function OrdersRow({
                           {...printingProps}
                           id="auto-complete"
                           name="uidPrinting"
-                          onSelect={e => handleInput(e)}
-                          renderInput={params => (
+                          onSelect={(e) => handleInput(e)}
+                          renderInput={(params) => (
                             <TextField
                               // error={error.city}
                               name="uidPrinting"
@@ -477,8 +477,8 @@ export default function OrdersRow({
                           {...deliveryProps}
                           id="auto-complete"
                           name="uidDelivery"
-                          onSelect={e => handleInput(e)}
-                          renderInput={params => (
+                          onSelect={(e) => handleInput(e)}
+                          renderInput={(params) => (
                             <TextField
                               // error={error.city}
                               name="uidDelivery"
@@ -499,7 +499,7 @@ export default function OrdersRow({
                         name="report"
                         id="report"
                         placeholder={"Ingrese su problema aquí..."}
-                        onChange={e => handleInput(e)}
+                        onChange={(e) => handleInput(e)}
                         className="w-full"
                       />
                     </>
@@ -517,7 +517,7 @@ export default function OrdersRow({
                 </Button>
                 <Button
                   variant="contained"
-                  onClick={e => handleAssignStatus(e)}
+                  onClick={(e) => handleAssignStatus(e)}
                 >
                   Aceptar
                 </Button>
@@ -530,7 +530,7 @@ export default function OrdersRow({
             <Button
               color="inherit"
               variant="text"
-              onClick={e => handleOpenFilesModal(e)}
+              onClick={(e) => handleOpenFilesModal(e)}
               // className="border rounded-lg py-2 px-2 hover:bg-[#458552] min-w-24"
             >
               <Inventory2Outlined />
@@ -546,14 +546,14 @@ export default function OrdersRow({
                 className="flex flex-col gap-8 w-full max-w-[400px]"
               >
                 <section className="flex flex-col gap-4">
-                  {order?.cart?.map((order, index) => {
+                  {order?.cart?.map((files_order, index) => {
                     return (
                       <div key={index} className="flex flex-col gap-1">
                         <p>Pedido {index + 1}</p>
                         <div className=" bg-[#fff] p-4 rounded-lg">
                           <Accordion
-                            expanded={expanded === order.orderUid}
-                            onChange={handleChange(order.orderUid)}
+                            expanded={expanded === files_order.orderUid}
+                            onChange={handleChange(files_order.orderUid)}
                           >
                             <AccordionSummary
                               aria-controls="panel1d-content"
@@ -570,7 +570,7 @@ export default function OrdersRow({
                                     Copias por archivo:
                                   </span>
                                   <span className="font-bold">
-                                    {order.numberOfCopies}
+                                    {files_order.numberOfCopies}
                                   </span>
                                 </li>
                                 <li>
@@ -578,7 +578,7 @@ export default function OrdersRow({
                                     Orientación:
                                   </span>
                                   <span className="font-bold">
-                                    {order.orientacion}
+                                    {files_order.orientacion}
                                   </span>
                                 </li>
                                 <li>
@@ -586,7 +586,7 @@ export default function OrdersRow({
                                     Forma de impresión:
                                   </span>
                                   <span className="font-bold">
-                                    {order.printWay}
+                                    {files_order.printWay}
                                   </span>
                                 </li>
                                 <li>
@@ -594,7 +594,7 @@ export default function OrdersRow({
                                     Total de páginas:
                                   </span>
                                   <span className="font-bold">
-                                    {order.totalPages}
+                                    {files_order.totalPages}
                                   </span>
                                 </li>
                                 <li>
@@ -602,7 +602,7 @@ export default function OrdersRow({
                                     Tamaño de papel:
                                   </span>
                                   <span className="font-bold">
-                                    {order.size}
+                                    {files_order.size}
                                   </span>
                                 </li>
                                 <li>
@@ -610,19 +610,19 @@ export default function OrdersRow({
                                     Copias por carilla:
                                   </span>
                                   <span className="font-bold">
-                                    {order.copiesPerPage}
+                                    {files_order.copiesPerPage}
                                   </span>
                                 </li>
                                 <li>
                                   <span className="font-light">Color:</span>
                                   <span className="font-bold">
-                                    {order.color}
+                                    {files_order.color}
                                   </span>
                                 </li>
                                 <li>
                                   <span className="font-light">Anillado:</span>
                                   <span className="font-bold">
-                                    {order.finishing}
+                                    {files_order.finishing}
                                   </span>
                                 </li>
                                 <li>
@@ -630,7 +630,7 @@ export default function OrdersRow({
                                     Agrupación:
                                   </span>
                                   <span className="font-bold">
-                                    {order?.group || "Sin información"}
+                                    {files_order?.group || "Sin información"}
                                   </span>
                                 </li>
                               </ul>
@@ -649,7 +649,7 @@ export default function OrdersRow({
                             <AccordionDetails>
                               <div>
                                 <section className="flex flex-col gap-3">
-                                  {order.files.map((file, index) => (
+                                  {files_order.files.map((file, index) => (
                                     <section key={index} className="flex gap-2">
                                       <p>{`${file?.slice(20, 50)}`}</p>
                                       <Tooltip
@@ -677,30 +677,58 @@ export default function OrdersRow({
                               </div>
                             </AccordionDetails>
                           </Accordion>
-                          {index == 0 && len(order?.libraryCart) > 0 && (
+                          {index == 0 && len(order?.library_cart) > 0 && (
                             <Accordion>
                               <AccordionSummary>
-                                <Typography>Articulos de Librería</Typography>
+                                <Typography>Librería</Typography>
                               </AccordionSummary>
                               <AccordionDetails>
-                                {order?.libraryCart?.map(item => (
-                                  <li key={item.id} className="flex gap-2">
-                                    <p>{item.name}</p>
-                                    <p>{item.quantity}</p>
-                                    <p>{item.price}</p>
-                                  </li>
-                                ))}
+                                <div className="overflow-hidden">
+                                  <table className="min-w-full">
+                                    <thead>
+                                      <tr className="border-b">
+                                        <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                                          Producto
+                                        </th>
+                                        <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                                          Cantidad
+                                        </th>
+                                        <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                                          Precio
+                                        </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {order?.library_cart?.map((item) => (
+                                        <tr
+                                          key={item.id}
+                                          className="border-b border-gray-100 hover:bg-gray-50"
+                                        >
+                                          <td className="px-4 py-2 whitespace-nowrap">
+                                            {item.name}
+                                          </td>
+                                          <td className="px-4 py-2 whitespace-nowrap">
+                                            {item.quantity}
+                                          </td>
+                                          <td className="px-4 py-2 whitespace-nowrap">
+                                            ${formatPrice(item.price)}
+                                          </td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
                               </AccordionDetails>
                             </Accordion>
                           )}
                           {index == 0 &&
-                            len(order?.description?.trim()) > 0 && (
+                            len(files_order?.description?.trim()) > 0 && (
                               <Accordion>
                                 <AccordionSummary>
                                   <Typography>Comentarios</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                  <p>{order.description}</p>
+                                  <p>{files_order.description}</p>
                                 </AccordionDetails>
                               </Accordion>
                             )}

@@ -79,8 +79,11 @@ export class OrdersAdapter {
         subtotal_price: order.subtotal_price,
         total_price: order.total_price,
         availability: order.availability,
+        library_cart: order.library_cart,
       };
     });
+
+    console.log(sortedOrders);
 
     return { ...data, orders: sortedOrders };
   }
