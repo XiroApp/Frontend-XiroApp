@@ -49,15 +49,27 @@ export default function AccountData() {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                  ${
-                    order.status === "pending"
-                      ? "bg-yellow-100 text-yellow-800"
-                      : order.status === "received"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                  }`}
+                `}
                   >
-                    {order.status}
+                    {/* {order.status} */}
+
+                    {order.status === "pending"
+                      ? "Pendiente ⏳"
+                      : order.status === "process"
+                      ? "En proceso 🔨"
+                      : order.status === "problems"
+                      ? "Con problemas 📛"
+                      : order.status === "printed"
+                      ? "Impreso 📄"
+                      : order.status === "in_delivery"
+                      ? "En delivery 🛸"
+                      : order.status === "received"
+                      ? "Recibido ✅"
+                      : order.status === "distribution"
+                      ? "En punto de distribución 🏤"
+                      : order.status === "pickup"
+                      ? "En punto de retiro 🏃‍♂️"
+                      : "Con problemas 📛"}
                   </span>
                 </td>
               </tr>
