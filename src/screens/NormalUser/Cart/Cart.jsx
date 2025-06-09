@@ -23,6 +23,7 @@ import OrderCard from "../../../components/Cart/OrderCard";
 import LibraryItemCart from "../../../components/Cart/LibraryItemCart";
 import {
   deleteAllCart,
+  setLibraryCart,
   setOrderPlace,
   verifyCoupon,
 } from "../../../redux/actions";
@@ -148,6 +149,7 @@ export default function Cart() {
     e.preventDefault();
     dispatch(deleteAllCart(user));
     dispatch(setOrderPlace(null));
+    dispatch(setLibraryCart([]));
     navigate("/");
   }
 
