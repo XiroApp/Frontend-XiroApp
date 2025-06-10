@@ -6,7 +6,6 @@ export default function AccountData() {
     .sort((a, b) => Number(b.order_number) - Number(a.order_number))
     .slice(0, 10);
 
-  console.log(clientOrders);
   // Función para obtener el ícono y color según el estado
   const getStatusStyles = (status) => {
     switch (status) {
