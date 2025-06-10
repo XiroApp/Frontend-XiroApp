@@ -6,6 +6,7 @@ export default function AccountData() {
     .sort((a, b) => Number(b.order_number) - Number(a.order_number))
     .slice(0, 10);
 
+  console.log(clientOrders);
   // Función para obtener el ícono y color según el estado
   const getStatusStyles = (status) => {
     switch (status) {
@@ -96,7 +97,7 @@ export default function AccountData() {
           </thead>
           <tbody className="divide-y divide-gray-200">
             {clientOrders.map((order, index) => {
-              const status = getStatusStyles(order?.status);
+              const status = getStatusStyles(order?.orderStatus);
               return (
                 <tr key={index}>
                   <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -136,7 +137,7 @@ export default function AccountData() {
       {/* Versión para móvil */}
       <div className="md:hidden space-y-4">
         {clientOrders.map((order, index) => {
-          const status = getStatusStyles(order?.status);
+          const status = getStatusStyles(order?.orderStatus);
           return (
             <div key={index} className="bg-gray-50 rounded-lg p-4 shadow-sm">
               <div className="flex justify-between items-start">
