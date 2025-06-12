@@ -10,28 +10,31 @@ Success.propTypes = {
 export default function Success({ loggedUser }) {
   return (
     <div className="h-screen w-screen flex flex-col justify-start items-center">
-      <Navbar title="Compra exitosa" loggedUser={loggedUser} />
+      <Navbar title="Compra Exitosa" loggedUser={loggedUser} />
 
-      <section className="mt-20 rounded-xl bg-slate-50 w-full max-w-xl h-full max-h-[350px] flex flex-col items-center justify-center gap-y-3">
+      <section className="mt-20 rounded-xl bg-slate-50 w-full max-w-xl h-full max-h-[380px] flex flex-col items-center justify-center">
         <CheckCircleIcon
           className="text-green-500"
           sx={{ height: "5rem", width: "5rem" }}
         />
-        <span className="text-3xl font-[500] w-full text-center">
-          ¡Compra exitosa!
+        <span className="text-4xl font-[500] w-full text-center mt-2">
+          ¡Compra Exitosa!
         </span>
-        <span className="text-xl text-center w-full font-[500] opacity-85 mt-1">
-          Te enviaremos un email con los detalles de tu pedido a
-          <br />
-          <address className="pt-1 font-[500]" style={{ fontFamily: "Arial" }}>
-            {loggedUser?.email ?? "@"}
-          </address>
-        </span>
-        <Link
-          to="/"
-          className="text-xl text-green-900 bg-green-300/50 duration-75 hover:bg-green-300/90 px-6 py-2 rounded-lg mt-4"
+        <p className="text-xl text-center w-full max-w-lg font-[500] opacity-90 mt-8">
+          Puedes ver el estado de tu pedido en el historial,
+          <br /> también te enviaremos un email con los detalles a
+        </p>
+        <address
+          className="text-xl mb-6 mt-0.5 opacity-95"
+          style={{ fontFamily: "Arial" }}
         >
-          Aceptar
+          {loggedUser?.email ?? "@"}
+        </address>
+        <Link
+          to="/?historial"
+          className="text-2xl text-green-950 bg-green-300/40 border border-green-950/40 duration-75 hover:bg-green-300/80 px-8 py-2.5 rounded-lg mt-4"
+        >
+          Ir al Historial
         </Link>
       </section>
     </div>

@@ -32,7 +32,6 @@ import { roleIs } from "./Common/helpers";
 
 function App() {
   // const APP_VERSION = Settings.FRONTEND_VERSION;
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const sessionUser = getSession();
@@ -42,7 +41,7 @@ function App() {
 
   // useEffect(() => {
   //   cleanUpResources(APP_VERSION);
-  // }, [APP_VERSION]);
+  // }, [APP_VERSION]);pathname
 
   useEffect(() => {
     if (sessionUser) {
@@ -62,6 +61,8 @@ function App() {
   useEffect(() => handleRole(), [dataBaseUser]);
 
   function handleRole() {
+    if (location.pathname == "/success") return;
+
     if (!dataBaseUser) {
       navigate("/login");
       return;
@@ -75,14 +76,8 @@ function App() {
       pickup: "/pickup",
     };
 
-    const route = Object.keys(roleRoutes).find(role => roleIs(role));
-    //! Revisar ruta success que se muestra solo medios segundo
-    // if (location.pathname == "/success") {
-    //   const timer = setTimeout(() => navigate(route || "/"), 4000);
-    //   return () => clearTimeout(timer);
-    // } else return navigate(route || "/");
-
-    navigate(route || "/");
+    const route = Object.keys(roleRoutes).find(role => roleIs(role)) || "/";
+    navigate(route);
   }
 
   return (
