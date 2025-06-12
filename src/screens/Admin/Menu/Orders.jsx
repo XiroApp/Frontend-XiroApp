@@ -128,7 +128,7 @@ export default function Orders({ editor }) {
   }
 
   function fetchUsersByRole() {
-    UsersAdapter.getSpecialUsers().then(res => {
+    UsersAdapter.getSpecialUsers().then((res) => {
       setDeliveryUsers(res.deliveryUsers);
       setPrintingUsers(res.printingUsers);
       setDistributionUsers(res.distributionUsers);
@@ -310,6 +310,7 @@ export default function Orders({ editor }) {
                       >
                         {columns.map((column, index) => {
                           const value = order[column.id];
+
                           return (
                             <OrdersRow
                               key={index}
@@ -334,7 +335,7 @@ export default function Orders({ editor }) {
                 <Backdrop
                   sx={{
                     color: "#fff",
-                    zIndex: theme => theme.zIndex.drawer + 1,
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
                   }}
                   open={loading}
                 >
@@ -382,7 +383,7 @@ export default function Orders({ editor }) {
                       }} // Ajuste de padding si es necesario
                     >
                       {/* Mapea las opciones de límite. Asegúrate de que 'limitOptions' esté definido en tu componente (ej: [10, 25, 50, 100]) */}
-                      {limitOptions.map(option => (
+                      {limitOptions.map((option) => (
                         <MenuItem key={option} value={option}>
                           {option}
                         </MenuItem>
