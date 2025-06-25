@@ -30,18 +30,13 @@ import PickUp from "./screens/PickUpUser/Pickup";
 import Distribution from "./screens/DistributionUser/Distribution";
 import { roleIs } from "./Common/helpers";
 
-function App() {
-  // const APP_VERSION = Settings.FRONTEND_VERSION;
+export default function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const sessionUser = getSession();
   const cart = useSelector(state => state.cart);
   const loggedUser = useSelector(state => state.loggedUser);
   const dataBaseUser = useSelector(state => state.dataBaseUser);
-
-  // useEffect(() => {
-  //   cleanUpResources(APP_VERSION);
-  // }, [APP_VERSION]);pathname
 
   useEffect(() => {
     if (sessionUser) {
@@ -193,5 +188,3 @@ function App() {
     </ThemeProvider>
   );
 }
-
-export default App;

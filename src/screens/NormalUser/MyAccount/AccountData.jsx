@@ -2,12 +2,12 @@ import { useSelector } from "react-redux";
 import { formatPrice } from "../../../Common/helpers";
 
 export default function AccountData() {
-  const clientOrders = useSelector((state) => state.clientOrders)
+  const clientOrders = useSelector(state => state.clientOrders)
     .sort((a, b) => Number(b.order_number) - Number(a.order_number))
     .slice(0, 10);
 
   // Función para obtener el ícono y color según el estado
-  const getStatusStyles = (status) => {
+  const getStatusStyles = status => {
     switch (status) {
       case "pending":
         return {
@@ -68,8 +68,8 @@ export default function AccountData() {
 
   return (
     <section className="flex flex-col bg-white rounded-2xl p-4 md:p-6 gap-4">
-      <h3 className="text-xl md:text-2xl opacity-80 mb-3 md:mb-5">
-        Últimas compras
+      <h3 className="text-xl md:text-2xl opacity-90 mb-3 md:mb-5">
+        Mis pedidos
       </h3>
 
       {/* Versión para desktop */}
@@ -77,19 +77,19 @@ export default function AccountData() {
         <table className="min-w-full bg-white border border-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
                 N° Orden
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
                 Comprobante
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
                 Entrega
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
                 Estado
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
                 Total
               </th>
             </tr>
@@ -103,14 +103,14 @@ export default function AccountData() {
                     {order?.order_number}
                   </td>
                   <td
-                    className="px-4 py-3 whitespace-nowrap text-sm text-gray-500"
+                    className="px-4 py-3 whitespace-nowrap text-sm text-gray-700"
                     title={order?.uid}
                   >
                     {order?.uid}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-500">
+                  <td className="px-4 py-3 text-sm text-gray-700">
                     <p className="font-medium">{order?.place?.type}</p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-gray-700">
                       {order?.place?.address?.name}{" "}
                       {order?.place?.address?.number},{" "}
                       {order?.place?.address?.locality}
@@ -144,7 +144,7 @@ export default function AccountData() {
                   <p className="text-sm font-medium text-gray-900">
                     Orden #{order?.order_number}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-700 mt-1">
                     {order?.uid.substring(0, 6)}...
                     {order?.uid.substring(order?.uid.length - 4)}
                   </p>
@@ -158,7 +158,7 @@ export default function AccountData() {
 
               <div className="mt-3 space-y-2">
                 <div>
-                  <p className="text-xs font-medium text-gray-500">Entrega</p>
+                  <p className="text-xs font-medium text-gray-700">Entrega</p>
                   <p className="text-sm">{order?.place?.type}</p>
                   <p className="text-xs text-gray-400">
                     {order?.place?.address?.name}{" "}
@@ -168,7 +168,7 @@ export default function AccountData() {
                 </div>
 
                 <div className="flex justify-between items-center pt-2 border-t border-gray-200">
-                  <p className="text-xs font-medium text-gray-500">Total</p>
+                  <p className="text-xs font-medium text-gray-700">Total</p>
                   <p className="text-sm font-medium">
                     $ {formatPrice(order?.total_price || 0)}
                   </p>
