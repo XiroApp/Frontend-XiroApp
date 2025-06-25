@@ -15,7 +15,7 @@ import PersonalData from "./PersonalData";
 import AccountData from "./AccountData";
 import AddressData from "./AddressData";
 import Navbar from "../../../components/Navbar/Navbar";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FAQ from "./FAQ";
 import Notifications from "./Notifications";
 import Chatbot from "../../../components/Chatbot/Chatbot";
@@ -35,10 +35,9 @@ export default function MyAccount({ cart, dataBaseUser }) {
     clientOrders = useSelector(state => state.clientOrders),
     [openCollapse, setOpenCollapse] = useState(false),
     [state, setState] = useState({ left: false }),
-    locationRef = useLocation().search,
     [render, setRender] = useState(() => {
-      switch (locationRef) {
-        case "?library":
+      switch (location.search) {
+        case "?libreria":
           return "library";
         case "?historial":
           return "accountData";
