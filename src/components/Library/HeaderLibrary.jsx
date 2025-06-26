@@ -14,10 +14,10 @@ function HeaderLibrary({ term, setTerm }) {
         <p className="text-3xl sm:text-4xl font-semibold text-slate-850 pl-2">
           Librería
         </p>
-        <div className="flex jusify-center items-center gap-x-4">
+        <div className="flex jusify-center items-center gap-x-1 sm:gap-x-4">
           <Link
             to="/imprimir"
-            className="text-sm sm:text-lg font-semibold text-slate-800 border-green-400 bg-green-300 hover:bg-green-400 duration-75 flex items-center justify-center h-12 border rounded-lg px-2 sm:px-4 py-2"
+            className="text-sm sm:text-lg font-semibold text-slate-800 border-green-400 bg-green-300 hover:bg-green-400 duration-75 text-center flex items-center justify-center h-12 border rounded-lg px-2 sm:px-4 py-2"
           >
             Ir a Imprimir
           </Link>
@@ -29,7 +29,7 @@ function HeaderLibrary({ term, setTerm }) {
               placeholder="Busca productos..."
               value={term}
               onChange={e => setTerm(e.target.value)}
-              className="w-full sm:w-[280px] px-4 py-2 rounded-lg border-[1.5px] pl-10 bg-slate-100/90 placeholder:text-slate-600 border-green-300 focus:outline-none h-12"
+              className="w-full max-w-[200px] sm:max-w-[280px] px-4 py-2 rounded-lg border-[1.5px] pl-10 bg-slate-100/90 placeholder:text-slate-600 border-green-300 focus:outline-none h-12"
             />
           </div>
         </div>

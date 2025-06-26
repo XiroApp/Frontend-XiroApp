@@ -28,6 +28,7 @@ const initLibraryProd = {
   id: "",
   code: "",
   name: "",
+  description: "",
   price: 0,
   cover: "",
   visible: true,

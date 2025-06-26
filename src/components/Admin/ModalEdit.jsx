@@ -49,9 +49,6 @@ function ModalEdit(props) {
 
   async function editProduct() {
     if (!validateFields()) return;
-
-    console.log(productSelected);
-
     try {
       setLoadingModal(true);
       await LibraryService.manageProduct(productSelected);
@@ -75,6 +72,11 @@ function ModalEdit(props) {
   function handleName(e) {
     const name = String(e.target.value).trim();
     setProductSelected({ ...productSelected, name });
+  }
+
+  function handleDescription(e) {
+    const description = String(e.target.value).trim();
+    setProductSelected({ ...productSelected, description });
   }
 
   function handlePrice(e) {
@@ -125,6 +127,22 @@ function ModalEdit(props) {
             />
             {errors.name && (
               <p className="text-red-500 text-sm">{errors.name}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-y-2">
+            <label htmlFor="name" className="font-medium text-lg">
+              Descripción
+            </label>
+            <input
+              defaultValue={productSelected.description}
+              onChange={handleDescription}
+              id="description"
+              type="text"
+              placeholder="Ingresa la descripción"
+              className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+            {errors.description && (
+              <p className="text-red-500 text-sm">{errors.description}</p>
             )}
           </div>
           <div className="flex flex-col gap-y-2">

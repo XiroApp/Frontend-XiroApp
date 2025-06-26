@@ -69,24 +69,35 @@ export default function LibraryPanel() {
               <table className="w-full table-auto">
                 <thead>
                   <tr className="bg-gray-200 w-full">
-                    <th className="py-2 w-1/4">Código</th>
-                    <th className="py-2 w-1/4">Nombre</th>
-                    <th className="py-2 w-1/4">Precio</th>
-                    <th className="py-2 w-1/4">Acciones</th>
+                    <th className="py-2 w-1/5">Código</th>
+                    <th className="py-2 w-1/5">Nombre</th>
+                    <th className="py-2 w-1/5">Descripción</th>
+                    <th className="py-2 w-1/5">Precio</th>
+                    <th className="py-2 w-1/5">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredProducts.map(p => (
-                    <ProductAdmin
-                      key={p.id}
-                      {...p}
-                      setProductSelected={setProductSelected}
-                      setShowDeleteModal={setShowDeleteModal}
-                      setShowEditModal={setShowEditModal}
-                      setShowVisibleModal={setShowVisibleModal}
-                      setShowHiddenModal={setShowHiddenModal}
-                    />
-                  ))}
+                  {filteredProducts
+                    .sort((a, b) => {
+                      const getNum = code =>
+                          parseInt(code.replace(/\D/g, ""), 10),
+                        prefixA = a.code.replace(/\d/g, ""),
+                        prefixB = b.code.replace(/\d/g, "");
+                      if (prefixA !== prefixB)
+                        return prefixA.localeCompare(prefixB);
+                      return getNum(a.code) - getNum(b.code);
+                    })
+                    .map(p => (
+                      <ProductAdmin
+                        key={p.id}
+                        {...p}
+                        setProductSelected={setProductSelected}
+                        setShowDeleteModal={setShowDeleteModal}
+                        setShowEditModal={setShowEditModal}
+                        setShowVisibleModal={setShowVisibleModal}
+                        setShowHiddenModal={setShowHiddenModal}
+                      />
+                    ))}
                 </tbody>
               </table>
             ) : (

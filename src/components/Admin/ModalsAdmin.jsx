@@ -33,7 +33,7 @@ export default function ModalsAdmin(props) {
         role="alert"
         className="transition-all fixed inset-0 pb-24 bg-slate-200 flex items-center justify-center z-50"
       >
-        <p className="w-full text-2xl lg:text-3xl text-center">Cargando...</p>;
+        <p className="w-full text-2xl lg:text-3xl text-center">Añadiendo...</p>;
       </div>
     );
 

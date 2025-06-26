@@ -28,8 +28,12 @@ export default function ModalAdd(props) {
 
     if (!newProduct.name || len(newProduct.name) == 0) {
       newErrors.name = "El nombre es obligatorio.";
-    } else if (len(newProduct.name) > 129) {
-      newErrors.name = "El nombre no debe exceder 129 caracteres.";
+    } else if (len(newProduct.name) > 47) {
+      newErrors.name = "El nombre no debe exceder 47 caracteres.";
+    }
+
+    if (len(newProduct.description) > 47) {
+      newErrors.description = "La descripción no debe exceder 47 caracteres.";
     }
 
     if (!newProduct.price || newProduct.price <= 0) {
@@ -58,6 +62,11 @@ export default function ModalAdd(props) {
   function handleName(e) {
     const name = String(e.target.value).trim();
     setNewProduct({ ...newProduct, name });
+  }
+
+  function handleDescription(e) {
+    const description = String(e.target.value).trim();
+    setNewProduct({ ...newProduct, description });
   }
 
   function handlePrice(e) {
@@ -122,7 +131,7 @@ export default function ModalAdd(props) {
 
           <div className="flex flex-col gap-y-2">
             <label htmlFor="name" className="font-medium text-lg">
-              Nombre del producto
+              Nombre
             </label>
             <input
               onChange={handleName}
@@ -133,6 +142,21 @@ export default function ModalAdd(props) {
             />
             {errors.name && (
               <p className="text-red-500 text-sm">{errors.name}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-y-2">
+            <label htmlFor="name" className="font-medium text-lg">
+              Descripción
+            </label>
+            <input
+              onChange={handleDescription}
+              id="description"
+              type="text"
+              placeholder="Ingresa la descripción"
+              className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+            {errors.description && (
+              <p className="text-red-500 text-sm">{errors.description}</p>
             )}
           </div>
           <div className="flex flex-col gap-y-2">

@@ -11,9 +11,10 @@ export default function ProductAdmin(props) {
   const {
       id,
       code,
-      cover,
       name,
+      description,
       price,
+      cover,
       visible,
       setProductSelected,
       setShowDeleteModal,
@@ -21,11 +22,12 @@ export default function ProductAdmin(props) {
       setShowHiddenModal,
       setShowVisibleModal,
     } = props,
-    productProps = { id, name, price, cover, code, visible };
+    productProps = { id, name, description, price, cover, code, visible };
   return (
     <tr className="border-b-2 border-slate-300 bg-gray-100 text-gray-900 h-[90px]">
       <td className="px-4 py-2 text-center">{code}</td>
       <td className="px-4 py-2 text-center">{name}</td>
+      <td className="px-4 py-2 text-center">{description}</td>
       <td className="px-4 py-2 text-center">${formatPrice(price)}</td>
       <td className="px-4 py-2">
         <div className="flex gap-4 justify-center w-full items-center brightness-95 ">

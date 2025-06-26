@@ -54,12 +54,12 @@ import BackBtn from "../../../components/BackBtn.jsx";
 export default function NewOrder() {
   const dispatch = useDispatch(),
     navigate = useNavigate(),
-    user = useSelector((state) => state.dataBaseUser),
-    cart = useSelector((state) => state.cart),
-    libraryCart = useSelector((state) => state.libraryCart),
-    labels = useSelector((state) => state.labels),
-    pricingState = useSelector((state) => state.pricing),
-    place = useSelector((state) => state.place),
+    user = useSelector(state => state.dataBaseUser),
+    cart = useSelector(state => state.cart),
+    libraryCart = useSelector(state => state.libraryCart),
+    labels = useSelector(state => state.labels),
+    pricingState = useSelector(state => state.pricing),
+    place = useSelector(state => state.place),
     [libraryModal, setLibraryModal] = useState(false),
     [showUnsavedModal, setShowUnsavedModal] = useState(false),
     [loadFileBtn, setLoadFileBtn] = useState(false),
@@ -77,11 +77,11 @@ export default function NewOrder() {
       previews: [],
     }),
     [resume, setResume] = useState(initialResumeState),
-    removeDuplicateDetails = (currentFiles) => {
+    removeDuplicateDetails = currentFiles => {
       const uniqueDetails = [];
       const seenNames = new Set();
 
-      currentFiles.details.forEach((file) => {
+      currentFiles.details.forEach(file => {
         if (!seenNames.has(file.name)) {
           seenNames.add(file.name);
           uniqueDetails.push(file);
@@ -130,6 +130,9 @@ export default function NewOrder() {
     if (state.loading) {
       setLoadFileBtn(true);
     } else setLoadFileBtn(false);
+
+    const timer = setTimeout(() => updateState("loading", false), 8000);
+    return () => clearTimeout(timer);
   }, [state.loading]);
 
   useEffect(() => {
@@ -152,7 +155,7 @@ export default function NewOrder() {
         0
       );
 
-      setResume((prev) => ({
+      setResume(prev => ({
         ...prev,
         printWay: totalPages > 1 ? prev.printWay : "Simple faz",
         totalPages,
@@ -173,13 +176,13 @@ export default function NewOrder() {
     }
   }, []);
 
-  const handleDeleteFile = useCallback((fileToDelete) => {
+  const handleDeleteFile = useCallback(fileToDelete => {
     updateState("loading", true);
-    setFiles((prevFiles) => {
-      const newDetails = prevFiles.details.filter((f) => {
+    setFiles(prevFiles => {
+      const newDetails = prevFiles.details.filter(f => {
         return f.name !== fileToDelete;
       });
-      const newPreviews = prevFiles.previews.filter((f) => f !== fileToDelete);
+      const newPreviews = prevFiles.previews.filter(f => f !== fileToDelete);
 
       return { previews: newPreviews, details: newDetails };
     });
@@ -198,7 +201,7 @@ export default function NewOrder() {
 
     try {
       const uploadPromises = Array.from(filesInput)
-        .filter((file) => {
+        .filter(file => {
           if (!validateFileSize(file, maxSizeMB)) {
             dispatch(
               setToast(
@@ -210,7 +213,7 @@ export default function NewOrder() {
           }
           return true;
         })
-        .map(async (file) => {
+        .map(async file => {
           if (validatePDFFile(file.name)) {
             const uploadedFile = await uploadFile(file);
             return { preview: uploadedFile };
@@ -218,16 +221,16 @@ export default function NewOrder() {
             const formData = new FormData();
             formData.append("files", file);
             const newDocuments = await dispatch(uploadMulter(formData)); // Este await es necesario.
-            return newDocuments.map((doc) => ({ preview: doc }));
+            return newDocuments.map(doc => ({ preview: doc }));
           }
         });
 
       const results = await Promise.all(uploadPromises);
       const newFiles = results.flat();
 
-      setFiles((prev) => ({
+      setFiles(prev => ({
         ...prev,
-        previews: [...prev.previews, ...newFiles.map((f) => f.preview)],
+        previews: [...prev.previews, ...newFiles.map(f => f.preview)],
       }));
     } catch (err) {
       dispatch(
@@ -259,17 +262,17 @@ export default function NewOrder() {
   }, [dispatch, user, resume, files.previews, pricing.total]);
 
   const updateState = useCallback((key, value) => {
-    setState((prev) => ({ ...prev, [key]: value }));
+    setState(prev => ({ ...prev, [key]: value }));
   }, []);
 
   const handleColorAlert = useCallback(() => {
-    setState((prev) => ({
+    setState(prev => ({
       ...prev,
       openColorAlertModal: !prev.openColorAlertModal,
     }));
   }, []);
 
-  const handleSettings = useCallback((e) => {
+  const handleSettings = useCallback(e => {
     updateState("currentSetting", e.target.name);
   }, []);
 
@@ -312,7 +315,7 @@ export default function NewOrder() {
       {state.choosePlace && (
         <ChoosePlaceModal
           choosePlace={state.choosePlace}
-          setChoosePlace={(value) => updateState("choosePlace", value)}
+          setChoosePlace={value => updateState("choosePlace", value)}
         />
       )}
 
@@ -483,7 +486,7 @@ export default function NewOrder() {
               <section className="w-full">
                 <NewOrderSettings
                   helpModal={state.helpModal}
-                  setHelpModal={(value) => updateState("helpModal", value)}
+                  setHelpModal={value => updateState("helpModal", value)}
                   currentSetting={state.currentSetting}
                   resume={resume}
                   setResume={handleSetResume}
@@ -505,9 +508,9 @@ export default function NewOrder() {
                           index={index}
                           resume={resume}
                           setResume={setResume}
-                          setLoading={(value) => updateState("loading", value)}
-                          setFilesDetail={(detail) =>
-                            setFiles((prev) => {
+                          setLoading={value => updateState("loading", value)}
+                          setFilesDetail={detail =>
+                            setFiles(prev => {
                               return {
                                 ...prev,
                                 details: [...detail],
@@ -674,7 +677,7 @@ export default function NewOrder() {
             >
               <div
                 role="alert"
-                onClick={(e) => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
                 className="bg-white rounded-lg p-6 max-w-xl w-full h-56 shadow-xl relative flex flex-col justify-between items-start"
               >
                 <p className="text-2xl font-semibold text-slate-800 w-full">
@@ -729,7 +732,7 @@ export default function NewOrder() {
             >
               <div
                 role="alert"
-                onClick={(e) => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
                 className="bg-white rounded-lg p-6 max-w-xl w-full h-[300px] shadow-xl relative flex flex-col justify-between items-start"
               >
                 <p className="text-2xl font-semibold text-slate-800 w-full">

@@ -420,25 +420,20 @@ export default function MyAccount({ cart, dataBaseUser }) {
                 </Button>
               </div>
               {render == "accountData" && (
-                <div className="hidden lg:flex lg:flex-col w-full justify-center items-center gap-y-3">
-                  <span className="text-3xl text-center w-full">
-                    Mis pedidos
-                  </span>
-                  <div className="flex justify-start items-start gap-x-2">
-                    <div className="flex flex-col gap-1 border-2 rounded-md py-3 w-[120px] items-center">
-                      <span className="text-[14px] opacity-70">EN CURSO</span>
-                      <span className="text-3xl ">
-                        {len(
-                          clientOrders?.filter(
-                            order => order.orderStatus !== "received"
-                          )
-                        )}
-                      </span>
-                    </div>
-                    <div className="flex flex-col gap-1 border-2 rounded-md py-3 w-[120px] items-center">
-                      <span className="text-[14px] opacity-70">HISTÓRICOS</span>
-                      <span className="text-3xl">{len(clientOrders)}</span>
-                    </div>
+                <div className="hidden lg:flex justify-center w-full items-center gap-x-2">
+                  <div className="flex flex-col gap-1 border-2 rounded-md py-3 w-[120px] items-center">
+                    <span className="text-[14px] opacity-70">EN CURSO</span>
+                    <span className="text-3xl ">
+                      {len(
+                        clientOrders?.filter(
+                          order => order.orderStatus !== "received"
+                        )
+                      )}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-1 border-2 rounded-md py-3 w-[120px] items-center">
+                    <span className="text-[14px] opacity-70">HISTÓRICOS</span>
+                    <span className="text-3xl">{len(clientOrders)}</span>
                   </div>
                 </div>
               )}

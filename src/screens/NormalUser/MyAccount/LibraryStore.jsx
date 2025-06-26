@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { len, normalizeStr } from "../../../Common/helpers";
 import ItemStore from "../../../components/Library/ItemStore";
 import AlertProd from "../../../components/Library/AlertProd";
-import LoadingProds from "../../../components/Library/LoadingProds";
 import HeaderLibrary from "../../../components/Library/HeaderLibrary";
 import { LibraryService } from "../../../Infra/Services/library.service";
 import ContinueBtn from "../../../components/Library/ContinueBtn";
+import { CircularProgress } from "@mui/material";
 
 export default function LibraryStore() {
   const dispatch = useDispatch(),
@@ -80,26 +80,30 @@ export default function LibraryStore() {
       <HeaderLibrary term={searchTerm} setTerm={setSearchTerm} />
       <div className="w-full flex-1 px-4 sm:px-8 py-4 h-full min-h-[650px]">
         {loading ? (
-          <LoadingProds />
+          <div className="flex justify-center items-center pt-16 w-full min-h-20">
+            <CircularProgress color="primary" size={50} />
+          </div>
         ) : (
-          <ul className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 place-items-center">
+          <ul className="w-full grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 place-items-center">
             {len(filteredProducts) > 0 &&
-              filteredProducts.map(product => (
-                <ItemStore
-                  key={product.id}
-                  product={product}
-                  inCart={inCart}
-                  handleQuantity={handleQuantity}
-                  addProdToCart={addProdToCart}
-                  quantities={{
-                    ...tempQuantities,
-                    ...productsCart.reduce((acc, item) => {
-                      acc[item.id] = item.quantity;
-                      return acc;
-                    }, {}),
-                  }}
-                />
-              ))}
+              filteredProducts
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map(product => (
+                  <ItemStore
+                    key={product.id}
+                    product={product}
+                    inCart={inCart}
+                    handleQuantity={handleQuantity}
+                    addProdToCart={addProdToCart}
+                    quantities={{
+                      ...tempQuantities,
+                      ...productsCart.reduce((acc, item) => {
+                        acc[item.id] = item.quantity;
+                        return acc;
+                      }, {}),
+                    }}
+                  />
+                ))}
             {len(filteredProducts) == 0 && len(searchTerm) > 0 && (
               <p className="w-full text-center p-4 text-lg col-span-full">
                 Sin resultados para &quot;{searchTerm}&quot;

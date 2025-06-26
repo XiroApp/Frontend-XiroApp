@@ -7,47 +7,50 @@ import logo from "/xiro-head.webp";
 export default function ItemStore(props) {
   const { product, inCart, handleQuantity, addProdToCart, quantities } = props;
   return (
-    <li className="flex justify-between flex-col items-center bg-[#fef9e9] p-3 rounded-xl border border-black w-full max-w-[240px] h-[380px] relative">
+    <li
+      title={product.name}
+      className="flex justify-between flex-col items-center bg-[#fef9e9] p-3 rounded-md border border-black w-full max-w-[280px] h-[380px] relative"
+    >
       {!product.visible && (
-        <div className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2.5 py-1.5 rounded-full z-10">
+        <div className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2.5 py-1.5 rounded-md z-10">
           Agotado
         </div>
       )}
       {product.visible && inCart(product.id) && (
         <Link
           to="/carrito"
-          className="absolute top-2 right-2 bg-green-600 hover:bg-green-500 transition-colors text-white text-xs font-bold px-2.5 py-1.5 rounded-full z-10"
+          className="absolute top-2 right-2 bg-green-600 hover:bg-green-500 transition-colors text-white text-xs font-bold px-2.5 py-1.5 rounded-md z-10"
         >
           En Carrito
         </Link>
       )}
       <div className="w-full h-32 mb-2 overflow-hidden rounded-md bg-white">
         <img
-          src={product.cover || logo}
+          src={product.cover || logo.src}
           alt={"Imágen de " + product.name}
-          className="w-full h-full object-contain rounded-md border-[0.1px] border-black"
+          className="w-full h-full object-contain object-center rounded-md border-[0.1px] border-black"
         />
       </div>
 
       <div className="flex flex-col items-center justify-between flex-grow w-full">
-        <div
-          title={product.name}
-          className="h-[90px] flex items-center justify-center w-full text-green-900 flex-col gap-y-1 my-2"
-        >
+        <div className="h-[90px] flex items-center justify-center w-full text-green-900 flex-col gap-y-1 my-2">
           <p
             className={twMerge(
               len(product.name) > 26 ? "text-lg" : "text-xl",
-              "font-semibold w-full text-center "
+              "font-semibold w-full text-center line-clamp-2 text-balance"
             )}
           >
             {product.name}
           </p>
-          <p className="opacity-90 text-sm w-full text-center">
-            TRAZO FINO COLOR NEGRO
+          <p className="opacity-90 text-sm w-full text-center line-clamp-2 text-balance">
+            {product.description ?? "-"}
           </p>
         </div>
 
-        <span className="w-full text-center font-medium text-lg text-black mb-2 bg-green-200/35 py-1 rounded-md">
+        <span
+          style={{ fontFamily: "Arial" }}
+          className="w-full text-center font-medium text-lg text-black mb-2 bg-green-200/35 py-1 rounded-md"
+        >
           ${formatPrice(product.price)}
         </span>
 
@@ -62,7 +65,7 @@ export default function ItemStore(props) {
                 Cantidad:
               </label>
 
-              <div className="flex items-center border-[1.3px] border-green-400 rounded overflow-hidden">
+              <div className="flex items-center border-[1.3px] border-green-400 rounded-md overflow-hidden">
                 <button
                   type="button"
                   onClick={() =>
@@ -106,7 +109,7 @@ export default function ItemStore(props) {
               >
                 Cantidad:
               </label>
-              <div className="flex items-center border-[1.3px] border-green-400 rounded overflow-hidden">
+              <div className="flex items-center border-[1.3px] border-green-400 rounded-md overflow-hidden">
                 <button
                   type="button"
                   disabled
@@ -137,21 +140,22 @@ export default function ItemStore(props) {
             inCart(product.id) ? (
               <Link
                 to="/carrito"
-                className="bg-[#E3F9D6] brightness-110 hover:bg-[#d6ffbc] hover:border-[#d6ffbc] text-slate-900 font-medium py-2 rounded-lg transition-colors w-full border border-green-400/80 text-center text-sm sm:text-base flex items-center justify-center gap-x-2"
+                className="bg-[#E3F9D6] brightness-110 hover:bg-[#d6ffbc] hover:border-[#d6ffbc] text-slate-900 font-medium py-2 rounded-md transition-colors w-full border border-green-400/80 text-center text-sm sm:text-base flex items-center justify-center gap-x-2"
               >
-                <span className="inline-block w-2 h-2 bg-green-600 rounded-full"></span>
+                <span className="inline-block w-2 h-2 bg-green-600 rounded-md"></span>
                 Ver Carrito
               </Link>
             ) : (
               <button
-                className="bg-green-600/90 hover:bg-green-500 text-white font-medium py-2 rounded-lg transition-colors w-full text-center text-sm sm:text-base"
+                type="button"
+                className="bg-green-600/90 hover:bg-green-500 text-white font-medium py-2 rounded-md transition-colors w-full text-center text-sm sm:text-base"
                 onClick={() => addProdToCart(product)}
               >
                 Agregar al Carrito
               </button>
             )
           ) : (
-            <div className="bg-[#ede7d4] text-slate-700 font-medium py-2 rounded-lg w-full text-center text-sm sm:text-base select-none">
+            <div className="bg-[#ede7d4] text-slate-700 font-medium py-2 rounded-md w-full text-center text-sm sm:text-base select-none">
               Agotado
             </div>
           )}
