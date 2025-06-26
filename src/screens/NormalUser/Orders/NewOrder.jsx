@@ -250,6 +250,7 @@ export default function NewOrder() {
         ...resume,
         files: files.previews,
         total: pricing.total,
+        ringed_total: pricing?.ringed_total || 0,
       })
     );
     setFiles({ details: [], previews: [] });
@@ -542,7 +543,16 @@ export default function NewOrder() {
                       <div className="flex justify-between">
                         <span className="font-[500]">Precio de impresión:</span>
                         <span className="opacity-70 font-[500]">
-                          ${formatPrice(pricing.total ?? 0)}
+                          $
+                          {formatPrice(
+                            pricing.total - pricing.ringed_total ?? 0
+                          )}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-[500]">Precio de anillado:</span>
+                        <span className="opacity-70 font-[500]">
+                          ${formatPrice(pricing.ringed_total ?? 0)}
                         </span>
                       </div>
                       <div className="flex justify-between">

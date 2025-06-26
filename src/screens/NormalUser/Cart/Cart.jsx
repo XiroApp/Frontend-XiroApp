@@ -43,13 +43,13 @@ const PUBLIC_KEY = Settings.MERCADOPAGO_KEY;
 export default function Cart() {
   const dispatch = useDispatch(),
     navigate = useNavigate(),
-    user = useSelector(state => state.dataBaseUser),
-    place = useSelector(state => state.place),
-    cart = useSelector(state => state.cart),
-    coupon = useSelector(state => state.coupon),
-    pricing = useSelector(state => state.pricing),
-    distance = useSelector(state => state.distance),
-    libraryCart = useSelector(state => state.libraryCart),
+    user = useSelector((state) => state.dataBaseUser),
+    place = useSelector((state) => state.place),
+    cart = useSelector((state) => state.cart),
+    coupon = useSelector((state) => state.coupon),
+    pricing = useSelector((state) => state.pricing),
+    distance = useSelector((state) => state.distance),
+    libraryCart = useSelector((state) => state.libraryCart),
     [shipment, setShipment] = useState(null),
     [delivery_distance, setDelivery_distance] = useState({
       text: null,
@@ -60,6 +60,8 @@ export default function Cart() {
     [mpModal, setMPModal] = useState(false),
     closeMPModal = () => setMPModal(false),
     totalCart = cart?.reduce((acc, order) => acc + Number(order.total), 0) || 0,
+    ringedTotal =
+      cart?.reduce((acc, order) => acc + Number(order?.ringed_total), 0) || 0,
     subtotalLibrary = () =>
       libraryCart?.reduce(
         (acc, order) => acc + Number(order.price) * Number(order.quantity),
@@ -81,11 +83,11 @@ export default function Cart() {
     }),
     backToRoot = () => navigate("/"),
     handleReset = () => setActiveStep(0),
-    isStepOptional = step => step === 4,
-    isStepSkipped = step => skipped.has(step),
+    isStepOptional = (step) => step === 4,
+    isStepSkipped = (step) => skipped.has(step),
     handleEditPlace = () => setChoosePlace(true),
     handleCupon = () => dispatch(verifyCoupon(cuponInput));
-
+ 
   useEffect(() => {
     window.scrollTo(0, 0);
     initMercadoPago(PUBLIC_KEY, { locale: "es-AR" });
@@ -107,7 +109,9 @@ export default function Cart() {
   useEffect(() => {
     if (coupon?.type[0] === "%") {
       const withPercentage =
-        totalCart + shipment - (totalCart * (coupon?.ammount / 100) || 0);
+        totalCart +
+        shipment -
+        ((totalCart - ringedTotal) * (coupon?.ammount / 100) || 0);
       setTotal(Number(withPercentage) + Number(subtotalLibrary()));
     } else {
       const withAmmount = totalCart - (coupon?.ammount || 0) + shipment;
@@ -123,13 +127,13 @@ export default function Cart() {
     }
 
     window.scrollTo(0, 0);
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   }
 
   function handleBack() {
     window.scrollTo(0, 0);
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   }
 
   function handleSkip() {
@@ -137,8 +141,8 @@ export default function Cart() {
       throw new Error("You can't skip a step that isn't optional.");
     }
 
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
-    setSkipped(prevSkipped => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
       const newSkipped = new Set(prevSkipped.values());
       newSkipped.add(activeStep);
       return newSkipped;
@@ -316,7 +320,7 @@ export default function Cart() {
                       <div className="flex flex-col justify-start items-start gap-y-2 pt-2">
                         {len(libraryCart) > 0 ? (
                           <ul className="w-full max-w-xl space-y-2">
-                            {libraryCart?.map(item => (
+                            {libraryCart?.map((item) => (
                               <LibraryItemCart key={item.id} item={item} />
                             ))}
                           </ul>
@@ -410,7 +414,7 @@ export default function Cart() {
                           Notas adicionales para el pedido
                         </span>
                         <TextField
-                          onChange={e => handleInput(e)}
+                          onChange={(e) => handleInput(e)}
                           id="standard-basic"
                           label="Añadir un comentario"
                           name="description"
@@ -457,7 +461,7 @@ export default function Cart() {
                           Artículos de librería
                         </span>
                         <ul className="flex flex-col">
-                          {libraryCart.map(order => (
+                          {libraryCart.map((order) => (
                             <li
                               key={order.id}
                               className="text-[14px] font-[400]"
@@ -504,7 +508,7 @@ export default function Cart() {
                         </div>
                         {editComment ? (
                           <TextField
-                            onChange={e => handleInput(e)}
+                            onChange={(e) => handleInput(e)}
                             id="standard-basic"
                             label="Editar comentario"
                             name="description"
@@ -526,7 +530,7 @@ export default function Cart() {
                       </span>
                       <section className="flex justify-between gap-4">
                         <TextField
-                          onChange={e => setCuponInput(e.target.value)}
+                          onChange={(e) => setCuponInput(e.target.value)}
                           id="standard-basic"
                           label={"Código de cupón"}
                           name="cupon"
@@ -538,7 +542,7 @@ export default function Cart() {
                           variant="outlined"
                           color="primary"
                           className="w-1/2 n-w-full flex items-center gap-1"
-                          onClick={e => handleCupon(e)}
+                          onClick={(e) => handleCupon(e)}
                         >
                           <LocalOfferIcon
                             sx={{ width: "1rem", height: "1rem" }}
@@ -560,9 +564,8 @@ export default function Cart() {
                             <span className="text-[16px] font-[400]">
                               Subtotal de impresiones
                             </span>
-                            <span>${formatPrice(totalCart)}</span>
+                            <span>${formatPrice(totalCart - ringedTotal)}</span>
                           </div>
-
                           <section className="flex justify-between">
                             <span className="text-[16px] font-[400]">
                               Cupón de descuento: {coupon?.code}
@@ -570,11 +573,18 @@ export default function Cart() {
                             <span className="text-green-500">
                               {coupon.type[0] === "%"
                                 ? `     - $${formatPrice(
-                                    totalCart * (coupon?.ammount / 100)
+                                    (totalCart - ringedTotal) *
+                                      (coupon?.ammount / 100)
                                   )}`
                                 : `  - $${formatPrice(coupon?.ammount)}`}
                             </span>
                           </section>
+                          <div className="flex justify-between">
+                            <span className="text-[16px] font-[400]">
+                              Subtotal de anillado
+                            </span>
+                            <span>${formatPrice(ringedTotal)}</span>
+                          </div>
 
                           <section className="flex justify-between">
                             <span className="text-[16px] font-[400]">
@@ -613,7 +623,13 @@ export default function Cart() {
                             <span className="text-[16px] font-[400]">
                               Subtotal de impresiones
                             </span>
-                            <span>${formatPrice(totalCart)}</span>
+                            <span>${formatPrice(totalCart - ringedTotal)}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-[16px] font-[400]">
+                              Subtotal de anillado
+                            </span>
+                            <span>${formatPrice(ringedTotal)}</span>
                           </div>
 
                           <section className="flex justify-between">
@@ -740,7 +756,7 @@ export default function Cart() {
                 )}
               </section>
               <Box className="bg-[#fff] rounded-b-md p-4 flex justify-between items-center pl-4">
-                <section onClick={e => handleDeleteCart(e)}>
+                <section onClick={(e) => handleDeleteCart(e)}>
                   <Button variant="text" color="error">
                     Vaciar carrito
                   </Button>
