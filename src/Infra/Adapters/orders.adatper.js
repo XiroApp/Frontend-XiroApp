@@ -5,8 +5,22 @@ import { utils, writeFileXLSX } from "xlsx";
 const baseUrl = Settings.SERVER_URL;
 
 export class OrdersAdapter {
-  static async getAllOrders() {
-    const url = `${baseUrl}/admin/orders`;
+  
+  static async getAllOrders(startDate, endDate) {
+    let url = `${baseUrl}/admin/orders`;
+    const params = new URLSearchParams();
+
+    if (startDate) {
+      params.append("startDate", startDate);
+    }
+    if (endDate) {
+      params.append("endDate", endDate);
+    }
+
+    if (params.toString()) {
+      url += `?${params.toString()}`;
+    }
+
     const response = await axios.get(url);
     return response.data;
   }
@@ -103,9 +117,9 @@ export class OrdersAdapter {
     console.log(data);
   }
 
-  static async downloadOrdersExcel() {
+  static async downloadOrdersExcel(startDate, endDate) {
     // Obtiene todos los pedidos
-    const orders = await OrdersAdapter.getAllOrders();
+    const orders = await OrdersAdapter.getAllOrders(startDate, endDate);
 
     // Crea la hoja de cálculo
     const worksheet = utils.json_to_sheet(orders);

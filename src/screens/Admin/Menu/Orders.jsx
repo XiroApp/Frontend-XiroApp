@@ -25,7 +25,8 @@ import {
   DialogActions,
   DialogTitle,
   DialogContentText,
-  DialogContent, // Importar IconButton
+  DialogContent,
+  TextField, // Importar IconButton
 } from "@mui/material";
 import ReplayIcon from "@mui/icons-material/Replay";
 import ClearIcon from "@mui/icons-material/Clear"; // Importar icono de limpiar
@@ -59,6 +60,9 @@ export default function Orders({ editor }) {
   const [hasMoreForward, setHasMoreForward] = useState(false); // Indica si hay más páginas hacia adelante
   const [hasMoreBackward, setHasMoreBackward] = useState(false); // Indica si hay más páginas hacia atrás
   /* -------------------------------------------- */
+  /* REPORTES */
+  const [startDate, setStartDate] = useState(""); // State for start date
+  const [endDate, setEndDate] = useState(""); // State for end date
   /* -------------------------------------------- */
 
   // Opciones de filtro para el desplegable
@@ -171,7 +175,7 @@ export default function Orders({ editor }) {
   async function handleDownloadExcel() {
     setLoading(true);
     try {
-      await OrdersAdapter.downloadOrdersExcel();
+      await OrdersAdapter.downloadOrdersExcel(startDate, endDate);
     } catch (error) {
       alert("Error al descargar el archivo");
     } finally {
