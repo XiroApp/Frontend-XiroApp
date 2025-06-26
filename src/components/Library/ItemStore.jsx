@@ -7,7 +7,7 @@ import logo from "/xiro-head.webp";
 export default function ItemStore(props) {
   const { product, inCart, handleQuantity, addProdToCart, quantities } = props;
   return (
-    <li className="flex justify-between flex-col items-center bg-[#fef9e9] p-3 rounded-xl border border-black w-full max-w-[280px] h-[330px] relative">
+    <li className="flex justify-between flex-col items-center bg-[#fef9e9] p-3 rounded-xl border border-black w-full max-w-[240px] h-[380px] relative">
       {!product.visible && (
         <div className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2.5 py-1.5 rounded-full z-10">
           Agotado
@@ -21,27 +21,29 @@ export default function ItemStore(props) {
           En Carrito
         </Link>
       )}
-      <div className="w-full h-32 mb-2 overflow-hidden rounded-md">
+      <div className="w-full h-32 mb-2 overflow-hidden rounded-md bg-white">
         <img
-          //! agregar esto en producción: src={product.cover || logo}
-          src={logo}
+          src={product.cover || logo}
           alt={"Imágen de " + product.name}
-          className="w-full h-full object-cover rounded-md border-[0.1px] border-black"
+          className="w-full h-full object-contain rounded-md border-[0.1px] border-black"
         />
       </div>
 
       <div className="flex flex-col items-center justify-between flex-grow w-full">
         <div
           title={product.name}
-          className="h-[60px] flex items-center justify-center w-full my-2"
+          className="h-[90px] flex items-center justify-center w-full text-green-900 flex-col gap-y-1 my-2"
         >
           <p
             className={twMerge(
               len(product.name) > 26 ? "text-lg" : "text-xl",
-              "font-semibold text-green-900 w-full text-center line-clamp-2"
+              "font-semibold w-full text-center "
             )}
           >
             {product.name}
+          </p>
+          <p className="opacity-90 text-sm w-full text-center">
+            TRAZO FINO COLOR NEGRO
           </p>
         </div>
 

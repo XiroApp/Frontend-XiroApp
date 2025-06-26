@@ -1,5 +1,5 @@
-// let _env = "TESTING"; // PRUEBAS
-let _env = "TESTING-LOCAL"; // PRUEBAS
+let _env = "TESTING"; // PRUEBAS
+// let _env = "TESTING-LOCAL"; // PRUEBAS
 // let _env = "PROD"; // PRODUCCIÓN
 // let _env = "LOCAL"; // LOCAL CON EMULADOR BACK
 

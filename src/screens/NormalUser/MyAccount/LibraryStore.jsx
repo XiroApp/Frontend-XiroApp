@@ -5,7 +5,6 @@ import { len, normalizeStr } from "../../../Common/helpers";
 import ItemStore from "../../../components/Library/ItemStore";
 import AlertProd from "../../../components/Library/AlertProd";
 import LoadingProds from "../../../components/Library/LoadingProds";
-import NoMatches from "../../../components/NoMatches";
 import HeaderLibrary from "../../../components/Library/HeaderLibrary";
 import { LibraryService } from "../../../Infra/Services/library.service";
 import ContinueBtn from "../../../components/Library/ContinueBtn";
@@ -101,7 +100,11 @@ export default function LibraryStore() {
                   }}
                 />
               ))}
-            {len(filteredProducts) == 0 && len(searchTerm) > 0 && <NoMatches />}
+            {len(filteredProducts) == 0 && len(searchTerm) > 0 && (
+              <p className="w-full text-center p-4 text-lg col-span-full">
+                Sin resultados para &quot;{searchTerm}&quot;
+              </p>
+            )}
           </ul>
         )}
         {len(libraryCart) > 0 && <ContinueBtn />}

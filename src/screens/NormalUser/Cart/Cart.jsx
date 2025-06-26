@@ -87,6 +87,7 @@ export default function Cart() {
     handleCupon = () => dispatch(verifyCoupon(cuponInput));
 
   useEffect(() => {
+    console.log("carrito: ", cart);
     window.scrollTo(0, 0);
     initMercadoPago(PUBLIC_KEY, { locale: "es-AR" });
   }, []);
