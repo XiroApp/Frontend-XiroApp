@@ -5,7 +5,7 @@ import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-
+import AssessmentIcon from "@mui/icons-material/Assessment";
 import UsersRow from "./UsersRow.jsx";
 import {
   Backdrop,
@@ -30,23 +30,19 @@ import {
   DialogContentText,
   DialogContent, // Importar IconButton
 } from "@mui/material";
+import ReplayIcon from "@mui/icons-material/Replay";
+import ClearIcon from "@mui/icons-material/Clear"; // Importar icono de limpiar
 import { UsersAdapter } from "../../../Infra/Adapters/users.adapter.js";
 
 const columns = [
-  {
-    id: "index",
-    label: "",
-    align: "left",
-  },
+  // {
+  //   id: "index",
+  //   label: "",
+  //   align: "left",
+  // },
   {
     id: "displayName",
     label: "Nombre completo",
-    // minWidth: 100,
-    align: "left",
-  },
-  {
-    id: "orders_total",
-    label: "Pedidos",
     // minWidth: 100,
     align: "left",
   },
@@ -59,6 +55,12 @@ const columns = [
   {
     id: "phone",
     label: "Teléfono",
+    // minWidth: 100,
+    align: "left",
+  },
+  {
+    id: "orders_total",
+    label: "Pedidos",
     // minWidth: 100,
     align: "left",
   },
@@ -82,6 +84,8 @@ export default function UsersApp({ editor }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState(null); // Estado para el filtro seleccionado
+  const [searchTerm, setSearchTerm] = useState(""); // Nuevo estado para el término de búsqueda
+  const [reportModal, setReportModal] = useState(false); // Nuevo estado para el término de búsqueda
 
   /* -------------------------------------------- */
   /* PAGINADO DEL BACK NUEVO 2025 V 78598.1.0.1 56 */
@@ -96,12 +100,12 @@ export default function UsersApp({ editor }) {
   /* -------------------------------------------- */
   // Opciones de filtro para el desplegable
   const filterOptions = [
-    { value: null, label: "Todos" },
-    { value: "user", label: "user" },
-    { value: "", label: "Sin Asignar" },
+    { value: "null", label: "Todos" },
+    { value: "user", label: "Usuarios" },
     { value: "admin", label: "Administrador" },
+    { value: "delivery", label: "Delivery" },
     { value: "printing", label: "Imprenta" },
-    { value: "pick_up", label: "Punto de retiro" },
+    { value: "pickup", label: "Punto de retiro" },
     { value: "distribution", label: "Punto de distribución" },
   ];
 
@@ -118,8 +122,7 @@ export default function UsersApp({ editor }) {
         limit,
         startAfterValue,
         endBeforeValue,
-        filter, // Usar el estado `filter`
-        "admin"
+        filter // Usar el estado `filter`
       );
 
       // El backend te devuelve { orders: [...], nextPageStartAfter: ..., previousPageEndBefore: ..., hasMoreForward, hasMoreBackward }
@@ -181,54 +184,89 @@ export default function UsersApp({ editor }) {
       : setAllUsers(usersApp);
   };
 
-  const renderButton = (name, value, label) => (
-    <Button
-      type="text"
-      variant={roleFIlter === name ? "contained" : "outlined"}
-      onClick={(e) => handleFilter(e)}
-      className="w-full"
-      name={name}
-      value={value} //Opcional. Si el value siempre debe ser el mismo que el name
-    >
-      {label}
-    </Button>
-  );
+  async function handleRefresh() {
+    if (filter) {
+      setSearchTerm("");
+      setFilter(null);
+    } else {
+      fetchUsers({});
+    }
+  }
+
+  function handleClearSearch() {
+    setSearchTerm(""); // Vacía el campo de búsqueda
+    fetchUsers({}); // Reinicia las órdenes a la primera página sin filtro de búsqueda
+  }
+
+  function handleReportModal() {
+    setReportModal(!reportModal);
+  }
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl p-4">
       <span className="text-2xl lg:text-3xl ">Usuarios</span>
-      <div className="flex">
-        <div className="flex flex-col rounded-lg  w-1/3 p-2">
-          <label htmlFor="">Buscar</label>
-          <Input
-            name="email"
-            type="text"
-            placeholder={"Ingrese nombre, email o número telefónico..."}
-            onChange={(e) => handleSearch(e)}
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col rounded-lg  w-1/2 p-2">
-          <label htmlFor="">Filtrar por rol</label>
-          <section className="flex justify-start gap-2">
-            {renderButton("user", "user", "Usuarios")}
-            {renderButton("printing", "printing", "Imprenta")}
-            {renderButton("distribution", "distribution", "Distribución")}
-            {renderButton("pickup", "pickup", "Pickup")}
-            {renderButton("delivery", "delivery", "Delivery")}
-            {renderButton("admin", "admin", "Administrador")}
-            <Button
+      <div className="flex flex-col lg:flex-row justify-between rounded-lg lg:w-full p-2 gap-y-4 gap-x-10">
+        <div className="flex gap-4 items-center">
+          {/* Reemplazado el label y Input por FormControl con OutlinedInput */}
+          <FormControl variant="outlined" size="small" className="w-56">
+            <InputLabel htmlFor="search-orders-input">
+              Buscar usuarios
+            </InputLabel>
+            <OutlinedInput
+              id="search-orders-input"
               type="text"
-              variant="text"
-              onClick={(e) => handleFilter(e)}
-              className="w-full"
-              name="refresh"
-              value="refresh"
+              value={searchTerm} // Conectado al nuevo estado searchTerm
+              onChange={(e) => handleSearch(e.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="clear search"
+                    onClick={handleClearSearch} // Llama a la nueva función para limpiar
+                    edge="end"
+                    disabled={searchTerm === ""} // Deshabilitar si no hay texto
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </InputAdornment>
+              }
+              // startAdornment={
+              //   <InputAdornment position="start">
+              //     <SearchIcon />
+              //   </InputAdornment>
+              // }
+              label="Buscar órdenes" // Debe coincidir con el InputLabel
+              sx={{ borderRadius: "8px" }} // Tailwind rounded corners
+            />
+          </FormControl>
+
+          <FormControl variant="outlined" size="small" className="w-56">
+            <InputLabel id="order-status-filter-label">
+              Filtrar por estado
+            </InputLabel>
+            <Select
+              labelId="order-status-filter-label"
+              id="order-status-filter"
+              value={filter || ""} // Si filter es null, el value es "" para mostrar el placeholder
+              onChange={handleFilter}
+              label="Estado de Orden"
+              sx={{ borderRadius: "8px" }} // Tailwind rounded corners
             >
-              Quitar filtros
-            </Button>
-          </section>
+              {filterOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button onClick={handleRefresh}>
+            Borrar filtros <ReplayIcon />
+          </Button>
         </div>
+
+        <Button variant="contained" onClick={handleReportModal}>
+          <AssessmentIcon />
+          Generar reporte
+        </Button>
       </div>
       <Paper sx={{ width: "100%" }}>
         <TableContainer sx={{ maxHeight: "60vh" }}>

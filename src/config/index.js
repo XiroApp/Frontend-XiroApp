@@ -1,7 +1,7 @@
 let _env = "TESTING"; // PRUEBAS
 // let _env = "TESTING-LOCAL"; // PRUEBAS
 // let _env = "PROD"; // PRODUCCIÓN
-// let _env = "LOCAL"; // LOCAL CON EMULADOR BACK
+// let _env = "LOCAL"; // LOCAL CON EMULADOR BACK EN PROD
 
 import { ApiConstants } from "../Common/constants";
 
@@ -10,7 +10,7 @@ const URL_PICTURES = "pictures";
 
 export class Settings {
   static get FRONTEND_VERSION() {
-    return "v6.0.9 (beta)"; //! Cambiar en cada despliegue.
+    return "v7.0.0 (beta)"; //! Cambiar en cada despliegue.
   }
 
   static get SERVER_URL() {
