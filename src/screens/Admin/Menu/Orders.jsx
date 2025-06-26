@@ -441,9 +441,35 @@ export default function Orders({ editor }) {
       >
         <DialogTitle id="alert-dialog-title">Generar reporte</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Seleccione las fechas
-          </DialogContentText>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Seleccione las fechas
+            </DialogContentText>
+            <div className="flex flex-col gap-4 mt-4">
+              <TextField
+                label="Fecha de Inicio"
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                fullWidth
+                variant="outlined"
+              />
+              <TextField
+                label="Fecha de Fin"
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                fullWidth
+                variant="outlined"
+              />
+            </div>
+          </DialogContent>
         </DialogContent>
         <DialogActions>
           <Button variant="text" onClick={handleReportModal}>
