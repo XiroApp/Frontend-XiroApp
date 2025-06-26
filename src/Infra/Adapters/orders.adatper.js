@@ -59,8 +59,9 @@ export class OrdersAdapter {
         cart: order.cart,
         paymentId: order.paymentData.id,
         paymentStatus: order.paymentData.status,
-        transactionAmount:
-          order.paymentData.transaction_details.total_paid_amount,
+        transactionAmount: order.total_price,
+        // transactionAmount:
+        //   order.paymentData.transaction_details.total_paid_amount,
         statusDetail: order.paymentData.status_detail,
         clientUid: order.clientUid,
         uidPrinting: order.uidPrinting,

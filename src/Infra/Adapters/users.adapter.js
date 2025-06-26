@@ -25,9 +25,7 @@ export class UsersAdapter {
     limit,
     startAfterValue,
     endBeforeValue,
-    status_filter,
-    role,
-    uid
+    role_filter
   ) {
     try {
       // let response = await axios.get(`${baseUrl}/admin/users/paginated`);
@@ -35,31 +33,22 @@ export class UsersAdapter {
       console.log("limit => ", limit);
       console.log("startAfterValue => ", startAfterValue);
       console.log("endBeforeValue => ", endBeforeValue);
-      console.log("status_filter => ", status_filter);
-      console.log("role => ", role);
-      console.log("uid => ", uid);
+      console.log("role_filter => ", role_filter);
+      // console.log("role => ", role);
+      // console.log("uid => ", uid);
 
       let url = "";
 
-      if (uid) {
-        url = `${baseUrl}/admin/users/paginated/${uid}?limit=${limit}&status=${status_filter}`; // Usamos el estado 'limit'
-        if (startAfterValue !== null) {
-          // Si vamos a la siguiente página, añadimos startAfter
-          url += `&startAfter=${startAfterValue}`;
-        } else if (endBeforeValue !== null) {
-          // Si vamos a la página anterior, añadimos endBefore
-          url += `&endBefore=${endBeforeValue}`;
-        }
-      } else {
-        url = `${baseUrl}/admin/users/paginated?limit=${limit}&status=${status_filter}`; // Usamos el estado 'limit'
-        if (startAfterValue !== null) {
-          // Si vamos a la siguiente página, añadimos startAfter
-          url += `&startAfter=${startAfterValue}`;
-        } else if (endBeforeValue !== null) {
-          // Si vamos a la página anterior, añadimos endBefore
-          url += `&endBefore=${endBeforeValue}`;
-        }
+      url = `${baseUrl}/admin/users/paginated?limit=${limit}&filter=${role_filter}`; // Usamos el estado 'limit'
+      if (startAfterValue !== null) {
+        // Si vamos a la siguiente página, añadimos startAfter
+        url += `&startAfter=${startAfterValue}`;
+      } else if (endBeforeValue !== null) {
+        // Si vamos a la página anterior, añadimos endBefore
+        url += `&endBefore=${endBeforeValue}`;
       }
+
+      
       console.log("url => ", url);
       const response = await axios.get(url);
 

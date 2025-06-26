@@ -1,7 +1,7 @@
 // let _env = "TESTING"; // PRUEBAS
 let _env = "TESTING-LOCAL"; // PRUEBAS
 // let _env = "PROD"; // PRODUCCIÓN
-// let _env = "LOCAL"; // LOCAL CON EMULADOR BACK
+// let _env = "LOCAL"; // LOCAL CON EMULADOR BACK EN PROD
 
 import { ApiConstants } from "../Common/constants";
 
