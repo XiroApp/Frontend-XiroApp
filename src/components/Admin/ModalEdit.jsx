@@ -165,7 +165,7 @@ function ModalEdit(props) {
         </div>
         <div className="flex flex-col gap-y-2 w-full mt-4">
           <a
-            href="https://imagen-a-link.netlify.app"
+            href="https://imagenalink.gixi.dev"
             target="_blank"
             rel="noreferrer"
             htmlFor="cover"

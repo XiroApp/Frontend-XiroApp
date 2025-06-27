@@ -188,7 +188,7 @@ export default function ModalAdd(props) {
 
           <div className="flex flex-col gap-y-2">
             <a
-              href="https://imagen-a-link.netlify.app"
+              href="https://imagenalink.gixi.dev"
               target="_blank"
               rel="noreferrer"
               htmlFor="cover"
