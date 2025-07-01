@@ -13,25 +13,23 @@ import {
   Step,
   StepLabel,
   Typography,
-  InputAdornment,
 } from "@mui/material";
 import { createAddressValidator } from "../../utils/inputValidator";
 import { addAddress, editAddress, setToast } from "../../redux/actions";
 import Places from "../Maps/Places";
+import propTypes from "prop-types";
 
 export default function NewAddressForm({ open, setOpen, selectedAddress }) {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.dataBaseUser);
+  const user = useSelector(state => state.dataBaseUser);
   const [localities, setLocalities] = useState(citiesJson.localities);
-  const [cities, setCities] = useState(citiesJson.cities);
-
+  const [cities] = useState(citiesJson.cities);
   const [openInputTag, setOpenInputTag] = useState(false);
   const [error, setError] = useState(false);
-  const [loader, setLoader] = useState(false);
   const [input, setInput] = useState({
     userUid: user.uid,
     name: "",
-    number: "",
+    number: null,
     city: "",
     locality: "",
     zipCode: "",
@@ -42,12 +40,11 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
     ...selectedAddress,
   });
 
-  /* STEPPER */
   const steps = ["Ingresa tu dirección", "Ayúdanos a encontrarte"];
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
 
-  const isStepSkipped = (step) => {
+  const isStepSkipped = step => {
     return skipped.has(step);
   };
 
@@ -57,11 +54,11 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
 
-  function handleSubmitStep1(e) {
+  function handleSubmitStep1() {
     if (input) {
       let results = createAddressValidator(
         input.name,
@@ -90,7 +87,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
   }
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
 
   const handleReset = () => {
@@ -99,7 +96,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
 
   useEffect(() => {
     if (selectedAddress) {
-      setInput((prevInput) => ({
+      setInput(prevInput => ({
         ...prevInput,
         ...selectedAddress,
       }));
@@ -140,11 +137,10 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
     setActiveStep(0);
   };
 
-  /* --------------- MAPAS -------------------------------- */
   const [location, setLocation] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleLocationChange = (newLocation) => {
+  const handleLocationChange = newLocation => {
     setLocation(newLocation);
   };
 
@@ -162,7 +158,6 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
       lng: location.lng,
       address: location.address,
     };
-    setLoader(true);
 
     try {
       if (selectedAddress) {
@@ -174,21 +169,19 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
       console.log(error);
       dispatch(setToast("Error", "error"));
     } finally {
-      setLoader(false);
       setOpen(false);
       setActiveStep(0);
     }
   };
 
-  /* AUTOCOMPLETE */
   const [inputCityValue, setInputCityValue] = useState("");
   const [inputLocalityValue, setInputLocalityValue] = useState("");
 
   useEffect(() => {
-    let city = citiesJson?.cities?.find((city) => city.name === inputCityValue);
+    let city = citiesJson?.cities?.find(city => city.name === inputCityValue);
     if (city) {
       let filtered = citiesJson.localities.filter(
-        (locality) =>
+        locality =>
           city.cp.includes(locality.postal_code) ||
           city.cp.includes(input.zip_code)
       );
@@ -256,7 +249,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                         // defaultValue={user.displayName}
                         placeholder="Calle ejemplo"
                         value={input.name || ""}
-                        onChange={(e) => handleInput(e)}
+                        onChange={e => handleInput(e)}
                       />
                       {error.name ? (
                         <span className="text-[12px] text-red-500 font-bold">
@@ -277,9 +270,24 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                         inputProps={{ max: 99999, min: 0, maxLength: 5 }}
                         placeholder="1234"
                         value={input.number || ""}
-                        // defaultValue={user.displayName}
-                        onChange={(e) => handleInput(e)}
+                        onChange={e => handleInput(e)}
                       />
+                      <label
+                        htmlFor="s/n"
+                        className="flex justify-around text-sm items-center mt-1.5"
+                      >
+                        Sin número
+                        <input
+                          id="s/n"
+                          type="checkbox"
+                          disabled={input.number != ""}
+                          onChange={e => {
+                            if (e.target.checked) {
+                              setInput({ ...input, number: null });
+                            }
+                          }}
+                        />
+                      </label>
                       {error.number ? (
                         <span className="text-[12px] text-red-500 font-bold">
                           Número incompleto.
@@ -296,7 +304,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                         // type="number"
                         placeholder="N° de casa o departamento..."
                         value={input.floorOrApartment || ""}
-                        onChange={(e) => handleInput(e)}
+                        onChange={e => handleInput(e)}
                       />
                       {error.floorOrApartment ? (
                         <span className="text-[12px] text-red-500 font-bold">
@@ -316,7 +324,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                         value={input.zipCode || ""}
                         type="number"
                         placeholder="5519"
-                        onChange={(e) => handleInput(e)}
+                        onChange={e => handleInput(e)}
                       />
                       {error.zipCode ? (
                         <span className="text-[12px] text-red-500 font-bold">
@@ -339,8 +347,8 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                           setInput({ ...input, city: newValue });
                         }}
                         name="city"
-                        options={cities.map((city) => city.name)}
-                        renderInput={(params) => (
+                        options={cities.map(city => city.name)}
+                        renderInput={params => (
                           <TextField
                             {...params}
                             error={error.city}
@@ -373,8 +381,8 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                         setInput({ ...input, locality: newValue });
                       }}
                       name="locality"
-                      options={localities.map((locality) => locality.name)}
-                      renderInput={(params) => (
+                      options={localities.map(locality => locality.name)}
+                      renderInput={params => (
                         <TextField
                           {...params}
                           error={error.locality}
@@ -403,7 +411,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                             ? "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#789360] text-sm text-white"
                             : "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1  bg-gray-600 hover:bg-[#789360] text-sm text-white"
                         }
-                        onClick={(e) => handleTag(e)}
+                        onClick={e => handleTag(e)}
                       >
                         Casa
                       </button>
@@ -414,7 +422,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                             ? "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#789360] text-sm text-white"
                             : "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1  bg-gray-600 hover:bg-[#789360] text-sm text-white"
                         }
-                        onClick={(e) => handleTag(e)}
+                        onClick={e => handleTag(e)}
                       >
                         Oficina
                       </button>
@@ -425,7 +433,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                             ? "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#789360] text-sm text-white"
                             : "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1  bg-gray-600 hover:bg-[#789360] text-sm text-white"
                         }
-                        onClick={(e) => handleTag(e)}
+                        onClick={e => handleTag(e)}
                       >
                         Trabajo
                       </button>
@@ -436,7 +444,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                             ? "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#789360] text-sm text-white"
                             : "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1  bg-gray-600 hover:bg-[#789360] text-sm text-white"
                         }
-                        onClick={(e) => handleTag(e)}
+                        onClick={e => handleTag(e)}
                       >
                         Universidad
                       </button>
@@ -447,7 +455,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                             ? "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#789360] text-sm text-white"
                             : "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1  bg-gray-600 hover:bg-[#789360] text-sm text-white"
                         }
-                        onClick={(e) => handleTag(e)}
+                        onClick={e => handleTag(e)}
                       >
                         Escuela
                       </button>
@@ -463,7 +471,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                             ? "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1 bg-[#789360] text-sm text-white"
                             : "rounded-full w-fit h-8 px-2 lg:w-30 lg:px-4 lg:py-1  bg-gray-600 hover:bg-[#789360] text-sm text-white"
                         }
-                        onClick={(e) => handleOtherTag(e)}
+                        onClick={e => handleOtherTag(e)}
                       >
                         Otro
                       </button>
@@ -475,7 +483,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                             type="text"
                             placeholder="Ingresa un nombre"
                             // defaultValue={user.displayName}
-                            onChange={(e) => handleTag(e)}
+                            onChange={e => handleTag(e)}
                           />
                           {error.tag ? (
                             <span className="text-[12px] text-red-500 font-bold">
@@ -542,3 +550,9 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
     </Dialog>
   );
 }
+
+NewAddressForm.propTypes = {
+  open: propTypes.bool,
+  setOpen: propTypes.func,
+  selectedAddress: propTypes.object,
+};

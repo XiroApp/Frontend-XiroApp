@@ -538,7 +538,7 @@ export default function NewOrder() {
                         id="parent-modal-title"
                         className="text-center"
                       >
-                        Tu pedido
+                        Pedido de Imprenta
                       </Typography>
                     </section>
 

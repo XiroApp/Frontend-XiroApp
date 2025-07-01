@@ -526,7 +526,7 @@ export default function Cart() {
                     </div>
                     <div className="flex flex-col pl-4 w-full max-w-2xl">
                       <span className="underline text-[16px] font-[400] mb-1">
-                        Cupones
+                        Cupones (solo válido para impresiones)
                       </span>
                       <section className="flex justify-between gap-4">
                         <TextField
