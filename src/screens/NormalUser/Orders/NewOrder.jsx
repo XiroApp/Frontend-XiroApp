@@ -413,9 +413,9 @@ export default function NewOrder() {
                   >
                     <RemoveFilesIcon
                       sx={{
-                        fontSize: 32,
+                        fontSize: 38,
                         backgroundColor: "#fecaca",
-                        color: "#000",
+                        color: "#dc2626",
                         borderRadius: "5px",
                         padding: "2px",
                         ":hover": {
