@@ -9,7 +9,7 @@ export default function ItemStore(props) {
   return (
     <li
       title={product.name}
-      className="flex justify-between flex-col items-center bg-[#fef9e9] p-3 rounded-md border border-black w-full max-w-[280px] h-[380px] relative"
+      className="flex justify-between flex-col items-center bg-[#fef9e9] p-3 rounded-md border border-black w-full max-w-[280px] h-[330px] relative"
     >
       {!product.visible && (
         <div className="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2.5 py-1.5 rounded-md z-10">
@@ -54,7 +54,7 @@ export default function ItemStore(props) {
           ${formatPrice(product.price)}
         </span>
 
-        <div className="flex items-center justify-center w-full mt-2">
+        {/* <div className="flex items-center justify-center w-full mt-2">
           {product.visible ? (
             <div className="flex items-center gap-x-2">
               <label
@@ -133,22 +133,57 @@ export default function ItemStore(props) {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
 
         <div className="w-full mt-3">
           {product.visible ? (
             inCart(product.id) ? (
-              <Link
-                to="/carrito"
-                className="bg-[#E3F9D6] brightness-110 hover:bg-[#d6ffbc] hover:border-[#d6ffbc] text-slate-900 font-medium py-2 rounded-md transition-colors w-full border border-green-400/80 text-center text-sm sm:text-base flex items-center justify-center gap-x-2"
-              >
-                <span className="inline-block w-2 h-2 bg-green-600 rounded-md"></span>
-                Ver Carrito
-              </Link>
+              <div className="flex items-center justify-center w-full gap-x-2 h-10">
+                <label
+                  title="Cantidad del producto"
+                  htmlFor={`quantity-${product.code}`}
+                  className="text-[13px] text-[#303f23] whitespace-nowrap"
+                >
+                  Cantidad:
+                </label>
+
+                <div className="flex items-center border-[1.3px] border-green-400 rounded-md overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleQuantity(
+                        product.id,
+                        (quantities[product.id] || 1) - 1
+                      )
+                    }
+                    className="text-xl hover:bg-green-200/90 cursor-default size-7 pb-1 bg-green-100 flex items-center justify-center text-green-800 font-bold"
+                  >
+                    -
+                  </button>
+                  <span
+                    id={`quantity-${product.code}`}
+                    className="w-[30px] text-[14.5px] select-none h-7 flex items-center justify-center bg-white text-center pb-0.5"
+                  >
+                    {quantities[product.id] || 1}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleQuantity(
+                        product.id,
+                        (quantities[product.id] || 1) + 1
+                      )
+                    }
+                    className="text-xl cursor-default hover:bg-green-200/90 size-7 pb-1 bg-green-100 flex items-center justify-center text-green-800 font-bold"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
             ) : (
               <button
                 type="button"
-                className="bg-green-600/90 hover:bg-green-500 text-white font-medium py-2 rounded-md transition-colors w-full text-center text-sm sm:text-base"
+                className="bg-green-600/90 hover:bg-green-500 text-white font-medium h-10 rounded-md transition-colors w-full text-center text-sm sm:text-base"
                 onClick={() => addProdToCart(product)}
               >
                 Agregar al Carrito
