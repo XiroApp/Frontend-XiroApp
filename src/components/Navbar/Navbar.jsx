@@ -74,7 +74,7 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
             }}
           ></Box>
 
-          {(len(cart) > 0 || len(libraryCart) > 0) && (
+          {(Number(len(cart)) > 0 || Number(len(libraryCart)) > 0) && (
             <Link to="/carrito" className="mr-4">
               <button
                 type="button"
@@ -86,7 +86,12 @@ export default function Navbar({ loggedUser, title, hideLogo = false }) {
                 )}
               >
                 <ShoppingCartIcon sx={{ height: "1em", width: "1em" }} />{" "}
-                <span className="mb-0.5">{len(cart) + len(libraryCart)}</span>
+                <span className="mb-0.5">
+                  {Number(len(cart)) +
+                    Number(
+                      libraryCart.reduce((acc, item) => acc + item.quantity, 0)
+                    )}
+                </span>
               </button>
             </Link>
           )}
