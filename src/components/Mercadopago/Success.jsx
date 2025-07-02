@@ -2,17 +2,14 @@ import Navbar from "../Navbar/Navbar";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import propTypes from "prop-types";
 import { Link } from "react-router-dom";
-
-Success.propTypes = {
-  loggedUser: propTypes.object,
-};
+import BackgroundHueso from "../BackgroundHueso";
 
 export default function Success({ loggedUser }) {
   return (
-    <div className="h-screen w-screen flex flex-col justify-start items-center">
+    <div className="h-screen w-screen flex flex-col justify-start items-center relative">
       <Navbar title="Compra Exitosa" loggedUser={loggedUser} />
-
-      <section className="mt-20 rounded-xl bg-slate-50 w-full max-w-xl h-full max-h-[380px] flex flex-col items-center justify-center">
+      <BackgroundHueso />
+      <section className="mt-20 rounded-xl scale-95 bg-slate-50 w-full max-w-xl h-full max-h-[380px] flex flex-col items-center justify-center">
         <CheckCircleIcon
           className="text-green-500"
           sx={{ height: "5rem", width: "5rem" }}
@@ -32,7 +29,7 @@ export default function Success({ loggedUser }) {
         </address>
         <Link
           to="/?historial"
-          className="text-2xl text-green-950 bg-green-300/40 border border-green-950/40 duration-75 hover:bg-green-300/80 px-8 py-2.5 rounded-lg mt-4"
+          className="text-2xl text-white bg-green-700 border border-green-950/40 duration-75 hover:bg-green-700/80 px-8 py-2.5 rounded-lg mt-4"
         >
           Ir al Historial
         </Link>
@@ -40,3 +37,7 @@ export default function Success({ loggedUser }) {
     </div>
   );
 }
+
+Success.propTypes = {
+  loggedUser: propTypes.object,
+};

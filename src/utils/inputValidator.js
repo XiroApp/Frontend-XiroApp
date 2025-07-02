@@ -116,7 +116,11 @@ export function createAddressValidator(
   usertag
 ) {
   let name = !(username && username.length < 80) ? true : false;
-  let number = !(usernumber < 99999) ? true : false;
+  let number = !(
+    (typeof usernumber === "string" && usernumber.trim() === "s/n") ||
+    (!isNaN(usernumber) && Number(usernumber) > 0 && Number(usernumber) < 99999)
+  );
+  // ...existing code...
   let zipCode = !(userzipCode && userzipCode < 9999 && userzipCode > 999)
     ? true
     : false;

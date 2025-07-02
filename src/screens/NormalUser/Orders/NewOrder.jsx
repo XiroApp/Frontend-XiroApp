@@ -50,6 +50,7 @@ import {
   DeleteForever as RemoveFilesIcon,
 } from "@mui/icons-material";
 import BackBtn from "../../../components/BackBtn.jsx";
+import BackgroundHueso from "../../../components/BackgroundHueso.jsx";
 
 export default function NewOrder() {
   const dispatch = useDispatch(),
@@ -494,7 +495,8 @@ export default function NewOrder() {
               </section>
             </section>
           </div>
-          <section className="w-full h-full">
+          <section className="w-full h-full relative">
+            <BackgroundHueso />
             <DefaultSnack content={labels?.snackbar_new_order_info} />
             {files.previews.length > 0 ? (
               <div className="flex flex-col items-center justify-center">
@@ -628,7 +630,7 @@ export default function NewOrder() {
                 </Modal>
               </div>
             ) : (
-              <div className="w-full flex justify-center items-center">
+              <div className="w-full flex justify-center items-center hidden">
                 <p className="max-w-xl rounded-lg text-lg md:text-2xl w-full text-center text-white mt-6 bg-green-700 py-2">
                   Carga los archivos que quieras imprimir
                 </p>
