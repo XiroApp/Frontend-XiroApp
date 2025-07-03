@@ -56,7 +56,9 @@ export default function App() {
   useEffect(() => handleRole(), [dataBaseUser]);
 
   function handleRole() {
-    if (location.pathname == "/success") return;
+    if (location.pathname == "/success" || location.pathname == "/failure") {
+      return;
+    }
 
     if (!dataBaseUser) {
       navigate("/login");

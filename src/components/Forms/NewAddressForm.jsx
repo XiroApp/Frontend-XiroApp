@@ -29,7 +29,7 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
   const [input, setInput] = useState({
     userUid: user.uid,
     name: "",
-    number: null,
+    number: "",
     city: "",
     locality: "",
     zipCode: "",
@@ -269,8 +269,10 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                         type="number"
                         inputProps={{ max: 99999, min: 0, maxLength: 5 }}
                         placeholder="1234"
-                        value={input.number || ""}
-                        onChange={e => handleInput(e)}
+                        value={input.number === "s/n" ? "" : input.number || ""}
+                        onChange={e => {
+                          setInput({ ...input, number: e.target.value });
+                        }}
                       />
                       <label
                         htmlFor="s/n"
@@ -280,10 +282,13 @@ export default function NewAddressForm({ open, setOpen, selectedAddress }) {
                         <input
                           id="s/n"
                           type="checkbox"
-                          disabled={input.number != ""}
+                          checked={input.number === "s/n"}
+                          disabled={input.number && input.number !== "s/n"}
                           onChange={e => {
                             if (e.target.checked) {
-                              setInput({ ...input, number: null });
+                              setInput({ ...input, number: "s/n" });
+                            } else {
+                              setInput({ ...input, number: "" });
                             }
                           }}
                         />

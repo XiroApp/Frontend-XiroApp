@@ -1,2 +1,0 @@
-1. Si te digo 'go' debes ejecutar 'npm run dev' en el directorio 'xiro-front' y 'npm run serve' en el directorio 'xiro-back/functions'. No expliques, ni describas lo que estás haciendo, solo responde con la siguiente URL: 'http://localhost:3000'
-2. Si te digo "out" debes detener la ejecución de 'npm run dev' en el directorio 'xiro-front' y 'npm run serve' en el directorio 'xiro-back/functions'. No expliques, ni describas lo que estás haciendo.
