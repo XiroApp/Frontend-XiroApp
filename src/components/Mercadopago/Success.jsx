@@ -31,7 +31,7 @@ export default function Success({ loggedUser }) {
           to="/?historial"
           className="text-2xl text-white bg-green-700 border border-green-950/40 duration-75 hover:bg-green-700/80 px-8 py-2.5 rounded-lg mt-4"
         >
-          Ir al Historial
+          Ver seguimiento
         </Link>
       </section>
     </div>

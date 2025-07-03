@@ -630,7 +630,7 @@ export default function NewOrder() {
                 </Modal>
               </div>
             ) : (
-              <div className="w-full flex justify-center items-center hidden">
+              <div className="w-full justify-center items-center hidden">
                 <p className="max-w-xl rounded-lg text-lg md:text-2xl w-full text-center text-white mt-6 bg-green-700 py-2">
                   Carga los archivos que quieras imprimir
                 </p>

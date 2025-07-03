@@ -180,7 +180,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
               <ListItemIcon>
                 <FaMedal style={{ width: "2.5rem", height: "2.5rem" }} />
               </ListItemIcon>
-              <ListItemText primary="Historial" />
+              <ListItemText primary="Historial y seguimiento" />
             </ListItemButton>
             <ListItemButton
               onClick={() => setRender("addressData")}
@@ -338,7 +338,7 @@ export default function MyAccount({ cart, dataBaseUser }) {
               <ListItemIcon>
                 <FaMedal style={{ width: "2.5rem", height: "2.5rem" }} />
               </ListItemIcon>
-              <ListItemText primary="Historial" />
+              <ListItemText primary="Historial y seguimiento" />
             </ListItemButton>
             <ListItemButton
               onClick={() => setRender("addressData")}
