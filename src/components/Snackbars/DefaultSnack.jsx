@@ -12,8 +12,9 @@ export default function DefaultSnack({ content = "" }) {
         open ? "flex justify-center items-center w-full px-4" : "hidden"
       }
     >
-      <div className="flex gap-2 items-start w-full max-w-2xl justify-between bg-green-200  border-[1.5px] border-green-700 pl-4 pb-4 rounded-lg">
+      <div className="flex gap-2 items-start w-full max-w-2xl justify-between bg-white font-bold  border-[1.5px] border-green-700 pl-4 pb-4 rounded-lg">
         <div className="w-full flex flex-col justify-start items-start gap-y-3 pt-4">
+          <p className="text-3xl text-center w-full text-pretty">IMPORTANTE</p>
           {content?.split("//").map((text, index) => (
             <p key={index} className="text-[13.5px] w-full text-pretty">
               {text}
@@ -22,7 +23,7 @@ export default function DefaultSnack({ content = "" }) {
         </div>
         <button
           onClick={() => setOpen(false)}
-          className="p-1 mt-1 mr-1 text-black bg-green-100 hover:scale-105 transition-transform border-[1.5px] border-green-700  rounded-lg"
+          className="p-1 mt-1 mr-1 text-black  hover:scale-105 transition-transform rounded-lg"
         >
           <svg
             fill="none"
